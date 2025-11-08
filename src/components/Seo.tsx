@@ -1,21 +1,18 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-// !STARTERCONF Change these default meta
 const defaultMeta = {
-    title: 'Next.js + Tailwind CSS + TypeScript Starter',
-    siteName: 'Next.js + Tailwind CSS + TypeScript Starter',
-    description:
-        'A starter for Next.js, Tailwind CSS, and TypeScript with Absolute Import, Seo, Link component, pre-configured with Husky',
-    /** Without additional '/' on the end, e.g. https://devnic.vercel.app/ */
-    url: 'https://devnic.vercel.app/',
+    title: 'The Watch Collections - When Quality Meets Perfection',
+    siteName: 'The Watch Collections',
+    description: 'We provide of the high end timepiece collections from the most luxurious brands in the world.',
+    url: 'https://thewatchcollections.com',
     type: 'website',
     robots: 'follow, index',
     /**
      * No need to be filled, will be populated with openGraph function
      * If you wish to use a normal image, just specify the path below
      */
-    image: 'https://devnic.vercel.app/images/large-og.png'
+    image: 'https://thewatchcollections.com/images/large-og.png'
 }
 
 type SeoProps = {
@@ -65,7 +62,7 @@ export default function Seo(props: SeoProps) {
                     <meta property='article:published_time' content={meta.date} />
                     <meta name='publish_date' property='og:publish_date' content={meta.date} />
                     {/* // !STARTERCONF Remove or change to your name */}
-                    <meta name='author' property='article:author' content='Nico Gulo' />
+                    <meta name='author' property='article:author' content='The Watch Collections' />
                 </>
             )}
 
