@@ -1,4 +1,5 @@
 import BaseDialog from '@components/dialog/BaseDialog'
+import Header from '@components/Header/Header'
 import { unbounded } from '@helpers/font'
 import useDialogStore from '@store/useDialogStore'
 import * as React from 'react'
@@ -13,6 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     return (
         <div className={unbounded.className}>
+            <Header />
             {children}
             <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />
         </div>
