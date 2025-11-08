@@ -16,15 +16,17 @@
         "baseUrl": ".",
         "paths": {
             "@components/*": ["./src/components/*"],
-            "@utils/*": ["./src/utils/*"],
+            "@constant/*": ["./src/constant/*"],
+            "@helpers/*": ["./src/helpers/*"],
+            "@hoc/*": ["./src/hoc/*"],
             "@hooks/*": ["./src/hooks/*"],
+            "@lib/*": ["./src/lib/*"],
+            "@modules/*": ["./src/modules/*"],
             "@pages/*": ["./src/pages/*"],
+            "@utils/*": ["./src/utils/*"],
             "@store/*": ["./src/store/*"],
             "@styles/*": ["./src/styles/*"],
             "@types/*": ["./src/types/*"],
-            "@lib/*": ["./src/lib/*"],
-            "@constant/*": ["./src/constant/*"],
-            "@hoc/*": ["./src/hoc/*"],
             "@svg/*": ["./src/svg/*"]
         },
         "incremental": true
