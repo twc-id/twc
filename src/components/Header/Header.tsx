@@ -20,7 +20,7 @@ const menuData: MenuItem[] = [
             {
                 label: 'BRAND',
                 items: [
-                    'RICHARD MILLIE',
+                    'RICHARD MILLE',
                     'PATEK PHILIPPE',
                     'AUDEMARS PIGUET',
                     'ROLEX',
