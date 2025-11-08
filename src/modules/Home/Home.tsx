@@ -6,7 +6,9 @@ const Home = () => {
     return (
         <>
             <Seo />
-            <Container>Home</Container>
+            <Container>
+                <div className='min-h-screen'>Home</div>
+            </Container>
         </>
     )
 }
