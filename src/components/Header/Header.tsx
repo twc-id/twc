@@ -1,6 +1,7 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import classNames from '@lib/classnames'
+import debounce from '@utils/debounce'
 import React, { useEffect, useState } from 'react'
 
 interface SubMenuItem {
@@ -60,9 +61,9 @@ const Headers = () => {
     const [hoveredSubMenuItem, setHoveredSubMenuItem] = useState<SubMenuItem | null>(null)
 
     useEffect(() => {
-        const handleScroll = () => {
+        const handleScroll = debounce(() => {
             setIsScrolled(window.scrollY > 0)
-        }
+        }, 100)
 
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
@@ -82,7 +83,7 @@ const Headers = () => {
 
     const renderMenu = () => (
         <button
-            aria-label="Toggle menu"
+            aria-label='Toggle menu'
             onClick={() => {
                 setIsMenuOpen(!isMenuOpen)
                 if (isMenuOpen) {
