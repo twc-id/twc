@@ -8,3 +8,4 @@ export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV
 
 export const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 export const COOKIE_PREFIX = process.env.NEXT_PUBLIC_COOKIE_PREFIX
+export const APP_VERSION = '1.0.0'
