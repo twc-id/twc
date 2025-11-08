@@ -123,7 +123,7 @@ const Headers = () => {
                 <Container>
                     <div className='flex flex-row justify-between'>
                         {renderMenu()}
-                        <div>sadas</div>
+                        <div className='font-bold text-xl'>MySite</div>
                         <div className='flex flex-row items-center gap-2'>
                             Search <Icons icon='Search' width={32} height={32} />
                         </div>
