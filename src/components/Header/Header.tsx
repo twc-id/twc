@@ -82,6 +82,7 @@ const Headers = () => {
 
     const renderMenu = () => (
         <button
+            aria-label="Toggle menu"
             onClick={() => {
                 setIsMenuOpen(!isMenuOpen)
                 if (isMenuOpen) {
