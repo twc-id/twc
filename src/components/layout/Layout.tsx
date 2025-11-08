@@ -1,4 +1,5 @@
 import BaseDialog from '@components/dialog/BaseDialog'
+import { unbounded } from '@helpers/font'
 import useDialogStore from '@store/useDialogStore'
 import * as React from 'react'
 
@@ -11,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     //#endregion  //*======== Store ===========
 
     return (
-        <div>
+        <div className={unbounded.className}>
             {children}
             <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />
         </div>
