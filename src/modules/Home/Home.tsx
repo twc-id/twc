@@ -1,8 +1,14 @@
 import Container from '@components/Container'
+import Seo from '@components/Seo'
 import React from 'react'
 
 const Home = () => {
-    return <Container>Home</Container>
+    return (
+        <>
+            <Seo />
+            <Container>Home</Container>
+        </>
+    )
 }
 
 export default Home
