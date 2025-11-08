@@ -81,6 +81,41 @@ const Headers = () => {
         }
     }, [isMenuOpen])
 
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isMenuOpen) {
+                setIsMenuOpen(false)
+                setHoveredMenuItem(null)
+                setHoveredSubMenuItem(null)
+            }
+        }
+
+        document.addEventListener('keydown', handleEscape)
+        return () => document.removeEventListener('keydown', handleEscape)
+    }, [isMenuOpen])
+
+    const handleMenuItemKeyDown = (e: React.KeyboardEvent, item: MenuItem) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setHoveredMenuItem(item)
+            setHoveredSubMenuItem(null)
+        }
+    }
+
+    const handleSubMenuItemKeyDown = (e: React.KeyboardEvent, subItem: SubMenuItem) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setHoveredSubMenuItem(subItem)
+        }
+    }
+
+    const handleSubSubMenuItemKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            // Handle navigation or action for leaf menu item
+        }
+    }
+
     const renderMenu = () => (
         <button
             aria-label='Toggle menu'
@@ -123,7 +158,7 @@ const Headers = () => {
                 <Container>
                     <div className='flex flex-row justify-between'>
                         {renderMenu()}
-                        <div className='font-bold text-xl'>MySite</div>
+                        <div className='text-xl font-bold'>MySite</div>
                         <div className='flex flex-row items-center gap-2'>
                             Search <Icons icon='Search' width={32} height={32} />
                         </div>
@@ -138,19 +173,23 @@ const Headers = () => {
                             {/* Grid 1: Main Menu */}
                             <div className='animate-slide-in-left space-y-4'>
                                 {menuData.map((item) => (
-                                    <div
+                                    <button
                                         key={item.label}
-                                        className='cursor-pointer text-white hover:text-gray-400'
+                                        type='button'
+                                        className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
                                         onMouseEnter={() => {
                                             setHoveredMenuItem(item)
                                             setHoveredSubMenuItem(null)
                                         }}
+                                        onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                                        aria-expanded={hoveredMenuItem === item}
+                                        aria-haspopup={!!item.subMenu}
                                     >
                                         <div className='flex items-center justify-between'>
                                             <span className='text-sm font-medium'>{item.label}</span>
-                                            {item.subMenu && <span>›</span>}
+                                            {item.subMenu && <span aria-hidden='true'>›</span>}
                                         </div>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
 
@@ -162,28 +201,34 @@ const Headers = () => {
                                 {/* Grid 2: Sub Menu */}
                                 <div className='space-y-4'>
                                     {hoveredMenuItem?.subMenu?.map((subItem) => (
-                                        <div
+                                        <button
                                             key={subItem.label}
-                                            className='animate-slide-in-left cursor-pointer text-gray-400 hover:text-white'
+                                            type='button'
+                                            className='animate-slide-in-left w-full cursor-pointer text-left text-gray-400 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
                                             onMouseEnter={() => setHoveredSubMenuItem(subItem)}
+                                            onKeyDown={(e) => handleSubMenuItemKeyDown(e, subItem)}
+                                            aria-expanded={hoveredSubMenuItem === subItem}
+                                            aria-haspopup={!!subItem.items}
                                         >
                                             <div className='flex items-center justify-between'>
                                                 <span className='text-sm'>{subItem.label}</span>
-                                                {subItem.items && <span>›</span>}
+                                                {subItem.items && <span aria-hidden='true'>›</span>}
                                             </div>
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
 
                                 {/* Grid 3: Sub Sub Menu */}
                                 <div className='space-y-4'>
                                     {hoveredSubMenuItem?.items?.map((item) => (
-                                        <div
+                                        <button
                                             key={item}
-                                            className='animate-slide-in-left cursor-pointer text-gray-400 hover:text-white'
+                                            type='button'
+                                            className='animate-slide-in-left w-full cursor-pointer text-left text-gray-400 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            onKeyDown={handleSubSubMenuItemKeyDown}
                                         >
                                             <span className='text-sm'>{item}</span>
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             </div>
