@@ -13,11 +13,9 @@ const nextConfig = {
     swcMinify: true,
 
     // Uncomment to add domain whitelist
-    // images: {
-    //   domains: [
-    //     'res.cloudinary.com',
-    //   ],
-    // },
+    images: {
+        domains: ['mediumpurple-pig-833607.hostingersite.com']
+    },
 
     // SVGR
     // webpack(config) {

@@ -4,6 +4,7 @@ export const isLocal = process.env.NODE_ENV === 'development'
 export const showLogger = isLocal ? true : process.env.NEXT_PUBLIC_SHOW_LOGGER === 'true'
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
+export const API_WP_URL = process.env.NEXT_PUBLIC_WP_URL
 export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV
 
 export const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN

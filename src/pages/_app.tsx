@@ -1,9 +1,11 @@
 import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
+import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
 import Router from 'next/router'
 import { appWithTranslation } from 'next-i18next'
 import nProgress from 'nprogress'
+import { useState } from 'react'
 
 // Updated imports to use alias format
 import '@styles/globals.css'
@@ -13,11 +15,19 @@ Router.events.on('routeChangeStart', nProgress.start)
 Router.events.on('routeChangeError', nProgress.done)
 Router.events.on('routeChangeComplete', nProgress.done)
 
-const MyApp = ({ Component, pageProps }: AppProps) => (
-    <Layout>
-        <DismissableToast />
-        <Component {...pageProps} />
-    </Layout>
-)
+const MyApp = ({ Component, pageProps }: AppProps) => {
+    const [queryClient] = useState(() => new QueryClient())
+
+    return (
+        <QueryClientProvider client={queryClient}>
+            <HydrationBoundary state={pageProps.dehydratedState}>
+                <Layout>
+                    <DismissableToast />
+                    <Component {...pageProps} />
+                </Layout>
+            </HydrationBoundary>
+        </QueryClientProvider>
+    )
+}
 
 export default appWithTranslation(MyApp)
