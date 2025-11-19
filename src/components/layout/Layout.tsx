@@ -1,6 +1,7 @@
 import BaseDialog from '@components/dialog/BaseDialog'
+import Footer from '@components/Footer'
 import Header from '@components/Header/Header'
-import { unbounded } from '@helpers/font'
+import { inter } from '@helpers/font'
 import useDialogStore from '@store/useDialogStore'
 import * as React from 'react'
 
@@ -13,10 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     //#endregion  //*======== Store ===========
 
     return (
-        <div className={unbounded.className}>
+        <div className={inter.className}>
             <Header />
             {children}
             <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />
+            <Footer />
         </div>
     )
 }
