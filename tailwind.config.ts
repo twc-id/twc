@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-import fontSize from './tailwind-config/font-sizes.config'
+import fontSize from './src/tailwind-config/font-sizes.config'
 
 export default {
     content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -9,7 +9,7 @@ export default {
         extend: {
             fontSize: fontSize as any,
             fontFamily: {
-                primary: ['Unbounded', ...defaultTheme.fontFamily.sans]
+                primary: ['Inter', ...defaultTheme.fontFamily.sans]
             },
             colors: {
                 primary: {
