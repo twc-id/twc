@@ -2,7 +2,6 @@ import blogFetchApi, { blogDictionaryFetchApi } from '@pages/api/blogApi'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { AxiosError, AxiosRequestConfig } from 'axios'
 
-// Types
 export interface ArticleAuthor {
     id: number
     name: string
@@ -105,6 +104,7 @@ export interface Article {
     meta: any[]
     categories: number[]
     tags: number[]
+    uagb_excerpt: string
     _embedded?: {
         author?: ArticleAuthor[]
         'wp:featuredmedia'?: ArticleImage[]
