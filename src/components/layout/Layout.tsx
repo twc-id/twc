@@ -1,7 +1,7 @@
 import BaseDialog from '@components/dialog/BaseDialog'
 import Footer from '@components/Footer'
 import Header from '@components/Header/Header'
-import { inter } from '@helpers/font'
+import { inter, overpass } from '@helpers/font'
 import useDialogStore from '@store/useDialogStore'
 import * as React from 'react'
 
@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     //#endregion  //*======== Store ===========
 
     return (
-        <div className={inter.className}>
+        <div className={`${inter.className} ${overpass.variable}`}>
             <Header />
             {children}
             <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />

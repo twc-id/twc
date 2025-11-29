@@ -33,7 +33,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                         className='group mb-10 flex cursor-pointer flex-col gap-6'
                     >
                         <div
-                            className={classNames('aspect-2/1 relative w-full overflow-hidden', {
+                            className={classNames('relative w-full overflow-hidden', {
                                 'min-h-[554px] flex-shrink-0': isFirstArticle,
                                 'min-h-[337px] flex-shrink-0': !isFirstArticle
                             })}

@@ -18,7 +18,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
             <div className='overflow-hidden bg-white'>
                 {/* Featured Image */}
                 {featuredImage && (
-                    <div className='aspect-2/1 relative min-h-[290px] w-full overflow-hidden'>
+                    <div className=' relative min-h-[290px] w-full overflow-hidden'>
                         <Image
                             src={featuredImage}
                             alt={article.title.rendered}

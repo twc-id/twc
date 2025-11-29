@@ -1,16 +1,19 @@
-import Container from '@components/Container'
 import Seo from '@components/Seo'
-import Commitment from '@modules/Home/components/Commitment'
-import Hero from '@modules/Home/components/Hero'
 import React from 'react'
+
+import Commitment from './components/Commitment'
+import Hero from './components/Hero'
+import Highlight from './components/Highlight'
+import SellReserve from './components/SellReserve'
 
 const Home = () => {
     return (
-        <div className='-mt-20'>
+        <div className='bg-grey-white -mt-20'>
             <Seo />
             <Hero />
             <Commitment />
-            <Container>asdas</Container>
+            <Highlight />
+            <SellReserve />
         </div>
     )
 }
