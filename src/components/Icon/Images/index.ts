@@ -31,6 +31,7 @@ const IconComponents = {
     ChevronLeft: lazy(() => import('./ChevronLeft')),
     ChevronVertical: lazy(() => import('./ChevronVertical')),
     Copy: lazy(() => import('./Copy')),
+    Diamond: lazy(() => import('./Diamond')),
     DoubleChevron: lazy(() => import('./DoubleChevron')),
     Dollar: lazy(() => import('./Dollar')),
     Download: lazy(() => import('./Download')),
