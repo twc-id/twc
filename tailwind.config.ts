@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
+import plugin from 'tailwindcss/plugin'
 
 import fontSize from './src/tailwind-config/font-sizes.config'
 
@@ -9,7 +10,9 @@ export default {
         extend: {
             fontSize: fontSize as any,
             fontFamily: {
-                primary: ['Inter', ...defaultTheme.fontFamily.sans]
+                primary: ['Inter', ...defaultTheme.fontFamily.sans],
+                inter: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+                overpass: ['var(--font-overpass)', ...defaultTheme.fontFamily.sans]
             },
             colors: {
                 primary: {
@@ -80,5 +83,34 @@ export default {
             }
         }
     },
-    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar')]
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('tailwind-scrollbar'),
+        plugin(function ({ addUtilities, theme }) {
+            const fontSizes = theme('fontSize') || {}
+            const newUtilities: Record<string, any> = {}
+
+            Object.keys(fontSizes).forEach((key) => {
+                const value = fontSizes[key]
+                if (Array.isArray(value) && value[1]?.fontFamily) {
+                    const fontFamily = value[1].fontFamily
+                    let fontFamilyValue = ''
+
+                    if (fontFamily === 'Inter') {
+                        fontFamilyValue = 'var(--font-inter)'
+                    } else if (fontFamily === 'Overpass') {
+                        fontFamilyValue = 'var(--font-overpass)'
+                    }
+
+                    if (fontFamilyValue) {
+                        newUtilities[`.text-${key}`] = {
+                            fontFamily: fontFamilyValue
+                        }
+                    }
+                }
+            })
+
+            addUtilities(newUtilities)
+        })
+    ]
 } satisfies Config
