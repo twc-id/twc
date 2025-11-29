@@ -5,17 +5,16 @@ import classNames from '@lib/classnames'
 import { cva, type VariantProps } from 'class-variance-authority'
 import React from 'react'
 
-const disabledOutline: string[] = [
-    'disabled:bg-[#F4F6F8]',
-    'border-text-transparent-10',
-    'disabled:border-none',
-    'disabled:text-[#BBC2C8]'
-]
+// const disabledOutline: string[] = [
+//     'disabled:bg-[#F4F6F8]',
+//     'border-text-transparent-10',
+//     'disabled:border-none',
+//     'disabled:text-[#BBC2C8]'
+// ]
 
 const buttonVariants = cva(
     [
         'border',
-        'font-bold',
         'text-center',
         'focus:outline-none',
         'disabled:cursor-not-allowed',
@@ -28,49 +27,43 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 primary: [
-                    'bg-primary-500',
+                    'bg-grey-white',
                     'hover:bg-opacity-80',
                     'disabled:bg-[#F4F6F8]',
-                    'text-white',
+                    'text-grey-black',
                     'disabled:text-[#BBC2C8]',
-                    'border-none'
+                    'border',
+                    'border-grey-black'
                 ],
-                secondary: [
-                    'bg-secondary-500',
-                    'hover:bg-opacity-80',
-                    'disabled:bg-[#F4F6F8]',
-                    'text-white',
-                    'disabled:text-[#BBC2C8]',
-                    'border-none'
-                ],
-                danger: [
-                    'bg-error-500',
-                    'hover:bg-opacity-80',
-                    'disabled:bg-[#F4F6F8]',
-                    'text-white',
-                    'disabled:text-[#BBC2C8]',
-                    'border-none'
-                ],
-                dangerOutline: [
-                    'bg-transparent',
-                    '!border-error-500',
-                    'text-error-500',
-                    'hover:bg-error-100',
-                    ...disabledOutline
-                ],
-                gray: [
-                    'bg-gray-[#F4F6F8]',
-                    'hover:bg-opacity-80',
-                    'disabled:bg-[#F4F6F8]',
-                    'text-gray-500',
-                    ...disabledOutline
-                ],
-                grayOutline: ['bg-transparent', ...disabledOutline],
-                primaryOutline: ['bg-transparent', 'border-primary-500', 'text-primary-500', ...disabledOutline]
+                secondary: ['bg-grey-black', 'hover:bg-opacity-80', '!text-grey-white', 'border-none']
+                // danger: [
+                //     'bg-error-500',
+                //     'hover:bg-opacity-80',
+                //     'disabled:bg-[#F4F6F8]',
+                //     'text-white',
+                //     'disabled:text-[#BBC2C8]',
+                //     'border-none'
+                // ],
+                // dangerOutline: [
+                //     'bg-transparent',
+                //     '!border-error-500',
+                //     'text-error-500',
+                //     'hover:bg-error-100',
+                //     ...disabledOutline
+                // ],
+                // gray: [
+                //     'bg-gray-[#F4F6F8]',
+                //     'hover:bg-opacity-80',
+                //     'disabled:bg-[#F4F6F8]',
+                //     'text-gray-500',
+                //     ...disabledOutline
+                // ],
+                // grayOutline: ['bg-transparent', ...disabledOutline],
+                // primaryOutline: ['bg-transparent', 'border-primary-500', 'text-primary-500', ...disabledOutline]
             },
             size: {
-                sm: ['py-2', 'px-3.5', 'text-xs', 'font-bold', 'rounded-[4px]'],
-                md: ['py-2.5', 'px-5', 'text-sm', 'font-bold', 'rounded-[4px]']
+                sm: ['py-2', 'px-3.5', 'text-xs', 'font-bold'],
+                md: ['py-2.5', 'px-5', 'text-button-3-desktop']
             },
             block: {
                 true: 'w-full'
