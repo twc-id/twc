@@ -8,7 +8,7 @@ import SellReserve from './components/SellReserve'
 
 const Home = () => {
     return (
-        <div className='bg-grey-white -mt-20'>
+        <div className='-mt-20'>
             <Seo />
             <Hero />
             <Commitment />

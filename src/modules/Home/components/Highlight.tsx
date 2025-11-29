@@ -1,7 +1,10 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
@@ -10,6 +13,10 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger)
+}
+
 const tabs = ['Watches', 'Accessories'] as const
 type TabTypes = (typeof tabs)[number]
 
@@ -17,6 +24,9 @@ const Highlight = () => {
     const [data, setData] = useState<any>(null)
     const [tab, setTab] = useState<TabTypes>('Watches')
     const swiperRef = useRef<SwiperType>()
+    const sectionRef = useRef<HTMLElement>(null)
+    const h1Ref = useRef<HTMLHeadingElement>(null)
+    const tabsRef = useRef<HTMLDivElement>(null)
 
     const getData = async () => {
         try {
@@ -35,12 +45,51 @@ const Highlight = () => {
         getData()
     }, [])
 
+    useGSAP(() => {
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                toggleActions: 'restart none none reset'
+            }
+        })
+
+        // Animasi H1 fade in
+        timeline.fromTo(h1Ref.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+        // Animasi tabs fade in
+        timeline.fromTo(
+            tabsRef.current,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+            '-=0.7'
+        )
+
+        // Animasi swiper items fade in satu per satu
+        if (data && data.length > 0) {
+            timeline.fromTo(
+                '.swiper-slide',
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    stagger: 0.2
+                },
+                '-=0.5'
+            )
+        }
+    }, [data])
+
     return (
-        <section className='py-[116px]'>
+        <section ref={sectionRef} className='bg-grey-white relative z-10 py-[116px]'>
             <Container className='flex flex-col gap-20'>
-                <div className='flex flex-row items-center justify-between'>
-                    <h1 className='text-heading-2-desktop text-grey-black'>Collection Highlight</h1>
-                    <div className='flex flex-row'>
+                <div className='flex flex-col items-center justify-between xl:flex-row'>
+                    <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black'>
+                        Collection Highlight
+                    </h1>
+                    <div ref={tabsRef} className='flex flex-row'>
                         {tabs.map((item) => (
                             <Button
                                 key={item}
