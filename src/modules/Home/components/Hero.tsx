@@ -1,5 +1,6 @@
 import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import React, { useRef, useState } from 'react'
@@ -64,7 +65,44 @@ const Hero = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='relative z-[50] h-[848px] pb-[121px] xl:h-[960px]'>
+        <section ref={sectionRef} className='relative h-[848px] xl:h-[960px]'>
+            <div className='absolute inset-x-0 bottom-[121px] z-10 pb-20'>
+                <Container>
+                    <div className='flex w-full flex-row items-end justify-between gap-4'>
+                        <div className='flex flex-col justify-end gap-2'>
+                            <h3 ref={h3Ref} className='text-paragraph-7-desktop text-grey-white'>
+                                CURATED PIECES
+                            </h3>
+                            <h1 ref={h1Ref} className='text-heading-1-desktop text-grey-white'>
+                                The RM <br />
+                                Collection
+                            </h1>
+                            <h3 ref={h3Ref} className='text-paragraph-5-desktop text-grey-200'>
+                                The premium luxury making time your own
+                            </h3>
+                        </div>
+                        <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
+                            {heroSlides.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => swiperRef.current?.slideToLoop(index)}
+                                    className={classNames('bg-grey-500 relative h-[3px] w-8 overflow-hidden', {
+                                        'w-16': activeIndex === index
+                                    })}
+                                >
+                                    <div
+                                        key={`progress-${activeIndex}-${index}`}
+                                        className={classNames('bg-grey-white absolute left-0 top-0 h-full', {
+                                            'animate-progress': activeIndex === index,
+                                            'w-0': activeIndex !== index
+                                        })}
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </Container>
+            </div>
             <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{
@@ -74,55 +112,25 @@ const Hero = () => {
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper
                 }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                 loop={true}
-                className='h-full w-full'
+                allowTouchMove={false}
+                className='h-full w-full [&_.swiper-slide]:!opacity-100'
             >
                 {heroSlides.map((slide) => (
-                    <SwiperSlide key={slide.id}>
-                        <div
-                            className='h-full w-full'
-                            style={{
-                                backgroundImage: `linear-gradient(180deg, rgba(1, 1, 1, 0) 31.05%, #010101 97.39%), url('/images/home/hero-home.webp')`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat'
-                            }}
-                        >
-                            <Container className='flex h-full flex-col justify-end gap-2 overflow-hidden pb-20'>
-                                <h3 ref={h3Ref} className='text-paragraph-7-desktop text-grey-white'>
-                                    {slide.subtitle}
-                                </h3>
-                                <h1 ref={h1Ref} className='text-heading-1-desktop text-grey-white'>
-                                    {slide.title.split(' ').slice(0, 2).join(' ')} <br />
-                                    {slide.title.split(' ').slice(2).join(' ')}
-                                </h1>
-                                <h3 className='text-paragraph-5-desktop text-grey-200'>{slide.description}</h3>
-                            </Container>
-                        </div>
-                    </SwiperSlide>
+                    <SwiperSlide
+                        key={slide.id}
+                        style={{
+                            backgroundImage: `linear-gradient(180deg, rgba(1, 1, 1, 0) 31.05%, #010101 97.39%), url('/images/home/hero-home.webp')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            transform: 'translate(0px, 0px) !important'
+                        }}
+                        className='absolute !translate-y-0'
+                    />
                 ))}
             </Swiper>
-
-            {/* Custom Pagination */}
-            <div className='absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 gap-2'>
-                {heroSlides.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => swiperRef.current?.slideToLoop(index)}
-                        className='bg-grey-500 relative h-1 w-12 overflow-hidden'
-                    >
-                        <div
-                            className={` absolute left-0 top-0 h-full transition-all duration-300 ${
-                                activeIndex === index ? 'w-full' : 'w-0'
-                            }`}
-                            style={{
-                                animation: activeIndex === index ? 'progress 3s linear' : 'none'
-                            }}
-                        />
-                    </button>
-                ))}
-            </div>
 
             <style jsx>{`
                 @keyframes progress {
@@ -132,6 +140,10 @@ const Hero = () => {
                     to {
                         width: 100%;
                     }
+                }
+                .animate-progress {
+                    animation: progress 3s linear;
+                    width: 100%;
                 }
             `}</style>
         </section>

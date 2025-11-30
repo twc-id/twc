@@ -83,7 +83,7 @@ const Highlight = () => {
     }, [data])
 
     return (
-        <section ref={sectionRef} className='bg-grey-white relative z-10 py-[116px]'>
+        <section ref={sectionRef} className='bg-grey-white relative z-10 pt-[116px]'>
             <Container className='flex flex-col gap-20'>
                 <div className='flex flex-col items-center justify-between xl:flex-row'>
                     <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black'>
