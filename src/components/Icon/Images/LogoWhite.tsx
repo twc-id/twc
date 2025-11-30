@@ -11,13 +11,13 @@ const LogoWhite: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
         xmlnsXlink='http://www.w3.org/1999/xlink'
         {...props}
     >
-        <rect width='54.4762' height='51.9126' fill='url(#pattern0_2267_42)' />
+        <rect width='54.4762' height='51.9126' fill='url(#logoWhite)' />
         <defs>
-            <pattern id='pattern0_2267_42' patternContentUnits='objectBoundingBox' width='1' height='1'>
-                <use xlinkHref='#image0_2267_42' transform='matrix(0.00588235 0 0 0.00617284 -0.352941 0)' />
+            <pattern id='logoWhite' patternContentUnits='objectBoundingBox' width='1' height='1'>
+                <use xlinkHref='#logo-white' transform='matrix(0.00588235 0 0 0.00617284 -0.352941 0)' />
             </pattern>
             <image
-                id='image0_2267_42'
+                id='logo-white'
                 width='294'
                 height='196'
                 preserveAspectRatio='none'

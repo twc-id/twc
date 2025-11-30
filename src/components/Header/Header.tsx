@@ -235,7 +235,7 @@ const Headers = () => {
     return (
         <>
             <div
-                className={classNames('sticky top-0 z-50 bg-transparent py-3.5 transition-all duration-300', {
+                className={classNames('sticky top-0 z-[9999] bg-transparent py-3.5 transition-all duration-300', {
                     'bg-[#0F0F0FCC] backdrop-blur-[20px]': isScrolled,
                     '-translate-y-full': !isVisible,
                     'translate-y-0': isVisible,
