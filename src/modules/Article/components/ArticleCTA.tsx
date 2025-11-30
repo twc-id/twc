@@ -11,7 +11,7 @@ const ArticleCTA = () => {
                     <p className='text-paragraph-6-desktop text-grey-100'>
                         Ask and discuss with us about your timepieces
                     </p>
-                    <Button variant='primaryOutline' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
+                    <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
                         Learn More
                     </Button>
                 </div>
