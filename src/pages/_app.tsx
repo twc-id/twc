@@ -2,6 +2,7 @@ import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
+import Head from 'next/head'
 import Router from 'next/router'
 import { appWithTranslation } from 'next-i18next'
 import nProgress from 'nprogress'
@@ -20,6 +21,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
+            <Head>
+                <meta name='viewport' content='width=device-width, initial-scale=1' />
+            </Head>
             <HydrationBoundary state={pageProps.dehydratedState}>
                 <Layout>
                     <DismissableToast />

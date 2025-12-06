@@ -35,7 +35,15 @@ const buttonVariants = cva(
                     'border',
                     'border-grey-black'
                 ],
-                secondary: ['bg-grey-black', 'hover:bg-opacity-80', '!text-grey-white', 'border-none']
+                secondary: [
+                    'bg-grey-black',
+                    'hover:bg-opacity-80',
+                    '!text-grey-white',
+                    'border-none',
+                    'dark:border',
+                    'hover:border',
+                    'hover:border-grey-white'
+                ]
                 // danger: [
                 //     'bg-error-500',
                 //     'hover:bg-opacity-80',

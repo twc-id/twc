@@ -1,4 +1,5 @@
 import Button from '@components/buttons/Button'
+import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
@@ -9,6 +10,7 @@ if (typeof window !== 'undefined') {
 }
 
 const SellReserve = () => {
+    const { isDarkSection } = useTheme()
     const sectionRef = useRef<HTMLElement>(null)
     const sellRef = useRef<HTMLDivElement>(null)
     const reserveRef = useRef<HTMLDivElement>(null)
@@ -18,7 +20,10 @@ const SellReserve = () => {
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
-                toggleActions: 'restart none none reset'
+                end: 'bottom 20%',
+                toggleActions: 'play none none reset',
+                onEnter: () => timeline.restart(),
+                onEnterBack: () => timeline.restart()
             }
         })
 
@@ -33,7 +38,9 @@ const SellReserve = () => {
     return (
         <section
             ref={sectionRef}
-            className='relative z-10 flex flex-col gap-2 bg-white px-4 py-16 xl:flex-row xl:px-5 xl:py-[160px]'
+            className={`xl:py[160px] relative z-10 flex flex-col gap-2 px-4 py-16 xl:flex-row xl:px-5 ${
+                isDarkSection ? 'bg-grey-black' : 'bg-white'
+            }`}
         >
             <div
                 ref={sellRef}
@@ -41,7 +48,8 @@ const SellReserve = () => {
                     backgroundImage:
                         "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/sell.webp')",
                     backgroundSize: '100% auto',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundPositionY: 'top'
+                    // backgroundRepeat: 'no-repeat'
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
@@ -54,7 +62,8 @@ const SellReserve = () => {
                     backgroundImage:
                         "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/reserve.webp')",
                     backgroundSize: '100% auto',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundPositionY: 'top'
+                    // backgroundRepeat: 'no-repeat'
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >

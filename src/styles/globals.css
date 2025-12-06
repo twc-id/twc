@@ -3,6 +3,16 @@
 @tailwind utilities;
 
 @layer base {
+    html,
+    body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
+    body {
+        @apply dark:bg-grey-black bg-white transition-colors duration-500;
+    }
+
     .layout {
         /* 1100px */
         max-width: 68.75rem;

@@ -18,6 +18,18 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'mediumpurple-pig-833607.hostingersite.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.jakpost.net'
+            },
+            {
+                protocol: 'https',
+                hostname: 'scontent-sin6-4.cdninstagram.com'
+            },
+            {
+                protocol: 'https',
+                hostname: '*.cdninstagram.com'
             }
         ]
     },

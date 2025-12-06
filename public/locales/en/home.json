@@ -1,0 +1,28 @@
+{
+    "hero": {
+        "title": " The RM <br /> Collection",
+        "sub_1": "CURATED PIECES",
+        "sub_2": "The premium luxury making time your own"
+    },
+    "commitment": {
+        "title": "Rarity, Quality, Collectability",
+        "description": "Connects collectors with luxury watches from around the world"
+    },
+    "highlight": {
+        "title": "Collection Highlight",
+        "tabs": {
+            "watches": "Watches",
+            "accessories": "Accessories"
+        },
+        "pre_owned": "Pre-owned: {{year}}",
+        "view_more": "View More"
+    },
+    "sell_reserve": {
+        "sell_title": "Sell Your Watch",
+        "reserve_title": "Reserve Your Watch",
+        "learn_more": "Learn More"
+    },
+    "timepiece": {
+        "title": "Timepiece Service"
+    }
+}

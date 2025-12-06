@@ -7,10 +7,12 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import type { Swiper as SwiperType } from 'swiper'
-import { Navigation } from 'swiper/modules'
+import { Grid, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
+import 'swiper/css/grid'
 import 'swiper/css/navigation'
 
 if (typeof window !== 'undefined') {
@@ -27,6 +29,7 @@ const Highlight = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const tabsRef = useRef<HTMLDivElement>(null)
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const getData = async () => {
         try {
@@ -83,19 +86,20 @@ const Highlight = () => {
     }, [data])
 
     return (
-        <section ref={sectionRef} className='bg-grey-white relative z-10 pt-[116px]'>
-            <Container className='flex flex-col gap-20'>
-                <div className='flex flex-col items-center justify-between xl:flex-row'>
-                    <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black'>
+        <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
+            <Container className='flex flex-col gap-5 xl:gap-20'>
+                <div className='flex flex-col justify-between gap-6 xl:flex-row xl:items-center'>
+                    <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black flex-shrink-0'>
                         Collection Highlight
                     </h1>
-                    <div ref={tabsRef} className='flex flex-row'>
+                    <div ref={tabsRef} className='flex w-full flex-row xl:justify-end'>
                         {tabs.map((item) => (
                             <Button
                                 key={item}
                                 variant={item === tab ? 'primary' : 'secondary'}
                                 className=''
                                 onClick={() => handleChangeTab(item)}
+                                block={isMobile}
                             >
                                 {item}
                             </Button>
@@ -105,41 +109,56 @@ const Highlight = () => {
 
                 <div className=''>
                     <Swiper
-                        modules={[Navigation]}
+                        modules={[Navigation, Grid]}
                         spaceBetween={24}
                         slidesPerView={4}
+                        slidesPerGroup={4}
+                        grid={{
+                            rows: isMobile ? 2 : 1,
+                            fill: 'row'
+                        }}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper
                         }}
-                        loop
                         breakpoints={{
                             320: {
-                                slidesPerView: 1,
-                                spaceBetween: 16
+                                slidesPerView: 2,
+                                slidesPerGroup: 4,
+                                spaceBetween: 16,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
                             },
                             768: {
                                 slidesPerView: 2,
-                                spaceBetween: 20
-                            },
-                            1024: {
-                                slidesPerView: 3,
-                                spaceBetween: 24
+                                slidesPerGroup: 4,
+                                spaceBetween: 20,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
                             },
                             1280: {
                                 slidesPerView: 4,
-                                spaceBetween: 24
+                                slidesPerGroup: 4,
+                                spaceBetween: 24,
+                                grid: {
+                                    rows: 1,
+                                    fill: 'row'
+                                }
                             }
                         }}
                     >
                         {data?.map((product: any) => (
-                            <SwiperSlide key={product.id} className='!w-[344px]'>
-                                <div className=' w-full flex-col gap-12'>
-                                    <div className='h-[417px] w-[344px]'>
+                            <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
+                                <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                    <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
                                         <Image
                                             src={product.images[0]?.src || '/images/placeholder.png'}
                                             alt={product.name}
-                                            width={344}
-                                            height={417}
+                                            width={isMobile ? 168 : 344}
+                                            height={isMobile ? 168 : 417}
                                         />
                                     </div>
 

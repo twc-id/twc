@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
@@ -39,6 +40,7 @@ const heroSlides = [
 ]
 
 const Hero = () => {
+    const { t } = useTranslation('home')
     const h3Ref = useRef<HTMLHeadingElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
@@ -62,23 +64,28 @@ const Hero = () => {
 
         // Animasi h1 muncul dari bawah setelah h3 selesai
         timeline.fromTo(h1Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+        }
     }, [])
 
     return (
-        <section ref={sectionRef} className='relative h-[848px] xl:h-[960px]'>
+        <section ref={sectionRef} className='relative h-[848px] w-full xl:h-[960px]'>
             <div className='absolute inset-x-0 bottom-[121px] z-10 pb-20'>
                 <Container>
-                    <div className='flex w-full flex-row items-end justify-between gap-4'>
+                    <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
                         <div className='flex flex-col justify-end gap-2'>
                             <h3 ref={h3Ref} className='text-paragraph-7-desktop text-grey-white'>
-                                CURATED PIECES
+                                {t('hero.sub_1')}
                             </h3>
                             <h1 ref={h1Ref} className='text-heading-1-desktop text-grey-white'>
-                                The RM <br />
-                                Collection
+                                <Trans i18nKey='hero.title' components={{ br: <br /> }}>
+                                    {t('hero.title')}
+                                </Trans>
                             </h1>
                             <h3 ref={h3Ref} className='text-paragraph-5-desktop text-grey-200'>
-                                The premium luxury making time your own
+                                {t('hero.sub_2')}
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
@@ -109,6 +116,7 @@ const Hero = () => {
                     delay: 3000,
                     disableOnInteraction: false
                 }}
+                slidesPerView={1}
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper
                 }}

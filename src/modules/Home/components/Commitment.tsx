@@ -34,33 +34,39 @@ const Commitment = () => {
             '-=0.5' // overlap with previous animation
         )
 
-        // Pin image saat scroll
-        ScrollTrigger.create({
+        // Pin image saat scroll - dengan ID untuk debugging
+        const pinTrigger = ScrollTrigger.create({
             trigger: imageContainerRef.current,
             start: 'top top',
             end: '+=100%',
             pin: true,
-            pinSpacing: false
+            pinSpacing: false,
+            id: 'commitment-pin',
+            pinnedContainer: sectionRef.current,
+            markers: true
         })
+
+        // Cleanup
+        return () => {
+            pinTrigger.kill()
+        }
     }, [])
+
     return (
-        <>
-            <div
-                ref={sectionRef}
-                className='bg-grey-black relative flex flex-col items-center justify-center gap-6 text-center xl:py-[160px]'
-            >
-                <h1 ref={titleRef} className='text-heading-2-desktop text-grey-white'>
+        <section ref={sectionRef}>
+            <div className='bg-grey-black relative flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
+                <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
                     Rarity, Quality, Collectability
                 </h1>
                 <Icons icon='Diamond' className='text-grey-100' />
-                <h3 ref={descRef} className='text-paragraph-6-desktop text-grey-100'>
+                <h3 ref={descRef} className='text-paragraph-6-mobile text-grey-100 xl:text-paragraph-6-desktop'>
                     Connects collectors with luxury watches from around the world
                 </h3>
             </div>
-            <div ref={imageContainerRef} className='relative z-0 h-[560px]'>
+            <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
                 <Image src='/images/home/commitment.webp' alt='commitment' fill className='object-cover' />
             </div>
-        </>
+        </section>
     )
 }
 

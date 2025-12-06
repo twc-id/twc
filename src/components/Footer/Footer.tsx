@@ -58,7 +58,7 @@ const Footer = () => {
         }
     ]
     return (
-        <footer className='bg-grey-black text-grey-white'>
+        <footer className='bg-grey-black text-grey-white relative z-20 '>
             <Container>
                 <div className='py-12'>
                     {/* Main Footer Content */}

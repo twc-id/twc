@@ -8,6 +8,7 @@ import debounce from '@utils/debounce'
 import Image from 'next/image'
 import Form, { Field } from 'rc-field-form'
 import React, { useEffect, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 interface SubMenuItem {
     label: string
@@ -74,6 +75,7 @@ const Headers = () => {
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [form] = Form.useForm()
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const handleBreadcrumbNavigate = (index: number) => {
         // index 0 -> Home, index 1 -> Our Collections
@@ -212,8 +214,8 @@ const Headers = () => {
             >
                 <Icons
                     icon='Hamburger'
-                    width={32}
-                    height={32}
+                    width={isMobile ? 24 : 32}
+                    height={isMobile ? 24 : 32}
                     className={classNames({
                         'text-white': !isScrolled,
                         'text-black': isScrolled,
@@ -227,7 +229,12 @@ const Headers = () => {
                     isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-0 opacity-0'
                 )}
             >
-                <Icons icon='XClose' width={32} height={32} className={!isScrolled ? 'text-white' : 'text-black'} />
+                <Icons
+                    icon='XClose'
+                    width={isMobile ? 24 : 32}
+                    height={isMobile ? 24 : 32}
+                    className={!isScrolled ? 'text-white' : 'text-black'}
+                />
             </div>
         </button>
     )
@@ -235,12 +242,15 @@ const Headers = () => {
     return (
         <>
             <div
-                className={classNames('sticky top-0 z-[9999] bg-transparent py-3.5 transition-all duration-300', {
-                    'bg-[#0F0F0FCC] backdrop-blur-[20px]': isScrolled,
-                    '-translate-y-full': !isVisible,
-                    'translate-y-0': isVisible,
-                    'bg-white': isSearchOpen
-                })}
+                className={classNames(
+                    'sticky top-0 z-[9999] bg-transparent py-2.5 transition-all duration-300 xl:py-3.5',
+                    {
+                        'bg-[#0F0F0FCC] backdrop-blur-[20px]': isScrolled,
+                        '-translate-y-full': !isVisible,
+                        'translate-y-0': isVisible,
+                        'bg-white': isSearchOpen
+                    }
+                )}
             >
                 <Container>
                     <div className='flex flex-row items-center justify-between'>
@@ -249,8 +259,8 @@ const Headers = () => {
                         <div className='h-[52px] w-[54px]'>
                             <Icons
                                 icon={!isScrolled ? 'LogoWhite' : 'LogoBlack'}
-                                width={54}
-                                height={52}
+                                width={isMobile ? 46 : 54}
+                                height={isMobile ? 44 : 52}
                                 className={isSearchOpen ? 'hidden' : ''}
                             />
                         </div>
@@ -271,8 +281,8 @@ const Headers = () => {
                         >
                             <Icons
                                 icon='Search'
-                                width={32}
-                                height={32}
+                                width={isMobile ? 24 : 32}
+                                height={isMobile ? 24 : 32}
                                 // className={!isScrolled ? 'text-white' : 'text-black'}
 
                                 className={classNames({
