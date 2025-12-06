@@ -47,7 +47,9 @@ const IconComponents = {
     HomeFilled: lazy(() => import('./HomeFilled')),
     Hamburger: lazy(() => import('./Hamburger')),
     Interuption: lazy(() => import('./Interuption')),
+    Instagram: lazy(() => import('./Instagram')),
     KeyIllustration: lazy(() => import('./KeyIllustration')),
+    LinkedIn: lazy(() => import('./LinkedIn')),
     LogoBlack: lazy(() => import('./LogoBlack')),
     LogoWhite: lazy(() => import('./LogoWhite')),
     Logout: lazy(() => import('./Logout')),
@@ -68,6 +70,7 @@ const IconComponents = {
     SquareFilled: lazy(() => import('./SquareFilled')),
     Square: lazy(() => import('./Square')),
     TouchHand: lazy(() => import('./TouchHand')),
+    Tiktok: lazy(() => import('./Tiktok')),
     Trash: lazy(() => import('./Trash')),
     Upload: lazy(() => import('./Upload')),
     User: lazy(() => import('./User')),
@@ -78,7 +81,8 @@ const IconComponents = {
     WalletFilled: lazy(() => import('./WalletFilled')),
     XCircle: lazy(() => import('./XCircle')),
     XCloseSmall: lazy(() => import('./XCloseSmall')),
-    XClose: lazy(() => import('./XClose'))
+    XClose: lazy(() => import('./XClose')),
+    Youtube: lazy(() => import('./Youtube'))
 }
 
 export default IconComponents
