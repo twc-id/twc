@@ -97,7 +97,7 @@ const Highlight = () => {
                             <Button
                                 key={item}
                                 variant={item === tab ? 'primary' : 'secondary'}
-                                className=''
+                                className='border-grey-black'
                                 onClick={() => handleChangeTab(item)}
                                 block={isMobile}
                             >

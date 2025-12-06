@@ -1,6 +1,7 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
@@ -17,11 +18,12 @@ if (typeof window !== 'undefined') {
 }
 
 const Review = () => {
-    const [canScrollLeft, setCanScrollLeft] = useState(false)
-    const [canScrollRight, setCanScrollRight] = useState(true)
     const [data, setData] = useState<any[]>([])
     const [products, setProducts] = useState<any>({})
-    const swiperRef = useRef<SwiperType>()
+    const swiperDesktopRef = useRef<SwiperType>()
+    const swiperMobileRef = useRef<SwiperType>()
+    const contentDesktopRef = useRef<HTMLDivElement>(null)
+    const contentMobileRef = useRef<HTMLDivElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
 
     const getData = async () => {
@@ -60,27 +62,28 @@ const Review = () => {
         return `IDR ${parseFloat(price).toLocaleString('id-ID')}`
     }
 
-    const handleSwiperUpdate = (swiper: any) => {
-        setCanScrollLeft(!swiper.isBeginning)
-        setCanScrollRight(!swiper.isEnd)
-    }
-
     useEffect(() => {
         getData()
     }, [])
 
-    // useGSAP(() => {
-    //     const timeline = gsap.timeline({
-    //         scrollTrigger: {
-    //             trigger: sectionRef.current,
-    //             start: 'top 80%',
-    //             toggleActions: 'restart none none reset'
-    //         }
-    //     })
-    // }, [])
+    useGSAP(() => {
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                toggleActions: 'restart none none reset'
+            }
+        })
+
+        timeline.fromTo(
+            [contentDesktopRef.current, contentMobileRef.current],
+            { opacity: 0, y: 60 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+        )
+    }, [])
 
     return (
-        <section className='bg-grey-black relative z-[12] py-16 xl:py-[116px]' ref={sectionRef}>
+        <section className='bg-grey-black relative z-[12] py-14 xl:py-[116px]' ref={sectionRef}>
             <Container className='flex flex-col gap-10 xl:gap-20'>
                 <div className='flex flex-row items-center justify-between'>
                     <h1 className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
@@ -89,16 +92,16 @@ const Review = () => {
                     <div className='hidden flex-row gap-4 xl:flex'>
                         <Button
                             className='!h-8 !w-8'
-                            onClick={() => swiperRef.current?.slidePrev()}
-                            disabled={!canScrollLeft}
+                            onClick={() => swiperDesktopRef.current?.slidePrev()}
+                            // disabled={!canScrollLeft}
                             variant='secondary'
                         >
                             <Icons icon='ChevronLeft' width={20} height={20} />
                         </Button>
                         <Button
                             className='!h-8 !w-8'
-                            onClick={() => swiperRef.current?.slideNext()}
-                            disabled={!canScrollRight}
+                            onClick={() => swiperDesktopRef.current?.slideNext()}
+                            // disabled={!canScrollRight}
                             variant='secondary'
                         >
                             <Icons icon='ChevronRight' width={20} height={20} />
@@ -107,17 +110,15 @@ const Review = () => {
                 </div>
 
                 {/* Desktop Swiper */}
-                <div className='hidden xl:block'>
+                <div className='hidden xl:block' ref={contentDesktopRef}>
                     <Swiper
                         modules={[Navigation]}
+                        loop
                         spaceBetween={20}
                         slidesPerView={1}
                         onSwiper={(swiper) => {
-                            swiperRef.current = swiper
-                            handleSwiperUpdate(swiper)
+                            swiperDesktopRef.current = swiper
                         }}
-                        onSlideChange={handleSwiperUpdate}
-                        onProgress={handleSwiperUpdate}
                     >
                         {data.map((review: any) => {
                             const product = products[review.product_id]
@@ -138,7 +139,7 @@ const Review = () => {
                                                 className='object-cover'
                                             />
                                             {/* Product Card Overlay */}
-                                            <div className='absolute bottom-10 left-1/2 flex w-[294px] -translate-x-1/2 flex-row gap-4 bg-white p-4'>
+                                            <div className='absolute bottom-10 left-10 right-10 flex flex-row gap-4 bg-white p-4'>
                                                 <div className='relative h-[88px] w-[88px] flex-shrink-0'>
                                                     <Image
                                                         src={product.images[0]?.src || '/images/placeholder.webp'}
@@ -178,16 +179,16 @@ const Review = () => {
                 </div>
 
                 {/* Mobile Swiper */}
-                <div className='xl:hidden'>
+                <div className='xl:hidden' ref={contentMobileRef}>
                     <Swiper
                         modules={[Navigation]}
                         spaceBetween={16}
                         slidesPerView={1}
+                        loop
                         onSwiper={(swiper) => {
-                            swiperRef.current = swiper
-                            handleSwiperUpdate(swiper)
+                            swiperMobileRef.current = swiper
                         }}
-                        onSlideChange={handleSwiperUpdate}
+                        onSlideChange={(swiper) => (swiperMobileRef.current = swiper)}
                     >
                         {data.map((review: any) => {
                             const product = products[review.product_id]
@@ -245,6 +246,22 @@ const Review = () => {
                             )
                         })}
                     </Swiper>
+                </div>
+                <div className='flex flex-row gap-4 xl:hidden'>
+                    <Button
+                        className='!h-8 !w-8'
+                        onClick={() => swiperMobileRef.current?.slidePrev()}
+                        variant='secondary'
+                    >
+                        <Icons icon='ChevronLeft' width={20} height={20} />
+                    </Button>
+                    <Button
+                        className='!h-8 !w-8'
+                        onClick={() => swiperMobileRef.current?.slideNext()}
+                        variant='secondary'
+                    >
+                        <Icons icon='ChevronRight' width={20} height={20} />
+                    </Button>
                 </div>
             </Container>
         </section>

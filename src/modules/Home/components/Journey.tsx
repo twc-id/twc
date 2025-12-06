@@ -35,8 +35,7 @@ const Journey = () => {
             pin: true,
             pinnedContainer: sectionRef.current,
             pinSpacing: true,
-            id: 'journey-pin',
-            markers: true
+            id: 'journey-pin'
         })
     }, [sectionRef])
 

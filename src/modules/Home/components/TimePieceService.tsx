@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -19,9 +19,8 @@ if (typeof window !== 'undefined') {
 }
 
 const TimePieceService = () => {
-    const [canScrollLeft, setCanScrollLeft] = useState(false)
-    const [canScrollRight, setCanScrollRight] = useState(true)
-    const swiperRef = useRef<SwiperType>()
+    const swiperDesktopRef = useRef<SwiperType>()
+    const swiperMobileRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
@@ -53,11 +52,6 @@ const TimePieceService = () => {
             description: 'Repair or replace cracked or scratched watch glass'
         }
     ]
-
-    const handleSwiperUpdate = (swiper: any) => {
-        setCanScrollLeft(!swiper.isBeginning)
-        setCanScrollRight(!swiper.isEnd)
-    }
 
     useGSAP(() => {
         // Track dark section state dengan ScrollTrigger
@@ -124,16 +118,14 @@ const TimePieceService = () => {
                     <div className='hidden flex-row gap-4 xl:flex'>
                         <Button
                             className='h!-8 !w-8'
-                            onClick={() => swiperRef.current?.slidePrev()}
-                            disabled={!canScrollLeft}
+                            onClick={() => swiperDesktopRef.current?.slidePrev()}
                             variant={isDarkSection ? 'secondary' : 'primary'}
                         >
                             <Icons icon='ChevronLeft' width={20} height={20} />
                         </Button>
                         <Button
                             className='h!-8 !w-8'
-                            onClick={() => swiperRef.current?.slideNext()}
-                            disabled={!canScrollRight}
+                            onClick={() => swiperDesktopRef.current?.slideNext()}
                             variant={isDarkSection ? 'secondary' : 'primary'}
                         >
                             <Icons icon='ChevronRight' width={20} height={20} />
@@ -153,11 +145,8 @@ const TimePieceService = () => {
                             spaceBetween={16}
                             slidesPerView={3}
                             onSwiper={(swiper) => {
-                                swiperRef.current = swiper
-                                handleSwiperUpdate(swiper)
+                                swiperDesktopRef.current = swiper
                             }}
-                            onSlideChange={handleSwiperUpdate}
-                            onProgress={handleSwiperUpdate}
                             style={{
                                 overflow: 'visible'
                             }}
@@ -199,11 +188,8 @@ const TimePieceService = () => {
                             spaceBetween={16}
                             slidesPerView={1.25}
                             onSwiper={(swiper) => {
-                                swiperRef.current = swiper
-                                handleSwiperUpdate(swiper)
+                                swiperMobileRef.current = swiper
                             }}
-                            onSlideChange={handleSwiperUpdate}
-                            onProgress={handleSwiperUpdate}
                         >
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>

@@ -42,8 +42,7 @@ const Commitment = () => {
             pin: true,
             pinSpacing: false,
             id: 'commitment-pin',
-            pinnedContainer: sectionRef.current,
-            markers: true
+            pinnedContainer: sectionRef.current
         })
 
         // Cleanup
