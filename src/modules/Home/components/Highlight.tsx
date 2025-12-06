@@ -97,17 +97,21 @@ const Highlight = () => {
                         {t('highlight.title')}
                     </h1>
                     <div ref={tabsRef} className='flex w-full flex-row xl:justify-end'>
-                        {tabs.map((item) => (
-                            <Button
-                                key={item}
-                                variant={item === tab ? 'primary' : 'secondary'}
-                                className='border-grey-black'
-                                onClick={() => handleChangeTab(item)}
-                                block={isMobile}
-                            >
-                                {item}
-                            </Button>
-                        ))}
+                        <div className='border-grey-black border'>
+                            {tabs.map((item) => (
+                                <button
+                                    key={item}
+                                    onClick={() => handleChangeTab(item)}
+                                    className={`text-button-3-desktop w-[137px] py-3 transition-colors ${
+                                        item === tab
+                                            ? 'bg-grey-black text-grey-white'
+                                            : 'bg-grey-white text-grey-black hover:bg-grey-100'
+                                    }`}
+                                >
+                                    {item}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
@@ -189,18 +193,18 @@ const Highlight = () => {
                         <div className='flex items-center gap-4'>
                             <button
                                 onClick={() => swiperRef.current?.slidePrev()}
-                                className='border-grey-200 hover:bg-grey-100 flex h-8 w-8 items-center justify-center border transition-colors'
+                                className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
                             >
                                 <Icons icon='ChevronLeft' width={20} height={20} />
                             </button>
                             <button
                                 onClick={() => swiperRef.current?.slideNext()}
-                                className='border-grey-200 hover:bg-grey-100 flex h-8 w-8 items-center justify-center border transition-colors'
+                                className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
                             >
                                 <Icons icon='ChevronRight' width={20} height={20} />
                             </button>
                         </div>
-                        <Button variant='primary' className=''>
+                        <Button variant='primary' className='hover:!border-grey-black/50 hover:text-grey-black/50'>
                             {t('highlight.view_more')}
                         </Button>
                     </div>

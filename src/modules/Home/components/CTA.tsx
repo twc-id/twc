@@ -55,7 +55,7 @@ const CTA = () => {
                         style={{
                             background: 'linear-gradient(270deg, rgba(1, 1, 1, 0) 52.44%, #010101 100%)'
                         }}
-                        className='hidden h-[595px] xl:block'
+                        className='hidden h-[595px] w-full xl:block'
                     >
                         <Image
                             src='/images/home/cta.webp'
@@ -63,7 +63,7 @@ const CTA = () => {
                             width={0}
                             height={0}
                             sizes='100vw'
-                            className='h-full w-auto'
+                            className='h-full w-full'
                         />
                     </div>
                     <div
