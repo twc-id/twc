@@ -3,6 +3,7 @@ import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
+import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -10,6 +11,7 @@ if (typeof window !== 'undefined') {
 }
 
 const SellReserve = () => {
+    const { t } = useTranslation(['home'])
     const { isDarkSection } = useTheme()
     const sectionRef = useRef<HTMLElement>(null)
     const sellRef = useRef<HTMLDivElement>(null)
@@ -53,8 +55,8 @@ const SellReserve = () => {
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>Sell Your Watch</h1>
-                <Button>Learn More</Button>
+                <h1 className='text-heading-2-desktop text-grey-white'>{t('sell_reserve.sell_title')}</h1>
+                <Button>{t('common:learn_more')}</Button>
             </div>
             <div
                 ref={reserveRef}
@@ -67,8 +69,8 @@ const SellReserve = () => {
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>Reserve Your Watch</h1>
-                <Button>Learn More</Button>
+                <h1 className='text-heading-2-desktop text-grey-white'>{t('sell_reserve.reserve_title')}</h1>
+                <Button>{t('common:learn_more')}</Button>
             </div>
         </section>
     )

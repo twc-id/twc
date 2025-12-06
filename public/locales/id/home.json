@@ -23,6 +23,39 @@
         "learn_more": "Pelajari Lebih Lanjut"
     },
     "timepiece": {
-        "title": "Layanan Jam Tangan"
+        "title": "Layanan Jam Tangan",
+        "book_now": "Book Now",
+        "items": {
+            "1": {
+                "label": "Cleaning",
+                "description": "Professional cleaning services to keep your watch clean and well maintained"
+            },
+            "2": {
+                "label": "Polishing",
+                "description": "Polish your watch by professional to make it shine like new"
+            },
+            "3": {
+                "label": "Battery Replacement",
+                "description": "Replace watch batteries quickly and easily with precision"
+            },
+            "4": {
+                "label": "Glass Replacement",
+                "description": "Repair or replace cracked or scratched watch glass"
+            }
+        }
+    },
+    "journey": {
+        "title": "Behind <br /> The Journey"
+    },
+    "review": {
+        "title": "Where Trust Speaks"
+    },
+    "social_media": {
+        "title": "New in Instagram",
+        "find_us_social_media": "Find Us in <br className='hidden xl:block' /> Social Media"
+    },
+    "cta": {
+        "title": "The Watch <br /> Journal",
+        "description": "Discover, learn, and collect the world’s luxury watches"
     }
 }

@@ -4,6 +4,7 @@ import Icons from '@components/Icon'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -22,6 +23,7 @@ declare global {
 }
 
 const Instagram = () => {
+    const { t } = useTranslation('home')
     const [isLoading, setIsLoading] = useState(true)
     const sectionRef = useRef<HTMLElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
@@ -128,11 +130,11 @@ const Instagram = () => {
                     {/* Header */}
                     <div className='flex flex-col items-center gap-1 text-center'>
                         <h2 ref={titleRef} className='text-heading-2-desktop text-grey-black mb-2'>
-                            New in Instagram
+                            {t('social_media.title')}
                         </h2>
                         <p className='text-grey-500 mb-6'>@thewatchcollections</p>
                         <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
-                            Follow Us
+                            {t('common:follow_us')}
                         </Button>
                     </div>
 
@@ -189,7 +191,9 @@ const Instagram = () => {
                     {/* Find Us in Social Media */}
                     <div className='flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10'>
                         <h3 className='text-heading-3-desktop text-grey-black flex-shrink-0 whitespace-pre-line '>
-                            Find Us in <br className='hidden xl:block' /> Social Media
+                            <Trans i18nKey='social_media.find_us_social_media' components={{ br: <br /> }}>
+                                {t('social_media.find_us_social_media')}
+                            </Trans>
                         </h3>
                         <div className='grid flex-shrink-0 grid-cols-2 grid-rows-2 flex-row gap-x-5  gap-y-5 xl:flex xl:gap-[72px]'>
                             <a

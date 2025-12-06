@@ -5,12 +5,14 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import React, { useRef } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
 const Journey = () => {
+    const { t } = useTranslation('home')
     const sectionRef = useRef<HTMLElement>(null)
     const rightRef = useRef<HTMLDivElement>(null)
     const imageContainerRef = useRef<HTMLImageElement>(null)
@@ -45,11 +47,12 @@ const Journey = () => {
                 <div className='flex w-full flex-col gap-4 xl:flex-row xl:justify-between'>
                     <div className='flex flex-shrink-0 flex-col gap-4'>
                         <h1 className='text-heading-2-desktop text-grey-white '>
-                            Behind <br />
-                            The Journey
+                            <Trans i18nKey='cta.title' components={{ br: <br /> }}>
+                                {t('journey.title')}
+                            </Trans>
                         </h1>
                         <div className='hidden xl:block'>
-                            <Button>Learn More</Button>
+                            <Button>{t('common:learn_more')}</Button>
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>
@@ -66,7 +69,7 @@ const Journey = () => {
                         </span>
                     </div>
                     <div className='block xl:hidden'>
-                        <Button>Learn More</Button>
+                        <Button>{t('common:learn_more')}</Button>
                     </div>
                 </div>
             </Container>

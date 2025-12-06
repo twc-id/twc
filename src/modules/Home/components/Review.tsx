@@ -6,6 +6,7 @@ import { WooCommerce } from '@lib/api'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation } from 'swiper/modules'
@@ -18,6 +19,7 @@ if (typeof window !== 'undefined') {
 }
 
 const Review = () => {
+    const { t } = useTranslation('home')
     const [data, setData] = useState<any[]>([])
     const [products, setProducts] = useState<any>({})
     const swiperDesktopRef = useRef<SwiperType>()
@@ -87,7 +89,7 @@ const Review = () => {
             <Container className='flex flex-col gap-10 xl:gap-20'>
                 <div className='flex flex-row items-center justify-between'>
                     <h1 className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
-                        Where Trust Speaks
+                        {t('review.title')}
                     </h1>
                     <div className='hidden flex-row gap-4 xl:flex'>
                         <Button

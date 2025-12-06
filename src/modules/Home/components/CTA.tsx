@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -11,6 +12,7 @@ if (typeof window !== 'undefined') {
 }
 
 const CTA = () => {
+    const { t } = useTranslation('home')
     const sectionRef = useRef<HTMLDivElement>(null)
     const headingref = useRef<HTMLHeadingElement>(null)
     const paragraphRef = useRef<HTMLParagraphElement>(null)
@@ -37,14 +39,15 @@ const CTA = () => {
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between'>
                     <div className='flex min-w-[380px] flex-col items-start gap-5 px-5 pt-8 xl:gap-6 xl:pl-20 xl:pr-0'>
                         <h2 className='text-heading-2-desktop text-grey-white' ref={headingref}>
-                            The Watch <br />
-                            Journal
+                            <Trans i18nKey='cta.title' components={{ br: <br /> }}>
+                                {t('cta.title')}
+                            </Trans>
                         </h2>
                         <p className='text-paragraph-6-desktop text-grey-100' ref={paragraphRef}>
-                            Discover, learn, and collect the world’s luxury watches
+                            {t('cta.description')}
                         </p>
                         <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
-                            Learn More
+                            {t('common:learn_more')}
                         </Button>
                     </div>
 

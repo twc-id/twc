@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation, Pagination } from 'swiper/modules'
@@ -19,6 +20,7 @@ if (typeof window !== 'undefined') {
 }
 
 const TimePieceService = () => {
+    const { t } = useTranslation('home')
     const swiperDesktopRef = useRef<SwiperType>()
     const swiperMobileRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
@@ -30,26 +32,26 @@ const TimePieceService = () => {
         {
             id: 1,
             image: '/images/home/service-cleaning.webp',
-            label: 'Cleaning',
-            description: 'Professional cleaning services to keep your watch clean and well maintained'
+            label: t('timepiece.items.1.label'),
+            description: t('timepiece.items.1.description')
         },
         {
             id: 2,
             image: '/images/home/service-polishing.webp',
-            label: 'Polishing',
-            description: 'Polish your watch by professional to make it shine like new'
+            label: t('timepiece.items.2.label'),
+            description: t('timepiece.items.2.description')
         },
         {
             id: 3,
             image: '/images/home/service-battery.webp',
-            label: 'Battery Replacement',
-            description: 'Replace watch batteries quickly and easily with precision'
+            label: t('timepiece.items.3.label'),
+            description: t('timepiece.items.3.description')
         },
         {
             id: 4,
             image: '/images/home/service-glass.webp',
-            label: 'Glass Replacement',
-            description: 'Repair or replace cracked or scratched watch glass'
+            label: t('timepiece.items.4.label'),
+            description: t('timepiece.items.4.description')
         }
     ]
 
@@ -108,11 +110,12 @@ const TimePieceService = () => {
                                 isDarkSection ? 'text-grey-white' : 'text-grey-black'
                             }`}
                         >
-                            Timepiece <br className='hidden xl:block' />
-                            Services
+                            <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
+                                {t('timepiece.title')}
+                            </Trans>
                         </h2>
                         <div className='hidden xl:block'>
-                            <Button>Book Now</Button>
+                            <Button>{t('timepiece.book_now')}</Button>
                         </div>
                     </div>
                     <div className='hidden flex-row gap-4 xl:flex'>
@@ -217,7 +220,7 @@ const TimePieceService = () => {
                                                 className='text-paragraph-7-desktop text-accent-price-dark font-semibold
                                                 underline'
                                             >
-                                                Book Now
+                                                {t('timepiece.book_now')}
                                             </UnstyledLink>
                                         </div>
                                     </div>

@@ -6,6 +6,7 @@ import { WooCommerce } from '@lib/api'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import type { Swiper as SwiperType } from 'swiper'
@@ -19,17 +20,20 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const tabs = ['Watches', 'Accessories'] as const
-type TabTypes = (typeof tabs)[number]
+// const tabs = ['Watches', 'Accessories'] as const
+// type TabTypes = (typeof tabs)[number]
 
 const Highlight = () => {
+    const { t } = useTranslation('home')
     const [data, setData] = useState<any>(null)
-    const [tab, setTab] = useState<TabTypes>('Watches')
+    const [tab, setTab] = useState('Watches')
     const swiperRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const tabsRef = useRef<HTMLDivElement>(null)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+
+    const tabs = [t('highlight.tabs.watches'), t('highlight.tabs.accessories')]
 
     const getData = async () => {
         try {
@@ -40,7 +44,7 @@ const Highlight = () => {
         }
     }
 
-    const handleChangeTab = (selectedTab: TabTypes) => {
+    const handleChangeTab = (selectedTab: string) => {
         setTab(selectedTab)
     }
 
@@ -90,7 +94,7 @@ const Highlight = () => {
             <Container className='flex flex-col gap-5 xl:gap-20'>
                 <div className='flex flex-col justify-between gap-6 xl:flex-row xl:items-center'>
                     <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black flex-shrink-0'>
-                        Collection Highlight
+                        {t('highlight.title')}
                     </h1>
                     <div ref={tabsRef} className='flex w-full flex-row xl:justify-end'>
                         {tabs.map((item) => (
@@ -169,7 +173,9 @@ const Highlight = () => {
                                         </p>
                                         <h3 className='text-subheading-5-desktop text-grey-black'>{product.name}</h3>
                                         <p className='text-paragraph-9-desktop text-grey-500'>
-                                            Pre-owned: {new Date(product.date_created).getFullYear()}
+                                            {t('highlight.pre_owned', {
+                                                year: new Date(product.date_created).getFullYear()
+                                            })}
                                         </p>
                                         <p className='text-paragraph-4-desktop text-accent-price-dark'>
                                             IDR {parseInt(product.price).toLocaleString('id-ID')}
@@ -195,7 +201,7 @@ const Highlight = () => {
                             </button>
                         </div>
                         <Button variant='primary' className=''>
-                            View More
+                            {t('highlight.view_more')}
                         </Button>
                     </div>
                 </div>

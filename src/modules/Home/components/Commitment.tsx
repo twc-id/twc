@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -10,6 +11,7 @@ if (typeof window !== 'undefined') {
 }
 
 const Commitment = () => {
+    const { t } = useTranslation('home')
     const titleRef = useRef<HTMLHeadingElement>(null)
     const descRef = useRef<HTMLHeadingElement>(null)
     const sectionRef = useRef<HTMLDivElement>(null)
@@ -55,11 +57,11 @@ const Commitment = () => {
         <section ref={sectionRef}>
             <div className='bg-grey-black relative flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
                 <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
-                    Rarity, Quality, Collectability
+                    {t('commitment.title')}
                 </h1>
                 <Icons icon='Diamond' className='text-grey-100' />
                 <h3 ref={descRef} className='text-paragraph-6-mobile text-grey-100 xl:text-paragraph-6-desktop'>
-                    Connects collectors with luxury watches from around the world
+                    {t('commitment.description')}
                 </h3>
             </div>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
