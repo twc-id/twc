@@ -28,21 +28,30 @@ const buttonVariants = cva(
             variant: {
                 primary: [
                     'bg-grey-white',
-                    'hover:bg-opacity-80',
+                    'hover:bg-transparent',
                     'disabled:bg-[#F4F6F8]',
                     'text-grey-black',
+                    'hover:text-grey-white',
                     'disabled:text-[#BBC2C8]',
                     'border',
-                    'border-grey-black'
+                    'border-grey-black',
+                    'hover:border-grey-white'
                 ],
                 secondary: [
                     'bg-grey-black',
                     'hover:bg-opacity-80',
                     '!text-grey-white',
-                    'border-none',
-                    'dark:border',
-                    'hover:border',
+                    'dark:border-1',
+                    'dark:!border-grey-white',
                     'hover:border-grey-white'
+                ],
+                secondaryInverse: [
+                    'bg-grey-white',
+                    'hover:bg-opacity-80',
+                    '!text-grey-black',
+                    'border',
+                    'border-grey-black',
+                    'hover:border-grey-black'
                 ]
                 // danger: [
                 //     'bg-error-500',
