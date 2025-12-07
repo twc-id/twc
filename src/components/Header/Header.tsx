@@ -2,6 +2,7 @@ import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
+import UnstyledLink from '@components/links/UnstyledLink'
 import NextImage from '@components/NextImage'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
@@ -18,6 +19,7 @@ interface SubMenuItem {
 interface MenuItem {
     label: string
     subMenu?: SubMenuItem[]
+    href?: string
 }
 
 const subMenuImages: Record<string, string> = {
@@ -60,10 +62,10 @@ const menuData: MenuItem[] = [
             }
         ]
     },
-    { label: 'SELL YOUR WATCH' },
-    { label: 'PRE-ORDER' },
-    { label: 'ABOUT US' },
-    { label: 'ARTICLE' }
+    { label: 'SELL YOUR WATCH', href: '/sell' },
+    { label: 'PRE-ORDER', href: '/pre-order' },
+    { label: 'ABOUT US', href: '/about-us' },
+    { label: 'ARTICLE', href: '/article' }
 ]
 
 const Headers = () => {
@@ -310,37 +312,54 @@ const Headers = () => {
                                     }
                                 )}
                             >
-                                {menuData.map((item) => (
-                                    <button
-                                        key={item.label}
-                                        type='button'
-                                        className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
-                                        onMouseEnter={() => {
-                                            if (window.innerWidth >= 1024) {
-                                                setHoveredMenuItem(item)
+                                {menuData.map((item) =>
+                                    item.href ? (
+                                        <UnstyledLink
+                                            key={item.label}
+                                            href={item.href}
+                                            className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            onClick={() => {
+                                                setIsMenuOpen(false)
+                                                setHoveredMenuItem(null)
                                                 setSelectedSubMenuItem(null)
-                                            }
-                                        }}
-                                        onClick={() => {
-                                            if (window.innerWidth < 1024 && item.subMenu) {
-                                                setHoveredMenuItem(item)
-                                                setSelectedSubMenuItem(null)
-                                            }
-                                        }}
-                                        onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
-                                        aria-expanded={hoveredMenuItem === item}
-                                        aria-haspopup={!!item.subMenu}
-                                    >
-                                        <div className='flex items-center gap-4'>
-                                            <span className='text-sm font-medium'>{item.label}</span>
-                                            {item.subMenu && (
-                                                <span aria-hidden='true'>
-                                                    <Icons icon='ChevronRight' width={16} height={16} />
-                                                </span>
-                                            )}
-                                        </div>
-                                    </button>
-                                ))}
+                                            }}
+                                        >
+                                            <div className='flex items-center gap-4'>
+                                                <span className='text-sm font-medium'>{item.label}</span>
+                                            </div>
+                                        </UnstyledLink>
+                                    ) : (
+                                        <button
+                                            key={item.label}
+                                            type='button'
+                                            className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            onMouseEnter={() => {
+                                                if (window.innerWidth >= 1024) {
+                                                    setHoveredMenuItem(item)
+                                                    setSelectedSubMenuItem(null)
+                                                }
+                                            }}
+                                            onClick={() => {
+                                                if (window.innerWidth < 1024 && item.subMenu) {
+                                                    setHoveredMenuItem(item)
+                                                    setSelectedSubMenuItem(null)
+                                                }
+                                            }}
+                                            onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                                            aria-expanded={hoveredMenuItem === item}
+                                            aria-haspopup={!!item.subMenu}
+                                        >
+                                            <div className='flex items-center gap-4'>
+                                                <span className='text-sm font-medium'>{item.label}</span>
+                                                {item.subMenu && (
+                                                    <span aria-hidden='true'>
+                                                        <Icons icon='ChevronRight' width={16} height={16} />
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+                                    )
+                                )}
                             </div>
 
                             {/* Grid 2: Content Area with Image */}

@@ -1,6 +1,7 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import Link from 'next/link'
 import React from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -25,7 +26,7 @@ const Footer = () => {
         {
             name: 'Reach Us',
             links: [
-                { title: 'About Us', href: '/about' },
+                { title: 'About Us', href: '/about-us' },
                 { title: 'Contact', href: '/contact' },
                 { title: 'Instagram', href: 'https://instagram.com' },
                 { title: 'Store Location', href: '/store' }
@@ -65,9 +66,9 @@ const Footer = () => {
                     <div className='hidden grid-cols-6 gap-12 xl:grid'>
                         {/* Logo */}
                         {!isMobile && (
-                            <div className=''>
+                            <Link href='/'>
                                 <Icons icon='LogoWhite' width={58} height={55} className='hidden xl:block' />
-                            </div>
+                            </Link>
                         )}
 
                         {/* Collections */}
@@ -160,9 +161,9 @@ const Footer = () => {
 
                     <div className='flex flex-col gap-12 xl:hidden'>
                         {/* Logo */}
-                        <div>
+                        <Link href='/'>
                             <Icons icon='LogoWhite' width={58} height={55} />
-                        </div>
+                        </Link>
                         <div className='flex w-full flex-row gap-12'>
                             {/* Our Services */}
                             <div className='min-w-[145px]'>
