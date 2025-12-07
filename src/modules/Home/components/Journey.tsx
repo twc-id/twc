@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 if (typeof window !== 'undefined') {
@@ -18,28 +18,96 @@ const Journey = () => {
     const imageContainerRef = useRef<HTMLImageElement>(null)
 
     useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'restart none none reset'
-            }
-        })
-        // Animasi kanan fade in
-        timeline.fromTo(rightRef.current, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
+        // Tunggu sampai semua layout stabil
+        const initScrollTrigger = () => {
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'restart none none reset'
+                }
+            })
+            // Animasi kanan fade in
+            timeline.fromTo(
+                rightRef.current,
+                { opacity: 0, x: 60 },
+                { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
+            )
 
-        // Pin image saat scroll, pastikan start berada di dalam section Journey
-        ScrollTrigger.create({
-            trigger: imageContainerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            pin: true,
-            pinnedContainer: sectionRef.current,
-            pinSpacing: true,
-            id: 'journey-pin'
-        })
+            // Pin image dengan refresh dan onRefresh callback
+            ScrollTrigger.create({
+                trigger: imageContainerRef.current,
+                start: 'top top',
+                end: 'bottom top',
+                pin: true,
+                pinnedContainer: sectionRef.current,
+                pinSpacing: true,
+                id: 'journey-pin',
+                refreshPriority: -1, // Lower priority to run after other ScrollTriggers
+                onRefresh: () => {
+                    // Callback saat refresh terjadi
+                }
+            })
+        }
+
+        // Delay initialization untuk memastikan layout component lain sudah stabil
+        const timer = setTimeout(() => {
+            initScrollTrigger()
+            // Refresh semua ScrollTrigger setelah inisialisasi
+            ScrollTrigger.refresh()
+        }, 100)
+
+        // Cleanup
+        return () => {
+            clearTimeout(timer)
+            ScrollTrigger.getById('journey-pin')?.kill()
+        }
     }, [sectionRef])
+
+    // Effect untuk menangani resize dan refresh ScrollTrigger
+    useEffect(() => {
+        const handleResize = () => {
+            // Delay refresh untuk memastikan layout sudah stabil
+            setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 100)
+        }
+
+        // Listen untuk perubahan layout dari component lain
+        const handleLayoutChange = () => {
+            ScrollTrigger.refresh()
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        // Custom event listener jika component lain mengirim event perubahan layout
+        window.addEventListener('layoutChange', handleLayoutChange)
+
+        // Observer untuk mengwatch perubahan DOM pada component di atas Journey
+        const observer = new MutationObserver(() => {
+            // Delay refresh saat ada perubahan DOM
+            setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 50)
+        })
+
+        // Watch changes pada parent container
+        if (sectionRef.current?.parentElement) {
+            observer.observe(sectionRef.current.parentElement, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            })
+        }
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+            window.removeEventListener('layoutChange', handleLayoutChange)
+            observer.disconnect()
+        }
+    }, [])
 
     return (
         <section ref={sectionRef} className=''>

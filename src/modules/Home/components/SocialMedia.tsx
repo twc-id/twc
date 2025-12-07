@@ -171,7 +171,7 @@ const Instagram = () => {
                                             justifyContent: 'center',
                                             borderRadius: '8px'
                                         }}
-                                        className='xl:h-[419px] xl:w-[314px]'
+                                        className='h-[419px] w-[314px]'
                                     >
                                         <div
                                             style={{

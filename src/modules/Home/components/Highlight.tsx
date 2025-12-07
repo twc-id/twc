@@ -20,9 +20,6 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-// const tabs = ['Watches', 'Accessories'] as const
-// type TabTypes = (typeof tabs)[number]
-
 const Highlight = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any>(null)
@@ -96,22 +93,24 @@ const Highlight = () => {
                     <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black flex-shrink-0'>
                         {t('highlight.title')}
                     </h1>
-                    <div ref={tabsRef} className='flex w-full flex-row xl:justify-end'>
-                        <div className='border-grey-black border'>
-                            {tabs.map((item) => (
-                                <button
-                                    key={item}
-                                    onClick={() => handleChangeTab(item)}
-                                    className={`text-button-3-desktop w-[137px] py-3 transition-colors ${
-                                        item === tab
-                                            ? 'bg-grey-black text-grey-white'
-                                            : 'bg-grey-white text-grey-black hover:bg-grey-100'
-                                    }`}
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
+
+                    <div
+                        className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'
+                        ref={tabsRef}
+                    >
+                        {tabs.map((item) => (
+                            <button
+                                key={item}
+                                onClick={() => handleChangeTab(item)}
+                                className={`text-button-3-desktop w-full py-3 transition-colors xl:w-[137px] ${
+                                    item === tab
+                                        ? 'bg-grey-black text-grey-white'
+                                        : 'bg-grey-white text-grey-black hover:bg-grey-100'
+                                }`}
+                            >
+                                {item}
+                            </button>
+                        ))}
                     </div>
                 </div>
 

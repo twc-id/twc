@@ -1,5 +1,4 @@
 import Button from '@components/buttons/Button'
-import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
@@ -12,7 +11,7 @@ if (typeof window !== 'undefined') {
 
 const SellReserve = () => {
     const { t } = useTranslation(['home'])
-    const { isDarkSection } = useTheme()
+
     const sectionRef = useRef<HTMLElement>(null)
     const sellRef = useRef<HTMLDivElement>(null)
     const reserveRef = useRef<HTMLDivElement>(null)
@@ -40,9 +39,7 @@ const SellReserve = () => {
     return (
         <section
             ref={sectionRef}
-            className={`xl:py[160px] relative z-10 flex flex-col gap-2 px-4 py-16 xl:flex-row xl:px-5 ${
-                isDarkSection ? 'bg-grey-black' : 'bg-white'
-            }`}
+            className='xl:py[160px] dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 py-16  xl:flex-row  xl:px-5 '
         >
             <div
                 ref={sellRef}

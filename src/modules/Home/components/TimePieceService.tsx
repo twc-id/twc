@@ -94,7 +94,15 @@ const TimePieceService = () => {
                 y: 0,
                 duration: 0.8,
                 ease: 'power2.out',
-                stagger: 0.15
+                stagger: 0.15,
+                onComplete: () => {
+                    // Dispatch custom event setelah animasi selesai untuk memberitahu component lain
+                    setTimeout(() => {
+                        window.dispatchEvent(
+                            new CustomEvent('layoutChange', { detail: { component: 'TimePieceService' } })
+                        )
+                    }, 100)
+                }
             },
             '-=0.5'
         )
@@ -105,11 +113,7 @@ const TimePieceService = () => {
             <Container className='relative flex flex-col justify-between gap-10 xl:flex-row'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
-                        <h2
-                            className={`text-heading-2-desktop ${
-                                isDarkSection ? 'text-grey-white' : 'text-grey-black'
-                            }`}
-                        >
+                        <h2 className={`text-heading-2-desktop dark:text-grey-white text-grey-black `}>
                             <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                 {t('timepiece.title')}
                             </Trans>
@@ -162,18 +166,10 @@ const TimePieceService = () => {
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <h3
-                                                className={`text-subheading-2-desktop ${
-                                                    isDarkSection ? 'text-grey-white' : 'text-grey-black'
-                                                }`}
-                                            >
+                                            <h3 className='text-subheading-2-desktop dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p
-                                                className={`text-paragraph-7-desktop ${
-                                                    isDarkSection ? 'text-grey-200' : 'text-grey-500'
-                                                }`}
-                                            >
+                                            <p className='text-paragraph-7-desktop dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
                                         </div>
@@ -201,18 +197,10 @@ const TimePieceService = () => {
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <h3
-                                                className={`text-subheading-2-desktop ${
-                                                    isDarkSection ? 'text-grey-white' : 'text-grey-black'
-                                                }`}
-                                            >
+                                            <h3 className='text-subheading-2-desktop dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p
-                                                className={`text-paragraph-7-desktop ${
-                                                    isDarkSection ? 'text-grey-200' : 'text-grey-500'
-                                                }`}
-                                            >
+                                            <p className='text-paragraph-7-desktop dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
                                             <UnstyledLink
