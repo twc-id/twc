@@ -148,6 +148,7 @@ const Journey = () => {
                     fill
                     className='object-cover'
                     ref={imageContainerRef}
+                    unoptimized
                 />
             </div>
         </section>
