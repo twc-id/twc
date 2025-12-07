@@ -56,6 +56,7 @@ const WhiteSpace = () => {
                     alt='The Watch Collections'
                     fill
                     className='object-cover'
+                    unoptimized
                 />
             </div>
         </section>
