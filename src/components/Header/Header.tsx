@@ -7,6 +7,7 @@ import NextImage from '@components/NextImage'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
 import Image from 'next/image'
+import Link from 'next/link'
 import Form, { Field } from 'rc-field-form'
 import React, { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -63,6 +64,7 @@ const menuData: MenuItem[] = [
         ]
     },
     { label: 'SELL YOUR WATCH', href: '/sell' },
+    { label: 'Reserve Your Watch', href: '/reserve' },
     { label: 'PRE-ORDER', href: '/pre-order' },
     { label: 'ABOUT US', href: '/about-us' },
     { label: 'ARTICLE', href: '/article' }
@@ -151,12 +153,25 @@ const Headers = () => {
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {
             document.body.style.overflow = 'hidden'
+            document.body.style.position = 'fixed'
+            document.body.style.width = '100%'
+            document.body.style.top = `-${window.scrollY}px`
         } else {
+            const scrollY = document.body.style.top
             document.body.style.overflow = 'unset'
+            document.body.style.position = 'static'
+            document.body.style.width = 'auto'
+            document.body.style.top = 'auto'
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1)
+            }
         }
 
         return () => {
             document.body.style.overflow = 'unset'
+            document.body.style.position = 'static'
+            document.body.style.width = 'auto'
+            document.body.style.top = 'auto'
         }
     }, [isMenuOpen, isSearchOpen])
 
@@ -250,7 +265,8 @@ const Headers = () => {
                         'bg-[#0F0F0FCC] backdrop-blur-[20px]': isScrolled,
                         '-translate-y-full': !isVisible,
                         'translate-y-0': isVisible,
-                        'bg-white': isSearchOpen
+                        'bg-white': isSearchOpen,
+                        'bg-black': isMenuOpen
                     }
                 )}
             >
@@ -258,14 +274,14 @@ const Headers = () => {
                     <div className='flex flex-row items-center justify-between'>
                         {renderMenu()}
 
-                        <div className='h-[52px] w-[54px]'>
+                        <Link href='/' className='h-[52px] w-[54px]'>
                             <Icons
                                 icon={!isScrolled ? 'LogoWhite' : 'LogoBlack'}
                                 width={isMobile ? 46 : 54}
                                 height={isMobile ? 44 : 52}
                                 className={isSearchOpen ? 'hidden' : ''}
                             />
-                        </div>
+                        </Link>
                         <button
                             aria-label='Toggle search'
                             type='button'
@@ -298,7 +314,7 @@ const Headers = () => {
             </div>
             {/* Dropdown Menu */}
             {isMenuOpen && (
-                <div className='animate-fade-in fixed inset-0 top-[80px] z-50 overflow-hidden bg-black'>
+                <div className='animate-fade-in fixed inset-0 top-0 z-[9998] overflow-hidden bg-black pt-[80px]'>
                     <Container className='h-full'>
                         <div className='flex h-full w-full gap-4 pt-5 xl:pt-10'>
                             {/* Grid 1: Main Menu - Hidden on mobile when submenu is selected */}

@@ -19,6 +19,7 @@ const Footer = () => {
             name: 'Our Services',
             links: [
                 { title: 'Sell Your Watch', href: '/sell' },
+                { label: 'Reserve Your Watch', href: '/reserve' },
                 { title: 'Reserve Your Watch', href: '/reserve' },
                 { title: 'Book an Appointment', href: '/appointment' }
             ]
@@ -28,7 +29,7 @@ const Footer = () => {
             links: [
                 { title: 'About Us', href: '/about-us' },
                 { title: 'Contact', href: '/contact' },
-                { title: 'Instagram', href: 'https://instagram.com' },
+                { title: 'Instagram', href: 'https://instagram.com/thewatchcollections' },
                 { title: 'Store Location', href: '/store' }
             ]
         },
