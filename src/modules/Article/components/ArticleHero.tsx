@@ -29,8 +29,8 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                 return (
                     <UnstyledLink
                         key={article.id}
-                        href={`/article/${article.slug}`}
-                        className='group mb-10 flex cursor-pointer flex-col gap-6'
+                        href={`/articles/${article.slug}`}
+                        className='group mb-10 flex h-fit cursor-pointer flex-col gap-6'
                     >
                         <div
                             className={classNames('relative w-full overflow-hidden', {

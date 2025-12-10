@@ -14,7 +14,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
     const tags = article._embedded?.['wp:term']?.[1] || []
 
     return (
-        <UnstyledLink href={`/article/${article.slug}`} className='group block'>
+        <UnstyledLink href={`/articles/${article.slug}`} className='group block'>
             <div className='overflow-hidden bg-white'>
                 {/* Featured Image */}
                 {featuredImage && (
@@ -39,18 +39,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
                     {/* Meta */}
                     <div className='flex items-center gap-2 '>
                         {/* Tags */}
-                        {tags.length > 0 && (
-                            <div className='flex flex-wrap gap-2'>
-                                {tags.slice(0, 1).map((tag: any) => (
-                                    <span
-                                        key={tag.id}
-                                        className='border-grey-500 text-paragraph-9-desktop rounded-full border-[0.5px] px-3 py-1 font-medium text-gray-500'
-                                    >
-                                        {tag.name}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
+                        {tags.length > 0 &&
+                            tags.slice(0, 1).map((tag: any) => (
+                                <span
+                                    key={tag.id}
+                                    className='border-grey-500 text-paragraph-9-desktop rounded-full border-[0.5px] px-3 py-1 font-medium text-gray-500'
+                                >
+                                    {tag.name}
+                                </span>
+                            ))}
 
                         <span className='text-paragraph-7-desktop text-gray-500'>
                             {formatDate(article.date, 'MMM, YYYY')}

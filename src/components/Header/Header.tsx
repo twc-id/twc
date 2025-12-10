@@ -67,7 +67,7 @@ const menuData: MenuItem[] = [
     { label: 'Reserve Your Watch', href: '/reserve' },
     { label: 'PRE-ORDER', href: '/pre-order' },
     { label: 'ABOUT US', href: '/about-us' },
-    { label: 'ARTICLE', href: '/article' }
+    { label: 'ARTICLE', href: '/articles' }
 ]
 
 const Headers = () => {
