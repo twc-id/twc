@@ -48,11 +48,12 @@ const SellReserve = () => {
                         "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/sell.webp')",
                     backgroundSize: '100% auto',
                     backgroundPositionY: 'top'
-                    // backgroundRepeat: 'no-repeat'
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>{t('sell_reserve.sell_title')}</h1>
+                <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
+                    {t('sell_reserve.sell_title')}
+                </h1>
                 <Button>{t('common:learn_more')}</Button>
             </div>
             <div
@@ -66,7 +67,9 @@ const SellReserve = () => {
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>{t('sell_reserve.reserve_title')}</h1>
+                <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
+                    {t('sell_reserve.reserve_title')}
+                </h1>
                 <Button>{t('common:learn_more')}</Button>
             </div>
         </section>

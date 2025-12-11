@@ -38,15 +38,24 @@ const CTA = () => {
             <Container>
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between'>
                     <div className='flex min-w-[380px] flex-col items-start gap-5 px-5 pt-8 xl:gap-6 xl:pl-20 xl:pr-0'>
-                        <h2 className='text-heading-2-desktop text-grey-white' ref={headingref}>
+                        <h2
+                            className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
+                            ref={headingref}
+                        >
                             <Trans i18nKey='cta.title' components={{ br: <br /> }}>
                                 {t('cta.title')}
                             </Trans>
                         </h2>
-                        <p className='text-paragraph-6-desktop text-grey-100' ref={paragraphRef}>
+                        <p
+                            className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-100'
+                            ref={paragraphRef}
+                        >
                             {t('cta.description')}
                         </p>
-                        <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
+                        <Button
+                            variant='secondary'
+                            className='!bg-grey-white xl:!text-button-3-desktop !text-button-3-mobile !rounded-none'
+                        >
                             {t('common:learn_more')}
                         </Button>
                     </div>

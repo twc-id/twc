@@ -69,6 +69,8 @@ const Review = () => {
     }, [])
 
     useGSAP(() => {
+        if (!contentDesktopRef.current || !contentMobileRef.current || !sectionRef.current) return
+
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
@@ -82,7 +84,11 @@ const Review = () => {
             { opacity: 0, y: 60 },
             { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
         )
-    }, [])
+    }, [data])
+
+    if (data.length === 0) {
+        return null
+    }
 
     return (
         <section className='bg-grey-black relative z-[12] py-14 xl:py-[116px]' ref={sectionRef}>
@@ -151,17 +157,17 @@ const Review = () => {
                                                     />
                                                 </div>
                                                 <div className='flex flex-col gap-1'>
-                                                    <p className='text-paragraph-8-desktop text-grey-500'>
+                                                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
                                                         {product.categories[0]?.name || 'Watch'}
                                                     </p>
                                                     <h4
-                                                        className='text-subheading-6-desktop text-grey-black'
+                                                        className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: product.name }}
                                                     />
-                                                    <p className='text-paragraph-9-desktop text-grey-500'>
+                                                    <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
                                                         {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}
                                                     </p>
-                                                    <p className='text-subheading-6-desktop text-accent-price-dark'>
+                                                    <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
                                                         {formatPrice(product.price)}
                                                     </p>
                                                 </div>
@@ -170,8 +176,12 @@ const Review = () => {
 
                                         {/* Right side - Content */}
                                         <div className='flex flex-1 flex-col justify-center gap-10'>
-                                            <p className='text-subheading-1-desktop text-grey-100'>{reviewText}</p>
-                                            <p className='text-paragraph-6-desktop text-grey-200'>{review.reviewer}</p>
+                                            <p className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-100'>
+                                                {reviewText}
+                                            </p>
+                                            <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
+                                                {review.reviewer}
+                                            </p>
                                         </div>
                                     </div>
                                 </SwiperSlide>

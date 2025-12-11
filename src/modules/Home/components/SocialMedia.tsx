@@ -129,10 +129,15 @@ const Instagram = () => {
                 <div className='flex w-full flex-col items-center gap-16 xl:gap-10'>
                     {/* Header */}
                     <div className='flex flex-col items-center gap-1 text-center'>
-                        <h2 ref={titleRef} className='text-heading-2-desktop text-grey-black mb-2'>
+                        <h2
+                            ref={titleRef}
+                            className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black mb-2'
+                        >
                             {t('social_media.title')}
                         </h2>
-                        <p className='text-grey-500 mb-6'>@thewatchcollections</p>
+                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 mb-6'>
+                            @thewatchcollections
+                        </p>
                         <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
                             {t('common:follow_us')}
                         </Button>
@@ -190,7 +195,7 @@ const Instagram = () => {
 
                     {/* Find Us in Social Media */}
                     <div className='flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10'>
-                        <h3 className='text-heading-3-desktop text-grey-black flex-shrink-0 whitespace-pre-line '>
+                        <h3 className='xl:text-heading-3-desktop text-heading-3-mobile text-grey-black flex-shrink-0 whitespace-pre-line '>
                             <Trans i18nKey='social_media.find_us_social_media' components={{ br: <br /> }}>
                                 {t('social_media.find_us_social_media')}
                             </Trans>
@@ -209,7 +214,9 @@ const Instagram = () => {
                                     className='text-grey-900 hover:text-grey-500'
                                 />
 
-                                <span className='text-grey-500 text-paragraph-6-desktop'>@thewatchcollections</span>
+                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                    @thewatchcollections
+                                </span>
                             </a>
                             <a
                                 href='https://instagram.com/thewatchcollections'
@@ -224,7 +231,9 @@ const Instagram = () => {
                                     className='text-grey-900 hover:text-grey-500'
                                 />
 
-                                <span className='text-grey-500 text-paragraph-6-desktop'>@thewatchcollections</span>
+                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                    @thewatchcollections
+                                </span>
                             </a>
                             <a
                                 href='https://instagram.com/thewatchcollections'
@@ -239,7 +248,9 @@ const Instagram = () => {
                                     className='text-grey-900 hover:text-grey-500'
                                 />
 
-                                <span className='text-grey-500 text-paragraph-6-desktop'>@thewatchcollections</span>
+                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                    @thewatchcollections
+                                </span>
                             </a>
                             <a
                                 href='https://instagram.com/thewatchcollections'
@@ -254,7 +265,9 @@ const Instagram = () => {
                                     className='text-grey-900 hover:text-grey-500'
                                 />
 
-                                <span className='text-grey-500 text-paragraph-6-desktop'>@thewatchcollections</span>
+                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                    @thewatchcollections
+                                </span>
                             </a>
                         </div>
                     </div>

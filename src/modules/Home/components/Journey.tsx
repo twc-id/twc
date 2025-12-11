@@ -114,7 +114,7 @@ const Journey = () => {
             <Container className='pb-16 xl:pb-[116px]'>
                 <div className='flex w-full flex-col gap-4 xl:flex-row xl:justify-between'>
                     <div className='flex flex-shrink-0 flex-col gap-4'>
-                        <h1 className='text-heading-2-desktop text-grey-white '>
+                        <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white '>
                             <Trans i18nKey='cta.title' components={{ br: <br /> }}>
                                 {t('journey.title')}
                             </Trans>
@@ -124,12 +124,12 @@ const Journey = () => {
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud
                         </span>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
                             Exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
                             autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel
                             illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui

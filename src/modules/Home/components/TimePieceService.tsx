@@ -26,6 +26,7 @@ const TimePieceService = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
+
     const { isDarkSection, setIsDarkSection } = useTheme()
 
     const items = [
@@ -113,7 +114,9 @@ const TimePieceService = () => {
             <Container className='relative flex flex-col justify-between gap-10 xl:flex-row'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
-                        <h2 className={`text-heading-2-desktop dark:text-grey-white text-grey-black `}>
+                        <h2
+                            className={`xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black `}
+                        >
                             <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                 {t('timepiece.title')}
                             </Trans>
@@ -166,10 +169,10 @@ const TimePieceService = () => {
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <h3 className='text-subheading-2-desktop dark:text-grey-white text-grey-black'>
+                                            <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p className='text-paragraph-7-desktop dark:text-grey-200 text-grey-500'>
+                                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
                                         </div>
@@ -197,15 +200,15 @@ const TimePieceService = () => {
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <h3 className='text-subheading-2-desktop dark:text-grey-white text-grey-black'>
+                                            <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p className='text-paragraph-7-desktop dark:text-grey-200 text-grey-500'>
+                                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
                                             <UnstyledLink
                                                 href='#'
-                                                className='text-paragraph-7-desktop text-accent-price-dark font-semibold
+                                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-accent-price-dark font-semibold
                                                 underline'
                                             >
                                                 {t('timepiece.book_now')}

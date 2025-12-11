@@ -76,15 +76,21 @@ const Hero = () => {
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
                         <div className='flex flex-col justify-end gap-2'>
-                            <h3 ref={h3Ref} className='text-paragraph-7-desktop text-grey-white'>
+                            <h3
+                                ref={h3Ref}
+                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white'
+                            >
                                 {t('hero.sub_1')}
                             </h3>
-                            <h1 ref={h1Ref} className='text-heading-1-desktop text-grey-white'>
+                            <h1 ref={h1Ref} className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white'>
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
                                     {t('hero.title')}
                                 </Trans>
                             </h1>
-                            <h3 ref={h3Ref} className='text-paragraph-5-desktop text-grey-200'>
+                            <h3
+                                ref={h3Ref}
+                                className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
+                            >
                                 {t('hero.sub_2')}
                             </h3>
                         </div>

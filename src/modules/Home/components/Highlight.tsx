@@ -90,7 +90,10 @@ const Highlight = () => {
         <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
             <Container className='flex flex-col gap-5 xl:gap-20'>
                 <div className='flex flex-col justify-between gap-6 xl:flex-row xl:items-center'>
-                    <h1 ref={h1Ref} className='text-heading-2-desktop text-grey-black flex-shrink-0'>
+                    <h1
+                        ref={h1Ref}
+                        className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black flex-shrink-0'
+                    >
                         {t('highlight.title')}
                     </h1>
 
@@ -102,7 +105,7 @@ const Highlight = () => {
                             <button
                                 key={item}
                                 onClick={() => handleChangeTab(item)}
-                                className={`text-button-3-desktop w-full py-3 transition-colors xl:w-[137px] ${
+                                className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
                                     item === tab
                                         ? 'bg-grey-black text-grey-white'
                                         : 'bg-grey-white text-grey-black hover:bg-grey-100'
@@ -170,17 +173,19 @@ const Highlight = () => {
                                     </div>
 
                                     <div className='flex flex-col gap-1 text-center'>
-                                        <p className='text-paragraph-8-desktop text-grey-200 uppercase'>
+                                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
                                             {product.categories[0]?.name || 'ROLEX PHILIPPE'} •{' '}
                                             {product.tags[0]?.name || 'SERIES'}
                                         </p>
-                                        <h3 className='text-subheading-5-desktop text-grey-black'>{product.name}</h3>
-                                        <p className='text-paragraph-9-desktop text-grey-500'>
+                                        <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                            {product.name}
+                                        </h3>
+                                        <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
                                             {t('highlight.pre_owned', {
                                                 year: new Date(product.date_created).getFullYear()
                                             })}
                                         </p>
-                                        <p className='text-paragraph-4-desktop text-accent-price-dark'>
+                                        <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
                                             IDR {parseInt(product.price).toLocaleString('id-ID')}
                                         </p>
                                     </div>
