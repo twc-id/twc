@@ -89,9 +89,9 @@ const Faq = () => {
             start: 'top center',
             end: 'bottom center',
             onEnter: () => setIsDarkSection(false),
-            onLeave: () => setIsDarkSection(true),
-            onEnterBack: () => setIsDarkSection(false),
-            onLeaveBack: () => setIsDarkSection(true)
+            onLeave: () => setIsDarkSection(false),
+            onEnterBack: () => setIsDarkSection(false)
+            // onLeaveBack: () => setIsDarkSection(true)
         })
 
         const timeline = gsap.timeline({

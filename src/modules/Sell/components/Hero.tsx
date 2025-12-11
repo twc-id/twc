@@ -2,7 +2,7 @@ import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import { useTranslation } from 'next-i18next'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -55,12 +55,14 @@ const Hero = () => {
         >
             <div className='absolute inset-x-0 bottom-0 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
                 <Container>
-                    <div className='flex w-full flex-col justify-end gap-14 gap-6 xl:items-end xl:gap-4'>
+                    <div className='flex w-full flex-col justify-end  gap-6 xl:items-end xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[483px]'
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[483px] xl:text-right'
                             ref={h1Ref}
                         >
-                            {t('hero.title')}
+                            <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>
+                                {t('hero.title')}
+                            </Trans>
                         </h1>
                         <p
                             className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile'

@@ -1,11 +1,12 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
@@ -16,6 +17,9 @@ const HowToSell = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
     const imageContainerRef = useRef<HTMLDivElement>(null)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
+    const [activeIndex, setActiveIndex] = useState(0)
+    const { setIsDarkSection } = useTheme()
 
     const items = [
         {
@@ -40,7 +44,41 @@ const HowToSell = () => {
         }
     ]
 
+    const handleScroll = () => {
+        if (!scrollContainerRef.current) return
+
+        const container = scrollContainerRef.current
+        const itemWidth = 288 + 24 // item width + gap
+        const scrollLeft = container.scrollLeft
+        const index = Math.round(scrollLeft / itemWidth)
+
+        setActiveIndex(Math.min(index, items.length - 1))
+    }
+
+    const scrollToItem = (index: number) => {
+        if (!scrollContainerRef.current) return
+
+        const container = scrollContainerRef.current
+        const itemWidth = 288 + 24 // item width + gap
+        const scrollLeft = index * itemWidth
+
+        container.scrollTo({
+            left: scrollLeft,
+            behavior: 'smooth'
+        })
+    }
+
     useGSAP(() => {
+        ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: 'top center',
+            end: 'bottom top',
+            onEnter: () => setIsDarkSection(true),
+            onLeaveBack: () => setIsDarkSection(false),
+
+            onEnterBack: () => setIsDarkSection(true)
+        })
+
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
@@ -87,7 +125,11 @@ const HowToSell = () => {
                         </h1>
                         <Button className='w-fit'>{t('common:book_appointment')}</Button>
                     </div>
-                    <div className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'>
+                    <div
+                        className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
+                        ref={scrollContainerRef}
+                        onScroll={handleScroll}
+                    >
                         {items.map((item, index) => (
                             <div
                                 key={index}
@@ -115,6 +157,17 @@ const HowToSell = () => {
                                     </p>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+                    <div className='flex flex-row items-center gap-2 xl:hidden'>
+                        {items.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => scrollToItem(index)}
+                                className={`mx-1 rounded-full transition-all duration-300 ${
+                                    index === activeIndex ? 'bg-grey-white h-1.5 w-1.5' : 'bg-grey-200 h-1 w-1'
+                                }`}
+                            />
                         ))}
                     </div>
                 </div>
