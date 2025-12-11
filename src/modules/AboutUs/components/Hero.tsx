@@ -56,11 +56,17 @@ const Hero = () => {
         >
             <div className='absolute inset-x-0 bottom-0 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
                 <Container>
-                    <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
-                        <h1 className='text-heading-1-desktop text-grey-white line-clamp-2 w-[483px]' ref={h1Ref}>
+                    <div className='flex w-full flex-col items-start justify-between gap-6 xl:flex-row xl:items-end xl:gap-4'>
+                        <h1
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 w-[350px] xl:w-[483px]'
+                            ref={h1Ref}
+                        >
                             {t('hero.title')}
                         </h1>
-                        <p className='text-grey-200 text-paragraph-5-desktop line-clamp-3 w-[288px]' ref={paragraphRef}>
+                        <p
+                            className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile line-clamp-3 w-[288px]'
+                            ref={paragraphRef}
+                        >
                             {t('hero.description')}
                         </p>
                     </div>

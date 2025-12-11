@@ -38,10 +38,12 @@ const Location = () => {
             <Container>
                 <div className='flex flex-col items-center gap-8 xl:flex-row xl:gap-[120px]'>
                     <div className='flex flex-col gap-9' ref={leftRef}>
-                        <h2 className='text-heading-2-desktop text-grey-black'>{t('location.title')}</h2>
+                        <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black'>
+                            {t('location.title')}
+                        </h2>
                         <div className='flex flex-row gap-2'>
                             <Icons icon='Pin' width={24} height={24} />
-                            <p className='text-paragraph-6-desktop text-grey-500'>
+                            <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'>
                                 Jl. Pantai Mutiara Regatta Blok TG1 B-C, Pluit, Kecamatan Penjaringan, Jakarta Utara,
                                 Daerah Khusus Ibukota Jakarta 14450
                             </p>
@@ -53,7 +55,7 @@ const Location = () => {
                                     href='mailto:support@thewatchcollections.com'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='text-paragraph-6-desktop text-grey-500'
+                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
                                 >
                                     support@thewatchcollections.com
                                 </a>
@@ -64,7 +66,7 @@ const Location = () => {
                                     href='https://wa.me/628121396688?text=Hello%20TheWatchCollections%2C'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='text-paragraph-6-desktop text-grey-500'
+                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
                                 >
                                     +62 812 1396 688
                                 </a>
@@ -75,7 +77,7 @@ const Location = () => {
                                     href='https://instagram.com/thewatchcollections'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='text-paragraph-6-desktop text-grey-500'
+                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
                                 >
                                     @thewatchcollections
                                 </a>

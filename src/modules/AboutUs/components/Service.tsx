@@ -67,10 +67,12 @@ const Service = () => {
             <Container className='flex flex-col items-center gap-16 xl:gap-[160px]'>
                 <div className='flex flex-col gap-14  xl:flex-row xl:gap-[133px]'>
                     <div ref={textref} className='flex max-w-[411px] flex-col gap-6 xl:gap-4'>
-                        <h2 className='text-heading-2-desktop text-grey-black dark:text-grey-white'>
+                        <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white'>
                             {t('service.title')}
                         </h2>
-                        <p className='text-paragraph-6-desktop text-grey-200 max-w-2xl'>{t('service.description')}</p>
+                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 max-w-2xl'>
+                            {t('service.description')}
+                        </p>
                     </div>
                     <div className='relative overflow-hidden xl:h-[511px] xl:w-[736px]' ref={rightRef}>
                         <Image
@@ -84,12 +86,12 @@ const Service = () => {
                 </div>
                 <div className='flex flex-col gap-8 text-center xl:max-w-[720px] xl:gap-10'>
                     <h3
-                        className='text-paragraph-3-desktop text-grey-black dark:text-grey-white line-clamp-[7] xl:line-clamp-3'
+                        className='xl:text-paragraph-3-desktop text-paragraph-3-mobile text-grey-black dark:text-grey-white line-clamp-[7] xl:line-clamp-3'
                         ref={quoteRef}
                     >
                         {t('service.quote')}
                     </h3>
-                    <p className='text-paragraph-6-desktop text-grey-200' ref={founderRef}>
+                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200' ref={founderRef}>
                         {t('service.founder')}
                     </p>
                 </div>

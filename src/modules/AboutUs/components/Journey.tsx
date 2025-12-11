@@ -66,11 +66,13 @@ const Journey = () => {
                         />
                     </div>
                     <div className='flex flex-col justify-center gap-6' ref={textref}>
-                        <h2 className='text-heading-2-desktop text-grey-black'>{t('journey.title')}</h2>
-                        <p className='text-paragraph-6-desktop text-grey-500 max-w-[411px]'>
+                        <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black'>
+                            {t('journey.title')}
+                        </h2>
+                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 max-w-[411px]'>
                             {t('journey.description')}
                         </p>
-                        <p className='text-paragraph-6-desktop text-grey-500 max-w-[411px]'>
+                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 max-w-[411px]'>
                             {t('journey.description_2')}
                         </p>
                     </div>
