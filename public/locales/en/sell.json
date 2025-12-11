@@ -1,6 +1,7 @@
 {
+    "title": "The Watch Collections - Sell Your Luxury Watches",
     "hero": {
-        "title": "Make Room for the Next",
+        "title": "Make Room for <br className='xl:hidden block'/> the Next",
         "description": "Sell fast or maximize your watches value."
     },
     "white_space": {
