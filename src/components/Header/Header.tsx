@@ -4,10 +4,12 @@ import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import NextImage from '@components/NextImage'
+import { useTheme } from '@contexts/ThemeContext'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import Form, { Field } from 'rc-field-form'
 import React, { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -71,6 +73,7 @@ const menuData: MenuItem[] = [
 ]
 
 const Headers = () => {
+    const router = useRouter()
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -78,8 +81,10 @@ const Headers = () => {
     const [selectedSubMenuItem, setSelectedSubMenuItem] = useState<SubMenuItem | null>(null)
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
+
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const { setIsDarkSection } = useTheme()
 
     const handleBreadcrumbNavigate = (index: number) => {
         // index 0 -> Home, index 1 -> Our Collections
@@ -188,6 +193,23 @@ const Headers = () => {
         document.addEventListener('keydown', handleEscape)
         return () => document.removeEventListener('keydown', handleEscape)
     }, [isMenuOpen, isSearchOpen])
+
+    // Theme switching on route changes
+    useEffect(() => {
+        const handleRouteChange = () => {
+            setIsDarkSection(false) // Switch to light mode on any page navigation
+        }
+
+        router.events.on('routeChangeComplete', handleRouteChange)
+
+        // Set initial state based on current route
+        setIsDarkSection(false)
+
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router.events])
 
     const handleMenuItemKeyDown = (e: React.KeyboardEvent, item: MenuItem) => {
         if (e.key === 'Enter' || e.key === ' ') {
