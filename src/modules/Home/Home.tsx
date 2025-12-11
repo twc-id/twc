@@ -1,5 +1,4 @@
 import Seo from '@components/Seo'
-import { ThemeProvider } from '@contexts/ThemeContext'
 import React from 'react'
 
 import Commitment from './components/Commitment'
@@ -14,22 +13,19 @@ import TimePieceService from './components/TimePieceService'
 
 const Home = () => {
     return (
-        <ThemeProvider>
-            <div className='relative -mt-20 overflow-hidden'>
-                <Seo />
-                <Hero />
+        <div className='relative -mt-20 overflow-hidden'>
+            <Seo />
+            <Hero />
+            <Commitment />
+            <Highlight />
+            <SellReserve />
+            <TimePieceService />
+            <Journey />
+            <Review />
+            <SocialMedia />
 
-                <Commitment />
-                <Highlight />
-                <SellReserve />
-                <TimePieceService />
-                <Journey />
-                <Review />
-                <SocialMedia />
-
-                <CTA />
-            </div>
-        </ThemeProvider>
+            <CTA />
+        </div>
     )
 }
 
