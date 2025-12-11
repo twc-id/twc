@@ -1,0 +1,96 @@
+{
+    "hero": {
+        "title": "Make Room for the Next",
+        "description": "Sell fast or maximize your watches value."
+    },
+    "white_space": {
+        "description": "Offering the best value for your timepiece based on the latest market valuations and prices."
+    },
+    "benefit": {
+        "items": {
+            "1": {
+                "title": "Inclusive Timepieces",
+                "description": "Enjoy inclusive service for a broad range of prestigious timepieces, cared for as they should be."
+            },
+            "2": {
+                "title": "Sell with Ease",
+                "description": "Choose ideal selling method for your luxury timepieces designed to optimize your returns easily."
+            },
+            "3": {
+                "title": "Best Price",
+                "description": "The Watch Collections asses and will give you best price as your valuable timepieces."
+            }
+        }
+    },
+    "how_to_sell": {
+        "title": "How to Sell in The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Send Watch Details",
+                "description": "Tell us your watch details in assessment appointment"
+            },
+            "2": {
+                "title": "Receive Quote",
+                "description": "You will receive quotes based on the information you give us and based on expert assessments"
+            },
+            "3": {
+                "title": "Send Watch",
+                "description": "If you agree to the valuation, we will make arrangement for your watch to be posted or collected securely"
+            },
+            "4": {
+                "title": "Receive Payment",
+                "description": "Tell us your watch details in assessment appointment"
+            }
+        }
+    },
+    "consign": {
+        "title": "How About Consign in The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Submit Your Watch",
+                "description": "Share your watch details and photos for an initial eligibility check"
+            },
+            "2": {
+                "title": "Expert Authentication",
+                "description": "Our specialists verify authenticity and condition to define a fair market value"
+            },
+            "3": {
+                "title": "Showcase & Listing",
+                "description": "We professionally present your watch and list it to reach serious, qualified buyers"
+            },
+            "4": {
+                "title": "Secure Sale & Payout",
+                "description": "Once sold, we handle the transaction and transfer your payout quickly and securely"
+            }
+        }
+    },
+    "faq": {
+        "title": "Frequently Ask Questions",
+        "items": {
+            "1": {
+                "question": "Can I book offline appointment?",
+                "answer": "Yes, you can book an offline appointment at our boutique to discuss selling your watch in person."
+            },
+            "2": {
+                "question": "How can I figure out how much my watch worth?",
+                "answer": "You can get a free valuation by providing details and photos of your watch through our online form."
+            },
+            "3": {
+                "question": "When is the commission fee due?",
+                "answer": "The commission fee is deducted from the final sale price once your watch is sold."
+            },
+            "4": {
+                "question": "What is the process after I agree to the quote?",
+                "answer": "Once you agree to the quote, we will arrange for secure collection or shipping of your watch for authentication and listing."
+            },
+            "5": {
+                "question": "How long does it take to sell my watch?",
+                "answer": "The time it takes to sell your watch can vary based on factors like demand, pricing, and market conditions."
+            }
+        }
+    },
+    "cta": {
+        "title": "Sell Your Watch",
+        "description": "Book appointment to discuss your ideal timepieces selling"
+    }
+}

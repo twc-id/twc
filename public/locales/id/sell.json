@@ -1,0 +1,96 @@
+{
+    "hero": {
+        "title": "Buat Ruang untuk yang Berikutnya",
+        "description": "Jual cepat atau maksimalkan nilai jam tangan Anda."
+    },
+    "white_space": {
+        "description": "Menawarkan nilai terbaik untuk jam tangan Anda berdasarkan penilaian dan harga pasar terbaru."
+    },
+    "benefit": {
+        "items": {
+            "1": {
+                "title": "Jam Tangan Inklusif",
+                "description": "Nikmati layanan inklusif untuk berbagai jam tangan bergengsi, dirawat sebagaimana mestinya."
+            },
+            "2": {
+                "title": "Jual dengan Mudah",
+                "description": "Pilih metode penjualan ideal untuk jam tangan mewah Anda yang dirancang untuk mengoptimalkan pengembalian Anda dengan mudah."
+            },
+            "3": {
+                "title": "Harga Terbaik",
+                "description": "The Watch Collections menilai dan akan memberikan Anda harga terbaik untuk jam tangan berharga Anda."
+            }
+        }
+    },
+    "how_to_sell": {
+        "title": "Bagaimana Cara Menjual di The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Kirim Detail Jam Tangan",
+                "description": "Beritahu kami detail jam tangan Anda dalam janji penilaian"
+            },
+            "2": {
+                "title": "Terima Penawaran",
+                "description": "Anda akan menerima penawaran berdasarkan informasi yang Anda berikan kepada kami dan berdasarkan penilaian ahli"
+            },
+            "3": {
+                "title": "Kirim Jam Tangan",
+                "description": "Jika Anda setuju dengan penilaian, kami akan mengatur agar jam tangan Anda dikirim atau diambil dengan aman"
+            },
+            "4": {
+                "title": "Terima Pembayaran",
+                "description": "Beritahu kami detail jam tangan Anda dalam janji penilaian"
+            }
+        }
+    },
+    "consign": {
+        "title": "Bagaimana dengan Konsinyasi di The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Kirim Jam Tangan Anda",
+                "description": "Bagikan detail dan foto jam tangan Anda untuk pemeriksaan kelayakan awal"
+            },
+            "2": {
+                "title": "Otentikasi Ahli",
+                "description": "Spesialis kami memverifikasi keaslian dan kondisi untuk menentukan nilai pasar yang adil"
+            },
+            "3": {
+                "title": "Pameran & Daftar",
+                "description": "Kami menyajikan jam tangan Anda secara profesional dan mendaftarkannya untuk menjangkau pembeli serius dan berkualitas"
+            },
+            "4": {
+                "title": "Penjualan & Pembayaran",
+                "description": "Setelah jam tangan Anda terjual, kami akan mengatur pembayaran cepat dan aman kepada Anda"
+            }
+        }
+    },
+    "faq": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "items": {
+            "1": {
+                "question": "Bagaimana cara menilai jam tangan saya?",
+                "answer": "Anda dapat menilai jam tangan Anda dengan mengatur janji penilaian penilaian dengan ahli kami, yang akan menilai kondisi, keaslian, dan nilai pasar jam tangan Anda."
+            },
+            "2": {
+                "question": "Berapa lama waktu yang dibutuhkan untuk menjual jam tangan saya?",
+                "answer": "Waktu yang dibutuhkan untuk menjual jam tangan Anda dapat bervari berdasarkan faktor-faktor seperti permintaan, penetapan harga, dan kondisi pasar."
+            },
+            "3": {
+                "question": "Apakah ada biaya untuk menilai jam tangan saya?",
+                "answer": "Penilaian jam tangan biasanya gratis, tetapi harap periksa dengan The Watch Collections untuk kebijakan spesifik mereka."
+            },
+            "4": {
+                "question": "Bagaimana saya menerima pembayaran untuk jam tangan saya?",
+                "answer": "Setelah jam tangan Anda terjual, Anda dapat menerima pembayaran melalui transfer bank, cek, atau metode pembayaran lain yang disepakati dengan The Watch Collections."
+            },
+            "5": {
+                "question": "Apakah saya perlu mengirim jam tangan saya untuk penilaian?",
+                "answer": "Tergantung pada kebijakan The Watch Collections, Anda mungkin perlu mengirim jam tangan Anda atau menjadwalkan janji temu langsung untuk penilaian."
+            }
+        }
+    },
+    "cta": {
+        "title": "Jual Jam Tangan Anda",
+        "description": "Buat janji untuk membahas penjualan jam tangan impian Anda"
+    }
+}
