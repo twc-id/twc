@@ -1,5 +1,6 @@
 import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
+import { ThemeProvider } from '@contexts/ThemeContext'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -21,15 +22,17 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Head>
-                <meta name='viewport' content='width=device-width, initial-scale=1' />
-            </Head>
-            <HydrationBoundary state={pageProps.dehydratedState}>
-                <Layout>
-                    <DismissableToast />
-                    <Component {...pageProps} />
-                </Layout>
-            </HydrationBoundary>
+            <ThemeProvider>
+                <Head>
+                    <meta name='viewport' content='width=device-width, initial-scale=1' />
+                </Head>
+                <HydrationBoundary state={pageProps.dehydratedState}>
+                    <Layout>
+                        <DismissableToast />
+                        <Component {...pageProps} />
+                    </Layout>
+                </HydrationBoundary>
+            </ThemeProvider>
         </QueryClientProvider>
     )
 }
