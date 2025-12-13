@@ -1,0 +1,18 @@
+{
+    "title": "The Watch Collection - Reserve Your Spot",
+    "hero": {
+        "title": "Didn't find your desired watch on our collections?",
+        "description": "Reserve your desired watch and The Watch Collections team will secure it for you.",
+        "items": {
+            "1": {
+                "title": "Classic Luxury"
+            },
+            "2": {
+                "title": "Sport Collection"
+            },
+            "3": {
+                "title": "Vintage Series"
+            }
+        }
+    }
+}
