@@ -28,6 +28,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                 </Head>
                 <HydrationBoundary state={pageProps.dehydratedState}>
                     <Layout>
+                        {/* <CustomCursor /> */}
                         <DismissableToast />
                         <Component {...pageProps} />
                     </Layout>
