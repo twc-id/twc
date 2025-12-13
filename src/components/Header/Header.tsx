@@ -241,7 +241,7 @@ const Headers = () => {
                     }
                 }
             }}
-            className={classNames('relative h-8 w-8 transition-all duration-300', {
+            className={classNames('relative h-8 w-8  transition-all duration-300', {
                 'pointer-events-none': isSearchOpen
             })}
         >
@@ -363,7 +363,7 @@ const Headers = () => {
                                             }}
                                         >
                                             <div className='flex items-center gap-4'>
-                                                <span className='text-sm font-medium'>{item.label}</span>
+                                                <span className='text-sm font-medium uppercase'>{item.label}</span>
                                             </div>
                                         </UnstyledLink>
                                     ) : (
