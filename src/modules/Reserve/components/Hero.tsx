@@ -19,6 +19,7 @@ const Hero = () => {
     const rightItemsRef = useRef<HTMLDivElement>(null)
     const pinSectionRef = useRef<HTMLDivElement>(null)
     const imageContainerRef = useRef<HTMLDivElement>(null)
+    const descriptionRef = useRef<HTMLDivElement>(null)
     const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
     // // Set viewport height on client side
@@ -54,15 +55,26 @@ const Hero = () => {
     useGSAP(() => {
         if (!pinSectionRef.current || !rightItemsRef.current) return
 
-        // const totalItems = items.length
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'bottom center',
+                toggleActions: 'restart none none reset'
+            }
+        })
+
+        timeline.fromTo(
+            descriptionRef.current,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+        )
 
         // Pin the section
         const pinTrigger = ScrollTrigger.create({
             trigger: pinSectionRef.current,
             start: 'top top',
-            end: '+=300%',
+            end: '+=100%',
             pin: true,
-            markers: true,
             scrub: 1,
             onUpdate: (self) => {
                 const progress = self.progress
@@ -150,7 +162,7 @@ const Hero = () => {
                     {/* Text overlay */}
                     <div className='absolute bottom-8 left-4 xl:bottom-[160px] xl:left-[80px]'>
                         <h2 className='xl:text-heading-3-desktop text-heading-3-mobile max-w-[300px] text-white xl:max-w-[400px]'>
-                            We can source more for you
+                            {t('hero.subtitle')}
                         </h2>
                     </div>
                 </div>
@@ -192,8 +204,8 @@ const Hero = () => {
             </div>
             {/* Description */}
             <Container>
-                <div className='pb-16 pt-14  text-right xl:pb-[160px] xl:pt-[116px] '>
-                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 '>
+                <div className='flex flex-row justify-end pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]' ref={descriptionRef}>
+                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 line-clamp-2 text-left xl:w-[374px]'>
                         {t('hero.description')}
                     </p>
                 </div>

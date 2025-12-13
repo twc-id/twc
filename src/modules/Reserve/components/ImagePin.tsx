@@ -23,10 +23,9 @@ const ImagePin = () => {
 
         // Pin image dengan refresh dan onRefresh callback
         ScrollTrigger.create({
-            trigger: sectionRef.current,
+            trigger: imageContainerRef.current,
             start: 'top top',
             end: 'bottom top',
-            markers: true,
             pin: true,
             pinnedContainer: sectionRef.current,
             pinSpacing: true,
@@ -38,7 +37,7 @@ const ImagePin = () => {
         <section ref={sectionRef} className='h-[300px] xl:h-[560px]'>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
                 <Image
-                    src='/images/reserve/reserve-pin.webp'
+                    src='/images/reserve/reserve-pin-2.webp'
                     alt='The Watch Collections'
                     fill
                     className='object-cover'
