@@ -20,8 +20,7 @@ const JourneyImage = () => {
             end: '+=100%',
             pin: true,
             pinSpacing: false,
-            id: 'journey-pin',
-            markers: true
+            id: 'journey-pin'
         })
 
         // Cleanup
