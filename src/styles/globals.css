@@ -13,6 +13,16 @@
         @apply dark:bg-grey-black bg-white transition-colors duration-500;
     }
 
+    /* ScrollSmoother styles */
+    #smooth-wrapper {
+        overflow: hidden;
+    }
+
+    #smooth-content {
+        overflow: visible;
+        width: 100%;
+    }
+
     .layout {
         /* 1100px */
         max-width: 68.75rem;
