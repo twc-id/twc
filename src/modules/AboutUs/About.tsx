@@ -26,8 +26,14 @@ const About = () => {
     const smoothContentRef = useRef<HTMLDivElement>(null)
     const smootherRef = useRef<ScrollSmoother | null>(null)
 
-    // Cleanup on page change
+    // Cleanup on page change and breakpoint changes
     React.useEffect(() => {
+        // Cleanup when isDesktop changes (responsive breakpoint)
+        if (!isDesktop && smootherRef.current) {
+            smootherRef.current.kill()
+            smootherRef.current = null
+        }
+
         return () => {
             if (smootherRef.current) {
                 smootherRef.current.kill()
@@ -39,7 +45,7 @@ const About = () => {
                 ScrollTrigger?.refresh?.()
             }
         }
-    }, [])
+    }, [isDesktop])
 
     useGSAP(() => {
         if (isDesktop && typeof window !== 'undefined') {
