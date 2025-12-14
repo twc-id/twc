@@ -1,4 +1,5 @@
 import Footer from '@components/Footer'
+import Seo from '@components/Seo'
 import { useGSAP } from '@gsap/react'
 import CTA from '@modules/Reserve/components/CTA'
 import Hero from '@modules/Reserve/components/Hero'
@@ -8,6 +9,7 @@ import ReserveTimepiece from '@modules/Reserve/components/ReserveTimepiece'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -17,6 +19,7 @@ if (typeof window !== 'undefined') {
 }
 
 const Reserve = () => {
+    const { t } = useTranslation('reserve')
     const isDesktop = useMediaQuery({ minWidth: 1280 })
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
@@ -74,6 +77,7 @@ const Reserve = () => {
 
     const content = (
         <>
+            <Seo title={t('title')} />
             <Hero />
             <ReserveTimepiece />
             <ImagePin />
@@ -97,6 +101,7 @@ const Reserve = () => {
 
     return (
         <div className='bg-grey-black relative -mt-20 overflow-hidden'>
+            <Seo title={t('title')} />
             <Hero />
             <ReserveTimepiece />
             <ImagePin />
