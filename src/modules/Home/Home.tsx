@@ -3,7 +3,6 @@ import Seo from '@components/Seo'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import React, { useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -19,7 +18,7 @@ import TimePieceService from './components/TimePieceService'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
+    gsap.registerPlugin(ScrollSmoother)
 }
 
 const Home = () => {
