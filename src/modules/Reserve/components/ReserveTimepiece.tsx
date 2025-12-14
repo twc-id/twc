@@ -68,7 +68,7 @@ const ReserveTimepiece = () => {
                     <div className='relative w-full'>
                         {/* LOADING STATE */}
                         {isLoading && (
-                            <div className='flex w-full justify-center gap-5 xl:gap-8'>
+                            <div className='flex w-full items-center justify-center gap-5 xl:gap-8'>
                                 <Skeleton className='h-[470px] w-[300px]' />
                                 <Skeleton className='hidden h-[491px] w-[300px] xl:block' />
                                 <Skeleton className='hidden h-[470px] w-[300px] xl:block' />
@@ -78,7 +78,7 @@ const ReserveTimepiece = () => {
                         {/* DATA READY */}
                         {!isLoading && data?.length > 0 && (
                             <Swiper
-                                key={data.length} // 🔥 force re-init once data ready
+                                key={data.length}
                                 modules={[Navigation]}
                                 slidesPerView={3}
                                 centeredSlides
@@ -89,9 +89,9 @@ const ReserveTimepiece = () => {
                                     nextEl: '.swiper-button-next-custom'
                                 }}
                                 breakpoints={{
-                                    320: { slidesPerView: 1, spaceBetween: 20 },
-                                    768: { slidesPerView: 2, spaceBetween: 24 },
-                                    1024: { slidesPerView: 3, spaceBetween: 32 }
+                                    320: { slidesPerView: 1 },
+                                    768: { slidesPerView: 2 },
+                                    1024: { slidesPerView: 3 }
                                 }}
                                 className='timepiece-swiper'
                             >
@@ -138,20 +138,35 @@ const ReserveTimepiece = () => {
                         {/* Custom Navigation Buttons */}
                         <Button
                             variant='secondaryInverse'
-                            className='swiper-button-prev-custom absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2'
+                            className='swiper-button-prev-custom absolute left-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 xl:flex'
                         >
                             <Icons icon='ChevronLeft' />
                         </Button>
 
                         <Button
                             variant='secondaryInverse'
-                            className='swiper-button-next-custom absolute right-4 top-1/2  z-10 flex h-10 w-10 -translate-y-1/2'
+                            className='swiper-button-next-custom absolute right-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 xl:flex'
+                        >
+                            <Icons icon='ChevronLeft' className='rotate-180' />
+                        </Button>
+
+                        {/* Navigation Buttons for Mobile */}
+                        <Button
+                            variant='secondaryInverse'
+                            className='swiper-button-prev-custom absolute -bottom-20 left-[36%] z-10 flex h-10 w-10 -translate-y-1/2 xl:hidden'
+                        >
+                            <Icons icon='ChevronLeft' />
+                        </Button>
+
+                        <Button
+                            variant='secondaryInverse'
+                            className='swiper-button-next-custom absolute -bottom-20 right-[36%] z-10 flex h-10 w-10 -translate-y-1/2 xl:hidden'
                         >
                             <Icons icon='ChevronLeft' className='rotate-180' />
                         </Button>
                     </div>
                 </div>
-                <div className='flex flex-row items-end justify-between pt-[96px] xl:pt-[147px]'>
+                <div className='flex flex-row items-end justify-between pt-[147px]'>
                     <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-2 xl:w-[432px]'>
                         {t('reserve_time_pieces.description')}
                     </h3>
