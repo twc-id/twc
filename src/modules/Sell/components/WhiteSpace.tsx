@@ -20,11 +20,16 @@ const WhiteSpace = () => {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
+                id: 'sell-whitespace-animation',
                 toggleActions: 'restart none none reset'
             }
         })
 
         timeline.fromTo(textRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+        }
     }, [])
 
     return (

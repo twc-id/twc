@@ -23,6 +23,7 @@ const CTA = () => {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
+                id: 'reserve-cta-animation',
                 toggleActions: 'restart none none reset'
             }
         })
@@ -30,8 +31,12 @@ const CTA = () => {
         timeline.fromTo(
             [headingref.current, paragraphRef.current],
             { opacity: 0, x: -20 },
-            { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
+            { opacity: 1, x: 0, duration: 1, ease: 'power2.out', stagger: 0.3 }
         )
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+        }
     }, [])
     return (
         <section className='bg-grey-white py-14 xl:py-[116px]' ref={sectionRef}>

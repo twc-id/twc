@@ -46,12 +46,17 @@ const ReserveTimepiece = () => {
     useGSAP(() => {
         if (!sectionRef.current) return
 
-        ScrollTrigger.create({
+        const scrollTrigger = ScrollTrigger.create({
             trigger: sectionRef.current,
             start: 'top top',
-            end: 'bottom top'
+            end: 'bottom top',
+            id: 'reserve-timepiece-trigger'
         })
-    })
+
+        return () => {
+            scrollTrigger.kill()
+        }
+    }, [])
 
     return (
         <section className='bg-grey-white relative z-10 pb-14 pt-20 xl:pb-[160px] xl:pt-[132px]' ref={sectionRef}>

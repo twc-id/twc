@@ -54,6 +54,7 @@ const Highlight = () => {
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
+                id: 'highlight-animation',
                 toggleActions: 'restart none none reset'
             }
         })
@@ -83,6 +84,10 @@ const Highlight = () => {
                 },
                 '-=0.5'
             )
+        }
+
+        return () => {
+            timeline.scrollTrigger?.kill()
         }
     }, [data])
 

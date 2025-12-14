@@ -21,6 +21,7 @@ const Hero = () => {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
+                id: 'about-hero-animation',
                 toggleActions: 'restart none none reset',
                 onEnter: () => timeline.restart(),
                 onEnterBack: () => timeline.restart()
