@@ -17,7 +17,7 @@ Router.events.on('routeChangeStart', nProgress.start)
 Router.events.on('routeChangeError', nProgress.done)
 Router.events.on('routeChangeComplete', nProgress.done)
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {
     const [queryClient] = useState(() => new QueryClient())
 
     return (
@@ -27,7 +27,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
                 </Head>
                 <HydrationBoundary state={pageProps.dehydratedState}>
-                    <Layout>
+                    <Layout currentPath={rest.router.asPath}>
                         {/* <CustomCursor /> */}
                         <DismissableToast />
                         <Component {...pageProps} />
