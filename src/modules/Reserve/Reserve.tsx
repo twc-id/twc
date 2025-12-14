@@ -95,8 +95,8 @@ const Reserve = () => {
             <ReserveTimepiece />
             <ImagePin />
             <HowToReserve />
-            <Footer />
             <CTA />
+            <Footer />
         </div>
     )
 }
