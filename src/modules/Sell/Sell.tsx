@@ -10,12 +10,13 @@ import HowToSell from '@modules/Sell/components/HowToSell'
 import WhiteSpace from '@modules/Sell/components/WhiteSpace'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollSmoother)
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 }
 
 const Sell = () => {
@@ -23,27 +24,48 @@ const Sell = () => {
     const isDesktop = useMediaQuery({ minWidth: 1280 })
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
+    const smootherRef = useRef<ScrollSmoother | null>(null)
+
+    // Cleanup on page change
+    React.useEffect(() => {
+        return () => {
+            if (smootherRef.current) {
+                smootherRef.current.kill()
+                smootherRef.current = null
+            }
+            // Clear all ScrollTriggers
+            if (typeof window !== 'undefined') {
+                ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
+                ScrollTrigger?.refresh?.()
+            }
+        }
+    }, [])
 
     useGSAP(() => {
         if (isDesktop && typeof window !== 'undefined') {
+            // Kill existing smoother if any
+            if (smootherRef.current) {
+                smootherRef.current.kill()
+            }
+
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
-                const smoother = ScrollSmoother.create({
+                smootherRef.current = ScrollSmoother.create({
                     wrapper: smoothWrapperRef.current,
                     content: smoothContentRef.current,
                     smooth: 1.2,
-                    effects: true, // Enable data-speed and data-lag attributes
-                    smoothTouch: false, // Disable on touch devices
-                    normalizeScroll: false // Keep false for desktop
+                    effects: true,
+                    smoothTouch: false,
+                    normalizeScroll: false
                 })
-
-                return () => {
-                    smoother?.kill()
-                }
             }, 100)
 
             return () => {
                 clearTimeout(timer)
+                if (smootherRef.current) {
+                    smootherRef.current.kill()
+                    smootherRef.current = null
+                }
             }
         }
     }, [isDesktop])
@@ -64,8 +86,12 @@ const Sell = () => {
 
     if (isDesktop) {
         return (
-            <div ref={smoothWrapperRef} className='relative -mt-20 overflow-hidden'>
-                <div ref={smoothContentRef}>{content}</div>
+            <div className='relative -mt-20 overflow-hidden'>
+                <div ref={smoothWrapperRef} id='smooth-wrapper-sell'>
+                    <div ref={smoothContentRef} id='smooth-content-sell'>
+                        {content}
+                    </div>
+                </div>
             </div>
         )
     }

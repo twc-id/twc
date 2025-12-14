@@ -3,6 +3,7 @@ import Seo from '@components/Seo'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import React, { useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -18,34 +19,56 @@ import TimePieceService from './components/TimePieceService'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollSmoother)
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 }
 
 const Home = () => {
     const isDesktop = useMediaQuery({ minWidth: 1280 })
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
+    const smootherRef = useRef<ScrollSmoother | null>(null)
+
+    // Cleanup on page change
+    React.useEffect(() => {
+        return () => {
+            if (smootherRef.current) {
+                smootherRef.current.kill()
+                smootherRef.current = null
+            }
+            // Clear all ScrollTriggers
+            if (typeof window !== 'undefined') {
+                gsap.killTweensOf('*')
+                ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
+                ScrollTrigger?.clearScrollMemory?.()
+            }
+        }
+    }, [])
 
     useGSAP(() => {
         if (isDesktop && typeof window !== 'undefined') {
+            // Kill existing smoother if any
+            if (smootherRef.current) {
+                smootherRef.current.kill()
+            }
+
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
-                const smoother = ScrollSmoother.create({
+                smootherRef.current = ScrollSmoother.create({
                     wrapper: smoothWrapperRef.current,
                     content: smoothContentRef.current,
                     smooth: 1.2,
-                    effects: true, // Enable data-speed and data-lag attributes
-                    smoothTouch: false, // Disable on touch devices
-                    normalizeScroll: false // Keep false for desktop
+                    effects: true,
+                    smoothTouch: false,
+                    normalizeScroll: false
                 })
-
-                return () => {
-                    smoother?.kill()
-                }
             }, 100)
 
             return () => {
                 clearTimeout(timer)
+                if (smootherRef.current) {
+                    smootherRef.current.kill()
+                    smootherRef.current = null
+                }
             }
         }
     }, [isDesktop])
