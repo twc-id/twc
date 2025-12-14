@@ -56,7 +56,7 @@ const ReserveTimepiece = () => {
     return (
         <section className='bg-grey-white relative z-10 pb-14 pt-20 xl:pb-[160px] xl:pt-[132px]' ref={sectionRef}>
             <Container className=''>
-                <div className='flex flex-col items-center xl:gap-20'>
+                <div className='flex flex-col items-center gap-16 xl:gap-20'>
                     <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black'>
                         {t('reserve_time_pieces.title')}
                     </h1>
@@ -100,8 +100,8 @@ const ReserveTimepiece = () => {
                             {isLoading ? (
                                 <div className='flex flex-row items-center justify-center gap-20'>
                                     <Skeleton className=' h-[470px] w-[300px]' />
-                                    <Skeleton className=' h-[491px] w-[300px]' />
-                                    <Skeleton className=' h-[470px] w-[300px]' />
+                                    <Skeleton className='hidden h-[491px] w-[300px] xl:block' />
+                                    <Skeleton className='hidden h-[470px] w-[300px] xl:block' />
                                 </div>
                             ) : (
                                 data?.map((product: any) => (
@@ -176,9 +176,9 @@ const ReserveTimepiece = () => {
                         </Button>
                     </div>
                 </div>
-                <div className='flex flex-row items-end justify-between xl:pt-[147px]'>
-                    <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-2 w-[432px]'>
-                        {t('reserve_time_pieces.title')}
+                <div className='flex flex-row items-end justify-between pt-[96px] xl:pt-[147px]'>
+                    <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-2 xl:w-[432px]'>
+                        {t('reserve_time_pieces.description')}
                     </h3>
                     <Button variant='secondaryInverse'>{t('common:view_all')}</Button>
                 </div>
