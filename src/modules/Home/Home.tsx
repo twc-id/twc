@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Footer from '@components/Footer'
 import Seo from '@components/Seo'
 import { useGSAP } from '@gsap/react'
@@ -37,6 +38,7 @@ const Home = () => {
         }
 
         return () => {
+            console.log('GSAP Home: Cleaning up ScrollSmoother and ScrollTriggers')
             if (smootherRef.current) {
                 smootherRef.current.kill()
                 smootherRef.current = null
@@ -46,6 +48,7 @@ const Home = () => {
                 ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
                 ScrollTrigger?.refresh?.()
             }
+            console.log('GSAP Home: Cleanup completed')
         }
     }, [isDesktop])
 
@@ -58,6 +61,7 @@ const Home = () => {
 
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
+                console.log('GSAP Home: Creating ScrollSmoother')
                 smootherRef.current = ScrollSmoother.create({
                     wrapper: smoothWrapperRef.current,
                     content: smoothContentRef.current,
@@ -68,6 +72,7 @@ const Home = () => {
                 })
                 // Refresh ScrollTrigger after ScrollSmoother is created
                 ScrollTrigger.refresh()
+                console.log('GSAP Home: ScrollSmoother created and ScrollTrigger refreshed')
             }, 100)
 
             return () => {
