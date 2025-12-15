@@ -38,8 +38,17 @@ const WhiteSpace = () => {
             pinnedContainer: sectionRef.current
         })
 
+        // return () => {
+        //     pinTrigger.kill()
+        // }
+
+        const timer = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+
         return () => {
             pinTrigger.kill()
+            clearTimeout(timer)
         }
     }, [])
 

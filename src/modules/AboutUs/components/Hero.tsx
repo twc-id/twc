@@ -38,9 +38,15 @@ const Hero = () => {
             { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
         )
 
-        return () => {
-            timeline.scrollTrigger?.kill()
-        }
+        // return () => {
+        //     timeline.scrollTrigger?.kill()
+        // }
+
+        const timer = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+
+        return () => clearTimeout(timer)
     }, [])
 
     return (
