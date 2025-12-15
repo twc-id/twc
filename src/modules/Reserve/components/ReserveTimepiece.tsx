@@ -4,7 +4,6 @@ import Icons from '@components/Icon'
 import Skeleton from '@components/Skeleton'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
-import { killScrollTriggerById } from '@utils/gsap'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -55,8 +54,9 @@ const ReserveTimepiece = () => {
         })
 
         return () => {
-            // Use utility function for cleanup
-            killScrollTriggerById('reserve-timepiece-trigger')
+            // Cleanup ScrollTrigger
+            const trigger = ScrollTrigger.getById('reserve-timepiece-trigger')
+            if (trigger) trigger.kill()
         }
     }, [])
 

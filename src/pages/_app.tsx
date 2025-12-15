@@ -2,7 +2,8 @@ import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
 import { ThemeProvider } from '@contexts/ThemeContext'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { handleRouteChangeGSAP, initGSAP } from '@utils/gsap'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -16,23 +17,25 @@ import '@styles/nprogress.css'
 
 // Initialize GSAP on client-side
 if (typeof window !== 'undefined') {
-    initGSAP()
+    gsap.registerPlugin(ScrollTrigger)
 }
 
 // Route change handlers
 Router.events.on('routeChangeStart', () => {
     nProgress.start()
-    handleRouteChangeGSAP.start()
+    gsap.killTweensOf('*')
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    gsap.globalTimeline.clear()
 })
 
 Router.events.on('routeChangeError', () => {
     nProgress.done()
-    handleRouteChangeGSAP.error()
+    setTimeout(() => ScrollTrigger.refresh(), 100)
 })
 
 Router.events.on('routeChangeComplete', () => {
     nProgress.done()
-    handleRouteChangeGSAP.complete()
+    setTimeout(() => ScrollTrigger.refresh(), 100)
 })
 
 const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {

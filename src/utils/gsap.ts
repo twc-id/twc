@@ -35,7 +35,7 @@ export const cleanupGSAP = (selector?: string | Element | null) => {
 /**
  * Refresh ScrollTrigger after DOM changes
  */
-export const refreshScrollTrigger = (delay: number = 100) => {
+export const refreshScrollTrigger = (delay: number = 300) => {
     if (typeof window === 'undefined') return
 
     setTimeout(() => {

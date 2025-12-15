@@ -64,6 +64,8 @@ const About = () => {
                     smoothTouch: false,
                     normalizeScroll: false
                 })
+                // Refresh ScrollTrigger after ScrollSmoother is created
+                ScrollTrigger.refresh()
             }, 100)
 
             return () => {

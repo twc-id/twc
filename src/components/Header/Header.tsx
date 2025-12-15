@@ -7,7 +7,6 @@ import NextImage from '@components/NextImage'
 import { useTheme } from '@contexts/ThemeContext'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
-import { cleanupGSAP, refreshScrollTrigger } from '@utils/gsap'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -197,34 +196,17 @@ const Headers = () => {
 
     // Theme switching on route changes
     useEffect(() => {
-        const handleRouteChangeStart = () => {
-            // Cleanup GSAP animations
-            cleanupGSAP()
-        }
-
         const handleRouteChangeComplete = () => {
             setIsDarkSection(false) // Switch to light mode on any page navigation
-
-            // Refresh ScrollTrigger after route change
-            refreshScrollTrigger()
         }
 
-        const handleRouteChangeError = () => {
-            // Refresh on error as well
-            refreshScrollTrigger()
-        }
-
-        router.events.on('routeChangeStart', handleRouteChangeStart)
         router.events.on('routeChangeComplete', handleRouteChangeComplete)
-        router.events.on('routeChangeError', handleRouteChangeError)
 
         // Set initial state based on current route
         setIsDarkSection(false)
 
         return () => {
-            router.events.off('routeChangeStart', handleRouteChangeStart)
             router.events.off('routeChangeComplete', handleRouteChangeComplete)
-            router.events.off('routeChangeError', handleRouteChangeError)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.events])
