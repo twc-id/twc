@@ -2,6 +2,7 @@ import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
 import { ThemeProvider } from '@contexts/ThemeContext'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { handleRouteChangeGSAP, initGSAP } from '@utils/gsap'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -13,9 +14,26 @@ import { useState } from 'react'
 import '@styles/globals.css'
 import '@styles/nprogress.css'
 
-Router.events.on('routeChangeStart', nProgress.start)
-Router.events.on('routeChangeError', nProgress.done)
-Router.events.on('routeChangeComplete', nProgress.done)
+// Initialize GSAP on client-side
+if (typeof window !== 'undefined') {
+    initGSAP()
+}
+
+// Route change handlers
+Router.events.on('routeChangeStart', () => {
+    nProgress.start()
+    handleRouteChangeGSAP.start()
+})
+
+Router.events.on('routeChangeError', () => {
+    nProgress.done()
+    handleRouteChangeGSAP.error()
+})
+
+Router.events.on('routeChangeComplete', () => {
+    nProgress.done()
+    handleRouteChangeGSAP.complete()
+})
 
 const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {
     const [queryClient] = useState(() => new QueryClient())

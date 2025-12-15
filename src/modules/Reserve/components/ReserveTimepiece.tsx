@@ -4,6 +4,7 @@ import Icons from '@components/Icon'
 import Skeleton from '@components/Skeleton'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import { killScrollTriggerById } from '@utils/gsap'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -46,7 +47,7 @@ const ReserveTimepiece = () => {
     useGSAP(() => {
         if (!sectionRef.current) return
 
-        const scrollTrigger = ScrollTrigger.create({
+        ScrollTrigger.create({
             trigger: sectionRef.current,
             start: 'top top',
             end: 'bottom top',
@@ -54,7 +55,8 @@ const ReserveTimepiece = () => {
         })
 
         return () => {
-            scrollTrigger.kill()
+            // Use utility function for cleanup
+            killScrollTriggerById('reserve-timepiece-trigger')
         }
     }, [])
 
