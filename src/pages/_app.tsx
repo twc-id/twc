@@ -114,7 +114,6 @@ const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {
                 normalizeScroll: false
             })
             ;(window as any).__scrollSmoother = smoother
-            ;(window as any).__scrollSmoother.__owner = 'app'
             ScrollTrigger.refresh()
             console.log('GSAP: created ScrollSmoother in _app')
         } catch (e) {

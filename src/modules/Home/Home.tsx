@@ -27,7 +27,6 @@ const Home = () => {
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
     const smootherRef = useRef<ScrollSmoother | null>(null)
-    const createdByPage = useRef(false)
 
     useEffect(() => {
         if (isDesktop && typeof window !== 'undefined') {
@@ -35,52 +34,36 @@ const Home = () => {
                 smootherRef.current.kill()
             }
             const timer = setTimeout(() => {
-                const globalS = (window as any).__scrollSmoother
-                if (globalS) {
-                    console.log('Home: Reusing existing window.__scrollSmoother')
-                    smootherRef.current = globalS
-                    createdByPage.current = false
-                } else {
-                    console.log('Home: Creating ScrollSmoother')
-                    smootherRef.current = ScrollSmoother.create({
-                        wrapper: smoothWrapperRef.current,
-                        content: smoothContentRef.current,
-                        smooth: 1.2,
-                        effects: true,
-                        smoothTouch: false,
-                        normalizeScroll: false
-                    })
-                    createdByPage.current = true
-                    try {
-                        ;(window as any).__scrollSmoother = smootherRef.current
-                        ;(window as any).__scrollSmoother.__owner = 'home'
-                        console.log('Home: saved ScrollSmoother to window.__scrollSmoother')
-                    } catch (e) {
-                        //
-                    }
+                console.log('Home: Creating ScrollSmoother')
+                smootherRef.current = ScrollSmoother.create({
+                    wrapper: smoothWrapperRef.current,
+                    content: smoothContentRef.current,
+                    smooth: 1.2,
+                    effects: true,
+                    smoothTouch: false,
+                    normalizeScroll: false
+                })
+                try {
+                    ;(window as any).__scrollSmoother = smootherRef.current
+                    console.log('Home: saved ScrollSmoother to window.__scrollSmoother')
+                } catch (e) {
+                    //
                 }
                 ScrollTrigger.refresh()
             }, 100)
 
             return () => {
                 clearTimeout(timer)
-                if (smootherRef.current && createdByPage.current) {
+                if (smootherRef.current) {
                     console.log('Home: killing ScrollSmoother on cleanup')
-                    try {
-                        smootherRef.current.kill()
-                    } catch (e) {
-                        //
-                    }
+                    smootherRef.current.kill()
                     smootherRef.current = null
                     try {
-                        const ws = (window as any).__scrollSmoother
-                        if (ws && ws.__owner === 'home') delete (window as any).__scrollSmoother
+                        if ((window as any).__scrollSmoother) delete (window as any).__scrollSmoother
                     } catch (e) {
                         //
                     }
                 }
-                smootherRef.current = null
-                createdByPage.current = false
             }
         }
 
