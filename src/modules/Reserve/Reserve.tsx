@@ -24,6 +24,7 @@ const Reserve = () => {
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
     const smootherRef = useRef<ScrollSmoother | null>(null)
+    const createdByPage = useRef(false)
 
     // Cleanup on page change and breakpoint changes
     React.useEffect(() => {
@@ -55,20 +56,29 @@ const Reserve = () => {
 
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
-                console.log('Reserve: Creating ScrollSmoother')
-                smootherRef.current = ScrollSmoother.create({
-                    wrapper: smoothWrapperRef.current,
-                    content: smoothContentRef.current,
-                    smooth: 1.2,
-                    effects: true,
-                    smoothTouch: false,
-                    normalizeScroll: false
-                })
-                try {
-                    ;(window as any).__scrollSmoother = smootherRef.current
-                    console.log('Reserve: saved ScrollSmoother to window.__scrollSmoother')
-                } catch (e) {
-                    console.warn('Reserve: cannot save smoother to window', e)
+                const globalS = (window as any).__scrollSmoother
+                if (globalS) {
+                    console.log('Reserve: Reusing existing window.__scrollSmoother')
+                    smootherRef.current = globalS
+                    createdByPage.current = false
+                } else {
+                    console.log('Reserve: Creating ScrollSmoother')
+                    smootherRef.current = ScrollSmoother.create({
+                        wrapper: smoothWrapperRef.current,
+                        content: smoothContentRef.current,
+                        smooth: 1.2,
+                        effects: true,
+                        smoothTouch: false,
+                        normalizeScroll: false
+                    })
+                    createdByPage.current = true
+                    try {
+                        ;(window as any).__scrollSmoother = smootherRef.current
+                        ;(window as any).__scrollSmoother.__owner = 'reserve'
+                        console.log('Reserve: saved ScrollSmoother to window.__scrollSmoother')
+                    } catch (e) {
+                        console.warn('Reserve: cannot save smoother to window', e)
+                    }
                 }
                 // Refresh ScrollTrigger after ScrollSmoother is created
                 ScrollTrigger.refresh()
@@ -76,16 +86,23 @@ const Reserve = () => {
 
             return () => {
                 clearTimeout(timer)
-                if (smootherRef.current) {
+                if (smootherRef.current && createdByPage.current) {
                     console.log('Reserve: killing ScrollSmoother on cleanup')
-                    smootherRef.current.kill()
+                    try {
+                        smootherRef.current.kill()
+                    } catch (e) {
+                        //
+                    }
                     smootherRef.current = null
                     try {
-                        if ((window as any).__scrollSmoother) delete (window as any).__scrollSmoother
+                        const ws = (window as any).__scrollSmoother
+                        if (ws && ws.__owner === 'reserve') delete (window as any).__scrollSmoother
                     } catch (e) {
                         //
                     }
                 }
+                smootherRef.current = null
+                createdByPage.current = false
             }
         }
     }, [isDesktop])
