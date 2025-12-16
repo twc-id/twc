@@ -4,7 +4,7 @@ import Seo from '@components/Seo'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import Commitment from './components/Commitment'
@@ -26,54 +26,63 @@ const Home = () => {
     const isDesktop = useMediaQuery({ minWidth: 1280 })
     const smoothWrapperRef = useRef<HTMLDivElement>(null)
     const smoothContentRef = useRef<HTMLDivElement>(null)
-    const smootherRef = useRef<ScrollSmoother | null>(null)
+    // const smootherRef = useRef<ScrollSmoother | null>(null)
 
-    useEffect(() => {
-        if (isDesktop && typeof window !== 'undefined') {
-            if (smootherRef.current) {
-                smootherRef.current.kill()
-            }
-            const timer = setTimeout(() => {
-                console.log('Home: Creating ScrollSmoother')
-                smootherRef.current = ScrollSmoother.create({
-                    wrapper: smoothWrapperRef.current,
-                    content: smoothContentRef.current,
-                    smooth: 1.2,
-                    effects: true,
-                    smoothTouch: false,
-                    normalizeScroll: false
-                })
-                try {
-                    ;(window as any).__scrollSmoother = smootherRef.current
-                    console.log('Home: saved ScrollSmoother to window.__scrollSmoother')
-                } catch (e) {
-                    //
-                }
-                ScrollTrigger.refresh()
-            }, 100)
+    // Cleanup on page change and breakpoint changes
+    // React.useEffect(() => {
+    //     // Cleanup when isDesktop changes (responsive breakpoint)
+    //     if (!isDesktop && smootherRef.current) {
+    //         smootherRef.current.kill()
+    //         smootherRef.current = null
+    //     }
 
-            return () => {
-                clearTimeout(timer)
-                if (smootherRef.current) {
-                    console.log('Home: killing ScrollSmoother on cleanup')
-                    smootherRef.current.kill()
-                    smootherRef.current = null
-                    try {
-                        if ((window as any).__scrollSmoother) delete (window as any).__scrollSmoother
-                    } catch (e) {
-                        //
-                    }
-                }
-            }
-        }
+    //     return () => {
+    //         console.log('GSAP Home: Cleaning up ScrollSmoother and ScrollTriggers')
+    //         if (smootherRef.current) {
+    //             smootherRef.current.kill()
+    //             smootherRef.current = null
+    //         }
+    //         // Clear all ScrollTriggers
+    //         if (typeof window !== 'undefined') {
+    //             ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
+    //             ScrollTrigger?.refresh?.()
+    //         }
+    //         console.log('GSAP Home: Cleanup completed')
+    //     }
+    // }, [isDesktop])
 
-        return () => {
-            if (smootherRef.current) {
-                smootherRef.current.kill()
-                smootherRef.current = null
-            }
-        }
-    }, [isDesktop])
+    // useGSAP(() => {
+    //     if (isDesktop && typeof window !== 'undefined') {
+    //         // Kill existing smoother if any
+    //         if (smootherRef.current) {
+    //             smootherRef.current.kill()
+    //         }
+
+    //         // Small delay to ensure DOM is ready
+    //         const timer = setTimeout(() => {
+    //             console.log('GSAP Home: Creating ScrollSmoother')
+    //             smootherRef.current = ScrollSmoother.create({
+    //                 wrapper: smoothWrapperRef.current,
+    //                 content: smoothContentRef.current,
+    //                 smooth: 1.2,
+    //                 effects: true,
+    //                 smoothTouch: false,
+    //                 normalizeScroll: false
+    //             })
+    //             // Refresh ScrollTrigger after ScrollSmoother is created
+    //             ScrollTrigger.refresh()
+    //             console.log('GSAP Home: ScrollSmoother created and ScrollTrigger refreshed')
+    //         }, 100)
+
+    //         return () => {
+    //             clearTimeout(timer)
+    //             if (smootherRef.current) {
+    //                 smootherRef.current.kill()
+    //                 smootherRef.current = null
+    //             }
+    //         }
+    //     }
+    // }, [isDesktop])
 
     const content = (
         <>
