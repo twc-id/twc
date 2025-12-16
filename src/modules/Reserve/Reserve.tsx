@@ -34,6 +34,7 @@ const Reserve = () => {
         }
 
         return () => {
+            console.log('GSAP Reserve: Cleaning up ScrollSmoother and ScrollTriggers')
             if (smootherRef.current) {
                 smootherRef.current.kill()
                 smootherRef.current = null
@@ -43,6 +44,7 @@ const Reserve = () => {
                 ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
                 ScrollTrigger?.refresh?.()
             }
+            console.log('GSAP Reserve: Cleanup completed')
         }
     }, [isDesktop])
 
@@ -55,6 +57,7 @@ const Reserve = () => {
 
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
+                console.log('GSAP Reserve: Creating ScrollSmoother')
                 smootherRef.current = ScrollSmoother.create({
                     wrapper: smoothWrapperRef.current,
                     content: smoothContentRef.current,
@@ -65,6 +68,7 @@ const Reserve = () => {
                 })
                 // Refresh ScrollTrigger after ScrollSmoother is created
                 ScrollTrigger.refresh()
+                console.log('GSAP Reserve: ScrollSmoother created and ScrollTrigger refreshed')
             }, 100)
 
             return () => {
