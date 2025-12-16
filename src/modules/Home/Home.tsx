@@ -61,8 +61,14 @@ const Home = () => {
                 }
                 ScrollTrigger.refresh()
             }, 100)
-
+            ;(window as any).__scrollSmoother = smootherRef.current
+            ;(window as any).__scrollSmoother.__owner = 'home'
             return () => {
+                try {
+                    window.dispatchEvent(new Event('scrollSmoother:created'))
+                } catch (e) {
+                    //
+                }
                 clearTimeout(timer)
                 if (smootherRef.current && createdByPage.current) {
                     console.log('Home: killing ScrollSmoother on cleanup')
@@ -80,6 +86,11 @@ const Home = () => {
                     }
                 }
                 smootherRef.current = null
+                try {
+                    window.dispatchEvent(new Event('scrollSmoother:destroyed'))
+                } catch (e) {
+                    //
+                }
                 createdByPage.current = false
             }
         }

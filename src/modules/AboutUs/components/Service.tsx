@@ -21,46 +21,78 @@ const Service = () => {
     const { setIsDarkSection } = useTheme()
 
     useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom top',
-            onEnter: () => setIsDarkSection(true),
-            onLeaveBack: () => setIsDarkSection(false),
-            onEnterBack: () => setIsDarkSection(true)
-        })
+        let timeline: any = null
+        let topTrigger: any = null
+        let listener: any = null
 
-        const timeline = gsap.timeline({
-            scrollTrigger: {
+        const init = () => {
+            topTrigger = ScrollTrigger.create({
                 trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'restart none none reset'
+                start: 'top center',
+                end: 'bottom top',
+                onEnter: () => setIsDarkSection(true),
+                onLeaveBack: () => setIsDarkSection(false),
+                onEnterBack: () => setIsDarkSection(true)
+            })
+
+            timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'restart none none reset'
+                }
+            })
+
+            timeline.fromTo(
+                rightRef.current,
+                { opacity: 0, x: 60 },
+                { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
+            )
+
+            timeline.fromTo(
+                textref.current,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+                '-=0.5'
+            )
+
+            timeline.fromTo(
+                quoteRef.current,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+                '-=0.5'
+            )
+
+            timeline.fromTo(
+                founderRef.current,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+                '-=0.5'
+            )
+        }
+
+        if ((window as any).__scrollSmoother) {
+            init()
+        } else {
+            listener = () => init()
+            window.addEventListener('scrollSmoother:created', listener)
+        }
+
+        return () => {
+            if (listener) window.removeEventListener('scrollSmoother:created', listener)
+            try {
+                topTrigger && topTrigger.kill()
+            } catch (e) {}
+            if (timeline) {
+                try {
+                    timeline.scrollTrigger?.kill()
+                } catch (e) {}
+                try {
+                    timeline.kill()
+                } catch (e) {}
             }
-        })
-
-        timeline.fromTo(rightRef.current, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            textref.current,
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5' // overlap with previous animation
-        )
-
-        timeline.fromTo(
-            quoteRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5' // overlap with previous animation
-        )
-
-        timeline.fromTo(
-            founderRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5' // overlap with previous animation
-        )
+        }
     }, [])
     return (
         <section ref={sectionRef} className='pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]'>

@@ -17,38 +17,63 @@ const WhiteSpace = () => {
     const imageContainerRef = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'restart none none reset'
-            }
-        })
+        let timeline: any = null
+        let pinTrigger: any = null
+        let timer: any = null
+        let listener: any = null
 
-        timeline.fromTo(textRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+        const init = () => {
+            timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'restart none none reset'
+                }
+            })
 
-        const pinTrigger = ScrollTrigger.create({
-            trigger: imageContainerRef.current,
-            start: 'top top',
-            end: '+=100%',
-            pin: true,
-            pinSpacing: false,
-            id: 'whitespace-pin',
-            pinnedContainer: sectionRef.current
-        })
+            timeline.fromTo(
+                textRef.current,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+            )
 
-        // return () => {
-        //     pinTrigger.kill()
-        // }
+            pinTrigger = ScrollTrigger.create({
+                trigger: imageContainerRef.current,
+                start: 'top top',
+                end: '+=100%',
+                pin: true,
+                pinSpacing: false,
+                id: 'whitespace-pin',
+                pinnedContainer: sectionRef.current
+            })
 
-        const timer = setTimeout(() => {
-            ScrollTrigger.refresh()
-        }, 100)
+            timer = setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 100)
+        }
+
+        if ((window as any).__scrollSmoother) {
+            init()
+        } else {
+            listener = () => init()
+            window.addEventListener('scrollSmoother:created', listener)
+        }
 
         return () => {
-            pinTrigger.kill()
-            clearTimeout(timer)
+            if (listener) window.removeEventListener('scrollSmoother:created', listener)
+            try {
+                pinTrigger && pinTrigger.kill()
+            } catch (e) {}
+            if (timer) clearTimeout(timer)
+            if (timeline) {
+                try {
+                    timeline.scrollTrigger?.kill()
+                } catch (e) {}
+                try {
+                    timeline.kill()
+                } catch (e) {}
+            }
         }
     }, [])
 

@@ -17,9 +17,12 @@ const Journey = () => {
     const textref = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
-        // Tunggu sampai semua layout stabil
+        let timeline: any = null
+        let timer: any = null
+        let listener: any = null
+
         const initScrollTrigger = () => {
-            const timeline = gsap.timeline({
+            timeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: 'top 80%',
@@ -27,7 +30,6 @@ const Journey = () => {
                     toggleActions: 'restart none none reset'
                 }
             })
-            // Animasi kanan fade in
             timeline.fromTo(
                 leftRef.current,
                 { opacity: 0, x: -60 },
@@ -39,16 +41,35 @@ const Journey = () => {
                 { opacity: 0, x: 60 },
                 { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
             )
+
+            timer = setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 100)
         }
 
-        // Delay initialization untuk memastikan layout component lain sudah stabil
-        const timer = setTimeout(() => {
+        if ((window as any).__scrollSmoother) {
             initScrollTrigger()
-            // Refresh semua ScrollTrigger setelah inisialisasi
-            ScrollTrigger.refresh()
-        }, 100)
+        } else {
+            listener = () => initScrollTrigger()
+            window.addEventListener('scrollSmoother:created', listener)
+        }
 
-        return () => clearTimeout(timer)
+        return () => {
+            if (listener) window.removeEventListener('scrollSmoother:created', listener)
+            if (timer) clearTimeout(timer)
+            if (timeline) {
+                try {
+                    timeline.scrollTrigger?.kill()
+                } catch (e) {
+                    //
+                }
+                try {
+                    timeline.kill()
+                } catch (e) {
+                    //
+                }
+            }
+        }
     }, [])
 
     return (
