@@ -63,6 +63,8 @@ const Home = () => {
     }, [])
 
     useGSAP(() => {
+        ScrollTrigger.refresh()
+
         if (isDesktop && typeof window !== 'undefined') {
             // Kill existing smoother if any
             if (smootherRef.current) {
