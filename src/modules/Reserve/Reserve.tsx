@@ -55,7 +55,6 @@ const Reserve = () => {
 
             // Small delay to ensure DOM is ready
             const timer = setTimeout(() => {
-                console.log('Reserve: Creating ScrollSmoother')
                 smootherRef.current = ScrollSmoother.create({
                     wrapper: smoothWrapperRef.current,
                     content: smoothContentRef.current,
@@ -64,12 +63,6 @@ const Reserve = () => {
                     smoothTouch: false,
                     normalizeScroll: false
                 })
-                try {
-                    ;(window as any).__scrollSmoother = smootherRef.current
-                    console.log('Reserve: saved ScrollSmoother to window.__scrollSmoother')
-                } catch (e) {
-                    console.warn('Reserve: cannot save smoother to window', e)
-                }
                 // Refresh ScrollTrigger after ScrollSmoother is created
                 ScrollTrigger.refresh()
             }, 100)
@@ -77,14 +70,8 @@ const Reserve = () => {
             return () => {
                 clearTimeout(timer)
                 if (smootherRef.current) {
-                    console.log('Reserve: killing ScrollSmoother on cleanup')
                     smootherRef.current.kill()
                     smootherRef.current = null
-                    try {
-                        if ((window as any).__scrollSmoother) delete (window as any).__scrollSmoother
-                    } catch (e) {
-                        //
-                    }
                 }
             }
         }
