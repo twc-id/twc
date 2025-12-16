@@ -7,20 +7,15 @@ import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import * as React from 'react'
-import { When } from 'react-if'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 }
 
-interface LayoutProps extends React.PropsWithChildren<object> {
-    currentPath: string
-}
+interface LayoutProps extends React.PropsWithChildren<object> {}
 
-const pathExcludeFooter = ['/']
-
-const Layout: React.FC<LayoutProps> = ({ children, currentPath }: LayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
     const smoothWrapperRef = React.useRef<HTMLDivElement>(null)
     const smoothContentRef = React.useRef<HTMLDivElement>(null)
     const smootherRef = React.useRef<ScrollSmoother | null>(null)
@@ -37,13 +32,16 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPath }: LayoutProps) =
             wrapper: smoothWrapperRef.current,
             content: smoothContentRef.current,
             smooth: 1.2,
-            effects: true,
+            effects: false,
             smoothTouch: false,
             normalizeScroll: false
         })
-    })
 
-    const shouldShowFooter = !pathExcludeFooter.some((path) => currentPath.startsWith(path))
+        console.log('smoother:', ScrollSmoother.get())
+        console.log('wrapper count:', document.querySelectorAll('#smooth-wrapper').length)
+        console.log('content count:', document.querySelectorAll('#smooth-content').length)
+        console.log('triggers:', ScrollTrigger.getAll().length)
+    })
 
     return (
         <div className={`${inter.className} ${overpass.variable}`}>
@@ -52,13 +50,11 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPath }: LayoutProps) =
                 <div ref={smoothWrapperRef} id='smooth-wrapper-home'>
                     <div ref={smoothContentRef} id='smooth-content-home'>
                         {children}
-                        <When condition={shouldShowFooter}>
-                            <Footer />
-                        </When>
-                        <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />
+                        <Footer />
                     </div>
                 </div>
             </div>
+            <BaseDialog onClose={handleClose} onSubmit={handleSubmit} open={open} options={state} />
         </div>
     )
 }

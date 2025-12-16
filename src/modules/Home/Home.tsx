@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import Footer from '@components/Footer'
 import Seo from '@components/Seo'
 import React from 'react'
 
@@ -14,29 +13,6 @@ import SocialMedia from './components/SocialMedia'
 import TimePieceService from './components/TimePieceService'
 
 const Home = () => {
-    // Cleanup on page change and breakpoint changes
-    // React.useEffect(() => {
-    //     // Cleanup when isDesktop changes (responsive breakpoint)
-    //     if (!isDesktop && smootherRef.current) {
-    //         smootherRef.current.kill()
-    //         smootherRef.current = null
-    //     }
-
-    //     return () => {
-    //         console.log('GSAP Home: Cleaning up ScrollSmoother and ScrollTriggers')
-    //         if (smootherRef.current) {
-    //             smootherRef.current.kill()
-    //             smootherRef.current = null
-    //         }
-    //         // Clear all ScrollTriggers
-    //         if (typeof window !== 'undefined') {
-    //             ScrollTrigger?.getAll()?.forEach((trigger) => trigger.kill())
-    //             ScrollTrigger?.refresh?.()
-    //         }
-    //         console.log('GSAP Home: Cleanup completed')
-    //     }
-    // }, [isDesktop])
-
     return (
         <>
             <Seo />
@@ -49,7 +25,6 @@ const Home = () => {
             <Review />
             <SocialMedia />
             <CTA />
-            <Footer />
         </>
     )
 }

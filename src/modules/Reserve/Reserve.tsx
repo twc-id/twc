@@ -1,4 +1,3 @@
-import Footer from '@components/Footer'
 import Seo from '@components/Seo'
 import CTA from '@modules/Reserve/components/CTA'
 import Hero from '@modules/Reserve/components/Hero'
@@ -12,14 +11,13 @@ const Reserve = () => {
     const { t } = useTranslation('reserve')
 
     return (
-        <div className='relative -mt-20 overflow-hidden'>
+        <div className='bg-grey-black'>
             <Seo title={t('title')} />
             <Hero />
             <ReserveTimepiece />
             <ImagePin />
             <HowToReserve />
             <CTA />
-            <Footer />
         </div>
     )
 }

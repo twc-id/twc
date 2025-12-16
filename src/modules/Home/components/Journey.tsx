@@ -84,19 +84,38 @@ const Journey = () => {
         // Custom event listener jika component lain mengirim event perubahan layout
         window.addEventListener('layoutChange', handleLayoutChange)
 
-        // Observer untuk mengwatch perubahan DOM pada component di atas Journey
-        const observer = new MutationObserver(() => {
-            // Delay refresh saat ada perubahan DOM
-            setTimeout(() => {
-                ScrollTrigger.refresh()
-            }, 50)
-        })
+        // Use a ResizeObserver (lighter) with a debounced refresh.
+        // Keep a one-shot MutationObserver fallback for attribute changes.
+        let resizeObserver: ResizeObserver | null = null
+        let mo: MutationObserver | null = null
+        let refreshTimer: any = null
 
-        // Watch changes pada parent container
+        const scheduleRefresh = (delay = 100) => {
+            clearTimeout(refreshTimer)
+            refreshTimer = setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, delay)
+        }
+
         if (sectionRef.current?.parentElement) {
-            observer.observe(sectionRef.current.parentElement, {
-                childList: true,
-                subtree: true,
+            try {
+                resizeObserver = new ResizeObserver(() => {
+                    scheduleRefresh(100)
+                })
+                resizeObserver.observe(sectionRef.current.parentElement)
+            } catch (e) {
+                // ResizeObserver may not be available in some environments; fall back to mutation observer below
+            }
+
+            // Fallback one-shot MutationObserver to catch class/style changes
+            mo = new MutationObserver(() => {
+                scheduleRefresh(50)
+                if (mo) {
+                    mo.disconnect()
+                    mo = null
+                }
+            })
+            mo.observe(sectionRef.current.parentElement, {
                 attributes: true,
                 attributeFilter: ['style', 'class']
             })
@@ -105,7 +124,9 @@ const Journey = () => {
         return () => {
             window.removeEventListener('resize', handleResize)
             window.removeEventListener('layoutChange', handleLayoutChange)
-            observer.disconnect()
+            if (resizeObserver) resizeObserver.disconnect()
+            if (mo) mo.disconnect()
+            clearTimeout(refreshTimer)
         }
     }, [])
 
