@@ -4,7 +4,6 @@ import Layout from '@components/layout/Layout'
 import { ThemeProvider } from '@contexts/ThemeContext'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import gsap from 'gsap'
-import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -19,7 +18,7 @@ import '@styles/nprogress.css'
 
 // Initialize GSAP on client-side
 if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
+    gsap.registerPlugin(ScrollTrigger)
 }
 
 // Route change handlers
@@ -29,20 +28,6 @@ Router.events.on('routeChangeStart', () => {
     gsap.killTweensOf('*')
     ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     gsap.globalTimeline.clear()
-    // Try to kill any existing ScrollSmoother instances to avoid leftover smoothers
-    try {
-        const getAll = (ScrollSmoother as any).getAll
-        if (typeof getAll === 'function') {
-            ;(ScrollSmoother as any).getAll().forEach((s: any) => s.kill && s.kill())
-            console.log('GSAP: Killed ScrollSmoother instances')
-        } else if ((ScrollSmoother as any).instance) {
-            const inst = (ScrollSmoother as any).instance
-            inst.kill && inst.kill()
-            console.log('GSAP: Killed ScrollSmoother.instance')
-        }
-    } catch (err) {
-        console.warn('GSAP: Error while killing ScrollSmoother', err)
-    }
     console.log('GSAP: Cleanup completed')
 })
 
