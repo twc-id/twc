@@ -11,7 +11,7 @@ import Head from 'next/head'
 import Router from 'next/router'
 import { appWithTranslation } from 'next-i18next'
 import nProgress from 'nprogress'
-import { useLayoutEffect, useState } from 'react'
+import { useState } from 'react'
 
 // Updated imports to use alias format
 import '@styles/globals.css'
@@ -55,48 +55,6 @@ Router.events.on('routeChangeComplete', () => {
 
 const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {
     const [queryClient] = useState(() => new QueryClient())
-
-    // Create ScrollSmoother early for pages that include smooth-wrapper elements.
-    useLayoutEffect(() => {
-        if (typeof window === 'undefined') return
-
-        const isDesktop = window.innerWidth >= 1280
-        if (!isDesktop) return
-
-        // detect wrapper element (id starts with 'smooth-wrapper')
-        const wrapper = document.querySelector("[id^='smooth-wrapper']") as HTMLElement | null
-        if (!wrapper) return
-
-        // ensure any previous smoother is killed
-        try {
-            const existing = (window as any).__scrollSmoother
-            if (existing && typeof existing.kill === 'function') {
-                existing.kill()
-                delete (window as any).__scrollSmoother
-                console.log('GSAP: killed existing window.__scrollSmoother before creating new')
-            }
-        } catch (e) {
-            //
-        }
-
-        try {
-            const content = wrapper.querySelector("[id^='smooth-content']") as HTMLElement | null
-            const smoother = (ScrollSmoother as any).create({
-                wrapper: wrapper,
-                content: content || wrapper.firstElementChild,
-                smooth: 1.2,
-                effects: true,
-                smoothTouch: false,
-                normalizeScroll: false
-            })
-            ;(window as any).__scrollSmoother = smoother
-            ;(window as any).__scrollSmoother.__owner = 'app'
-            ScrollTrigger.refresh()
-            console.log('GSAP: created ScrollSmoother in _app')
-        } catch (e) {
-            console.warn('GSAP: failed to create ScrollSmoother in _app', e)
-        }
-    }, [rest.router.asPath])
 
     return (
         <QueryClientProvider client={queryClient}>
