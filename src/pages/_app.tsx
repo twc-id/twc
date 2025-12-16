@@ -43,6 +43,17 @@ Router.events.on('routeChangeStart', () => {
     } catch (err) {
         console.warn('GSAP: Error while killing ScrollSmoother', err)
     }
+    // Fallback: check for window.__scrollSmoother set by pages
+    try {
+        const ws = (window as any).__scrollSmoother
+        if (ws && typeof ws.kill === 'function') {
+            ws.kill()
+            delete (window as any).__scrollSmoother
+            console.log('GSAP: Killed window.__scrollSmoother')
+        }
+    } catch (e) {
+        //
+    }
     console.log('GSAP: Cleanup completed')
 })
 
