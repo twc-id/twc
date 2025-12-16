@@ -116,6 +116,7 @@ const TimePieceService = () => {
                     <div className='flex flex-col gap-8'>
                         <h2
                             className={`xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black `}
+                            ref={titleRef}
                         >
                             <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                 {t('timepiece.title')}

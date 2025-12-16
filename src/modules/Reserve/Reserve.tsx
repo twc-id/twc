@@ -69,10 +69,14 @@ const Reserve = () => {
 
             return () => {
                 clearTimeout(timer)
-                if (smootherRef.current) {
-                    smootherRef.current.kill()
-                    smootherRef.current = null
-                }
+            }
+        } else {
+            const timer = setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 100)
+
+            return () => {
+                clearTimeout(timer)
             }
         }
     }, [isDesktop])
