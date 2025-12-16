@@ -28,30 +28,27 @@ Router.events.on('routeChangeStart', () => {
     gsap.killTweensOf('*')
     ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     gsap.globalTimeline.clear()
-    // Reset styles that might be set by ScrollSmoother
-    gsap.set('html', { clearProps: 'all' })
-    gsap.set('body', { clearProps: 'all' })
     console.log('GSAP: Cleanup completed')
 })
 
 Router.events.on('routeChangeError', () => {
     console.log('GSAP: Route change error - refreshing ScrollTrigger')
     nProgress.done()
-    requestAnimationFrame(() => {
+    setTimeout(() => {
         ScrollTrigger.update()
         ScrollTrigger.refresh()
         console.log('GSAP: ScrollTrigger refreshed after error')
-    })
+    }, 500)
 })
 
 Router.events.on('routeChangeComplete', () => {
     console.log('GSAP: Route change complete - refreshing ScrollTrigger')
     nProgress.done()
-    requestAnimationFrame(() => {
+    setTimeout(() => {
         ScrollTrigger.update()
         ScrollTrigger.refresh()
         console.log('GSAP: ScrollTrigger refreshed after complete')
-    })
+    }, 500)
 })
 
 const MyApp = ({ Component, pageProps, ...rest }: AppProps) => {
