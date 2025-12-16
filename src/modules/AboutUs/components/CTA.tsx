@@ -18,48 +18,24 @@ const CTA = () => {
     const paragraphRef = useRef<HTMLParagraphElement>(null)
 
     useGSAP(() => {
-        let timeline: any = null
-        let listener: any = null
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                id: 'about-cta-animation',
+                toggleActions: 'restart none none reset'
+            }
+        })
 
-        const init = () => {
-            timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    id: 'about-cta-animation',
-                    toggleActions: 'restart none none reset'
-                }
-            })
-
-            timeline.fromTo(
-                [headingref.current, paragraphRef.current],
-                { opacity: 0, x: -20 },
-                { opacity: 1, x: 0, duration: 1, ease: 'power2.out', stagger: 0.3 }
-            )
-        }
-
-        if ((window as any).__scrollSmoother) {
-            init()
-        } else {
-            listener = () => init()
-            window.addEventListener('scrollSmoother:created', listener)
-        }
+        timeline.fromTo(
+            [headingref.current, paragraphRef.current],
+            { opacity: 0, x: -20 },
+            { opacity: 1, x: 0, duration: 1, ease: 'power2.out', stagger: 0.3 }
+        )
 
         return () => {
-            if (listener) window.removeEventListener('scrollSmoother:created', listener)
-            if (timeline) {
-                try {
-                    timeline.scrollTrigger?.kill()
-                } catch (e) {
-                    //
-                }
-                try {
-                    timeline.kill()
-                } catch (e) {
-                    //
-                }
-            }
+            timeline.scrollTrigger?.kill()
         }
     }, [])
     return (

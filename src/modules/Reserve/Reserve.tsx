@@ -76,11 +76,6 @@ const Reserve = () => {
                         ;(window as any).__scrollSmoother = smootherRef.current
                         ;(window as any).__scrollSmoother.__owner = 'reserve'
                         console.log('Reserve: saved ScrollSmoother to window.__scrollSmoother')
-                        try {
-                            window.dispatchEvent(new Event('scrollSmoother:created'))
-                        } catch (e) {
-                            //
-                        }
                     } catch (e) {
                         console.warn('Reserve: cannot save smoother to window', e)
                     }
@@ -101,14 +96,7 @@ const Reserve = () => {
                     smootherRef.current = null
                     try {
                         const ws = (window as any).__scrollSmoother
-                        if (ws && ws.__owner === 'reserve') {
-                            try {
-                                window.dispatchEvent(new Event('scrollSmoother:destroyed'))
-                            } catch (e) {
-                                //
-                            }
-                            delete (window as any).__scrollSmoother
-                        }
+                        if (ws && ws.__owner === 'reserve') delete (window as any).__scrollSmoother
                     } catch (e) {
                         //
                     }

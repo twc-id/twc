@@ -18,55 +18,19 @@ const Location = () => {
     const socialRef = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
-        let timeline: any = null
-        let listener: any = null
-
-        const init = () => {
-            timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'restart none none reset'
-                }
-            })
-
-            timeline.fromTo(
-                leftRef.current,
-                { opacity: 0, x: -60 },
-                { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
-            )
-
-            timeline.fromTo(
-                mapRef.current,
-                { opacity: 0, x: 60 },
-                { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
-            )
-            timeline.fromTo(
-                socialRef.current,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-            )
-        }
-
-        if ((window as any).__scrollSmoother) {
-            init()
-        } else {
-            listener = () => init()
-            window.addEventListener('scrollSmoother:created', listener)
-        }
-
-        return () => {
-            if (listener) window.removeEventListener('scrollSmoother:created', listener)
-            if (timeline) {
-                try {
-                    timeline.scrollTrigger?.kill()
-                } catch (e) {}
-                try {
-                    timeline.kill()
-                } catch (e) {}
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'restart none none reset'
             }
-        }
+        })
+
+        timeline.fromTo(leftRef.current, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
+
+        timeline.fromTo(mapRef.current, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
+        timeline.fromTo(socialRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
     }, [])
 
     return (

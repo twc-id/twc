@@ -16,59 +16,37 @@ const Hero = () => {
     const paragraphRef = useRef<HTMLParagraphElement>(null)
 
     useGSAP(() => {
-        let timeline: any = null
-        let timer: any = null
-        let listener: any = null
-
-        const init = () => {
-            timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    id: 'about-hero-animation',
-                    toggleActions: 'restart none none reset',
-                    onEnter: () => timeline.restart(),
-                    onEnterBack: () => timeline.restart()
-                }
-            })
-
-            timeline.fromTo(h1Ref.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
-
-            timeline.fromTo(
-                paragraphRef.current,
-                { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-            )
-
-            timer = setTimeout(() => {
-                ScrollTrigger.refresh()
-            }, 100)
-        }
-
-        if ((window as any).__scrollSmoother) {
-            init()
-        } else {
-            listener = () => init()
-            window.addEventListener('scrollSmoother:created', listener)
-        }
-
-        return () => {
-            if (listener) window.removeEventListener('scrollSmoother:created', listener)
-            if (timer) clearTimeout(timer)
-            if (timeline) {
-                try {
-                    timeline.scrollTrigger?.kill()
-                } catch (e) {
-                    //
-                }
-                try {
-                    timeline.kill()
-                } catch (e) {
-                    //
-                }
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                id: 'about-hero-animation',
+                toggleActions: 'restart none none reset',
+                onEnter: () => timeline.restart(),
+                onEnterBack: () => timeline.restart()
             }
-        }
+        })
+
+        // Animasi fade untuk h3 dengan durasi lebih lama
+        timeline.fromTo(h1Ref.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
+
+        // Animasi h1 muncul dari bawah setelah h3 selesai
+        timeline.fromTo(
+            paragraphRef.current,
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+        )
+
+        // return () => {
+        //     timeline.scrollTrigger?.kill()
+        // }
+
+        const timer = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+
+        return () => clearTimeout(timer)
     }, [])
 
     return (

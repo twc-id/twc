@@ -77,11 +77,6 @@ const Sell = () => {
                         ;(window as any).__scrollSmoother = smootherRef.current
                         ;(window as any).__scrollSmoother.__owner = 'sell'
                         console.log('Sell: saved ScrollSmoother to window.__scrollSmoother')
-                        try {
-                            window.dispatchEvent(new Event('scrollSmoother:created'))
-                        } catch (e) {
-                            //
-                        }
                     } catch (e) {
                         console.warn('Sell: cannot save smoother to window', e)
                     }
@@ -102,14 +97,7 @@ const Sell = () => {
                     smootherRef.current = null
                     try {
                         const ws = (window as any).__scrollSmoother
-                        if (ws && ws.__owner === 'sell') {
-                            try {
-                                window.dispatchEvent(new Event('scrollSmoother:destroyed'))
-                            } catch (e) {
-                                //
-                            }
-                            delete (window as any).__scrollSmoother
-                        }
+                        if (ws && ws.__owner === 'sell') delete (window as any).__scrollSmoother
                     } catch (e) {
                         //
                     }
