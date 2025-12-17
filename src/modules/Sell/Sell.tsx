@@ -1,4 +1,3 @@
-import Footer from '@components/Footer'
 import Seo from '@components/Seo'
 import Benefit from '@modules/Sell/components/Benefit'
 import Consign from '@modules/Sell/components/Consign'
@@ -23,7 +22,6 @@ const Sell = () => {
             <Consign />
             <Faq />
             <CTA />
-            <Footer />
         </>
     )
 }
