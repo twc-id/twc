@@ -158,14 +158,25 @@ const Review = () => {
                                                 </div>
                                                 <div className='flex flex-col gap-1'>
                                                     <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
-                                                        {product.categories[0]?.name || 'Watch'}
+                                                        {product.brands?.[0].name} •{' '}
+                                                        {
+                                                            product.meta_data.find(
+                                                                (meta: any) => meta.key === 'reference'
+                                                            )?.value
+                                                        }
                                                     </p>
                                                     <h4
                                                         className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: product.name }}
                                                     />
                                                     <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                                        {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}
+                                                        {/* {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'} */}
+                                                        {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                            t('highlight.pre_owned', {
+                                                                year: product.meta_data.find((meta: any) =>
+                                                                    meta.key.startsWith('pre-owned-')
+                                                                )?.value
+                                                            })}
                                                     </p>
                                                     <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
                                                         {formatPrice(product.price)}

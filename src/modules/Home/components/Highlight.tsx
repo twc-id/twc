@@ -128,10 +128,7 @@ const Highlight = () => {
                         spaceBetween={24}
                         slidesPerView={4}
                         slidesPerGroup={4}
-                        grid={{
-                            rows: isMobile ? 2 : 1,
-                            fill: 'row'
-                        }}
+                        loop={isMobile ? false : true}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper
                         }}
@@ -157,11 +154,7 @@ const Highlight = () => {
                             1280: {
                                 slidesPerView: 4,
                                 slidesPerGroup: 4,
-                                spaceBetween: 24,
-                                grid: {
-                                    rows: 1,
-                                    fill: 'row'
-                                }
+                                spaceBetween: 24
                             }
                         }}
                     >
@@ -179,16 +172,19 @@ const Highlight = () => {
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                            {product.categories[0]?.name || 'ROLEX PHILIPPE'} •{' '}
-                                            {product.tags[0]?.name || 'SERIES'}
+                                            {product.brands?.[0].name} •{' '}
+                                            {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
                                         </p>
                                         <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
                                             {product.name}
                                         </h3>
                                         <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                            {t('highlight.pre_owned', {
-                                                year: new Date(product.date_created).getFullYear()
-                                            })}
+                                            {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                t('highlight.pre_owned', {
+                                                    year: product.meta_data.find((meta: any) =>
+                                                        meta.key.startsWith('pre-owned-')
+                                                    )?.value
+                                                })}
                                         </p>
                                         <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
                                             IDR {parseInt(product.price).toLocaleString('id-ID')}

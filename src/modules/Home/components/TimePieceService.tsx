@@ -14,6 +14,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
@@ -111,7 +112,7 @@ const TimePieceService = () => {
 
     return (
         <section ref={sectionRef} className='overflow-hidden pb-16 xl:pb-[160px]'>
-            <Container className='relative flex flex-col justify-between gap-10 xl:flex-row'>
+            <Container className='relative flex flex-col justify-between gap-14 xl:flex-row xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
                         <h2
@@ -190,6 +191,7 @@ const TimePieceService = () => {
                             modules={[Navigation, Pagination]}
                             spaceBetween={16}
                             slidesPerView={1.25}
+                            pagination={{ el: '.timepiece-pagination', clickable: true }}
                             onSwiper={(swiper) => {
                                 swiperMobileRef.current = swiper
                             }}
@@ -219,6 +221,27 @@ const TimePieceService = () => {
                                 </SwiperSlide>
                             ))}
                         </Swiper>
+                        {/* explicit pagination container so bullets are always visible and styleable */}
+                        <div
+                            className='timepiece-pagination mt-14 flex items-center justify-end
+                        '
+                        />
+                        <style jsx global>{`
+                            .timepiece-pagination .swiper-pagination-bullet {
+                                width: 4px !important;
+                                height: 4px !important;
+                                background: #e5e7eb !important; /* gray-200 */
+                                opacity: 1 !important;
+                                margin: 0 6px !important;
+                                border-radius: 9999px !important;
+                            }
+
+                            .timepiece-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+                                background: #ffffff !important; /* active: grey-white / white */
+                                width: 6px !important;
+                                height: 6px !important;
+                            }
+                        `}</style>
                     </div>
                 </div>
             </Container>
