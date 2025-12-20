@@ -48,7 +48,7 @@ const Hero = () => {
             ref={sectionRef}
             className='relative h-[848px] w-full xl:h-[960px]'
             style={{
-                backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('/images/sell/hero.webp')`,
+                backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('/images/collections/hero.webp')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
@@ -58,7 +58,7 @@ const Hero = () => {
                 <Container>
                     <div className='flex w-full flex-col   gap-6  xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[483px] '
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[720px] '
                             ref={h1Ref}
                         >
                             <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>

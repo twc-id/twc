@@ -5,7 +5,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale || defaultLanguage, ['components', 'common', 'pages', 'reserve']))
+        ...(await serverSideTranslations(locale || defaultLanguage, [
+            'components',
+            'common',
+            'pages',
+            'collection',
+            'home'
+        ]))
     },
     revalidate: 3600
 })
