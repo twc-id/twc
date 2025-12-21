@@ -21,14 +21,26 @@ const api = async (endpoint: string, options?: RequestInit) => {
     return response
 }
 
-const WooCommerce = new WooCommerceRestApi({
-    url: 'https://mediumpurple-pig-833607.hostingersite.com',
-    consumerKey: CONSUMER_KEY ?? '',
-    consumerSecret: CONSUMER_SECRET ?? '',
-    version: 'wc/v3',
-    queryStringAuth: true
-})
+interface WooCommerceConfig {
+    url?: string
+    consumerKey?: string
+    consumerSecret?: string
+    version?: string
+    queryStringAuth?: boolean
+}
 
-export { WooCommerce }
+const createWooCommerceInstance = (config?: WooCommerceConfig) => {
+    return new WooCommerceRestApi({
+        url: config?.url ?? 'https://mediumpurple-pig-833607.hostingersite.com',
+        consumerKey: config?.consumerKey ?? CONSUMER_KEY ?? '',
+        consumerSecret: config?.consumerSecret ?? CONSUMER_SECRET ?? '',
+        version: config?.version ?? ('wc/v3' as any),
+        queryStringAuth: config?.queryStringAuth ?? true
+    })
+}
+
+const WooCommerce = createWooCommerceInstance()
+
+export { createWooCommerceInstance, WooCommerce }
 
 export default api
