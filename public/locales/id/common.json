@@ -2,5 +2,17 @@
     "learn_more": "Learn More",
     "follow_us": "Follow Us",
     "book_appointment": "Book an Appointment",
-    "view_all": "View All"
+    "view_all": "View All",
+    "loading": "Loading",
+    "show_more": "Show More",
+    "filter": {
+        "brand": "Brand",
+        "price_range": "Price Range",
+        "availability": "Availability",
+        "gender": "Gender",
+        "sort_by": "Sort By"
+    },
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "pre_order": "Pre-order"
 }
