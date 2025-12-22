@@ -135,7 +135,7 @@ const Footer = () => {
                             <div className='min-w-[145px]'>
                                 <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Our Services</h3>
                                 <ul className='space-y-4'>
-                                    {items[1].links.map((link) => (
+                                    {items[0].links.map((link) => (
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
@@ -151,7 +151,7 @@ const Footer = () => {
                             <div className='min-w-[145px]'>
                                 <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Reach Us</h3>
                                 <ul className='space-y-4'>
-                                    {items[2].links.map((link) => (
+                                    {items[1].links.map((link) => (
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
@@ -170,7 +170,7 @@ const Footer = () => {
                             <div className='min-w-[145px]'>
                                 <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Collections</h3>
                                 <ul className='space-y-4'>
-                                    {items[0].links.map((link) => (
+                                    {items[2].links.map((link) => (
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
@@ -198,6 +198,18 @@ const Footer = () => {
                                     ))}
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    {/* Footer Bottom */}
+                    <div className='mt-20 flex flex-col items-start justify-between border-t border-gray-700 pt-8 md:flex-row xl:hidden xl:items-center'>
+                        <p className='text-paragraph-10-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
+                        <div className='mt-4 hidden gap-6 md:mt-0 xl:flex'>
+                            <UnstyledLink href='/privacy' className='text-button-5-desktop text-grey-white '>
+                                Privacy Policy
+                            </UnstyledLink>
+                            <UnstyledLink href='/terms' className='text-button-5-desktop text-grey-white '>
+                                Terms of Service
+                            </UnstyledLink>
                         </div>
                     </div>
                 </div>
