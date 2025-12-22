@@ -51,9 +51,16 @@ const CTA = () => {
                         <p className='text-paragraph-6-desktop text-grey-100' ref={paragraphRef}>
                             {t('cta.description')}
                         </p>
-                        <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
-                            {t('common:book_appointment')}
-                        </Button>
+                        <a
+                            href='
+                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
+                            <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
+                                {t('common:book_appointment')}
+                            </Button>
+                        </a>
                     </div>
 
                     <div
