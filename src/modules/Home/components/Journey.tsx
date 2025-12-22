@@ -1,5 +1,6 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
@@ -141,7 +142,9 @@ const Journey = () => {
                             </Trans>
                         </h1>
                         <div className='hidden xl:block'>
-                            <Button>{t('common:learn_more')}</Button>
+                            <UnstyledLink href='/about-us'>
+                                <Button>{t('common:learn_more')}</Button>
+                            </UnstyledLink>
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>

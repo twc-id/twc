@@ -1,4 +1,5 @@
 import Button from '@components/buttons/Button'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
@@ -54,7 +55,9 @@ const SellReserve = () => {
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
                     {t('sell_reserve.sell_title')}
                 </h1>
-                <Button>{t('common:learn_more')}</Button>
+                <UnstyledLink href='/sell'>
+                    <Button>{t('common:learn_more')}</Button>
+                </UnstyledLink>
             </div>
             <div
                 ref={reserveRef}
@@ -70,7 +73,9 @@ const SellReserve = () => {
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
                     {t('sell_reserve.reserve_title')}
                 </h1>
-                <Button>{t('common:learn_more')}</Button>
+                <UnstyledLink href='/reserve'>
+                    <Button>{t('common:learn_more')}</Button>
+                </UnstyledLink>
             </div>
         </section>
     )

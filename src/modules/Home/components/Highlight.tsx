@@ -1,6 +1,7 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import gsap from 'gsap'
@@ -23,7 +24,7 @@ if (typeof window !== 'undefined') {
 const Highlight = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any>(null)
-    const [tab, setTab] = useState('Watches')
+    const [tab, setTab] = useState<string>(t('highlight.tabs.watches'))
     const swiperRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
@@ -32,22 +33,30 @@ const Highlight = () => {
 
     const tabs = [t('highlight.tabs.watches'), t('highlight.tabs.accessories')]
 
-    const getData = async () => {
+    const getData = async (categoryId: number) => {
         try {
-            const response = await WooCommerce.get('products')
+            setData(null)
+            const response = await WooCommerce.get(`products?tag=54&category=${categoryId}`)
             setData(response.data)
         } catch (error) {
             // Error fetching products
+            setData([])
         }
     }
 
     const handleChangeTab = (selectedTab: string) => {
+        if (selectedTab === tab) return
         setTab(selectedTab)
+        // reset swiper to first slide immediately for better UX
+        swiperRef.current?.slideTo(0)
     }
 
     useEffect(() => {
-        getData()
-    }, [])
+        // determine category id based on selected tab label
+        const isWatches = tab === t('highlight.tabs.watches')
+        const categoryId = isWatches ? 15 : 16
+        getData(categoryId)
+    }, [tab, t])
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -91,6 +100,23 @@ const Highlight = () => {
         }
     }, [data])
 
+    useEffect(() => {
+        // ensure swiper updates after data changes (remount or refresh)
+        if (!swiperRef.current) return
+
+        // call update on next frame so DOM has rendered slides
+        requestAnimationFrame(() => {
+            swiperRef.current?.update()
+            swiperRef.current?.slideTo(0)
+        })
+    }, [data])
+
+    // determine slides per view for current viewport and derive loop/group behavior
+    const slidesPerViewCurrent = isMobile ? 2 : 4
+    const slidesGroup = Math.min(slidesPerViewCurrent, Math.max(1, data?.length || 1))
+    const enableLoop = !isMobile && (data?.length || 0) > slidesPerViewCurrent
+    const hasFewSlides = Array.isArray(data) && data.length <= slidesPerViewCurrent
+
     return (
         <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
             <Container className='flex flex-col gap-5 xl:gap-20'>
@@ -123,95 +149,186 @@ const Highlight = () => {
                 </div>
 
                 <div className=''>
-                    <Swiper
-                        modules={[Navigation, Grid]}
-                        spaceBetween={24}
-                        slidesPerView={4}
-                        slidesPerGroup={4}
-                        loop={isMobile ? false : true}
-                        onSwiper={(swiper) => {
-                            swiperRef.current = swiper
-                        }}
-                        breakpoints={{
-                            320: {
-                                slidesPerView: 2,
-                                slidesPerGroup: 4,
-                                spaceBetween: 16,
-                                grid: {
-                                    rows: 2,
-                                    fill: 'row'
-                                }
-                            },
-                            768: {
-                                slidesPerView: 2,
-                                slidesPerGroup: 4,
-                                spaceBetween: 20,
-                                grid: {
-                                    rows: 2,
-                                    fill: 'row'
-                                }
-                            },
-                            1280: {
-                                slidesPerView: 4,
-                                slidesPerGroup: 4,
-                                spaceBetween: 24
-                            }
-                        }}
-                    >
-                        {data?.map((product: any) => (
-                            <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
-                                <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                    <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
-                                        <Image
-                                            src={product.images[0]?.src || '/images/placeholder.png'}
-                                            alt={product.name}
-                                            width={isMobile ? 168 : 344}
-                                            height={isMobile ? 168 : 417}
-                                        />
-                                    </div>
+                    {hasFewSlides ? (
+                        <div className='flex gap-6 overflow-hidden'>
+                            {data?.map((product: any) => (
+                                <div key={product.id} className='!w-[168px] flex-shrink-0 xl:!w-[344px]'>
+                                    <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                        <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
+                                            <Image
+                                                src={product.images[0]?.src || '/images/placeholder.png'}
+                                                alt={product.name}
+                                                width={isMobile ? 168 : 344}
+                                                height={isMobile ? 168 : 417}
+                                            />
+                                        </div>
 
-                                    <div className='flex flex-col gap-1 text-center'>
-                                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                            {product.brands?.[0].name} •{' '}
-                                            {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
-                                        </p>
-                                        <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
-                                            {product.name}
-                                        </h3>
-                                        <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                            {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                t('highlight.pre_owned', {
-                                                    year: product.meta_data.find((meta: any) =>
-                                                        meta.key.startsWith('pre-owned-')
-                                                    )?.value
-                                                })}
-                                        </p>
-                                        <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                            IDR {parseInt(product.price).toLocaleString('id-ID')}
-                                        </p>
+                                        <div className='flex flex-col gap-1 text-center'>
+                                            <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
+                                                {product.brands?.[0].name} •{' '}
+                                                {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
+                                            </p>
+                                            <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                {product.name}
+                                            </h3>
+                                            <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                    t('highlight.pre_owned', {
+                                                        year: product.meta_data.find((meta: any) =>
+                                                            meta.key.startsWith('pre-owned-')
+                                                        )?.value
+                                                    })}
+                                            </p>
+                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                IDR {parseInt(product.price).toLocaleString('id-ID')}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                    <div className='flex flex-row justify-between pt-12'>
-                        <div className='flex items-center gap-4'>
-                            <button
-                                onClick={() => swiperRef.current?.slidePrev()}
-                                className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
-                            >
-                                <Icons icon='ChevronLeft' width={20} height={20} />
-                            </button>
-                            <button
-                                onClick={() => swiperRef.current?.slideNext()}
-                                className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
-                            >
-                                <Icons icon='ChevronRight' width={20} height={20} />
-                            </button>
+                            ))}
                         </div>
-                        <Button variant='primary' className='hover:!border-grey-black/50 hover:text-grey-black/50'>
-                            {t('highlight.view_more')}
-                        </Button>
+                    ) : (
+                        <>
+                            <Swiper
+                                key={`highlight-swiper-${tab}`}
+                                modules={[Navigation, Grid]}
+                                spaceBetween={24}
+                                slidesPerView={4}
+                                slidesPerGroup={slidesGroup}
+                                loop={enableLoop}
+                                onSwiper={(swiper) => {
+                                    swiperRef.current = swiper
+                                }}
+                                breakpoints={{
+                                    320: {
+                                        slidesPerView: 2,
+                                        slidesPerGroup: 2,
+                                        spaceBetween: 16,
+                                        grid: {
+                                            rows: 2,
+                                            fill: 'row'
+                                        }
+                                    },
+                                    768: {
+                                        slidesPerView: 2,
+                                        slidesPerGroup: 2,
+                                        spaceBetween: 20,
+                                        grid: {
+                                            rows: 2,
+                                            fill: 'row'
+                                        }
+                                    },
+                                    1280: {
+                                        slidesPerView: 4,
+                                        slidesPerGroup: 4,
+                                        spaceBetween: 24
+                                    }
+                                }}
+                            >
+                                {data === null ? (
+                                    // when loading, if Accessories tab is selected, render skeletons
+                                    // using the static small-data layout so position matches final UI
+                                    tab === t('highlight.tabs.accessories') ? (
+                                        <div className='flex-rowxl:!w-[344px] flex !w-[168px] gap-6'>
+                                            {Array.from({ length: Math.max(1, slidesPerViewCurrent) }).map((_, idx) => (
+                                                <div key={`skeleton-static-${idx}`}>
+                                                    <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                                        <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+
+                                                        <div className='flex flex-col gap-1 text-center'>
+                                                            <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                                            <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
+                                                            <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                                            <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
+                                            <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                                <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                                    <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+
+                                                    <div className='flex flex-col gap-1 text-center'>
+                                                        <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
+                                                    </div>
+                                                </div>
+                                            </SwiperSlide>
+                                        ))
+                                    )
+                                ) : (
+                                    data?.map((product: any) => (
+                                        <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
+                                            <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                                <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
+                                                    <Image
+                                                        src={product.images[0]?.src || '/images/placeholder.png'}
+                                                        alt={product.name}
+                                                        width={isMobile ? 168 : 344}
+                                                        height={isMobile ? 168 : 417}
+                                                    />
+                                                </div>
+
+                                                <div className='flex flex-col gap-1 text-center'>
+                                                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
+                                                        {product.brands?.[0].name} •{' '}
+                                                        {
+                                                            product.meta_data.find(
+                                                                (meta: any) => meta.key === 'reference'
+                                                            )?.value
+                                                        }
+                                                    </p>
+                                                    <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                        {product.name}
+                                                    </h3>
+                                                    <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                        {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                            t('highlight.pre_owned', {
+                                                                year: product.meta_data.find((meta: any) =>
+                                                                    meta.key.startsWith('pre-owned-')
+                                                                )?.value
+                                                            })}
+                                                    </p>
+                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                        IDR {parseInt(product.price).toLocaleString('id-ID')}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </SwiperSlide>
+                                    ))
+                                )}
+                            </Swiper>
+                        </>
+                    )}
+                    <div className='flex flex-row justify-between pt-12'>
+                        {!hasFewSlides && data && data.length > 0 ? (
+                            <div className='flex items-center gap-4'>
+                                <button
+                                    onClick={() => swiperRef.current?.slidePrev()}
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                >
+                                    <Icons icon='ChevronLeft' width={20} height={20} />
+                                </button>
+                                <button
+                                    onClick={() => swiperRef.current?.slideNext()}
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                >
+                                    <Icons icon='ChevronRight' width={20} height={20} />
+                                </button>
+                            </div>
+                        ) : (
+                            <div />
+                        )}
+                        <UnstyledLink href='/collections'>
+                            <Button variant='primary' className='hover:!border-grey-black/50 hover:text-grey-black/50'>
+                                {t('highlight.view_more')}
+                            </Button>
+                        </UnstyledLink>
                     </div>
                 </div>
             </Container>

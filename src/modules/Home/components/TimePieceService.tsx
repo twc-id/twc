@@ -124,7 +124,13 @@ const TimePieceService = () => {
                             </Trans>
                         </h2>
                         <div className='hidden xl:block'>
-                            <Button>{t('timepiece.book_now')}</Button>
+                            <a
+                                href='https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                <Button>{t('timepiece.book_now')}</Button>
+                            </a>
                         </div>
                     </div>
                     <div className='hidden flex-row gap-4 xl:flex'>

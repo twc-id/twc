@@ -135,12 +135,18 @@ const Instagram = () => {
                         >
                             {t('social_media.title')}
                         </h2>
-                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 mb-6'>
+                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'>
                             @thewatchcollections
                         </p>
-                        <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
-                            {t('common:follow_us')}
-                        </Button>
+                        <a
+                            href='https://www.instagram.com/thewatchcollections/'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
+                            <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
+                                {t('common:follow_us')}
+                            </Button>
+                        </a>
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}
