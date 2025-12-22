@@ -37,11 +37,11 @@ const Location = () => {
         <section className='bg-grey-white pb-16 pt-14 xl:py-[116px]' ref={sectionRef} id='location'>
             <Container>
                 <div className='flex flex-col items-center gap-8 xl:flex-row xl:gap-[120px]'>
-                    <div className='flex flex-col gap-9' ref={leftRef}>
+                    <div className='flex w-full flex-col gap-9' ref={leftRef}>
                         <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black'>
                             {t('location.title')}
                         </h2>
-                        <div className='flex flex-row gap-2'>
+                        <div className=' flex flex-row gap-2'>
                             <Icons icon='Pin' width={24} height={24} />
                             <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'>
                                 Jl. Pantai Mutiara Regatta Blok TG1 B-C, Pluit, Kecamatan Penjaringan, Jakarta Utara,

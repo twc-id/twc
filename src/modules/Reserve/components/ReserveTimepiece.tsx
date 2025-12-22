@@ -1,6 +1,7 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
@@ -28,8 +29,7 @@ const ReserveTimepiece = () => {
     const getData = async () => {
         setIsLoading(true)
         try {
-            // const response = await WooCommerce.get('products?tag=33', {})
-            const response = await WooCommerce.get('products')
+            const response = await WooCommerce.get(`products?tag=54&category=15&per_page=10`)
 
             setData(response.data)
         } catch (error) {
@@ -106,7 +106,7 @@ const ReserveTimepiece = () => {
                                                 }`}
                                             >
                                                 <div className='flex flex-col items-center gap-2.5'>
-                                                    <div className='relative h-[491px] w-[300px] overflow-hidden bg-black'>
+                                                    <div className='relative h-[473px] w-[300px] overflow-hidden'>
                                                         <Image
                                                             src={
                                                                 product.images?.[0]?.src ||
@@ -114,7 +114,7 @@ const ReserveTimepiece = () => {
                                                             }
                                                             alt={product.name}
                                                             width={300}
-                                                            height={491}
+                                                            height={473}
                                                             unoptimized
                                                         />
                                                     </div>
@@ -172,7 +172,10 @@ const ReserveTimepiece = () => {
                     <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-2 xl:w-[432px]'>
                         {t('reserve_time_pieces.description')}
                     </h3>
-                    <Button variant='secondaryInverse'>{t('common:view_all')}</Button>
+
+                    <UnstyledLink href='/collections'>
+                        <Button variant='secondaryInverse'>{t('common:view_all')}</Button>
+                    </UnstyledLink>
                 </div>
             </Container>
         </section>

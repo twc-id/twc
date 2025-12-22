@@ -110,7 +110,14 @@ const Consign = () => {
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black  xl:max-w-[574px]'>
                             {t('consign.title')}
                         </h1>
-                        <Button className='h-full w-fit'>{t('common:book_appointment')}</Button>
+                        <a
+                            href='
+                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
+                            <Button className='h-full w-fit'>{t('common:book_appointment')}</Button>
+                        </a>
                     </div>
                     <div
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
