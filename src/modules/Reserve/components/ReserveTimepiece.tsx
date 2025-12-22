@@ -169,7 +169,7 @@ const ReserveTimepiece = () => {
                     </div>
                 </div>
                 <div className='flex flex-row items-end justify-between pt-[147px]'>
-                    <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-2 xl:w-[432px]'>
+                    <h3 className='xl:text-heading-3-desktop text-heading-3-mobile line-clamp-3 w-[250px] xl:line-clamp-2 xl:w-[432px]'>
                         {t('reserve_time_pieces.description')}
                     </h3>
 
