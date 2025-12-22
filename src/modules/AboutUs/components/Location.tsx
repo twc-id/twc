@@ -34,7 +34,7 @@ const Location = () => {
     }, [])
 
     return (
-        <section className='bg-grey-white pb-16 pt-14 xl:py-[116px]' ref={sectionRef}>
+        <section className='bg-grey-white pb-16 pt-14 xl:py-[116px]' ref={sectionRef} id='location'>
             <Container>
                 <div className='flex flex-col items-center gap-8 xl:flex-row xl:gap-[120px]'>
                     <div className='flex flex-col gap-9' ref={leftRef}>
