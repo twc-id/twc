@@ -55,6 +55,7 @@ const IconComponents = {
     LinkedIn: lazy(() => import('./LinkedIn')),
     LogoBlack: lazy(() => import('./LogoBlack')),
     LogoWhite: lazy(() => import('./LogoWhite')),
+    LogoFullWhite: lazy(() => import('./LogoFullWhite')),
     Logout: lazy(() => import('./Logout')),
     Mail: lazy(() => import('./Mail')),
     MinusCircle: lazy(() => import('./MinusCircle')),
