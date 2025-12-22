@@ -9,18 +9,11 @@ const Footer = () => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const items = [
         {
-            name: 'Collections',
-            links: [
-                { title: 'Our Collections', href: '/collections' },
-                { title: 'Articles', href: '/articles' }
-            ]
-        },
-        {
             name: 'Our Services',
             links: [
                 { title: 'Sell Your Watch', href: '/sell' },
-                { label: 'Reserve Your Watch', href: '/reserve' },
-                { title: 'Reserve Your Watch', href: '/reserve' },
+                { title: 'Pre-Order', href: '/reserve' },
+                { title: 'Watch Service', href: '/reserve' },
                 { title: 'Book an Appointment', href: '/appointment' }
             ]
         },
@@ -30,29 +23,19 @@ const Footer = () => {
                 { title: 'About Us', href: '/about-us' },
                 { title: 'Contact', href: '/contact' },
                 { title: 'Instagram', href: 'https://instagram.com/thewatchcollections' },
-                { title: 'Store Location', href: '/store' }
+                { title: 'Store Location', href: '/about-us#location' }
             ]
         },
+
         {
-            name: 'Watch Services',
+            name: 'Collections',
             links: [
-                { title: 'Cleaning', href: '/services/cleaning' },
-                { title: 'Polishing', href: '/services/polishing' },
-                { title: 'Battery Replacement', href: '/services/battery' },
-                { title: 'Glass Replacement', href: '/services/glass' }
+                { title: 'Our Collections', href: '/collections' },
+                { title: 'Articles', href: '/articles' }
             ]
         },
         {
-            name: '',
-            links: [
-                { title: 'Overhaul', href: '/services/overhaul' },
-                { title: 'Services & Maintenance', href: '/services/maintenance' },
-                { title: 'Protective Film', href: '/services/protective-film' },
-                { title: 'Strap Replacement', href: '/services/strap' }
-            ]
-        },
-        {
-            name: 'Securiity',
+            name: 'Security',
             links: [
                 { title: 'Privacy Policy', href: '/privacy' },
                 { title: 'Terms of Service', href: '/terms' }
@@ -64,17 +47,21 @@ const Footer = () => {
             <Container>
                 <div className='py-12'>
                     {/* Main Footer Content */}
-                    <div className='hidden grid-cols-6 gap-12 xl:grid'>
+                    <div className='hidden flex-row gap-12 xl:flex'>
                         {/* Logo */}
                         {!isMobile && (
-                            <Link href='/'>
-                                <Icons icon='LogoWhite' width={58} height={55} className='hidden xl:block' />
-                            </Link>
+                            <div className='mr-[240px] flex max-w-[208px] flex-col justify-between'>
+                                <Link href='/' className='!w-fit'>
+                                    <Icons icon='LogoFullWhite' width={142} height={64} className='hidden xl:block' />
+                                </Link>
+                                <p className='text-paragraph-10-desktop text-grey-white'>
+                                    © 2014 THE WATCH COLLECTIONS
+                                </p>
+                            </div>
                         )}
-
-                        {/* Collections */}
-                        <div className=''>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Collections</h3>
+                        {/* Our Services */}
+                        <div className='w-[186px]'>
+                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Our Services</h3>
                             <ul className='space-y-4'>
                                 {items[0].links.map((link) => (
                                     <li key={link.title}>
@@ -88,10 +75,9 @@ const Footer = () => {
                                 ))}
                             </ul>
                         </div>
-
-                        {/* Our Services */}
-                        <div>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Our Services</h3>
+                        {/* Reach Us */}
+                        <div className='w-[186px]'>
+                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Reach Us</h3>
                             <ul className='space-y-4'>
                                 {items[1].links.map((link) => (
                                     <li key={link.title}>
@@ -105,10 +91,9 @@ const Footer = () => {
                                 ))}
                             </ul>
                         </div>
-
-                        {/* Reach Us */}
-                        <div>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Reach Us</h3>
+                        {/* Collections */}
+                        <div className='w-[186px]'>
+                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Collections</h3>
                             <ul className='space-y-4'>
                                 {items[2].links.map((link) => (
                                     <li key={link.title}>
@@ -122,41 +107,21 @@ const Footer = () => {
                                 ))}
                             </ul>
                         </div>
-
-                        {/* Watch Services */}
-                        <div>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Watch Services</h3>
-                            <div className='grid grid-cols-1'>
-                                <ul className='space-y-4'>
-                                    {items[3].links.map((link) => (
-                                        <li key={link.title}>
-                                            <UnstyledLink
-                                                href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
-                                            >
-                                                {link.title}
-                                            </UnstyledLink>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 className='text-grey-black text-subheading-7-desktop mb-4 uppercase'>WATCH SERVICES</h3>
-                            <div className='grid grid-cols-1'>
-                                <ul className='space-y-4'>
-                                    {items[4].links.map((link) => (
-                                        <li key={link.title}>
-                                            <UnstyledLink
-                                                href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
-                                            >
-                                                {link.title}
-                                            </UnstyledLink>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                        {/* Security */}
+                        <div className='w-[186px]'>
+                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Security</h3>
+                            <ul className='space-y-4'>
+                                {items[3].links.map((link) => (
+                                    <li key={link.title}>
+                                        <UnstyledLink
+                                            href={link.href}
+                                            className='text-button-4-desktop text-grey-white'
+                                        >
+                                            {link.title}
+                                        </UnstyledLink>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
 
@@ -199,47 +164,7 @@ const Footer = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className='flex w-full flex-row gap-12'>
-                            {/* Watch Services */}
-                            <div>
-                                <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>
-                                    Watch Services
-                                </h3>
-                                <div className='grid grid-cols-1'>
-                                    <ul className='space-y-4'>
-                                        {items[3].links.map((link) => (
-                                            <li key={link.title}>
-                                                <UnstyledLink
-                                                    href={link.href}
-                                                    className='text-button-4-desktop text-grey-white'
-                                                >
-                                                    {link.title}
-                                                </UnstyledLink>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className='text-grey-black text-subheading-7-desktop mb-4 uppercase'>
-                                    WATCH SERVICES
-                                </h3>
-                                <div className='grid grid-cols-1'>
-                                    <ul className='space-y-4'>
-                                        {items[4].links.map((link) => (
-                                            <li key={link.title}>
-                                                <UnstyledLink
-                                                    href={link.href}
-                                                    className='text-button-4-desktop text-grey-white'
-                                                >
-                                                    {link.title}
-                                                </UnstyledLink>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
                         <div className='flex w-full flex-row gap-12'>
                             {/* Collections */}
                             <div className='min-w-[145px]'>
@@ -261,7 +186,7 @@ const Footer = () => {
                             <div className='min-w-[145px]'>
                                 <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Security</h3>
                                 <ul className='space-y-4'>
-                                    {items[5].links.map((link) => (
+                                    {items[3].links.map((link) => (
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
@@ -273,19 +198,6 @@ const Footer = () => {
                                     ))}
                                 </ul>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Footer Bottom */}
-                    <div className='mt-20 flex flex-col items-start justify-between border-t border-gray-700 pt-8 md:flex-row xl:items-center'>
-                        <p className='text-paragraph-10-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
-                        <div className='mt-4 hidden gap-6 md:mt-0 xl:flex'>
-                            <UnstyledLink href='/privacy' className='text-button-5-desktop text-grey-white '>
-                                Privacy Policy
-                            </UnstyledLink>
-                            <UnstyledLink href='/terms' className='text-button-5-desktop text-grey-white '>
-                                Terms of Service
-                            </UnstyledLink>
                         </div>
                     </div>
                 </div>
