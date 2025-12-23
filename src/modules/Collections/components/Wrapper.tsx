@@ -6,7 +6,7 @@ import Sidebar from '@modules/Collections/components/Sidebar'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 interface WrapperProps {
     data: any
@@ -15,25 +15,36 @@ interface WrapperProps {
     hasMore?: boolean
     isLoadingMore?: boolean
     total?: number | null
+    tabs: string[]
+    selectedTab?: number
+    onTabChange?: (index: number) => void
+    brandOptions?: Array<{ id: string; name: string }>
 }
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Wrapper: React.FC<WrapperProps> = ({ data, isLoading, onLoadMore, hasMore, isLoadingMore, total }) => {
+const Wrapper: React.FC<WrapperProps> = ({
+    data,
+    isLoading,
+    onLoadMore,
+    hasMore,
+    isLoadingMore,
+    total,
+    tabs,
+    selectedTab,
+    onTabChange,
+    brandOptions
+}) => {
     const { t } = useTranslation(['collection'])
-    const [tab, setTab] = useState('Watches')
     const sectionRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
     const sidebarRef = useRef<HTMLDivElement>(null)
     const pinTriggerRef = useRef<any>(null)
-    const tabs = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
 
-    const handleChangeTab = (selectedTab: string) => {
-        setTab(selectedTab)
-    }
+    // tabs are controlled by parent via `selectedTab` and `onTabChange`
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -92,7 +103,7 @@ const Wrapper: React.FC<WrapperProps> = ({ data, isLoading, onLoadMore, hasMore,
         if (sideEl) {
             // sidebar should not scroll unless its content exceeds viewport
             if (sideEl.scrollHeight > window.innerHeight - headerHeight) {
-                sideEl.style.maxHeight = `calc(100vh - ${headerHeight}px)`
+                sideEl.style.maxHeight = `calc(100vh)`
                 sideEl.style.overflowY = 'auto'
             } else {
                 sideEl.style.overflowY = 'visible'
@@ -126,12 +137,12 @@ const Wrapper: React.FC<WrapperProps> = ({ data, isLoading, onLoadMore, hasMore,
                 <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile'>Our Collections</h2>
                 {/* Tabs */}
                 <div className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'>
-                    {tabs.map((item) => (
+                    {tabs.map((item, idx) => (
                         <button
-                            key={item}
-                            onClick={() => handleChangeTab(item)}
+                            key={`${item}-${idx}`}
+                            onClick={() => onTabChange?.(idx)}
                             className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
-                                item === tab
+                                idx === (selectedTab ?? 0)
                                     ? 'bg-grey-black text-grey-white'
                                     : 'bg-grey-white text-grey-black hover:bg-grey-100'
                             }`}
@@ -142,18 +153,25 @@ const Wrapper: React.FC<WrapperProps> = ({ data, isLoading, onLoadMore, hasMore,
                 </div>
             </div>
 
-            <div className='flex flex-row xl:gap-10'>
-                <Sidebar products={data} />
-                <Content
-                    products={data}
-                    isLoading={isLoading}
-                    onLoadMore={onLoadMore}
-                    hasMore={hasMore}
-                    isLoadingMore={isLoadingMore}
-                    total={total}
-                    contentRef={contentRef}
-                />
-            </div>
+            {(() => {
+                const showSidebar = selectedTab === 0
+                return (
+                    <div className='flex flex-row xl:gap-10'>
+                        {showSidebar && <Sidebar products={data} brandOptions={brandOptions} />}
+                        <div className={showSidebar ? 'flex-1' : 'w-full'}>
+                            <Content
+                                products={data}
+                                isLoading={isLoading}
+                                onLoadMore={onLoadMore}
+                                hasMore={hasMore}
+                                isLoadingMore={isLoadingMore}
+                                total={total}
+                                contentRef={contentRef}
+                            />
+                        </div>
+                    </div>
+                )
+            })()}
             {hasMore && (
                 <div className='mt-6 flex flex-col items-center gap-5'>
                     {typeof total === 'number' && (

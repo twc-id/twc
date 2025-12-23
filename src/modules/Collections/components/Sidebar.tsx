@@ -46,15 +46,14 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
 
 interface SidebarProps {
     products: any
+    brandOptions?: Array<{ id: string; name: string }>
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ products }) => {
+const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
     const filters = useCollectionsFilterStore.useFilters()
     const setFilter = useCollectionsFilterStore.useSetFilter()
     // const resetFilters = useCollectionsFilterStore.useResetFilters()
     // const getActiveFiltersCount = useCollectionsFilterStore.useGetActiveFiltersCount()
-
-    // const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
 
     const metaData = [
         {
@@ -133,10 +132,15 @@ const Sidebar: React.FC<SidebarProps> = ({ products }) => {
     //     getData()
     // }, [])
 
-    const brands = products
-        ?.map((product: any) => product?.brands?.[0])
-        .filter((brand: any) => brand)
-        .filter((brand: any, index: number, self: any[]) => self.findIndex((b) => b.id === brand.id) === index)
+    const brands =
+        brandOptions.length > 0
+            ? brandOptions
+            : products
+                  ?.map((product: any) => product?.brands?.[0])
+                  .filter((brand: any) => brand)
+                  .filter(
+                      (brand: any, index: number, self: any[]) => self.findIndex((b) => b.id === brand.id) === index
+                  )
 
     const resetIndividualFilter = (key: (typeof metaData)[0]['key']) => {
         if (key === 'brands' || key === 'availability' || key === 'condition' || key === 'gender') {

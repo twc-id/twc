@@ -4,6 +4,7 @@ import CTA from '@modules/Collections/components/CTA'
 import Hero from '@modules/Collections/components/Hero'
 import Wrapper from '@modules/Collections/components/Wrapper'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
+import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 
 // // Apply brand filter
@@ -66,6 +67,7 @@ import React, { useEffect, useState } from 'react'
 // }
 
 const Collections = () => {
+    const { t } = useTranslation(['collection'])
     const filters = useCollectionsFilterStore.useFilters()
     const [data, setData] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -73,13 +75,69 @@ const Collections = () => {
     const [hasMore, setHasMore] = useState(false)
     const [total, setTotal] = useState<number | null>(null)
     const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
+    const [selectedTab, setSelectedTab] = useState<number>(0)
+    const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
+
+    const categoryId = selectedTab === 0 ? 15 : 16
+
+    // Fetch brands once and keep in parent so Sidebar can receive via props
+    useEffect(() => {
+        let mounted = true
+        const fetchBrands = async () => {
+            try {
+                const perPage = 100
+                const first = await WooCommerce.get(`products/brands?page=1&per_page=${perPage}`)
+                const firstData = first.data || []
+                const totalHeader =
+                    parseInt(first.headers?.['x-wp-total'] ?? first.headers?.['X-WP-Total'] ?? '0', 10) || null
+                if (!mounted) return
+                let allBrands = firstData
+
+                if (totalHeader && totalHeader > firstData.length) {
+                    const pages = Math.ceil(totalHeader / perPage)
+                    const promises: Array<Promise<any>> = []
+                    for (let p = 2; p <= pages; p++) {
+                        promises.push(WooCommerce.get(`products/brands?page=${p}&per_page=${perPage}`))
+                    }
+                    const rest = await Promise.all(promises)
+                    rest.forEach((r) => {
+                        allBrands = allBrands.concat(r.data || [])
+                    })
+                }
+
+                const normalized = (allBrands || []).map((b: any) => ({ id: String(b.id), name: b.name }))
+                if (mounted) setBrandOptions(normalized)
+            } catch (err) {
+                console.error('Error fetching brands', err)
+            }
+        }
+
+        fetchBrands()
+        return () => {
+            mounted = false
+        }
+    }, [])
 
     const fetchPage = async (pageToFetch: number, append = false) => {
         try {
             if (append) setIsLoadingMore(true)
             else setIsLoading(true)
+            // Use proper WooCommerce pagination: `page` and `per_page`
+            const perPage = 10
+            const params: string[] = []
+            params.push(`page=${pageToFetch}`)
+            params.push(`per_page=${perPage}`)
 
-            const response = await WooCommerce.get(`products?offset=${pageToFetch}`)
+            // If brand filters are applied, query by brand(s). Otherwise use category.
+            if (filters?.brands && filters.brands.length > 0) {
+                // API accepts comma-separated brand ids
+                params.push(`brand=${filters.brands.join(',')}`)
+            } else {
+                params.push(`category=${categoryId}`)
+            }
+
+            const response = await WooCommerce.get(`products?${params.join('&')}`)
             const fetched = response.data || []
             const totalHeader =
                 parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
@@ -88,7 +146,7 @@ const Collections = () => {
             if (append) setData((prev) => [...prev, ...fetched])
             else setData(fetched)
 
-            setHasMore(fetched.length === 10)
+            setHasMore(fetched.length === perPage)
         } catch (error) {
             console.error('Error fetching products:', error)
         } finally {
@@ -101,7 +159,7 @@ const Collections = () => {
         setPage(1)
         fetchPage(1, false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters])
+    }, [filters, selectedTab])
 
     const handleLoadMore = async () => {
         const nextPage = page + 1
@@ -111,7 +169,7 @@ const Collections = () => {
 
     return (
         <>
-            <Seo title='Collections' />
+            <Seo title={`The Watch Collections - ${tabLabels[selectedTab]}`} />
             <Hero />
             <Wrapper
                 data={data}
@@ -120,6 +178,10 @@ const Collections = () => {
                 hasMore={hasMore}
                 isLoadingMore={isLoadingMore}
                 total={total}
+                tabs={tabLabels}
+                selectedTab={selectedTab}
+                onTabChange={setSelectedTab}
+                brandOptions={brandOptions}
             />
             <CTA />
         </>

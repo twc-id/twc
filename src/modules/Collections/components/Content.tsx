@@ -31,7 +31,7 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                 {products && products.length > 0 ? (
                     products.map((item: any) => (
                         <div className='flex flex-col gap-1 xl:gap-12' key={item.name}>
-                            <div className='h-[168px] w-[168px] xl:h-[318px] xl:w-[318px]'>
+                            <div className='relative h-[168px] w-[168px] overflow-hidden xl:h-[318px] xl:w-[318px]'>
                                 <Image
                                     src={item?.images?.[0]?.src || '/images/placeholder.png'}
                                     alt={item?.name}
