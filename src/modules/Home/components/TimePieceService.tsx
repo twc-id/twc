@@ -111,7 +111,7 @@ const TimePieceService = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-hidden pb-16 xl:pb-[160px]'>
+        <section ref={sectionRef} className='overflow-hidden pb-16 xl:pb-[160px]' id='service'>
             <Container className='relative flex flex-col justify-between gap-14 xl:flex-row xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>

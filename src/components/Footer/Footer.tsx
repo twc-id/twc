@@ -12,18 +12,28 @@ const Footer = () => {
             name: 'Our Services',
             links: [
                 { title: 'Sell Your Watch', href: '/sell' },
-                { title: 'Pre-Order', href: '/reserve' },
-                { title: 'Watch Service', href: '/reserve' },
-                { title: 'Book an Appointment', href: '/appointment' }
+                { title: 'Reserve Watch', href: '/reserve' },
+                { title: 'Watch Service', href: '/#service' },
+                {
+                    title: 'Book an Appointment',
+                    href: 'https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                }
             ]
         },
+
         {
             name: 'Reach Us',
             links: [
                 { title: 'About Us', href: '/about-us' },
-                { title: 'Contact', href: '/contact' },
+                {
+                    title: 'Contact',
+                    href: 'https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                },
                 { title: 'Instagram', href: 'https://instagram.com/thewatchcollections' },
-                { title: 'Store Location', href: '/about-us#location' }
+                {
+                    title: 'Store Location',
+                    href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
+                }
             ]
         },
 
