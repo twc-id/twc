@@ -49,10 +49,10 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                                     {item?.name}
                                 </h3>
                                 <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                    {item?.meta_data?.key?.startsWith('pre-owned-') &&
-                                        t('highlight.pre_owned', {
-                                            year: item?.meta_data?.find((meta: any) =>
-                                                meta.key.startsWith('pre-owned-')
+                                    {item?.meta_data?.find((meta: any) => meta.key === 'basic-info-year-purchase') &&
+                                        t('home:highlight.pre_owned', {
+                                            year: item?.meta_data?.find(
+                                                (meta: any) => meta.key === 'basic-info-year-purchase'
                                             )?.value
                                         })}
                                 </p>

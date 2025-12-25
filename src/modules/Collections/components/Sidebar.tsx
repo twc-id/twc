@@ -101,8 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
 
     const genderOptions = [
         { id: 'men', name: 'Men' },
-        { id: 'women', name: 'Women' },
-        { id: 'unisex', name: 'Unisex' }
+        { id: 'women', name: 'Women' }
     ]
 
     const sortByOptions = [

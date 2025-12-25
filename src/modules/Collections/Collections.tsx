@@ -129,24 +129,86 @@ const Collections = () => {
             params.push(`page=${pageToFetch}`)
             params.push(`per_page=${perPage}`)
 
-            // If brand filters are applied, query by brand(s). Otherwise use category.
+            // Priority: brand filter (existing special handling) -> gender filter (by meta) -> category
             if (filters?.brands && filters.brands.length > 0) {
                 // API accepts comma-separated brand ids
                 params.push(`brand=${filters.brands.join(',')}`)
+                const response = await WooCommerce.get(`products?${params.join('&')}`)
+                const fetched = response.data || []
+                const totalHeader =
+                    parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
+                setTotal(totalHeader)
+
+                if (append) setData((prev) => [...prev, ...fetched])
+                else setData(fetched)
+
+                setHasMore(fetched.length === perPage)
+            } else if (filters?.gender && filters.gender.length > 0) {
+                // Use WooCommerce `products/by-meta` endpoint for gender meta: key=basic-info-gender
+                // Support multiple genders by requesting each and merging unique results.
+                const genderValues = filters.gender
+
+                if (genderValues.length === 1) {
+                    const val = encodeURIComponent(genderValues[0])
+                    const response = await WooCommerce.get(
+                        `products/by-meta?key=basic-info-gender&value=${val}&page=${pageToFetch}&per_page=${perPage}`
+                    )
+                    const fetched = response.data?.data || []
+                    console.log(fetched?.data)
+                    const totalHeader =
+                        parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) ||
+                        null
+                    setTotal(totalHeader)
+
+                    if (append) setData((prev) => [...prev, ...fetched])
+                    else setData(fetched)
+
+                    setHasMore(fetched.length === perPage)
+                } else {
+                    const requests = genderValues.map((g) => {
+                        const val = encodeURIComponent(g)
+                        return WooCommerce.get(
+                            `products/by-meta?key=basic-info-gender&value=${val}&page=${pageToFetch}&per_page=${perPage}`
+                        )
+                    })
+
+                    const responses = await Promise.all(requests)
+                    let all: any[] = []
+                    let totalSum = 0
+                    responses.forEach((r) => {
+                        all = all.concat(r.data || [])
+                        const h = parseInt(r.headers?.['x-wp-total'] ?? r.headers?.['X-WP-Total'] ?? '0', 10) || 0
+                        totalSum += h
+                    })
+
+                    // Deduplicate by id
+                    const seen = new Set()
+                    const unique = all.filter((p) => {
+                        if (!p?.id) return false
+                        if (seen.has(p.id)) return false
+                        seen.add(p.id)
+                        return true
+                    })
+
+                    setTotal(totalSum || null)
+                    if (append) setData((prev) => [...prev, ...unique])
+                    else setData(unique)
+
+                    setHasMore(unique.length === perPage)
+                }
             } else {
                 params.push(`category=${categoryId}`)
+                const response = await WooCommerce.get(`products?${params.join('&')}`)
+                const fetched = response.data || []
+                const totalHeader =
+                    parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
+                setTotal(totalHeader)
+
+                if (append) setData((prev) => [...prev, ...fetched])
+                else setData(fetched)
+
+                setHasMore(fetched.length === perPage)
             }
-
-            const response = await WooCommerce.get(`products?${params.join('&')}`)
-            const fetched = response.data || []
-            const totalHeader =
-                parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
-            setTotal(totalHeader)
-
-            if (append) setData((prev) => [...prev, ...fetched])
-            else setData(fetched)
-
-            setHasMore(fetched.length === perPage)
         } catch (error) {
             console.error('Error fetching products:', error)
         } finally {
