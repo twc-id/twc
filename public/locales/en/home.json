@@ -14,7 +14,7 @@
             "watches": "Watches",
             "accessories": "Accessories"
         },
-        "pre_owned": "Pre-owned: {{year}}",
+        "pre_owned": "Pre-owned • {{year}}",
         "view_more": "View More"
     },
     "sell_reserve": {

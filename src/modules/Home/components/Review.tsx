@@ -22,6 +22,7 @@ const Review = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any[]>([])
     const [products, setProducts] = useState<any>({})
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const swiperDesktopRef = useRef<SwiperType>()
     const swiperMobileRef = useRef<SwiperType>()
     const contentDesktopRef = useRef<HTMLDivElement>(null)
@@ -30,35 +31,56 @@ const Review = () => {
 
     const getData = async () => {
         try {
-            const response = await WooCommerce.get('products/reviews')
-            setData(response.data)
+            setIsLoading(true)
+            const response = await WooCommerce.get('testimonials')
+            const dataTestimonials = response?.data?.items || []
 
-            // Fetch product details for each review
-            const productIds = Array.from(new Set(response.data.map((review: any) => review.product_id)))
-            const productPromises = productIds.map((id) => WooCommerce.get(`products/${id as number}`))
-            const productResponses = await Promise.all(productPromises)
+            setData(dataTestimonials)
+            console.log('Testimonials:', dataTestimonials)
 
-            const productMap: any = {}
-            productResponses.forEach((res) => {
-                productMap[res.data.id] = res.data
-            })
+            // Fetch product details for each review (batch by include param)
+            const productIds = Array.from(new Set(dataTestimonials.map((review: any) => review.product_id))).filter(
+                Boolean
+            ) as number[]
 
-            setProducts(productMap)
+            if (productIds.length > 0) {
+                try {
+                    const includeParam = productIds.join(',')
+                    const productsResponse = await WooCommerce.get(
+                        `products?include=${includeParam}&per_page=${productIds.length}`
+                    )
+                    const productsArray = productsResponse?.data || []
+                    const productMap: Record<number, any> = {}
+                    productsArray.forEach((p: any) => {
+                        if (p?.id) productMap[p.id] = p
+                    })
+                    console.log('Products:', productMap)
+                    setProducts(productMap)
+                } catch (err) {
+                    console.error('Error fetching products for testimonials', err)
+                    setProducts({})
+                }
+            } else {
+                setProducts({})
+            }
         } catch (error) {
             // Error fetching reviews
+            console.error('Error fetching testimonials', error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    const extractImageFromReview = (reviewHtml: string) => {
-        // Extract image URL from HTML review content
-        const imgMatch = reviewHtml.match(/<img[^>]+src="([^">]+)"/)
-        return imgMatch ? imgMatch[1] : '/images/home/review-placeholder.webp'
-    }
+    // const extractImageFromReview = (reviewHtml: string) => {
+    //     // Extract image URL from HTML review content
+    //     const imgMatch = reviewHtml.match(/<img[^>]+src="([^">]+)"/)
+    //     return imgMatch ? imgMatch[1] : '/images/home/review-placeholder.webp'
+    // }
 
-    const stripHtmlTags = (html: string) => {
-        // Remove HTML tags and get plain text
-        return html.replace(/<[^>]*>/g, '').trim()
-    }
+    // const stripHtmlTags = (html: string) => {
+    //     // Remove HTML tags and get plain text
+    //     return html.replace(/<[^>]*>/g, '').trim()
+    // }
 
     const formatPrice = (price: string) => {
         return `IDR ${parseFloat(price).toLocaleString('id-ID')}`
@@ -86,8 +108,48 @@ const Review = () => {
         )
     }, [data])
 
-    if (data.length === 0) {
-        return null
+    if (isLoading) {
+        // Render skeleton placeholders for desktop and mobile while loading
+        return (
+            <section className='bg-grey-black relative z-[12] py-14 xl:py-[116px]'>
+                <Container className='flex flex-col gap-10 xl:gap-20'>
+                    <div className='flex flex-row items-center justify-between'>
+                        <div className='bg-grey-100 h-8 w-64 animate-pulse rounded' />
+                        <div className='hidden gap-4 xl:flex'>
+                            <div className='bg-grey-100 h-8 w-8 animate-pulse rounded' />
+                            <div className='bg-grey-100 h-8 w-8 animate-pulse rounded' />
+                        </div>
+                    </div>
+
+                    {/* Desktop skeleton */}
+                    <div className='hidden xl:block'>
+                        <div className='flex flex-row xl:gap-20'>
+                            <div className='relative h-[725px] w-[566px] flex-shrink-0'>
+                                <div className='bg-grey-100 absolute inset-0 animate-pulse' />
+                            </div>
+                            <div className='flex flex-1 flex-col justify-center gap-10'>
+                                <div className='bg-grey-100 h-6 w-3/4 animate-pulse rounded' />
+                                <div className='bg-grey-100 h-4 w-1/2 animate-pulse rounded' />
+                                <div className='bg-grey-100 h-6 w-1/4 animate-pulse rounded' />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile skeleton */}
+                    <div className='xl:hidden'>
+                        <div className='flex flex-col gap-6'>
+                            <div className='relative h-[420px] w-full'>
+                                <div className='bg-grey-100 absolute inset-0 animate-pulse' />
+                            </div>
+                            <div className='flex flex-col gap-4'>
+                                <div className='bg-grey-100 h-5 w-3/4 animate-pulse rounded' />
+                                <div className='bg-grey-100 h-4 w-1/2 animate-pulse rounded' />
+                            </div>
+                        </div>
+                    </div>
+                </Container>
+            </section>
+        )
     }
 
     return (
@@ -132,8 +194,10 @@ const Review = () => {
                             const product = products[review.product_id]
                             if (!product) return null
 
-                            const reviewImage = extractImageFromReview(review.review)
-                            const reviewText = stripHtmlTags(review.review)
+                            // const reviewImage = extractImageFromReview(review.review)
+                            const reviewImage = review.image?.url || ''
+                            // const reviewText = stripHtmlTags(review.review)
+                            const reviewText = review.text
 
                             return (
                                 <SwiperSlide key={review.id}>
@@ -147,7 +211,7 @@ const Review = () => {
                                                 className='object-cover'
                                             />
                                             {/* Product Card Overlay */}
-                                            <div className='absolute bottom-10 left-10 right-10 flex flex-row gap-4 bg-white p-4'>
+                                            <div className='absolute bottom-10 left-10 right-10 flex flex-row items-center gap-4 bg-white p-4'>
                                                 <div className='relative h-[88px] w-[88px] flex-shrink-0'>
                                                     <Image
                                                         src={product.images[0]?.src || '/images/placeholder.webp'}
@@ -169,18 +233,21 @@ const Review = () => {
                                                         className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: product.name }}
                                                     />
-                                                    <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                                        {/* {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'} */}
-                                                        {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                            t('highlight.pre_owned', {
+                                                    {product?.meta_data?.key?.startsWith('pre-owned-') && (
+                                                        <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                            {t('highlight.pre_owned', {
                                                                 year: product.meta_data.find((meta: any) =>
                                                                     meta.key.startsWith('pre-owned-')
                                                                 )?.value
                                                             })}
-                                                    </p>
-                                                    <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
-                                                        {formatPrice(product.price)}
-                                                    </p>
+                                                        </p>
+                                                    )}
+
+                                                    {product?.price !== '' && (
+                                                        <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
+                                                            {formatPrice(product.price)}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -191,7 +258,7 @@ const Review = () => {
                                                 {reviewText}
                                             </p>
                                             <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
-                                                {review.reviewer}
+                                                {review?.name}. {review?.position} {review?.company}
                                             </p>
                                         </div>
                                     </div>
@@ -217,8 +284,10 @@ const Review = () => {
                             const product = products[review.product_id]
                             if (!product) return null
 
-                            const reviewImage = extractImageFromReview(review.review)
-                            const reviewText = stripHtmlTags(review.review)
+                            // const reviewImage = extractImageFromReview(review.review)
+
+                            const reviewImage = review.image?.url || ''
+                            const reviewText = review.text
 
                             return (
                                 <SwiperSlide key={review.id}>
@@ -232,7 +301,7 @@ const Review = () => {
                                                 className='object-cover'
                                             />
                                             {/* Product Card Overlay */}
-                                            <div className='absolute bottom-4 left-4 right-4 flex flex-row gap-3 bg-white p-3'>
+                                            <div className='absolute bottom-4 left-4 right-4 flex flex-row items-center gap-3 bg-white p-3'>
                                                 <div className='relative h-[126px] w-[104px] flex-shrink-0'>
                                                     <Image
                                                         src={product.images[0]?.src || '/images/placeholder.webp'}
@@ -243,18 +312,36 @@ const Review = () => {
                                                 </div>
                                                 <div className='flex flex-col gap-0.5'>
                                                     <p className='text-paragraph-10-mobile text-grey-500'>
-                                                        {product.categories[0]?.name || 'Watch'}
+                                                        {product.brands?.[0].name} •{' '}
+                                                        {
+                                                            product.meta_data.find(
+                                                                (meta: any) => meta.key === 'reference'
+                                                            )?.value
+                                                        }
                                                     </p>
                                                     <h4
                                                         className='text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: product.name }}
                                                     />
-                                                    <p className='text-paragraph-11-mobile text-grey-500'>
+                                                    {/* <p className='text-paragraph-11-mobile text-grey-500'>
                                                         {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}
-                                                    </p>
-                                                    <p className='text-subheading-6-mobile text-accent-price-dark'>
-                                                        {formatPrice(product.price)}
-                                                    </p>
+                                                    </p> */}
+
+                                                    {product?.meta_data?.key?.startsWith('pre-owned-') && (
+                                                        <p className='text-paragraph-11-mobile text-grey-500'>
+                                                            {t('highlight.pre_owned', {
+                                                                year: product.meta_data.find((meta: any) =>
+                                                                    meta.key.startsWith('pre-owned-')
+                                                                )?.value
+                                                            })}
+                                                        </p>
+                                                    )}
+
+                                                    {product?.price !== '' && (
+                                                        <p className='text-subheading-6-mobile text-accent-price-dark'>
+                                                            {formatPrice(product.price)}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -262,7 +349,9 @@ const Review = () => {
                                         {/* Content */}
                                         <div className='flex flex-col gap-8 xl:gap-4'>
                                             <p className='text-paragraph-3-mobile text-grey-white'>{reviewText}</p>
-                                            <p className='text-paragraph-6-mobile text-grey-200'>{review.reviewer}</p>
+                                            <p className='text-paragraph-6-mobile text-grey-200'>
+                                                {review?.name}. {review?.position} {review?.company}
+                                            </p>
                                         </div>
                                     </div>
                                 </SwiperSlide>
