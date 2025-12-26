@@ -36,7 +36,6 @@ const Review = () => {
             const dataTestimonials = response?.data?.items || []
 
             setData(dataTestimonials)
-            console.log('Testimonials:', dataTestimonials)
 
             // Fetch product details for each review (batch by include param)
             const productIds = Array.from(new Set(dataTestimonials.map((review: any) => review.product_id))).filter(
@@ -54,7 +53,7 @@ const Review = () => {
                     productsArray.forEach((p: any) => {
                         if (p?.id) productMap[p.id] = p
                     })
-                    console.log('Products:', productMap)
+
                     setProducts(productMap)
                 } catch (err) {
                     console.error('Error fetching products for testimonials', err)
