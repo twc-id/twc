@@ -115,6 +115,7 @@ const Highlight = () => {
     const slidesPerViewCurrent = isMobile ? 2 : 4
     const slidesGroup = Math.min(slidesPerViewCurrent, Math.max(1, data?.length || 1))
     const enableLoop = !isMobile && (data?.length || 0) > slidesPerViewCurrent
+
     const hasFewSlides = Array.isArray(data) && data.length <= slidesPerViewCurrent
 
     return (
@@ -149,162 +150,116 @@ const Highlight = () => {
                 </div>
 
                 <div className=''>
-                    {hasFewSlides ? (
-                        <div className='flex gap-6 overflow-hidden'>
-                            {data?.map((product: any) => (
-                                <div key={product.id} className='!w-[168px] flex-shrink-0 xl:!w-[344px]'>
-                                    <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                        <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
-                                            <Image
-                                                src={product.images[0]?.src || '/images/placeholder.png'}
-                                                alt={product.name}
-                                                width={isMobile ? 168 : 344}
-                                                height={isMobile ? 168 : 417}
-                                            />
-                                        </div>
+                    <Swiper
+                        key={`highlight-swiper-${tab}`}
+                        modules={[Navigation, Grid]}
+                        spaceBetween={24}
+                        // slidesPerView={Math.min((data?.length as number) || 1, slidesPerViewCurrent)}
 
-                                        <div className='flex flex-col gap-1 text-center'>
-                                            <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                                {product.brands?.[0].name} •{' '}
-                                                {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
-                                            </p>
-                                            <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
-                                                {product.name}
-                                            </h3>
-                                            <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                                {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                    t('highlight.pre_owned', {
-                                                        year: product.meta_data.find((meta: any) =>
-                                                            meta.key.startsWith('pre-owned-')
-                                                        )?.value
-                                                    })}
-                                            </p>
-                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                                IDR {parseInt(product.price).toLocaleString('id-ID')}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <>
-                            <Swiper
-                                key={`highlight-swiper-${tab}`}
-                                modules={[Navigation, Grid]}
-                                spaceBetween={24}
-                                slidesPerView={4}
-                                slidesPerGroup={slidesGroup}
-                                loop={enableLoop}
-                                onSwiper={(swiper) => {
-                                    swiperRef.current = swiper
-                                }}
-                                breakpoints={{
-                                    320: {
-                                        slidesPerView: 2,
-                                        slidesPerGroup: 2,
-                                        spaceBetween: 16,
-                                        grid: {
-                                            rows: 2,
-                                            fill: 'row'
-                                        }
-                                    },
-                                    768: {
-                                        slidesPerView: 2,
-                                        slidesPerGroup: 2,
-                                        spaceBetween: 20,
-                                        grid: {
-                                            rows: 2,
-                                            fill: 'row'
-                                        }
-                                    },
-                                    1280: {
-                                        slidesPerView: 4,
-                                        slidesPerGroup: 4,
-                                        spaceBetween: 24
-                                    }
-                                }}
-                            >
-                                {data === null ? (
-                                    // when loading, if Accessories tab is selected, render skeletons
-                                    // using the static small-data layout so position matches final UI
-                                    tab === t('highlight.tabs.accessories') ? (
-                                        <div className='flex-rowxl:!w-[344px] flex !w-[168px] gap-6'>
-                                            {Array.from({ length: Math.max(1, slidesPerViewCurrent) }).map((_, idx) => (
-                                                <div key={`skeleton-static-${idx}`}>
-                                                    <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                                        <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                        slidesPerView={4}
+                        slidesPerGroup={slidesGroup}
+                        // centeredSlides
+                        loop={enableLoop}
+                        allowTouchMove={true}
+                        draggable={true}
+                        onSwiper={(swiper) => {
+                            swiperRef.current = swiper
+                        }}
+                        wrapperClass='max-[1279px]:justify-between'
+                        breakpoints={{
+                            320: {
+                                slidesPerView: 2,
+                                slidesPerGroup: 2,
+                                spaceBetween: 16,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
+                            },
+                            768: {
+                                slidesPerView: 2,
+                                slidesPerGroup: 2,
+                                spaceBetween: 20,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
+                            },
+                            1280: {
+                                slidesPerView: 4,
+                                slidesPerGroup: 4,
+                                spaceBetween: 24
+                            }
+                        }}
+                    >
+                        {data === null
+                            ? // when loading, render skeleton slides inside swiper so layout matches
+                              tab === t('highlight.tabs.accessories')
+                                ? Array.from({ length: Math.max(1, slidesPerViewCurrent) }).map((_, idx) => (
+                                      <SwiperSlide key={`skeleton-static-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                          <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                              <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                                              <div className='flex flex-col gap-1 text-center'>
+                                                  <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
+                                              </div>
+                                          </div>
+                                      </SwiperSlide>
+                                  ))
+                                : Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
+                                      <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                          <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                              <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                                              <div className='flex flex-col gap-1 text-center'>
+                                                  <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
+                                              </div>
+                                          </div>
+                                      </SwiperSlide>
+                                  ))
+                            : data?.map((product: any) => (
+                                  <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
+                                      <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                          <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
+                                              <Image
+                                                  src={product.images[0]?.src || '/images/placeholder.png'}
+                                                  alt={product.name}
+                                                  width={isMobile ? 168 : 344}
+                                                  height={isMobile ? 168 : 417}
+                                              />
+                                          </div>
 
-                                                        <div className='flex flex-col gap-1 text-center'>
-                                                            <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
-                                                            <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
-                                                            <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
-                                                            <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
-                                            <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
-                                                <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                                    <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
-
-                                                    <div className='flex flex-col gap-1 text-center'>
-                                                        <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
-                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
-                                                        <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
-                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
-                                                    </div>
-                                                </div>
-                                            </SwiperSlide>
-                                        ))
-                                    )
-                                ) : (
-                                    data?.map((product: any) => (
-                                        <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
-                                            <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                                <div className='h-[168px] w-[168px] xl:h-[417px] xl:w-[344px]'>
-                                                    <Image
-                                                        src={product.images[0]?.src || '/images/placeholder.png'}
-                                                        alt={product.name}
-                                                        width={isMobile ? 168 : 344}
-                                                        height={isMobile ? 168 : 417}
-                                                    />
-                                                </div>
-
-                                                <div className='flex flex-col gap-1 text-center'>
-                                                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                                        {product.brands?.[0].name} •{' '}
-                                                        {
-                                                            product.meta_data.find(
-                                                                (meta: any) => meta.key === 'reference'
-                                                            )?.value
-                                                        }
-                                                    </p>
-                                                    <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
-                                                        {product.name}
-                                                    </h3>
-                                                    <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                                        {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                            t('highlight.pre_owned', {
-                                                                year: product.meta_data.find((meta: any) =>
-                                                                    meta.key.startsWith('pre-owned-')
-                                                                )?.value
-                                                            })}
-                                                    </p>
-                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                                        IDR {parseInt(product.price).toLocaleString('id-ID')}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </SwiperSlide>
-                                    ))
-                                )}
-                            </Swiper>
-                        </>
-                    )}
+                                          <div className='flex flex-col gap-1 text-center'>
+                                              <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
+                                                  {product.brands?.[0].name} •{' '}
+                                                  {
+                                                      product.meta_data.find((meta: any) => meta.key === 'reference')
+                                                          ?.value
+                                                  }
+                                              </p>
+                                              <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                  {product.name}
+                                              </h3>
+                                              <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                  {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                      t('highlight.pre_owned', {
+                                                          year: product.meta_data.find((meta: any) =>
+                                                              meta.key.startsWith('pre-owned-')
+                                                          )?.value
+                                                      })}
+                                              </p>
+                                              <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                  IDR {parseInt(product.price).toLocaleString('id-ID')}
+                                              </p>
+                                          </div>
+                                      </div>
+                                  </SwiperSlide>
+                              ))}
+                    </Swiper>
                     <div className='flex flex-row justify-between pt-12'>
                         {!hasFewSlides && data && data.length > 0 ? (
                             <div className='flex items-center gap-4'>
