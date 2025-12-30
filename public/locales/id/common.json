@@ -14,5 +14,6 @@
     },
     "in_stock": "In Stock",
     "out_of_stock": "Out of Stock",
-    "pre_order": "Pre-order"
+    "pre_order": "Pre-order",
+    "sold_out": "Sold Out"
 }
