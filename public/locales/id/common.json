@@ -15,5 +15,10 @@
     "in_stock": "In Stock",
     "out_of_stock": "Out of Stock",
     "pre_order": "Pre-order",
-    "sold_out": "Sold Out"
+    "sold_out": "Sold Out",
+    "watch": "Jam",
+    "item": "Item",
+    "accesoris": "Aksesoris",
+    "reserve": "Reserve",
+    "reserve_this": "Reserve This {{item}}"
 }
