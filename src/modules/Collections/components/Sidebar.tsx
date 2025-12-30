@@ -1,9 +1,12 @@
 import { Checklist } from '@components/Checkbox'
+import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import classNames from '@lib/classnames'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
-import React, { useState } from 'react'
+import debounce from 'lodash/debounce'
+import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
 
 interface CollapseProps {
@@ -52,8 +55,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
     const filters = useCollectionsFilterStore.useFilters()
     const setFilter = useCollectionsFilterStore.useSetFilter()
-    // const resetFilters = useCollectionsFilterStore.useResetFilters()
-    // const getActiveFiltersCount = useCollectionsFilterStore.useGetActiveFiltersCount()
+
+    const router = useRouter()
 
     const metaData = [
         {
@@ -95,8 +98,12 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
     ]
 
     const conditionOptions = [
-        { id: 'new', name: 'New' },
-        { id: 'pre-owned', name: 'Pre-Owned' }
+        { id: 'brand-new', name: 'Brand New' },
+        { id: 'pre-owned-like-new', name: 'Pre-Owned (Like New)' },
+        { id: 'pre-owned-very-good', name: 'Pre-Owned (Very Good)' },
+        { id: 'pre-owned-good', name: 'Pre-Owned (Good)' },
+        { id: 'pre-owned-fair', name: 'Pre-Owned (Fair)' },
+        { id: 'pre-owned-incomplete', name: 'Pre-Owned (Incomplete)' }
     ]
 
     const genderOptions = [
@@ -108,28 +115,9 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
         { id: 'default', name: 'Default' },
         { id: 'price-asc', name: 'Price: Low to High' },
         { id: 'price-desc', name: 'Price: High to Low' },
-        { id: 'name-asc', name: 'Name: A to Z' },
-        { id: 'name-desc', name: 'Name: Z to A' }
+        { id: 'year-asc', name: 'Year: Oldest first' },
+        { id: 'year-desc', name: 'Year: Newest first' }
     ]
-
-    // const getData = async () => {
-    //     try {
-    //         // Fetch brands or other filter options from API
-    //         const response = await WooCommerce.get('products')
-    //         // Extract unique brands from products
-    //         const brands = response.data
-    // .map((product: any) => product.brands?.[0])
-    // .filter((brand: any) => brand)
-    // .filter((brand: any, index: number, self: any[]) => self.findIndex((b) => b.id === brand.id) === index)
-    //         setBrandOptions(brands)
-    //     } catch (error) {
-    //         console.log('error', error)
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     getData()
-    // }, [])
 
     const brands =
         brandOptions.length > 0
@@ -141,11 +129,92 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
                       (brand: any, index: number, self: any[]) => self.findIndex((b) => b.id === brand.id) === index
                   )
 
+    const [localMin, setLocalMin] = useState<string>(filters.priceRange.min ?? '')
+    const [localMax, setLocalMax] = useState<string>(filters.priceRange.max ?? '')
+
+    useEffect(() => {
+        setLocalMin(filters.priceRange.min ?? '')
+        setLocalMax(filters.priceRange.max ?? '')
+    }, [filters.priceRange.min, filters.priceRange.max])
+
+    // If `product_brand` exists in the URL, use it to auto-check brands filter
+    useEffect(() => {
+        const qb = router.query?.product_brand
+        if (!qb) return
+
+        const values = Array.isArray(qb)
+            ? qb
+            : String(qb)
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+
+        // Only set if different from current filters
+        const same = values.length === filters.brands.length && values.every((v) => filters.brands.includes(v))
+        if (!same) {
+            setFilter('brands', values)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router.query?.product_brand])
+
+    // Keep filters in the URL so they persist on refresh / share
+    useEffect(() => {
+        if (!router.isReady) return
+
+        const q: Record<string, any> = { ...router.query }
+
+        // product_brand (brands)
+        if (filters.brands && filters.brands.length > 0) q.product_brand = filters.brands.join(',')
+        else delete q.product_brand
+
+        // availability, condition, gender (comma separated)
+        if (filters.availability && filters.availability.length > 0) q.availability = filters.availability.join(',')
+        else delete q.availability
+
+        if (filters.condition && filters.condition.length > 0) q.condition = filters.condition.join(',')
+        else delete q.condition
+
+        if (filters.gender && filters.gender.length > 0) q.gender = filters.gender.join(',')
+        else delete q.gender
+
+        // price range
+        if (filters.priceRange?.min) q.min_price = String(filters.priceRange.min)
+        else delete q.min_price
+        if (filters.priceRange?.max) q.max_price = String(filters.priceRange.max)
+        else delete q.max_price
+
+        // sortBy
+        if (filters.sortBy && filters.sortBy !== 'default') q.sortBy = filters.sortBy
+        else delete q.sortBy
+
+        // replace without navigation
+        router.replace({ pathname: router.pathname, query: q }, undefined, { shallow: true })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters, router.isReady])
+
+    const applyPriceRange = useMemo(
+        () =>
+            debounce((min?: string, max?: string) => {
+                if (min !== '' && typeof min !== 'undefined' && max !== '' && typeof max !== 'undefined') {
+                    setFilter('priceRange', { min, max })
+                }
+            }, 500),
+        [setFilter]
+    )
+
+    useEffect(() => {
+        return () => {
+            applyPriceRange.cancel()
+        }
+    }, [applyPriceRange])
+
     const resetIndividualFilter = (key: (typeof metaData)[0]['key']) => {
         if (key === 'brands' || key === 'availability' || key === 'condition' || key === 'gender') {
             setFilter(key, [])
         } else if (key === 'priceRange') {
             setFilter('priceRange', {})
+            setLocalMin('')
+            setLocalMax('')
         } else if (key === 'sortBy') {
             setFilter('sortBy', 'default')
         }
@@ -193,7 +262,11 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
                             textClassName='xl:text-paragraph-7-desktop text-paragraph-7-mobile'
                             size='sm'
                         >
-                            {option.name}
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: option.name
+                                }}
+                            />
                         </Checklist>
                     ))}
                     {hasActive && (
@@ -212,32 +285,81 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
             return (
                 <div className='flex flex-col gap-3'>
                     <div className='flex items-center gap-2'>
-                        <input
+                        <Input
                             type='number'
                             placeholder='Min'
-                            className='border-grey-200 w-full rounded border px-3 py-2 text-sm'
-                            value={filters.priceRange.min || ''}
-                            onChange={(e) =>
-                                setFilter('priceRange', {
-                                    ...filters.priceRange,
-                                    min: e.target.value ? Number(e.target.value) : undefined
-                                })
-                            }
+                            value={localMin}
+                            onChange={(e) => {
+                                setLocalMin(e)
+                                applyPriceRange(e, localMax)
+                            }}
                         />
+
                         <span className='text-grey-400'>-</span>
-                        <input
+
+                        <Input
                             type='number'
-                            placeholder='Max'
-                            className='border-grey-200 w-full rounded border px-3 py-2 text-sm'
-                            value={filters.priceRange.max || ''}
-                            onChange={(e) =>
-                                setFilter('priceRange', {
-                                    ...filters.priceRange,
-                                    max: e.target.value ? Number(e.target.value) : undefined
-                                })
-                            }
+                            placeholder='max'
+                            value={localMax}
+                            onChange={(e) => {
+                                setLocalMax(e)
+                                applyPriceRange(localMin, e)
+                            }}
                         />
                     </div>
+                    {/* Price range quick-select radios */}
+                    <div className='flex flex-col gap-2'>
+                        {(() => {
+                            const priceQuickOptions: Array<{ id: string; min: string; max?: string; label: string }> = [
+                                { id: '0-1000000000', min: '0', max: '1000000000', label: 'IDR 0 - IDR 1M' },
+                                {
+                                    id: '1000000000-5000000000',
+                                    min: '1000000000',
+                                    max: '5000000000',
+                                    label: 'IDR 1M - IDR 5M'
+                                },
+                                {
+                                    id: '6000000000-10000000000',
+                                    min: '6000000000',
+                                    max: '10000000000',
+                                    label: 'IDR 6M - IDR 10M'
+                                },
+                                { id: '10000000000-plus', min: '10000000000', max: undefined, label: 'IDR > 10M' }
+                            ]
+
+                            return priceQuickOptions.map((opt) => (
+                                <div className='flex items-center gap-2' key={opt.id}>
+                                    <RadioButton
+                                        onChange={() =>
+                                            setFilter('priceRange', {
+                                                min: opt.min,
+                                                max: opt.max
+                                            })
+                                        }
+                                        checked={
+                                            (filters.priceRange.min ?? undefined) === opt.min &&
+                                            (filters.priceRange.max ?? undefined) === opt.max
+                                        }
+                                        name='price-range'
+                                        value={opt.id}
+                                        buttonSize='sm'
+                                    />
+                                    <span
+                                        className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
+                                        onClick={() =>
+                                            setFilter('priceRange', {
+                                                min: opt.min,
+                                                max: opt.max
+                                            })
+                                        }
+                                    >
+                                        {opt.label}
+                                    </span>
+                                </div>
+                            ))
+                        })()}
+                    </div>
+
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}

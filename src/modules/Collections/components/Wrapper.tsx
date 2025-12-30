@@ -6,7 +6,7 @@ import Sidebar from '@modules/Collections/components/Sidebar'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 
 interface WrapperProps {
     data: any
@@ -41,10 +41,8 @@ const Wrapper: React.FC<WrapperProps> = ({
     const sectionRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
-    const sidebarRef = useRef<HTMLDivElement>(null)
-    const pinTriggerRef = useRef<any>(null)
 
-    // tabs are controlled by parent via `selectedTab` and `onTabChange`
+    const pinTriggerRef = useRef<any>(null)
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -70,13 +68,6 @@ const Wrapper: React.FC<WrapperProps> = ({
         pinTriggerRef.current = ScrollTrigger.create({
             trigger: topRef.current,
             start: 'top top',
-            end: () => {
-                const contentEl: any = contentRef.current
-                if (!contentEl) return '+=100%'
-                const extra = 100
-                const delta = Math.max(0, contentEl.scrollHeight - window.innerHeight + extra)
-                return `+=${delta}`
-            },
             pin: true,
             pinSpacing: false,
             id: 'collections-wrapper-top-pin',
@@ -90,47 +81,6 @@ const Wrapper: React.FC<WrapperProps> = ({
         }
     }, [])
 
-    // make content scrollable while header is pinned and handle bottom-reached events
-    useEffect(() => {
-        const el = contentRef.current
-        const sideEl = sidebarRef.current
-        if (!el) return
-
-        const headerHeight = topRef.current?.offsetHeight || 0
-        el.style.maxHeight = `calc(100vh - ${headerHeight}px)`
-        el.style.overflowY = 'auto'
-
-        if (sideEl) {
-            // sidebar should not scroll unless its content exceeds viewport
-            if (sideEl.scrollHeight > window.innerHeight - headerHeight) {
-                sideEl.style.maxHeight = `calc(100vh)`
-                sideEl.style.overflowY = 'auto'
-            } else {
-                sideEl.style.overflowY = 'visible'
-            }
-        }
-
-        let loadingTriggered = false
-
-        const onScroll = () => {
-            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1
-            if (atBottom) {
-                if (hasMore && onLoadMore && !isLoadingMore && !loadingTriggered) {
-                    loadingTriggered = true
-                    // onLoadMore()
-                    setTimeout(() => {
-                        loadingTriggered = false
-                    }, 500)
-                } else if (!hasMore) {
-                    // release the pin so the page continues to the next section
-                    pinTriggerRef.current?.kill()
-                }
-            }
-        }
-
-        el.addEventListener('scroll', onScroll)
-        return () => el.removeEventListener('scroll', onScroll)
-    }, [hasMore, isLoadingMore, onLoadMore])
     return (
         <Container className='flex flex-col xl:gap-10 xl:pt-20' ref={sectionRef}>
             <div className='bg-grey-white dark:bg-grey-black flex flex-row justify-between xl:pb-10' ref={topRef}>

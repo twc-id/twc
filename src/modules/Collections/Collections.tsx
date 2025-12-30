@@ -4,37 +4,15 @@ import CTA from '@modules/Collections/components/CTA'
 import Hero from '@modules/Collections/components/Hero'
 import Wrapper from '@modules/Collections/components/Wrapper'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-
-// // Apply brand filter
-// if (filters.brands.length > 0) {
-//     filteredData = filteredData.filter((product: any) =>
-//         product.brands?.some((brand: any) => filters.brands.includes(brand.id.toString()))
-//     )
-// }
 
 // // Apply availability filter
 // if (filters.availability.length > 0) {
 //     filteredData = filteredData.filter((product: any) => {
 //         const stockStatus = product.stock_status
 //         return filters.availability.includes(stockStatus)
-//     })
-// }
-
-// // Apply condition filter
-// if (filters.condition.length > 0) {
-//     filteredData = filteredData.filter((product: any) => {
-//         const condition = product.meta_data?.find((meta: any) => meta.key === 'condition')?.value
-//         return filters.condition.includes(condition)
-//     })
-// }
-
-// // Apply gender filter
-// if (filters.gender.length > 0) {
-//     filteredData = filteredData.filter((product: any) => {
-//         const gender = product.meta_data?.find((meta: any) => meta.key === 'gender')?.value
-//         return filters.gender.includes(gender)
 //     })
 // }
 
@@ -45,24 +23,6 @@ import React, { useEffect, useState } from 'react'
 //         if (filters.priceRange.min && price < filters.priceRange.min) return false
 //         if (filters.priceRange.max && price > filters.priceRange.max) return false
 //         return true
-//     })
-// }
-
-// // Apply sorting
-// if (filters.sortBy !== 'default') {
-//     filteredData = [...filteredData].sort((a: any, b: any) => {
-//         switch (filters.sortBy) {
-//             case 'price-asc':
-//                 return parseFloat(a.price) - parseFloat(b.price)
-//             case 'price-desc':
-//                 return parseFloat(b.price) - parseFloat(a.price)
-//             case 'name-asc':
-//                 return a.name.localeCompare(b.name)
-//             case 'name-desc':
-//                 return b.name.localeCompare(a.name)
-//             default:
-//                 return 0
-//         }
 //     })
 // }
 
@@ -78,6 +38,9 @@ const Collections = () => {
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
     const [selectedTab, setSelectedTab] = useState<number>(0)
     const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
+
+    const router = useRouter()
+    const setFilter = useCollectionsFilterStore.useSetFilter()
 
     const categoryId = selectedTab === 0 ? 15 : 16
 
@@ -129,10 +92,65 @@ const Collections = () => {
             params.push(`page=${pageToFetch}`)
             params.push(`per_page=${perPage}`)
 
-            // Priority: brand filter (existing special handling) -> gender filter (by meta) -> category
-            if (filters?.brands && filters.brands.length > 0) {
-                // API accepts comma-separated brand ids
-                params.push(`brand=${filters.brands.join(',')}`)
+            // Build a single meta-array combining selected filters.
+            // This sends one request to `products/by-meta` with multiple meta objects (can include multiple entries per key).
+            const brandValues = filters?.brands || []
+            const productBrandParam = brandValues.length > 0 ? brandValues.join(',') : ''
+
+            // Sorting params (support price and date sorting)
+            let orderByParam = ''
+            let orderParam = ''
+            if (filters?.sortBy) {
+                if (filters.sortBy === 'price-asc' || filters.sortBy === 'price-desc') orderByParam = 'orderby=price'
+                if (filters.sortBy === 'year-asc' || filters.sortBy === 'year-desc') orderByParam = 'orderby=date'
+
+                if (filters.sortBy === 'price-asc' || filters.sortBy === 'year-asc') orderParam = 'order=asc'
+                if (filters.sortBy === 'price-desc' || filters.sortBy === 'year-desc') orderParam = 'order=desc'
+            }
+
+            const metaArr: Array<any> = []
+
+            // Condition: include is_new if selected, and include status+condition pairs for pre-owned selections.
+            const conditionValues = filters?.condition || []
+            const preOwnedMap: Record<string, string> = {
+                'pre-owned-like-new': 'Like New',
+                'pre-owned-very-good': 'Very Good',
+                'pre-owned-good': 'Good',
+                'pre-owned-fair': 'Fair',
+                'pre-owned-incomplete': 'Incomplete'
+            }
+            if (conditionValues.length > 0) {
+                if (conditionValues.includes('brand-new')) {
+                    metaArr.push({ key: 'is_new', value: '1' })
+                }
+                const selectedPreOwned = conditionValues.filter((c: string) => c.startsWith('pre-owned-'))
+                if (selectedPreOwned.length > 0) {
+                    // add status once
+                    metaArr.push({ key: 'basic-info-status', value: 'Pre-Owned' })
+                    // add one entry per selected condition
+                    selectedPreOwned.forEach((id: string) => {
+                        const condValue = preOwnedMap[id]
+                        if (!condValue) return
+                        metaArr.push({ key: 'basic-info-condition', value: condValue })
+                    })
+                }
+            }
+
+            // Gender: add each selected gender as its own meta entry (multiple entries allowed)
+            const genderValues = filters?.gender || []
+            genderValues.forEach((g: string) => metaArr.push({ key: 'basic-info-gender', value: g }))
+
+            // You can add other meta entries here (availability, price range as two entries etc.)
+
+            // If no meta entries and no brand param, fallback to products?
+            if (metaArr.length === 0 && !productBrandParam) {
+                params.push(`category=${categoryId}`)
+                if (filters.priceRange?.min)
+                    params.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
+                if (filters.priceRange?.max)
+                    params.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
+                if (orderByParam) params.push(orderByParam)
+                if (orderParam) params.push(orderParam)
                 const response = await WooCommerce.get(`products?${params.join('&')}`)
                 const fetched = response.data || []
                 const totalHeader =
@@ -143,63 +161,20 @@ const Collections = () => {
                 else setData(fetched)
 
                 setHasMore(fetched.length === perPage)
-            } else if (filters?.gender && filters.gender.length > 0) {
-                // Use WooCommerce `products/by-meta` endpoint for gender meta: key=basic-info-gender
-                // Support multiple genders by requesting each and merging unique results.
-                const genderValues = filters.gender
-
-                if (genderValues.length === 1) {
-                    const val = encodeURIComponent(genderValues[0])
-                    const response = await WooCommerce.get(
-                        `products/by-meta?key=basic-info-gender&value=${val}&page=${pageToFetch}&per_page=${perPage}`
-                    )
-                    const fetched = response.data?.data || []
-                    console.log(fetched?.data)
-                    const totalHeader =
-                        parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) ||
-                        null
-                    setTotal(totalHeader)
-
-                    if (append) setData((prev) => [...prev, ...fetched])
-                    else setData(fetched)
-
-                    setHasMore(fetched.length === perPage)
-                } else {
-                    const requests = genderValues.map((g) => {
-                        const val = encodeURIComponent(g)
-                        return WooCommerce.get(
-                            `products/by-meta?key=basic-info-gender&value=${val}&page=${pageToFetch}&per_page=${perPage}`
-                        )
-                    })
-
-                    const responses = await Promise.all(requests)
-                    let all: any[] = []
-                    let totalSum = 0
-                    responses.forEach((r) => {
-                        all = all.concat(r.data || [])
-                        const h = parseInt(r.headers?.['x-wp-total'] ?? r.headers?.['X-WP-Total'] ?? '0', 10) || 0
-                        totalSum += h
-                    })
-
-                    // Deduplicate by id
-                    const seen = new Set()
-                    const unique = all.filter((p) => {
-                        if (!p?.id) return false
-                        if (seen.has(p.id)) return false
-                        seen.add(p.id)
-                        return true
-                    })
-
-                    setTotal(totalSum || null)
-                    if (append) setData((prev) => [...prev, ...unique])
-                    else setData(unique)
-
-                    setHasMore(unique.length === perPage)
-                }
             } else {
-                params.push(`category=${categoryId}`)
-                const response = await WooCommerce.get(`products?${params.join('&')}`)
-                const fetched = response.data || []
+                // Build single by-meta request with combined meta array and optional product_brand param
+                const q: string[] = []
+                q.push(`page=${pageToFetch}`)
+                q.push(`per_page=${perPage}`)
+                q.push(`category=${categoryId}`)
+                if (filters.priceRange?.min) q.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
+                if (filters.priceRange?.max) q.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
+                if (productBrandParam) q.push(`product_brand=${productBrandParam}`)
+                if (orderByParam) q.push(orderByParam)
+                if (orderParam) q.push(orderParam)
+                const metaParam = encodeURIComponent(JSON.stringify(metaArr))
+                const response = await WooCommerce.get(`products/by-meta?meta=${metaParam}&relation=AND&${q.join('&')}`)
+                const fetched = response.data?.data || response.data || []
                 const totalHeader =
                     parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
                 setTotal(totalHeader)
@@ -229,6 +204,30 @@ const Collections = () => {
         await fetchPage(nextPage, true)
     }
 
+    const handleTabChange = (idx: number) => {
+        // when switching to Accessories tab (index 1), clear URL params and reset filters
+        if (idx === 1) {
+            try {
+                // only replace URL if there are existing query params to clear
+                if (router && router.query && Object.keys(router.query).length > 0) {
+                    router.replace({ pathname: router.pathname }, undefined, { shallow: true })
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            // reset filters to defaults
+            setFilter('brands', [])
+            setFilter('availability', [])
+            setFilter('condition', [])
+            setFilter('gender', [])
+            setFilter('priceRange', {})
+            setFilter('sortBy', 'default')
+        }
+
+        setSelectedTab(idx)
+    }
+
     return (
         <>
             <Seo title={`The Watch Collections - ${tabLabels[selectedTab]}`} />
@@ -242,7 +241,7 @@ const Collections = () => {
                 total={total}
                 tabs={tabLabels}
                 selectedTab={selectedTab}
-                onTabChange={setSelectedTab}
+                onTabChange={handleTabChange}
                 brandOptions={brandOptions}
             />
             <CTA />
