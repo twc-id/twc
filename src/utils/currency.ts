@@ -88,7 +88,7 @@ export const formatNumberLocale = (number: number, locale: Locale, options?: Opt
 }
 
 export const formatRupiah = (number: number, options?: Options) =>
-    `Rp${formatNumber(number, { precision: 0, ...options })}`
+    `IDR ${formatNumber(number, { precision: 0, ...options })}`
 
 export const formatRupiahPrefix = (number: number, options?: Options) => {
     let formattedNumber = formatNumber(Math.abs(number), {
