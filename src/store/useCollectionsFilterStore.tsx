@@ -9,8 +9,8 @@ export interface FilterOptions {
     condition: string[]
     gender: string[]
     priceRange: {
-        min?: number
-        max?: number
+        min?: string
+        max?: string
     }
     sortBy: string
 }
