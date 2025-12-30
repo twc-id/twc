@@ -4,6 +4,7 @@ import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -223,40 +224,47 @@ const Highlight = () => {
                                   ))
                             : data?.map((product: any) => (
                                   <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
-                                      <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                          <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
-                                              <Image
-                                                  src={product.images[0]?.src || '/images/placeholder.png'}
-                                                  alt={product.name}
-                                                  width={isMobile ? 168 : 344}
-                                                  height={isMobile ? 168 : 417}
-                                              />
-                                          </div>
+                                      <UnstyledLink href={`/collections/${product.slug}`}>
+                                          <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                              <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
+                                                  <Image
+                                                      src={product.images[0]?.src || '/images/placeholder.png'}
+                                                      alt={product.name}
+                                                      width={isMobile ? 168 : 344}
+                                                      height={isMobile ? 168 : 417}
+                                                  />
+                                              </div>
 
-                                          <div className='flex flex-col gap-1 text-center'>
-                                              <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                                  {product.brands?.[0].name} •{' '}
-                                                  {
-                                                      product.meta_data.find((meta: any) => meta.key === 'reference')
-                                                          ?.value
-                                                  }
-                                              </p>
-                                              <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
-                                                  {product.name}
-                                              </h3>
-                                              <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
-                                                  {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                      t('highlight.pre_owned', {
-                                                          year: product.meta_data.find((meta: any) =>
-                                                              meta.key.startsWith('pre-owned-')
+                                              <div className='flex flex-col gap-1 text-center'>
+                                                  <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
+                                                      {product.brands?.[0].name} •{' '}
+                                                      {
+                                                          product.meta_data.find(
+                                                              (meta: any) => meta.key === 'reference'
                                                           )?.value
-                                                      })}
-                                              </p>
-                                              <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                                  IDR {parseInt(product.price).toLocaleString('id-ID')}
-                                              </p>
+                                                      }
+                                                  </p>
+                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                      {product.name}
+                                                  </h3>
+                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                      {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                          t('highlight.pre_owned', {
+                                                              year: product.meta_data.find((meta: any) =>
+                                                                  meta.key.startsWith('pre-owned-')
+                                                              )?.value
+                                                          })}
+                                                  </p>
+                                                  {product.purchasable ? (
+                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                          {formatRupiah(product.price)}
+                                                      </p>
+                                                  ) : (
+                                                      t('common:sold_out')
+                                                  )}
+                                              </div>
                                           </div>
-                                      </div>
+                                      </UnstyledLink>
                                   </SwiperSlide>
                               ))}
                     </Swiper>

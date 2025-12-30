@@ -3,6 +3,7 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -68,21 +69,6 @@ const Review = () => {
         } finally {
             setIsLoading(false)
         }
-    }
-
-    // const extractImageFromReview = (reviewHtml: string) => {
-    //     // Extract image URL from HTML review content
-    //     const imgMatch = reviewHtml.match(/<img[^>]+src="([^">]+)"/)
-    //     return imgMatch ? imgMatch[1] : '/images/home/review-placeholder.webp'
-    // }
-
-    // const stripHtmlTags = (html: string) => {
-    //     // Remove HTML tags and get plain text
-    //     return html.replace(/<[^>]*>/g, '').trim()
-    // }
-
-    const formatPrice = (price: string) => {
-        return `IDR ${parseFloat(price).toLocaleString('id-ID')}`
     }
 
     useEffect(() => {
@@ -242,10 +228,12 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.price !== '' && (
+                                                    {product?.purchasable ? (
                                                         <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
-                                                            {formatPrice(product.price)}
+                                                            {formatRupiah(product.price)}
                                                         </p>
+                                                    ) : (
+                                                        t('common:sold_out')
                                                     )}
                                                 </div>
                                             </div>
@@ -336,10 +324,12 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.price !== '' && (
+                                                    {product?.purchasable ? (
                                                         <p className='text-subheading-6-mobile text-accent-price-dark'>
-                                                            {formatPrice(product.price)}
+                                                            {formatRupiah(product.price)}
                                                         </p>
+                                                    ) : (
+                                                        t('common:sold_out')
                                                     )}
                                                 </div>
                                             </div>
