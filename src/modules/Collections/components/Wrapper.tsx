@@ -4,11 +4,13 @@ import Icons from '@components/Icon'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import Content from '@modules/Collections/components/Content'
+import MobileFilterModal from '@modules/Collections/components/MobileFilterModal'
 import Sidebar from '@modules/Collections/components/Sidebar'
+import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 interface WrapperProps {
     data: any
@@ -46,11 +48,26 @@ const Wrapper: React.FC<WrapperProps> = ({
 
     const pinTriggerRef = useRef<any>(null)
 
+    // Mobile filter modal state
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+    const { filters, setFilter } = useCollectionsFilterStore()
+
+    const handleApplyFilters = (tempFilters: any) => {
+        // Apply all temp filters to the store
+        const keys = ['brands', 'availability', 'condition', 'gender', 'priceRange', 'sortBy'] as const
+        keys.forEach((key) => {
+            if (key in tempFilters) {
+                setFilter(key, tempFilters[key])
+            }
+        })
+    }
+
     useGSAP(() => {
-        // Use GSAP matchMedia to only apply animations on desktop
+        // Use GSAP matchMedia for different viewport animations
         const mm = gsap.matchMedia()
 
-        mm.add('(min-width: 1024px)', () => {
+        // Desktop: Existing animations
+        mm.add('(min-width: 1280px)', () => {
             const timeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: sectionRef.current,
@@ -94,8 +111,8 @@ const Wrapper: React.FC<WrapperProps> = ({
     }, [])
 
     return (
-        <Container className='flex flex-col gap-14 pt-14 xl:gap-10 xl:pt-20' ref={sectionRef}>
-            <div className='bg-grey-white dark:bg-grey-black flex justify-between xl:pb-10' ref={topRef}>
+        <Container className='relative flex flex-col gap-14 pt-14 xl:gap-10 xl:pt-20' ref={sectionRef}>
+            <div className='bg-grey-white dark:bg-grey-black z-50 flex justify-between  xl:pb-10' ref={topRef}>
                 <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
                     Our Collections
                 </h2>
@@ -127,6 +144,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                     className={classNames('!p-3 xl:hidden', {
                         hidden: selectedTab !== 0
                     })}
+                    onClick={() => setIsFilterModalOpen(true)}
                 >
                     <Icons
                         icon='Filter'
@@ -141,20 +159,33 @@ const Wrapper: React.FC<WrapperProps> = ({
             {(() => {
                 const showSidebar = selectedTab === 0
                 return (
-                    <div className='flex flex-row xl:gap-10'>
-                        {showSidebar && <Sidebar products={data} brandOptions={brandOptions} />}
-                        <div className={showSidebar ? 'flex-1' : 'w-full'}>
-                            <Content
-                                products={data}
-                                isLoading={isLoading}
-                                onLoadMore={onLoadMore}
-                                hasMore={hasMore}
-                                isLoadingMore={isLoadingMore}
-                                total={total}
-                                contentRef={contentRef}
-                            />
+                    <>
+                        <div className='flex flex-row xl:gap-10'>
+                            {showSidebar && <Sidebar products={data} brandOptions={brandOptions} />}
+                            <div className={showSidebar ? 'flex-1' : 'w-full'}>
+                                <Content
+                                    products={data}
+                                    isLoading={isLoading}
+                                    onLoadMore={onLoadMore}
+                                    hasMore={hasMore}
+                                    isLoadingMore={isLoadingMore}
+                                    total={total}
+                                    contentRef={contentRef}
+                                />
+                            </div>
                         </div>
-                    </div>
+
+                        {/* Mobile Filter Modal */}
+                        {showSidebar && (
+                            <MobileFilterModal
+                                open={isFilterModalOpen}
+                                onClose={() => setIsFilterModalOpen(false)}
+                                onApply={handleApplyFilters}
+                                initialFilters={filters}
+                                brandOptions={brandOptions}
+                            />
+                        )}
+                    </>
                 )
             })()}
             {hasMore && (

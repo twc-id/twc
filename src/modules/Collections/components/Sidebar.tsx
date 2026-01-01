@@ -20,7 +20,7 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
     const { getToggleProps, getCollapseProps } = useCollapse({ isExpanded })
 
     return (
-        <div className='border-grey-100 border-b py-3 xl:px-4'>
+        <div className='border-grey-100 border-b px-4 py-3'>
             <button
                 className='flex w-full items-center justify-between text-left'
                 {...getToggleProps({
@@ -417,7 +417,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
     }
 
     return (
-        <div className='flex w-full flex-col gap-5 xl:max-w-[270px] xl:gap-6'>
+        <div className='hidden w-full flex-col gap-5 xl:flex xl:max-w-[270px] xl:gap-6'>
             {metaData.map((item) => (
                 <Collapse key={item.key} title={item.label} defaultExpanded={item.key === 'brands'}>
                     {renderFilterOptions(item)}

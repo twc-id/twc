@@ -27,7 +27,7 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
         )
     }
     return (
-        <div ref={contentRef} className='scrollbar-none max-h-screen overflow-y-auto'>
+        <div ref={contentRef} className='scrollbar-none xl:max-h-screen xl:overflow-y-auto'>
             <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3'>
                 {products && products.length > 0 ? (
                     products.map((item: any) => (
