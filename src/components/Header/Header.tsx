@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger-with-children */
 import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import Input from '@components/forms/Input'
@@ -5,6 +6,7 @@ import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import NextImage from '@components/NextImage'
 import { useTheme } from '@contexts/ThemeContext'
+import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
 import Image from 'next/image'
@@ -17,6 +19,7 @@ import { useMediaQuery } from 'react-responsive'
 interface SubMenuItem {
     label: string
     items?: string[]
+    href?: string
 }
 
 interface MenuItem {
@@ -28,48 +31,36 @@ interface MenuItem {
 const subMenuImages: Record<string, string> = {
     BRAND: '/images/navbar/brands.webp',
     AVAILABILITY: '/images/navbar/availability.webp',
-    CONDITIONS: '/images/navbar/condition.webp'
+    CONDITIONS: '/images/navbar/condition.webp',
+    ACCESSORIES: '/images/navbar/accessories.webp'
 }
 
 const menuData: MenuItem[] = [
     {
-        label: 'OUR COLLECTIONS',
+        label: 'Our Collections',
         subMenu: [
             {
-                label: 'BRAND',
-                items: [
-                    'RICHARD MILLE',
-                    'PATEK PHILIPPE',
-                    'AUDEMARS PIGUET',
-                    'ROLEX',
-                    'A. LANGE & SÖHNE',
-                    'H. MOSER & CIE.',
-                    'CARTIER',
-                    'HUBLOT',
-                    'OMEGA',
-                    'ZENITH',
-                    'PANERAI',
-                    'FRANCK MULLER',
-                    'JAEGER-LECOULTRE',
-                    'TUDOR',
-                    'THE WATCH COLLECTIONS'
-                ]
+                label: 'Brand'
             },
             {
-                label: 'AVAILABILITY',
-                items: ['IN STOCK', 'COMING SOON']
+                label: 'Availability',
+                items: ['IN STOCK', 'OUT OF STOCK']
             },
             {
-                label: 'CONDITIONS',
+                label: 'Conditions',
                 items: ['Brand New', 'Pre-Owned']
+            },
+            {
+                label: 'Accessories',
+                href: '/collections?tab=accessories'
             }
         ]
     },
-    { label: 'SELL YOUR WATCH', href: '/sell' },
+    { label: 'Sell Your Watch', href: '/sell' },
     { label: 'Reserve Your Watch', href: '/reserve' },
-    { label: 'PRE-ORDER', href: '/pre-order' },
-    { label: 'ABOUT US', href: '/about-us' },
-    { label: 'ARTICLE', href: '/articles' }
+    { label: 'Pre-Order', href: '/pre-order' },
+    { label: 'About Us', href: '/about-us' },
+    { label: 'Article', href: '/articles' }
 ]
 
 const Headers = () => {
@@ -81,6 +72,7 @@ const Headers = () => {
     const [selectedSubMenuItem, setSelectedSubMenuItem] = useState<SubMenuItem | null>(null)
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
+    const [brands, setBrands] = useState<any[]>([])
 
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
@@ -132,6 +124,21 @@ const Headers = () => {
             image: '/images/navbar/brands.webp'
         }
     ]
+
+    const fetchBrands = async () => {
+        try {
+            const response = await WooCommerce.get(`products/brands?page=1&per_page=15`)
+
+            const brand = response.data
+            setBrands(brand)
+        } catch (err) {
+            console.error('Error fetching brands', err)
+        }
+    }
+
+    useEffect(() => {
+        fetchBrands()
+    }, [])
 
     useEffect(() => {
         const handleScroll = debounce(() => {
@@ -355,7 +362,7 @@ const Headers = () => {
                                         <UnstyledLink
                                             key={item.label}
                                             href={item.href}
-                                            className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            className='text-grey-200 hover:text-grey-white w-full cursor-pointer text-left transition-colors focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
                                             onClick={() => {
                                                 setIsMenuOpen(false)
                                                 setHoveredMenuItem(null)
@@ -363,14 +370,16 @@ const Headers = () => {
                                             }}
                                         >
                                             <div className='flex items-center gap-4'>
-                                                <span className='text-sm font-medium uppercase'>{item.label}</span>
+                                                <span className='xl:text-button-1-desktop text-button-1-mobile capitalize'>
+                                                    {item.label}
+                                                </span>
                                             </div>
                                         </UnstyledLink>
                                     ) : (
                                         <button
                                             key={item.label}
                                             type='button'
-                                            className='w-full cursor-pointer text-left text-white transition-colors hover:text-gray-400 focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            className='text-grey-200 hover:text-grey-white w-full cursor-pointer text-left transition-colors focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
                                             onMouseEnter={() => {
                                                 if (window.innerWidth >= 1024) {
                                                     setHoveredMenuItem(item)
@@ -387,8 +396,10 @@ const Headers = () => {
                                             aria-expanded={hoveredMenuItem === item}
                                             aria-haspopup={!!item.subMenu}
                                         >
-                                            <div className='flex items-center gap-4'>
-                                                <span className='text-sm font-medium'>{item.label}</span>
+                                            <div className='flex items-center justify-between gap-4 xl:justify-normal'>
+                                                <span className='xl:text-button-1-desktop text-button-1-mobile'>
+                                                    {item.label}
+                                                </span>
                                                 {item.subMenu && (
                                                     <span aria-hidden='true'>
                                                         <Icons icon='ChevronRight' width={16} height={16} />
@@ -421,41 +432,44 @@ const Headers = () => {
                                                 items={[{ title: 'Home', href: '/' }, { title: hoveredMenuItem.label }]}
                                                 breakpoint='Mobile'
                                                 onNavigate={(i) => handleBreadcrumbNavigate(i)}
+                                                navigationClassName='text-button-5-mobile capitalize'
+                                                lastItemClassName='text-button-5-mobile capitalize'
                                             />
                                         </div>
 
                                         {/* Desktop: BRAND Section - Full Width Image + Items Below */}
                                         <div className='hidden xl:block'>
-                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'BRAND') && (
+                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'Brand') && (
                                                 <div className='animate-slide-in-left space-y-6'>
                                                     {/* Full Width Image */}
-                                                    <div className='relative w-full overflow-hidden rounded-lg'>
+                                                    <div className='relative w-full overflow-hidden'>
                                                         <NextImage
                                                             src={subMenuImages.BRAND}
                                                             alt='Brands'
                                                             width={960}
                                                             height={301}
-                                                            className='w-full object-cover'
+                                                            className='w-full object-cover '
                                                         />
                                                     </div>
                                                     {/* Title and Items */}
                                                     <div>
-                                                        <h3 className='mb-4 text-xs font-normal uppercase text-gray-500'>
+                                                        <h3 className='text-paragraph-7-desktop mb-4  text-gray-500'>
                                                             By Brands
                                                         </h3>
-                                                        <div className='grid grid-flow-col grid-rows-4 gap-x-[165px] gap-y-2'>
-                                                            {hoveredMenuItem.subMenu
-                                                                .find((item) => item.label === 'BRAND')
-                                                                ?.items?.map((item) => (
-                                                                    <button
-                                                                        key={item}
-                                                                        type='button'
-                                                                        className='cursor-pointer text-left text-sm text-gray-400 transition-colors hover:text-white focus:text-white focus:outline-none'
-                                                                        onKeyDown={handleSubSubMenuItemKeyDown}
-                                                                    >
-                                                                        {item}
-                                                                    </button>
-                                                                ))}
+                                                        <div className='grid grid-flow-col grid-rows-4 gap-x-[100px] gap-y-2'>
+                                                            {brands.map((item) => (
+                                                                <UnstyledLink
+                                                                    key={item}
+                                                                    href={`/collections?product_brand=${item.id}`}
+                                                                    className='xl:text-button-4-desktop text-button-4-mobile text-grey-200 hover:text-grey-100'
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: item.name
+                                                                    }}
+                                                                    // eslint-disable-next-line react/no-children-prop
+                                                                    children={undefined}
+                                                                    onClick={() => setIsMenuOpen(false)}
+                                                                />
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -463,58 +477,131 @@ const Headers = () => {
                                         </div>
 
                                         {/* Mobile: SubMenu Categories */}
-                                        <div className='space-y-4 xl:hidden'>
-                                            {hoveredMenuItem.subMenu.map((subItem) => (
-                                                <button
-                                                    key={subItem.label}
-                                                    type='button'
-                                                    className='group flex w-full cursor-pointer flex-col gap-4'
-                                                    onClick={() => setSelectedSubMenuItem(subItem)}
-                                                >
-                                                    <div className='h-[179px] w-full rounded-lg'>
-                                                        <Image
-                                                            src={subMenuImages[subItem.label]}
-                                                            alt={subItem.label}
-                                                            width={0}
-                                                            height={0}
-                                                            sizes='100vw'
-                                                            className='h-[179px] w-full object-cover transition-transform group-active:scale-105'
-                                                        />
-                                                    </div>
-                                                    <h3 className='text-left text-sm font-normal text-white'>
-                                                        By{' '}
-                                                        {subItem.label.charAt(0) + subItem.label.slice(1).toLowerCase()}
-                                                    </h3>
-                                                </button>
-                                            ))}
+                                        <div className='grid grid-cols-2 gap-5 xl:hidden'>
+                                            {hoveredMenuItem.subMenu.map((subItem) => {
+                                                const img =
+                                                    subMenuImages[subItem.label.toLocaleUpperCase()] ||
+                                                    subMenuImages['ACCESSORIES']
+
+                                                // On mobile, Accessories should navigate directly
+                                                if (subItem.label === 'Accessories') {
+                                                    return (
+                                                        <UnstyledLink
+                                                            key={subItem.label}
+                                                            href={subItem.href || '/collections?tab=accessories'}
+                                                            className='group flex w-full cursor-pointer flex-col gap-4'
+                                                            onClick={() => setIsMenuOpen(false)}
+                                                        >
+                                                            <div className='h-[218px] w-full overflow-hidden'>
+                                                                <Image
+                                                                    src={img}
+                                                                    alt={subItem.label}
+                                                                    width={0}
+                                                                    height={0}
+                                                                    sizes='100vw'
+                                                                    className='h-auto min-h-[218px] w-full object-cover transition-transform group-active:scale-105'
+                                                                />
+                                                            </div>
+                                                            <h3 className='text-paragraph-7-mobile text-grey-200 text-left'>
+                                                                By{' '}
+                                                                {subItem.label.charAt(0) +
+                                                                    subItem.label.slice(1).toLowerCase()}
+                                                            </h3>
+                                                        </UnstyledLink>
+                                                    )
+                                                }
+
+                                                return (
+                                                    <button
+                                                        key={subItem.label}
+                                                        type='button'
+                                                        className='group flex w-full cursor-pointer flex-col gap-4'
+                                                        onClick={() => setSelectedSubMenuItem(subItem)}
+                                                    >
+                                                        <div className='h-[218px] w-full overflow-hidden'>
+                                                            <Image
+                                                                src={img}
+                                                                alt={subItem.label}
+                                                                width={0}
+                                                                height={0}
+                                                                sizes='100vw'
+                                                                className='h-auto min-h-[218px] w-full object-cover transition-transform group-active:scale-105'
+                                                            />
+                                                        </div>
+                                                        <h3 className='text-paragraph-7-mobile text-grey-200 text-left'>
+                                                            By{' '}
+                                                            {subItem.label.charAt(0) +
+                                                                subItem.label.slice(1).toLowerCase()}
+                                                        </h3>
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
 
                                         {/* Desktop: AVAILABILITY & CONDITIONS Section - Side by Side */}
-                                        <div className='hidden grid-cols-2 lg:grid xl:gap-[128px]'>
+                                        <div className='hidden grid-cols-3 lg:grid xl:gap-14'>
                                             {/* AVAILABILITY */}
-                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'AVAILABILITY') && (
+                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'Availability') && (
                                                 <div className='animate-slide-in-left flex flex-row items-end gap-8'>
-                                                    <div className='relative overflow-hidden rounded-lg'>
-                                                        <NextImage
+                                                    <div className='relative h-[107px] w-[160px] overflow-hidden'>
+                                                        <Image
                                                             src={subMenuImages.AVAILABILITY}
                                                             alt='Availability'
-                                                            width={293}
-                                                            height={219}
-                                                            className='h-full w-full object-cover'
+                                                            width={160}
+                                                            height={107}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className='mb-3 text-xs font-normal uppercase text-gray-500'>
+                                                        <h3 className='text-paragraph-7-desktop mb-3  text-gray-500'>
                                                             By Availability
                                                         </h3>
                                                         <div className='space-y-2'>
                                                             {hoveredMenuItem.subMenu
-                                                                .find((item) => item.label === 'AVAILABILITY')
+                                                                .find((item) => item.label === 'Availability')
+                                                                ?.items?.map((item) => (
+                                                                    <UnstyledLink
+                                                                        key={item}
+                                                                        href={
+                                                                            item === 'IN STOCK'
+                                                                                ? '/collections?availability=instock'
+                                                                                : item === 'OUT OF STOCK'
+                                                                                ? '/collections?availability=outofstock'
+                                                                                : '#'
+                                                                        }
+                                                                        className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
+                                                                        onClick={() => setIsMenuOpen(false)}
+                                                                    >
+                                                                        {item}
+                                                                    </UnstyledLink>
+                                                                ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* CONDITIONS */}
+                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'Conditions') && (
+                                                <div className='animate-slide-in-left flex flex-row items-end gap-8'>
+                                                    <div className='relative h-[107px] w-[160px] overflow-hidden'>
+                                                        <Image
+                                                            src={subMenuImages.CONDITIONS}
+                                                            alt='Conditions'
+                                                            width={160}
+                                                            height={107}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className='text-paragraph-7-desktop mb-3  text-gray-500'>
+                                                            By Condition
+                                                        </h3>
+                                                        <div className='space-y-2'>
+                                                            {hoveredMenuItem.subMenu
+                                                                .find((item) => item.label === 'Conditions')
                                                                 ?.items?.map((item) => (
                                                                     <button
                                                                         key={item}
                                                                         type='button'
-                                                                        className='block cursor-pointer text-left text-sm text-gray-400 transition-colors hover:text-white focus:text-white focus:outline-none'
+                                                                        className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
                                                                         onKeyDown={handleSubSubMenuItemKeyDown}
                                                                     >
                                                                         {item}
@@ -524,36 +611,26 @@ const Headers = () => {
                                                     </div>
                                                 </div>
                                             )}
-
-                                            {/* CONDITIONS */}
-                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'CONDITIONS') && (
+                                            {/* ACCESSORIES */}
+                                            {hoveredMenuItem.subMenu.find((item) => item.label === 'Accessories') && (
                                                 <div className='animate-slide-in-left flex flex-row items-end gap-8'>
-                                                    <div className='relative overflow-hidden rounded-lg'>
-                                                        <NextImage
-                                                            src={subMenuImages.CONDITIONS}
-                                                            alt='Conditions'
-                                                            width={293}
-                                                            height={219}
-                                                            className='h-full w-full object-cover'
+                                                    <div className='h-[107px] w-[160px] overflow-hidden'>
+                                                        <Image
+                                                            src={subMenuImages.ACCESSORIES}
+                                                            alt='Accessories'
+                                                            width={160}
+                                                            height={107}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className='mb-3 text-xs font-normal uppercase text-gray-500'>
-                                                            By Condition
-                                                        </h3>
                                                         <div className='space-y-2'>
-                                                            {hoveredMenuItem.subMenu
-                                                                .find((item) => item.label === 'CONDITIONS')
-                                                                ?.items?.map((item) => (
-                                                                    <button
-                                                                        key={item}
-                                                                        type='button'
-                                                                        className='block cursor-pointer text-left text-sm text-gray-400 transition-colors hover:text-white focus:text-white focus:outline-none'
-                                                                        onKeyDown={handleSubSubMenuItemKeyDown}
-                                                                    >
-                                                                        {item}
-                                                                    </button>
-                                                                ))}
+                                                            <UnstyledLink
+                                                                href='/collections?tab=accessories'
+                                                                className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
+                                                                onClick={() => setIsMenuOpen(false)}
+                                                            >
+                                                                See All Accessories
+                                                            </UnstyledLink>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -580,21 +657,61 @@ const Headers = () => {
                                             ]}
                                             breakpoint='Mobile'
                                             onNavigate={(i) => handleBreadcrumbNavigate(i)}
+                                            navigationClassName='text-button-5-mobile !capitalize'
+                                            lastItemClassName='text-button-5-mobile capitalize'
                                         />
 
                                         {/* Items List */}
                                         <div className='space-y-4'>
-                                            {selectedSubMenuItem.items?.map((item) => (
-                                                <button
-                                                    key={item}
-                                                    type='button'
-                                                    className='block w-full cursor-pointer text-left text-base text-white transition-colors active:text-gray-400'
-                                                    onKeyDown={handleSubSubMenuItemKeyDown}
-                                                >
-                                                    {item}
-                                                </button>
-                                            ))}
+                                            {selectedSubMenuItem.label === 'Brand' &&
+                                                brands.map((item) => (
+                                                    <UnstyledLink
+                                                        key={item}
+                                                        href={`/collections?product_brand=${item.id}`}
+                                                        className='text-button-1-mobile text-grey-200 block text-left transition-colors'
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: item.name
+                                                        }}
+                                                        // eslint-disable-next-line react/no-children-prop
+                                                        children={undefined}
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    />
+                                                ))}
                                         </div>
+
+                                        {/* Item list by condition */}
+                                        {selectedSubMenuItem.label !== 'Brand' && selectedSubMenuItem.items && (
+                                            <div className='space-y-4'>
+                                                {selectedSubMenuItem.items.map((item) => (
+                                                    <UnstyledLink
+                                                        key={item}
+                                                        href={
+                                                            item === 'Brand New'
+                                                                ? '/collections?condition=brand-new'
+                                                                : item === 'Pre-Owned'
+                                                                ? '/collections?condition=pre-owned-very-good'
+                                                                : '#'
+                                                        }
+                                                        className='text-button-1-mobile text-grey-200 block text-left transition-colors'
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        {item}
+                                                    </UnstyledLink>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {/* Item Accessories */}
+                                        {selectedSubMenuItem.label === 'Accessories' && (
+                                            <div className='space-y-4'>
+                                                <UnstyledLink
+                                                    href='/collections?tab=accessories'
+                                                    className='text-button-1-mobile text-grey-200 block text-left transition-colors'
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                >
+                                                    See All Accessories
+                                                </UnstyledLink>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
