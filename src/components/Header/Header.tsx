@@ -4,16 +4,17 @@ import Container from '@components/Container'
 import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
-import NextImage from '@components/NextImage'
 import { useTheme } from '@contexts/ThemeContext'
 import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
+import Fuse from 'fuse.js'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import Form, { Field } from 'rc-field-form'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 interface SubMenuItem {
@@ -64,6 +65,7 @@ const menuData: MenuItem[] = [
 ]
 
 const Headers = () => {
+    const { t } = useTranslation(['collection', 'home', 'common'])
     const router = useRouter()
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -73,6 +75,10 @@ const Headers = () => {
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [brands, setBrands] = useState<any[]>([])
+    const [searchResults, setSearchResults] = useState<any[]>([])
+    const [isSearching, setIsSearching] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [correctedQuery, setCorrectedQuery] = useState('')
 
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
@@ -94,36 +100,89 @@ const Headers = () => {
         }
     }
 
-    const suggestionProducts = [
-        {
-            sku: '5968G0 PATEK PHILIPPE',
-            title: 'Aquanaut White Gold Blue Dial',
-            year: 'Pre-owned 2024',
-            price: 'IDR 1.975.000.000',
-            image: '/images/navbar/brands.webp'
-        },
-        {
-            sku: '5968G PATEK PHILIPPE',
-            title: 'Aquanaut White Gold Blue Dial',
-            year: 'Pre-owned 2024',
-            price: 'IDR 1.975.000.000',
-            image: '/images/navbar/availability.webp'
-        },
-        {
-            sku: '5968G0 PATEK PHILIPPE',
-            title: 'Aquanaut White Gold Blue Dial',
-            year: 'Pre-owned 2024',
-            price: 'IDR 1.975.000.000',
-            image: '/images/navbar/condition.webp'
-        },
-        {
-            sku: '5968O PATEK PHILIPPE',
-            title: 'Aquanaut White Gold Blue Dial',
-            year: 'Pre-owned 2024',
-            price: 'IDR 1.975.000.000',
-            image: '/images/navbar/brands.webp'
+    const fetchDefaultSuggestions = async () => {
+        try {
+            setIsSearching(true)
+            const response = await WooCommerce.get(`products?tag=54&category=15&per_page=4`)
+            setSearchResults(response.data || [])
+        } catch (err) {
+            console.error('Error fetching default suggestions', err)
+            setSearchResults([])
+        } finally {
+            setIsSearching(false)
         }
-    ]
+    }
+
+    const debouncedSearch = useMemo(
+        () =>
+            debounce((query: string) => {
+                const fetchProducts = async () => {
+                    if (!query || query.trim().length < 2) {
+                        // If no query, show default suggestions
+                        fetchDefaultSuggestions()
+                        setCorrectedQuery('')
+                        return
+                    }
+
+                    try {
+                        setIsSearching(true)
+                        // First, try exact search
+                        const response = await WooCommerce.get(
+                            `products?search=${encodeURIComponent(query)}&per_page=8`
+                        )
+                        const exactResults = response.data || []
+
+                        if (exactResults.length > 0) {
+                            // Found exact match
+                            setSearchResults(exactResults)
+                            setCorrectedQuery('')
+                        } else {
+                            // No exact match, try fuzzy search
+                            // Fetch all products for fuzzy matching (limit to reasonable amount)
+                            const allProductsRes = await WooCommerce.get(`products?per_page=100`)
+                            const allProducts = allProductsRes.data || []
+
+                            // Configure Fuse.js for fuzzy matching
+                            const fuse = new Fuse(allProducts, {
+                                keys: ['name', 'brands.name'],
+                                threshold: 0.6, // 0 = exact match, 1 = match anything (increased for better typo tolerance)
+                                includeScore: true,
+                                minMatchCharLength: 2,
+                                ignoreLocation: true // Search the entire string, not just a specific location
+                            })
+
+                            const fuzzyResults = fuse.search(query)
+
+                            if (fuzzyResults.length > 0) {
+                                // Found fuzzy matches
+                                const topMatch = fuzzyResults[0].item as any
+                                const correctedName = topMatch.name
+                                setCorrectedQuery(correctedName)
+                                setSearchResults(fuzzyResults.slice(0, 8).map((r) => r.item))
+                            } else {
+                                // No results at all
+                                setSearchResults([])
+                                setCorrectedQuery('')
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error fetching products', err)
+                        setSearchResults([])
+                        setCorrectedQuery('')
+                    } finally {
+                        setIsSearching(false)
+                    }
+                }
+                fetchProducts()
+            }, 600),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    )
+
+    const handleSearchChange = (value: string) => {
+        setSearchQuery(value)
+        debouncedSearch(value)
+    }
 
     const fetchBrands = async () => {
         try {
@@ -139,6 +198,13 @@ const Headers = () => {
     useEffect(() => {
         fetchBrands()
     }, [])
+
+    useEffect(() => {
+        if (isSearchOpen && searchResults.length === 0 && !searchQuery) {
+            fetchDefaultSuggestions()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSearchOpen])
 
     useEffect(() => {
         const handleScroll = debounce(() => {
@@ -249,39 +315,32 @@ const Headers = () => {
                 }
             }}
             className={classNames('relative h-8 w-8  transition-all duration-300', {
-                'pointer-events-none': isSearchOpen
+                hidden: isSearchOpen
             })}
         >
-            <div
-                className={classNames(
-                    'absolute inset-0 transition-all duration-300',
-                    isMenuOpen ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'
-                )}
-            >
-                <Icons
-                    icon='Hamburger'
-                    width={isMobile ? 24 : 32}
-                    height={isMobile ? 24 : 32}
-                    className={classNames({
-                        'text-white': !isScrolled,
-                        'text-black': isScrolled,
-                        hidden: isSearchOpen
-                    })}
-                />
-            </div>
-            <div
-                className={classNames(
-                    'absolute inset-0 transition-all duration-300',
-                    isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-0 opacity-0'
-                )}
-            >
-                <Icons
-                    icon='XClose'
-                    width={isMobile ? 24 : 32}
-                    height={isMobile ? 24 : 32}
-                    className={!isScrolled ? 'text-white' : 'text-black'}
-                />
-            </div>
+            <Icons
+                icon='Hamburger'
+                width={24}
+                height={24}
+                className={classNames('absolute inset-0 rotate-0 scale-100 opacity-100 transition-all duration-300', {
+                    'text-white': !isScrolled,
+                    'text-black': isScrolled,
+                    'rotate-90 scale-0 opacity-0': isMenuOpen,
+
+                    hidden: isSearchOpen
+                })}
+            />
+
+            <Icons
+                icon='XClose'
+                width={24}
+                height={24}
+                className={classNames('absolute inset-0 rotate-90 scale-0 opacity-0 transition-all duration-300', {
+                    'rotate-0 scale-100 opacity-100': isMenuOpen,
+                    'text-white': !isScrolled,
+                    'text-black': isScrolled
+                })}
+            />
         </button>
     )
 
@@ -300,10 +359,19 @@ const Headers = () => {
                 )}
             >
                 <Container>
-                    <div className='flex flex-row items-center justify-between'>
+                    <div
+                        className={classNames('flex min-h-[52px] w-full flex-row items-center justify-between', {
+                            'justify-end': isSearchOpen
+                        })}
+                    >
                         {renderMenu()}
 
-                        <Link href='/' className='h-[52px] w-[54px]'>
+                        <Link
+                            href='/'
+                            className={classNames('h-[52px] w-[54px]', {
+                                hidden: isSearchOpen
+                            })}
+                        >
                             <Icons
                                 icon={!isScrolled ? 'LogoWhite' : 'LogoBlack'}
                                 width={isMobile ? 46 : 54}
@@ -311,9 +379,10 @@ const Headers = () => {
                                 className={isSearchOpen ? 'hidden' : ''}
                             />
                         </Link>
-                        <button
-                            aria-label='Toggle search'
-                            type='button'
+                        <Icons
+                            icon={isSearchOpen ? 'XClose' : 'Search'}
+                            width={24}
+                            height={24}
                             onClick={() => {
                                 const willOpen = !isSearchOpen
                                 setIsSearchOpen(willOpen)
@@ -322,22 +391,17 @@ const Headers = () => {
                                     setIsMenuOpen(false)
                                     setHoveredMenuItem(null)
                                     setSelectedSubMenuItem(null)
+
+                                    setSearchQuery('')
+                                    form.setFieldsValue({ search: '' })
+                                    setSearchResults([])
                                 }
                             }}
-                            className='relative h-8 w-8 transition-all duration-300'
-                        >
-                            <Icons
-                                icon='Search'
-                                width={isMobile ? 24 : 32}
-                                height={isMobile ? 24 : 32}
-                                // className={!isScrolled ? 'text-white' : 'text-black'}
-
-                                className={classNames({
-                                    'text-white': !isScrolled && !isSearchOpen,
-                                    'text-black': isScrolled || isSearchOpen
-                                })}
-                            />
-                        </button>
+                            className={classNames('cursor-pointer', {
+                                'text-white': !isScrolled && !isSearchOpen,
+                                'text-black': isScrolled || isSearchOpen
+                            })}
+                        />
                     </div>
                 </Container>
             </div>
@@ -443,7 +507,7 @@ const Headers = () => {
                                                 <div className='animate-slide-in-left space-y-6'>
                                                     {/* Full Width Image */}
                                                     <div className='relative w-full overflow-hidden'>
-                                                        <NextImage
+                                                        <Image
                                                             src={subMenuImages.BRAND}
                                                             alt='Brands'
                                                             width={960}
@@ -723,7 +787,7 @@ const Headers = () => {
             {/* Search Dropdown */}
             {isSearchOpen && (
                 <div
-                    className='animate-fade-in fixed inset-0 top-[80px] z-50 overflow-auto'
+                    className='animate-fade-in fixed inset-0 top-[60px] z-50 overflow-auto bg-white'
                     onClick={() => {
                         // setIsSearchOpen(false)
                         setHoveredMenuItem(null)
@@ -731,54 +795,123 @@ const Headers = () => {
                     }}
                 >
                     {/* full-width white bar */}
-                    <div className='h-full w-full bg-white'>
+                    <div className='min-h-screen w-full bg-white pb-10'>
                         <div className='py-6' onClick={(e) => e.stopPropagation()}>
-                            <Container>
-                                <div className='mb-4'>
-                                    <Form form={form}>
-                                        <Field name='search'>
-                                            <Input
-                                                className='!rounded-none !border-x-0 !border-t-0'
-                                                inputClassName='text-center'
-                                                placeholder='Search'
-                                            />
-                                        </Field>
-                                    </Form>
-                                </div>
+                            <Container className='flex flex-col gap-10'>
+                                <Form form={form}>
+                                    <Field name='search'>
+                                        <Input
+                                            className='!rounded-none !border-x-0 !border-t-0'
+                                            inputClassName='text-center xl:text-paragraph-2-desktop text-paragraph-2-mobile placeholder:text-gray-400'
+                                            placeholder='Search'
+                                            value={searchQuery}
+                                            onChange={handleSearchChange}
+                                        />
+                                    </Field>
+                                </Form>
 
-                                <div className='h-full w-full'>
-                                    <h4 className='mb-4 text-sm text-gray-500'>Suggestions</h4>
+                                <div className='flex flex-col gap-6'>
+                                    <h4 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'>
+                                        {searchQuery ? 'Search Results' : 'Suggestions'}
+                                    </h4>
+                                    {/* Typo correction message */}
+                                    {correctedQuery && searchQuery && (
+                                        <p className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile text-center'>
+                                            We couldn't find a match for "
+                                            <span className='font-semibold'>{searchQuery}</span>", but we show results
+                                            of "<span className='font-semibold'>{correctedQuery}</span>" below
+                                        </p>
+                                    )}
                                     <div className='h-full w-full'>
-                                        <div className='grid grid-cols-2 gap-6 md:grid-cols-4'>
-                                            {suggestionProducts.map((p) => (
-                                                <div
-                                                    key={p.sku}
-                                                    className='cursor-pointer text-center
-                                                '
-                                                    onClick={() => {
-                                                        setIsSearchOpen(false)
-                                                    }}
-                                                >
-                                                    <div className='mb-3 h-40 w-full overflow-hidden rounded'>
-                                                        <NextImage
-                                                            src={p.image}
-                                                            alt={p.title}
-                                                            width={240}
-                                                            height={240}
-                                                            className='h-full w-full object-contain'
-                                                        />
+                                        {isSearching ? (
+                                            <div className='grid grid-cols-2 items-center gap-6 md:grid-cols-4'>
+                                                {Array.from({ length: 4 }).map((_, idx) => (
+                                                    <div key={`skeleton-${idx}`} className='flex flex-col items-center'>
+                                                        <div className='bg-grey-100 mb-3 h-[168px] w-[168px] animate-pulse overflow-hidden rounded xl:h-[309px] xl:w-[309px]' />
+                                                        <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                                        <div className='bg-grey-100 mx-auto mt-2 h-4 w-28 animate-pulse rounded' />
                                                     </div>
-                                                    <div className='text-xs text-gray-400'>{p.sku}</div>
-                                                    <div className='mt-1 text-sm font-medium text-gray-800'>
-                                                        {p.title}
-                                                    </div>
-                                                    <div className='text-xs text-gray-400'>{p.year}</div>
-                                                    <div className='mt-1 text-sm font-semibold text-gray-800'>
-                                                        {p.price}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                                                ))}
+                                            </div>
+                                        ) : searchResults.length > 0 ? (
+                                            <div className='grid grid-cols-2 gap-6 md:grid-cols-4'>
+                                                {searchResults.map((product) => (
+                                                    <UnstyledLink
+                                                        key={product.id}
+                                                        href={`/collections/${product.slug}`}
+                                                        className='cursor-pointer text-center'
+                                                        onClick={() => {
+                                                            setIsSearchOpen(false)
+                                                            setSearchQuery('')
+                                                            setSearchResults([])
+                                                            setCorrectedQuery('')
+                                                        }}
+                                                    >
+                                                        <div className='flex flex-col gap-1 overflow-hidden xl:gap-12'>
+                                                            <div className='mb-3 h-[168px] w-[168px] overflow-hidden xl:h-[309px] xl:w-[309px]'>
+                                                                <Image
+                                                                    src={
+                                                                        product.images[0]?.src ||
+                                                                        '/images/placeholder.png'
+                                                                    }
+                                                                    alt={product.name}
+                                                                    width={isMobile ? 168 : 309}
+                                                                    height={isMobile ? 168 : 309}
+                                                                    className='h-full w-full object-contain'
+                                                                />
+                                                            </div>
+                                                            <div className='flex flex-col gap-1 text-center'>
+                                                                <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
+                                                                    {product?.brands?.[0].name} •{' '}
+                                                                    {
+                                                                        product?.meta_data?.find(
+                                                                            (meta: any) => meta.key === 'reference'
+                                                                        )?.value
+                                                                    }
+                                                                </p>
+                                                                <h4
+                                                                    className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'
+                                                                    dangerouslySetInnerHTML={{ __html: product.name }}
+                                                                />
+
+                                                                <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                                    {product?.meta_data?.find(
+                                                                        (meta: any) =>
+                                                                            meta.key === 'basic-info-year-purchase'
+                                                                    ) &&
+                                                                        t('home:highlight.pre_owned', {
+                                                                            year: product?.meta_data?.find(
+                                                                                (meta: any) =>
+                                                                                    meta.key ===
+                                                                                    'basic-info-year-purchase'
+                                                                            )?.value
+                                                                        })}
+                                                                </p>
+                                                                {product?.price !== '' && (
+                                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                                        IDR{' '}
+                                                                        {parseInt(product?.price).toLocaleString(
+                                                                            'id-ID'
+                                                                        )}
+                                                                    </p>
+                                                                )}
+                                                                {!product?.purchasable && (
+                                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-red-600'>
+                                                                        {t('common:sold_out')}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </UnstyledLink>
+                                                ))}
+                                            </div>
+                                        ) : searchQuery ? (
+                                            <div className='text-grey-400 py-10 text-center'>
+                                                No products found for "{searchQuery}"
+                                            </div>
+                                        ) : null}
                                     </div>
                                 </div>
                             </Container>
