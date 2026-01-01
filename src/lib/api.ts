@@ -30,12 +30,31 @@ interface WooCommerceConfig {
 }
 
 const createWooCommerceInstance = (config?: WooCommerceConfig) => {
+    const consumerKey = config?.consumerKey ?? CONSUMER_KEY ?? ''
+    const consumerSecret = config?.consumerSecret ?? CONSUMER_SECRET ?? ''
+
+    const toBase64 = (str: string) => {
+        if (typeof window !== 'undefined' && typeof window.btoa === 'function') return btoa(str)
+        // Node.js environment
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const Buffer = require('buffer').Buffer
+        return Buffer.from(str).toString('base64')
+    }
+
+    const authHeader = `Basic ${toBase64(`${consumerKey}:${consumerSecret}`)}`
+
     return new WooCommerceRestApi({
         url: config?.url ?? 'https://mediumpurple-pig-833607.hostingersite.com',
-        consumerKey: config?.consumerKey ?? CONSUMER_KEY ?? '',
-        consumerSecret: config?.consumerSecret ?? CONSUMER_SECRET ?? '',
+        consumerKey,
+        consumerSecret,
         version: config?.version ?? ('wc/v3' as any),
-        queryStringAuth: config?.queryStringAuth ?? true
+        // prefer header-based auth by default (safer over HTTPS)
+        queryStringAuth: config?.queryStringAuth ?? false,
+        axiosConfig: {
+            headers: {
+                Authorization: authHeader
+            }
+        }
     })
 }
 
