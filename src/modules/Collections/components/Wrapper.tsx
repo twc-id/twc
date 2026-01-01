@@ -1,6 +1,8 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import Icons from '@components/Icon'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import Content from '@modules/Collections/components/Content'
 import Sidebar from '@modules/Collections/components/Sidebar'
 import gsap from 'gsap'
@@ -45,62 +47,95 @@ const Wrapper: React.FC<WrapperProps> = ({
     const pinTriggerRef = useRef<any>(null)
 
     useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                // end will be calculated based on the inner content height so the section remains pinned
-                end: () => {
-                    const contentEl: any = contentRef.current
-                    if (!contentEl) return '+=100%'
-                    const extra = 100 // small buffer
-                    const delta = Math.max(0, contentEl.scrollHeight - window.innerHeight + extra)
-                    return `+=${delta}`
-                },
-                id: 'collections-wrapper-animation',
-                toggleActions: 'restart none none reset'
+        // Use GSAP matchMedia to only apply animations on desktop
+        const mm = gsap.matchMedia()
+
+        mm.add('(min-width: 1024px)', () => {
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                    // end will be calculated based on the inner content height so the section remains pinned
+                    end: () => {
+                        const contentEl: any = contentRef.current
+                        if (!contentEl) return '+=100%'
+                        const extra = 100 // small buffer
+                        const delta = Math.max(0, contentEl.scrollHeight - window.innerHeight + extra)
+                        return `+=${delta}`
+                    },
+                    id: 'collections-wrapper-animation',
+                    toggleActions: 'restart none none reset'
+                }
+            })
+
+            timeline.fromTo(topRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
+
+            // pin the top header only; content will be scrollable inside the pinned section
+            pinTriggerRef.current = ScrollTrigger.create({
+                trigger: topRef.current,
+                start: 'top top',
+                pin: true,
+                pinSpacing: false,
+                id: 'collections-wrapper-top-pin',
+                pinnedContainer: sectionRef.current
+            })
+
+            return () => {
+                timeline.scrollTrigger?.kill()
+                timeline.kill()
+                pinTriggerRef.current?.kill?.()
             }
         })
 
-        timeline.fromTo(topRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
-
-        // pin the top header only; content will be scrollable inside the pinned section
-        pinTriggerRef.current = ScrollTrigger.create({
-            trigger: topRef.current,
-            start: 'top top',
-            pin: true,
-            pinSpacing: false,
-            id: 'collections-wrapper-top-pin',
-            pinnedContainer: sectionRef.current
-        })
-
-        // Cleanup
+        // Cleanup matchMedia when component unmounts or deps change
         return () => {
-            timeline.scrollTrigger?.kill()
-            pinTriggerRef.current?.kill?.()
+            mm.revert()
         }
     }, [])
 
     return (
-        <Container className='flex flex-col xl:gap-10 xl:pt-20' ref={sectionRef}>
-            <div className='bg-grey-white dark:bg-grey-black flex flex-row justify-between xl:pb-10' ref={topRef}>
-                <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile'>Our Collections</h2>
+        <Container className='flex flex-col gap-14 pt-14 xl:gap-10 xl:pt-20' ref={sectionRef}>
+            <div className='bg-grey-white dark:bg-grey-black flex justify-between xl:pb-10' ref={topRef}>
+                <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
+                    Our Collections
+                </h2>
                 {/* Tabs */}
-                <div className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'>
+                <div
+                    className={classNames('border-grey-black flex flex-row border xl:w-auto xl:justify-end', {
+                        'w-full': selectedTab !== 0
+                    })}
+                >
                     {tabs.map((item, idx) => (
                         <button
                             key={`${item}-${idx}`}
                             onClick={() => onTabChange?.(idx)}
-                            className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
-                                idx === (selectedTab ?? 0)
-                                    ? 'bg-grey-black text-grey-white'
-                                    : 'bg-grey-white text-grey-black hover:bg-grey-100'
-                            }`}
+                            className={classNames(
+                                'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors',
+                                {
+                                    'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
+                                    'bg-grey-white text-grey-black hover:bg-grey-100': idx !== (selectedTab ?? 0),
+                                    'w-full': selectedTab !== 0
+                                }
+                            )}
                         >
                             {item}
                         </button>
                     ))}
                 </div>
+                <Button
+                    variant='secondaryInverse'
+                    className={classNames('!p-3 xl:hidden', {
+                        hidden: selectedTab !== 0
+                    })}
+                >
+                    <Icons
+                        icon='Filter'
+                        width={16}
+                        height={16}
+                        className='text-grey-black
+                    '
+                    />
+                </Button>
             </div>
 
             {(() => {

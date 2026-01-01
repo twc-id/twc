@@ -8,23 +8,14 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 
-// // Apply availability filter
-// if (filters.availability.length > 0) {
-//     filteredData = filteredData.filter((product: any) => {
-//         const stockStatus = product.stock_status
-//         return filters.availability.includes(stockStatus)
-//     })
-// }
+const TAB_MAP = {
+    watches: 0,
+    accessories: 1
+} as const
 
-// // Apply price range filter
-// if (filters.priceRange.min || filters.priceRange.max) {
-//     filteredData = filteredData.filter((product: any) => {
-//         const price = parseFloat(product.price)
-//         if (filters.priceRange.min && price < filters.priceRange.min) return false
-//         if (filters.priceRange.max && price > filters.priceRange.max) return false
-//         return true
-//     })
-// }
+type TabKey = keyof typeof TAB_MAP
+
+const DEFAULT_TAB: TabKey = 'watches'
 
 const Collections = () => {
     const { t } = useTranslation(['collection'])
@@ -140,10 +131,16 @@ const Collections = () => {
             const genderValues = filters?.gender || []
             genderValues.forEach((g: string) => metaArr.push({ key: 'basic-info-gender', value: g }))
 
+            // Availability: add each selected availability as `stock_status` meta entry
+            // Availability values (will be sent as query param `stock_status` for /by-meta)
+            const availabilityValues = filters?.availability || []
+
             // You can add other meta entries here (availability, price range as two entries etc.)
 
-            // If no meta entries and no brand param, fallback to products?
-            if (metaArr.length === 0 && !productBrandParam) {
+            // If no meta entries, no brand param, and no price range, fallback to products?
+            const hasPriceRange = !!(filters.priceRange?.min || filters.priceRange?.max)
+            const hasAvailability = availabilityValues.length > 0
+            if (metaArr.length === 0 && !productBrandParam && !hasPriceRange && !hasAvailability) {
                 params.push(`category=${categoryId}`)
                 if (filters.priceRange?.min)
                     params.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
@@ -170,6 +167,7 @@ const Collections = () => {
                 if (filters.priceRange?.min) q.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
                 if (filters.priceRange?.max) q.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
                 if (productBrandParam) q.push(`product_brand=${productBrandParam}`)
+                if (availabilityValues.length > 0) q.push(`stock_status=${availabilityValues.join(',')}`)
                 if (orderByParam) q.push(orderByParam)
                 if (orderParam) q.push(orderParam)
                 const metaParam = encodeURIComponent(JSON.stringify(metaArr))
@@ -205,18 +203,36 @@ const Collections = () => {
     }
 
     const handleTabChange = (idx: number) => {
-        // when switching to Accessories tab (index 1), clear URL params and reset filters
-        if (idx === 1) {
-            try {
-                // only replace URL if there are existing query params to clear
-                if (router && router.query && Object.keys(router.query).length > 0) {
-                    router.replace({ pathname: router.pathname }, undefined, { shallow: true })
-                }
-            } catch (e) {
-                // ignore
-            }
+        const tabKey = Object.entries(TAB_MAP).find(([, value]) => value === idx)?.[0] as TabKey
 
-            // reset filters to defaults
+        const currentTab = (router.query.tab as TabKey) || DEFAULT_TAB
+
+        // hindari replace jika sama
+        if (currentTab === tabKey) return
+
+        router.replace(
+            {
+                pathname: router.pathname,
+                query: {
+                    ...router.query,
+                    tab: tabKey
+                }
+            },
+            undefined,
+            { shallow: true }
+        )
+    }
+
+    useEffect(() => {
+        const tabFromUrl = (router.query.tab as TabKey) || DEFAULT_TAB
+
+        const nextTabIndex = TAB_MAP[tabFromUrl]
+
+        if (nextTabIndex !== selectedTab) {
+            setSelectedTab(nextTabIndex)
+        }
+
+        if (tabFromUrl === 'accessories') {
             setFilter('brands', [])
             setFilter('availability', [])
             setFilter('condition', [])
@@ -224,9 +240,8 @@ const Collections = () => {
             setFilter('priceRange', {})
             setFilter('sortBy', 'default')
         }
-
-        setSelectedTab(idx)
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router.query.tab])
 
     return (
         <>

@@ -92,9 +92,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
     ]
 
     const availabilityOptions = [
-        { id: 'in-stock', name: 'In Stock' },
-        { id: 'pre-order', name: 'Pre-Order' },
-        { id: 'out-of-stock', name: 'Out of Stock' }
+        { id: 'instock', name: 'In Stock' },
+        { id: 'outofstock', name: 'Out of Stock' }
     ]
 
     const conditionOptions = [
@@ -137,25 +136,34 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
         setLocalMax(filters.priceRange.max ?? '')
     }, [filters.priceRange.min, filters.priceRange.max])
 
-    // If `product_brand` exists in the URL, use it to auto-check brands filter
+    // If `product_brand` or `availability` exist in the URL, use them to auto-check filters
     useEffect(() => {
-        const qb = router.query?.product_brand
-        if (!qb) return
+        const qbBrand = router.query?.product_brand
+        const qbAvailability = router.query?.availability
+        if (!qbBrand && !qbAvailability) return
 
-        const values = Array.isArray(qb)
-            ? qb
-            : String(qb)
-                  .split(',')
-                  .map((s) => s.trim())
-                  .filter(Boolean)
+        const parseValues = (qb: any) =>
+            Array.isArray(qb)
+                ? qb
+                : String(qb)
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean)
 
-        // Only set if different from current filters
-        const same = values.length === filters.brands.length && values.every((v) => filters.brands.includes(v))
-        if (!same) {
-            setFilter('brands', values)
+        if (qbBrand) {
+            const values = parseValues(qbBrand)
+            const same = values.length === filters.brands.length && values.every((v) => filters.brands.includes(v))
+            if (!same) setFilter('brands', values)
+        }
+
+        if (qbAvailability) {
+            const values = parseValues(qbAvailability)
+            const same =
+                values.length === filters.availability.length && values.every((v) => filters.availability.includes(v))
+            if (!same) setFilter('availability', values)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.query?.product_brand])
+    }, [router.query?.product_brand, router.query?.availability])
 
     // Keep filters in the URL so they persist on refresh / share
     useEffect(() => {
