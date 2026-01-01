@@ -283,7 +283,7 @@ const Review = () => {
                                         <div className='relative h-[725px] w-full'>
                                             <Image
                                                 src={reviewImage}
-                                                alt={review.reviewer}
+                                                alt={review.reviewer || ''}
                                                 fill
                                                 className='object-cover'
                                             />
@@ -292,7 +292,7 @@ const Review = () => {
                                                 <div className='relative h-[126px] w-[104px] flex-shrink-0'>
                                                     <Image
                                                         src={product.images[0]?.src || '/images/placeholder.webp'}
-                                                        alt={product.name}
+                                                        alt={product.name || ''}
                                                         fill
                                                         className='object-contain'
                                                     />

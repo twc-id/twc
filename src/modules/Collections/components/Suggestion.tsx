@@ -25,7 +25,6 @@ const Suggestion = ({ products }: SuggestionProps) => {
     const handleSelect = () => {
         if (typeof window === 'undefined') return
         try {
-            console.log('killing scrolltriggers', ScrollTrigger.getById && ScrollTrigger.getById('detail-left-pin'))
             // kill the specific left pin ScrollTrigger and all ScrollTriggers
             ScrollTrigger.getById && ScrollTrigger.getById('detail-left-pin')?.kill()
             ScrollTrigger.getAll && ScrollTrigger.getAll().forEach((s: any) => s.kill())

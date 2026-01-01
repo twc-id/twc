@@ -32,7 +32,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-    console.log(ctx, 'called here')
     try {
         const raw = ctx.params?.slug
         const slug = Array.isArray(raw) ? raw[raw.length - 1] : String(raw ?? '')
