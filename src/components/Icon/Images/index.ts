@@ -44,6 +44,7 @@ const IconComponents = {
     EurUsd: lazy(() => import('./EurUsd')),
     EyeHide: lazy(() => import('./EyeHide')),
     EyeShow: lazy(() => import('./EyeShow')),
+    Filter: lazy(() => import('./Filter')),
     GbpUsd: lazy(() => import('./GbpUsd')),
     Gold: lazy(() => import('./Gold')),
     Home: lazy(() => import('./Home')),
