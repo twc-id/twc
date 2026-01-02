@@ -309,6 +309,7 @@ const Headers = () => {
     const handleSubSubMenuItemKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault()
+
             // Handle navigation or action for leaf menu item
         }
     }
@@ -528,11 +529,7 @@ const Headers = () => {
                                                 <span className='xl:text-button-1-desktop text-button-1-mobile'>
                                                     {item.label}
                                                 </span>
-                                                {item.subMenu && (
-                                                    <span aria-hidden='true'>
-                                                        <Icons icon='ChevronRight' width={16} height={16} />
-                                                    </span>
-                                                )}
+                                                {item.subMenu && <Icons icon='ChevronRight' width={16} height={16} />}
                                             </div>
                                         </button>
                                     )
@@ -553,7 +550,7 @@ const Headers = () => {
                                 )}
                             >
                                 {hoveredMenuItem?.subMenu && (
-                                    <div className='space-y-8'>
+                                    <div className='space-y-8 xl:space-y-0'>
                                         {/* Breadcrumb - Mobile Only */}
                                         <div className='lg:hidden'>
                                             <Breadcrumb
