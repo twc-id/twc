@@ -323,8 +323,8 @@ const Headers = () => {
                 width={24}
                 height={24}
                 className={classNames('absolute inset-0 rotate-0 scale-100 opacity-100 transition-all duration-300', {
-                    'text-white': !isScrolled,
                     'text-black': isScrolled,
+                    'text-white': isVisible,
                     'rotate-90 scale-0 opacity-0': isMenuOpen,
 
                     hidden: isSearchOpen
@@ -373,7 +373,7 @@ const Headers = () => {
                             })}
                         >
                             <Icons
-                                icon={!isScrolled ? 'LogoWhite' : 'LogoBlack'}
+                                icon={isVisible ? 'LogoWhite' : !isScrolled ? 'LogoWhite' : 'LogoBlack'}
                                 width={isMobile ? 46 : 54}
                                 height={isMobile ? 44 : 52}
                                 className={isSearchOpen ? 'hidden' : ''}
@@ -398,8 +398,8 @@ const Headers = () => {
                                 }
                             }}
                             className={classNames('cursor-pointer', {
-                                'text-white': !isScrolled && !isSearchOpen,
-                                'text-black': isScrolled || isSearchOpen
+                                'text-black': isScrolled || isSearchOpen,
+                                'text-white': (!isScrolled && !isSearchOpen) || isVisible
                             })}
                         />
                     </div>

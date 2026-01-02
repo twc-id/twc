@@ -105,7 +105,7 @@ const Hero = () => {
 
     return (
         <section ref={sectionRef} className='relative h-[848px] w-full xl:h-[960px]'>
-            <div className='absolute inset-x-0 bottom-[121px] z-10 pb-20'>
+            <div className='absolute inset-x-0 bottom-[121px] z-10'>
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
                         <div className='flex flex-col justify-end gap-2'>
