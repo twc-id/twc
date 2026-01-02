@@ -3,8 +3,9 @@ import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import Image from 'next/image'
 import { Trans, useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -18,24 +19,11 @@ if (typeof window !== 'undefined') {
 const heroSlides = [
     {
         id: 1,
-        image: '/images/home/hero-home.webp',
-        subtitle: 'CURATED PIECES',
-        title: 'The RM Collection',
-        description: 'The premium luxury making time your own'
+        video: 'https://mediumpurple-pig-833607.hostingersite.com/wp-content/uploads/2025/12/Banner-Video-TWC.mp4'
     },
     {
         id: 2,
-        image: '/images/home/hero-home.webp',
-        subtitle: 'EXCLUSIVE COLLECTION',
-        title: 'Luxury Watches',
-        description: 'Experience timeless elegance'
-    },
-    {
-        id: 3,
-        image: '/images/home/hero-home.webp',
-        subtitle: 'PREMIUM SELECTION',
-        title: 'Rare Timepieces',
-        description: 'Discover exceptional craftsmanship'
+        video: 'https://mediumpurple-pig-833607.hostingersite.com/wp-content/uploads/2025/12/Banner-Video-invishield.mp4'
     }
 ]
 
@@ -46,6 +34,9 @@ const Hero = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const swiperRef = useRef<SwiperType>()
+    const videoRefs = useRef<Record<number | string, HTMLVideoElement | null>>({})
+    const [isVisible, setIsVisible] = useState(true)
+    const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -70,6 +61,47 @@ const Hero = () => {
             timeline.scrollTrigger?.kill()
         }
     }, [])
+
+    // Observe hero visibility to pause videos when not visible
+    useEffect(() => {
+        if (typeof window === 'undefined' || !sectionRef.current) return
+        const el = sectionRef.current
+        const io = new IntersectionObserver(
+            (entries) => {
+                const e = entries[0]
+                setIsVisible(Boolean(e.isIntersecting))
+            },
+            { threshold: 0.25 }
+        )
+        io.observe(el)
+        return () => io.disconnect()
+    }, [])
+
+    // Play only the active slide video and pause others; also pause when hero not visible
+    useEffect(() => {
+        const vids = videoRefs.current
+        Object.keys(vids).forEach((k) => {
+            const idx = Number(k)
+            const v = vids[k]
+            if (!v) return
+            try {
+                if (idx === activeIndex && isVisible) {
+                    v.muted = true
+                    const p = v.play()
+                    if (p && typeof p.then === 'function') p.catch(() => {})
+                } else {
+                    v.pause()
+                    try {
+                        v.currentTime = 0
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+            } catch (e) {
+                // swallow
+            }
+        })
+    }, [activeIndex, isVisible])
 
     return (
         <section ref={sectionRef} className='relative h-[848px] w-full xl:h-[960px]'>
@@ -120,7 +152,7 @@ const Hero = () => {
             <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{
-                    delay: 3000,
+                    delay: 5000,
                     disableOnInteraction: false
                 }}
                 slidesPerView={1}
@@ -132,18 +164,43 @@ const Hero = () => {
                 allowTouchMove={false}
                 className='h-full w-full [&_.swiper-slide]:!opacity-100'
             >
-                {heroSlides.map((slide) => (
-                    <SwiperSlide
-                        key={slide.id}
-                        style={{
-                            backgroundImage: `linear-gradient(180deg, rgba(1, 1, 1, 0) 31.05%, #010101 97.39%), url('/images/home/hero-home.webp')`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                            transform: 'translate(0px, 0px) !important'
-                        }}
-                        className='absolute !translate-y-0'
-                    />
+                {heroSlides.map((slide, idx) => (
+                    <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
+                        {/* fallback poster image until video is ready */}
+                        <Image
+                            src='/images/home/hero-home.webp'
+                            alt='hero poster'
+                            className='absolute inset-0 h-full w-full object-cover'
+                            fill
+                        />
+
+                        <video
+                            ref={(el) => {
+                                videoRefs.current[idx] = el
+                            }}
+                            className='absolute inset-0 h-full w-full object-cover'
+                            muted
+                            playsInline
+                            preload='auto'
+                            onCanPlay={() => setVideoLoaded((s) => ({ ...s, [idx]: true }))}
+                            style={{
+                                opacity: videoLoaded[idx] ? 1 : 0,
+                                transition: 'opacity 400ms ease'
+                            }}
+                        >
+                            {/* prefer webm when available, fallback to provided mp4 */}
+                            <source src={slide.video.replace(/\.mp4$/i, '.webm')} type='video/webm' />
+                            <source src={slide.video} type='video/mp4' />
+                        </video>
+
+                        {/* gradient overlay to keep text readable */}
+                        <div
+                            className='absolute inset-0'
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(1,1,1,0) 31.05%, #010101 97.39%)'
+                            }}
+                        />
+                    </SwiperSlide>
                 ))}
             </Swiper>
 
@@ -157,7 +214,7 @@ const Hero = () => {
                     }
                 }
                 .animate-progress {
-                    animation: progress 3s linear;
+                    animation: progress 5s linear;
                     width: 100%;
                 }
             `}</style>
