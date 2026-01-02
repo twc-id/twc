@@ -28,6 +28,7 @@ const Collections = () => {
     const [isLoadingMore, setIsLoadingMore] = useState(false)
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
     const [selectedTab, setSelectedTab] = useState<number>(0)
+    const [isInitialized, setIsInitialized] = useState(false)
     const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
     const [isLoadingBrands, setIsLoadingBrands] = useState(true)
 
@@ -143,6 +144,7 @@ const Collections = () => {
             // If no meta entries, no brand param, and no price range, fallback to products?
             const hasPriceRange = !!(filters.priceRange?.min || filters.priceRange?.max)
             const hasAvailability = availabilityValues.length > 0
+
             if (metaArr.length === 0 && !productBrandParam && !hasPriceRange && !hasAvailability) {
                 params.push(`category=${categoryId}`)
                 if (filters.priceRange?.min)
@@ -157,12 +159,16 @@ const Collections = () => {
                     parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
                 setTotal(totalHeader)
 
-                if (append) setData((prev) => [...prev, ...fetched])
-                else setData(fetched)
+                if (append) {
+                    setData((prev) => [...prev, ...fetched])
+                } else {
+                    setData(fetched)
+                }
 
                 setHasMore(fetched.length === perPage)
             } else {
                 // Build single by-meta request with combined meta array and optional product_brand param
+
                 const q: string[] = []
                 q.push(`page=${pageToFetch}`)
                 q.push(`per_page=${perPage}`)
@@ -194,10 +200,11 @@ const Collections = () => {
     }
 
     useEffect(() => {
+        if (!router.isReady || !isInitialized) return
         setPage(1)
         fetchPage(1, false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters, selectedTab])
+    }, [filters, selectedTab, router.isReady, isInitialized])
 
     const handleLoadMore = async () => {
         const nextPage = page + 1
@@ -206,36 +213,16 @@ const Collections = () => {
     }
 
     const handleTabChange = (idx: number) => {
-        const tabKey = Object.entries(TAB_MAP).find(([, value]) => value === idx)?.[0] as TabKey
-
-        const currentTab = (router.query.tab as TabKey) || DEFAULT_TAB
-
         // hindari replace jika sama
-        if (currentTab === tabKey) return
+        if (idx === selectedTab) return
 
-        router.replace(
-            {
-                pathname: router.pathname,
-                query: {
-                    ...router.query,
-                    tab: tabKey
-                }
-            },
-            undefined,
-            { shallow: true }
-        )
-    }
+        const tabKey: TabKey = idx === 0 ? 'watches' : 'accessories'
 
-    useEffect(() => {
-        const tabFromUrl = (router.query.tab as TabKey) || DEFAULT_TAB
+        // update selectedTab immediately so fetchPage uses correct category
+        setSelectedTab(idx)
 
-        const nextTabIndex = TAB_MAP[tabFromUrl]
-
-        if (nextTabIndex !== selectedTab) {
-            setSelectedTab(nextTabIndex)
-        }
-
-        if (tabFromUrl === 'accessories') {
+        // reset filters when switching to accessories
+        if (tabKey === 'accessories') {
             setFilter('brands', [])
             setFilter('availability', [])
             setFilter('condition', [])
@@ -243,8 +230,48 @@ const Collections = () => {
             setFilter('priceRange', {})
             setFilter('sortBy', 'default')
         }
+
+        // update URL (remove tab param for watches, add for accessories)
+        setTimeout(() => {
+            router.replace(
+                {
+                    pathname: router.pathname,
+                    query: tabKey === DEFAULT_TAB ? {} : { tab: tabKey }
+                },
+                undefined,
+                { shallow: true }
+            )
+        }, 0)
+    }
+
+    // Sync tab from URL when user navigates with browser back/forward
+    useEffect(() => {
+        if (!router.isReady) return
+
+        const tabFromUrl = (router.query.tab as TabKey) || DEFAULT_TAB
+        const nextTabIndex = TAB_MAP[tabFromUrl]
+
+        // Set tab from URL and mark as initialized
+        if (nextTabIndex !== selectedTab) {
+            setSelectedTab(nextTabIndex)
+
+            // reset filters when navigating to accessories
+            if (tabFromUrl === 'accessories') {
+                setFilter('brands', [])
+                setFilter('availability', [])
+                setFilter('condition', [])
+                setFilter('gender', [])
+                setFilter('priceRange', {})
+                setFilter('sortBy', 'default')
+            }
+        }
+
+        // Mark as initialized after first sync
+        if (!isInitialized) {
+            setIsInitialized(true)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.query.tab])
+    }, [router.query.tab, router.isReady])
 
     return (
         <>

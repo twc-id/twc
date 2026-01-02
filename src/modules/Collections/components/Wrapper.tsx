@@ -11,6 +11,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
 import React, { useRef, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 interface WrapperProps {
     data: any
@@ -47,6 +48,8 @@ const Wrapper: React.FC<WrapperProps> = ({
     const sectionRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
+
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const pinTriggerRef = useRef<any>(null)
 
@@ -133,7 +136,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                                 {
                                     'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
                                     'bg-grey-white text-grey-black hover:bg-grey-100': idx !== (selectedTab ?? 0),
-                                    'w-full': selectedTab !== 0
+                                    'w-full': selectedTab !== 0 && isMobile
                                 }
                             )}
                         >
