@@ -50,9 +50,10 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
 interface SidebarProps {
     products: any
     brandOptions?: Array<{ id: string; name: string }>
+    brandLoading?: boolean
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
+const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoading = false }) => {
     const filters = useCollectionsFilterStore.useFilters()
     const setFilter = useCollectionsFilterStore.useSetFilter()
 
@@ -420,7 +421,15 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [] }) => {
         <div className='hidden w-full flex-col gap-5 xl:flex xl:max-w-[270px] xl:gap-6'>
             {metaData.map((item) => (
                 <Collapse key={item.key} title={item.label} defaultExpanded={item.key === 'brands'}>
-                    {renderFilterOptions(item)}
+                    {item.key === 'brands' && brandLoading ? (
+                        <div className='flex flex-col gap-3 px-2 py-1'>
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className='bg-grey-200 h-4 w-full animate-pulse rounded' />
+                            ))}
+                        </div>
+                    ) : (
+                        renderFilterOptions(item)
+                    )}
                 </Collapse>
             ))}
         </div>

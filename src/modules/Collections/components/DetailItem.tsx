@@ -232,10 +232,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         // re-create when product or headerHeight changes
     }, [product?.id, priceHistory?.length, headerHeight])
 
-    // debug state
-    // eslint-disable-next-line no-console
-    console.debug('showTopSticky', showTopSticky)
-
     // track active image based on scroll position
     useLayoutEffect(() => {
         const scrollEl = scrollRef.current

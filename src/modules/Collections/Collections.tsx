@@ -29,6 +29,7 @@ const Collections = () => {
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
     const [selectedTab, setSelectedTab] = useState<number>(0)
     const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
+    const [isLoadingBrands, setIsLoadingBrands] = useState(true)
 
     const router = useRouter()
     const setFilter = useCollectionsFilterStore.useSetFilter()
@@ -62,8 +63,10 @@ const Collections = () => {
 
                 const normalized = (allBrands || []).map((b: any) => ({ id: String(b.id), name: b.name }))
                 if (mounted) setBrandOptions(normalized)
+                if (mounted) setIsLoadingBrands(false)
             } catch (err) {
                 console.error('Error fetching brands', err)
+                if (mounted) setIsLoadingBrands(false)
             }
         }
 
@@ -258,6 +261,7 @@ const Collections = () => {
                 selectedTab={selectedTab}
                 onTabChange={handleTabChange}
                 brandOptions={brandOptions}
+                brandLoading={isLoadingBrands}
             />
             <CTA />
         </>

@@ -58,6 +58,7 @@ interface MobileFilterModalProps {
     onApply: (filters: any) => void
     initialFilters: any
     brandOptions?: Array<{ id: string; name: string }>
+    brandLoading?: boolean
 }
 
 const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
@@ -65,7 +66,8 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
     onClose,
     onApply,
     initialFilters,
-    brandOptions = []
+    brandOptions = [],
+    brandLoading = false
 }) => {
     // Local temporary filter state
     const [tempFilters, setTempFilters] = useState(initialFilters)
@@ -217,6 +219,24 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
             else if (key === 'availability') options = availabilityOptions
             else if (key === 'condition') options = conditionOptions
             else if (key === 'gender') options = genderOptions
+
+            // If brands are loading, show skeleton placeholders
+            if (key === 'brands' && brandLoading) {
+                return (
+                    <div className='flex gap-4'>
+                        <div className='flex flex-1 flex-col gap-3'>
+                            {[...Array(4)].map((_, i) => (
+                                <div key={i} className='bg-grey-200 h-4 w-full animate-pulse rounded' />
+                            ))}
+                        </div>
+                        <div className='flex flex-1 flex-col gap-3'>
+                            {[...Array(4)].map((_, i) => (
+                                <div key={i} className='bg-grey-200 h-4 w-full animate-pulse rounded' />
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
 
             // Split into two columns for brands
             const isDoubleColumn = key === 'brands'

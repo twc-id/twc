@@ -23,6 +23,7 @@ interface WrapperProps {
     selectedTab?: number
     onTabChange?: (index: number) => void
     brandOptions?: Array<{ id: string; name: string }>
+    brandLoading?: boolean
 }
 
 if (typeof window !== 'undefined') {
@@ -39,7 +40,8 @@ const Wrapper: React.FC<WrapperProps> = ({
     tabs,
     selectedTab,
     onTabChange,
-    brandOptions
+    brandOptions,
+    brandLoading
 }) => {
     const { t } = useTranslation(['collection'])
     const sectionRef = useRef<HTMLDivElement>(null)
@@ -161,7 +163,9 @@ const Wrapper: React.FC<WrapperProps> = ({
                 return (
                     <>
                         <div className='flex flex-row xl:gap-10'>
-                            {showSidebar && <Sidebar products={data} brandOptions={brandOptions} />}
+                            {showSidebar && (
+                                <Sidebar products={data} brandOptions={brandOptions} brandLoading={brandLoading} />
+                            )}
                             <div className={showSidebar ? 'flex-1' : 'w-full'}>
                                 <Content
                                     products={data}
@@ -183,6 +187,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                                 onApply={handleApplyFilters}
                                 initialFilters={filters}
                                 brandOptions={brandOptions}
+                                brandLoading={brandLoading}
                             />
                         )}
                     </>
