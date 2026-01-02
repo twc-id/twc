@@ -1,5 +1,8 @@
 import ArrowLink from '@components/links/ArrowLink'
 import Seo from '@components/Seo'
+import { defaultLanguage } from '@constant/i18n'
+import { GetStaticProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import * as React from 'react'
 import { RiAlarmWarningFill } from 'react-icons/ri'
 
@@ -22,3 +25,9 @@ export default function NotFoundPage() {
         </>
     )
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || defaultLanguage, ['components', 'common', 'pages']))
+    }
+})
