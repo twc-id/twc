@@ -111,7 +111,7 @@ const Hero = () => {
                         <div className='flex flex-col justify-end gap-2'>
                             <h3
                                 ref={h3Ref}
-                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white'
+                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
                             >
                                 {t('hero.sub_1')}
                             </h3>

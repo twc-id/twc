@@ -68,7 +68,7 @@ const CTA = () => {
                                 variant='secondary'
                                 className='!bg-grey-white xl:!text-button-3-desktop !text-button-3-mobile !rounded-none'
                             >
-                                {t('common:learn_more')}
+                                {t('common:read_article')}
                             </Button>
                         </a>
                     </div>

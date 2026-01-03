@@ -143,7 +143,7 @@ const Journey = () => {
                         </h1>
                         <div className='hidden xl:block'>
                             <UnstyledLink href='/about-us'>
-                                <Button>{t('common:learn_more')}</Button>
+                                <Button>{t('common:learn_our_story')}</Button>
                             </UnstyledLink>
                         </div>
                     </div>
