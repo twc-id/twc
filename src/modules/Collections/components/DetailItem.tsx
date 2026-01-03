@@ -571,12 +571,14 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 {product.name}
                             </h1>
 
-                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
-                                Ref.{' '}
-                                <span className=''>
-                                    {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
-                                </span>
-                            </p>
+                            {product.meta_data.find((meta: any) => meta.key === 'reference') && (
+                                <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
+                                    Ref.{' '}
+                                    <span className=''>
+                                        {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
+                                    </span>
+                                </p>
+                            )}
 
                             <div className='flex flex-row gap-1 pt-2 xl:pt-0'>
                                 {product.tags.map((item: any) => (
@@ -584,7 +586,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         className='border-grey-500 flex items-center rounded-full border'
                                         key={item.name}
                                     >
-                                        <span className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 px-3 py-[5px] xl:!leading-none'>
+                                        <span className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
                                             {item.name}
                                         </span>
                                     </div>
@@ -656,8 +658,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 )}
                             </div>
                         </div>
-                        {/* spacer so content above doesn't get hidden by sticky mobile footer */}
-                        <div className='h-[84px] xl:hidden' />
 
                         {isMobile && (
                             <div className='fixed bottom-0 left-0 right-0 z-50 xl:hidden'>
@@ -719,7 +719,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             {product.purchasable ? (
                                                 <Button variant='secondaryInverse'>
                                                     {' '}
-                                                    {t('common:reserve_this', {
+                                                    {t('common:reserve', {
                                                         item: isWatch ? t('common:watch') : t('common:item')
                                                     })}
                                                 </Button>

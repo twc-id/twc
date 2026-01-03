@@ -26,7 +26,7 @@ const Collections = () => {
     const [hasMore, setHasMore] = useState(false)
     const [total, setTotal] = useState<number | null>(null)
     const [isLoadingMore, setIsLoadingMore] = useState(false)
-    const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
+
     const [selectedTab, setSelectedTab] = useState<number>(0)
     const [isInitialized, setIsInitialized] = useState(false)
     const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
@@ -36,6 +36,7 @@ const Collections = () => {
     const setFilter = useCollectionsFilterStore.useSetFilter()
 
     const categoryId = selectedTab === 0 ? 15 : 16
+    const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
 
     // Fetch brands once and keep in parent so Sidebar can receive via props
     useEffect(() => {
