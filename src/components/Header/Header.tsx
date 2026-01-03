@@ -15,7 +15,6 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import Form, { Field } from 'rc-field-form'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Case, Default, Switch } from 'react-if'
 import { useMediaQuery } from 'react-responsive'
 
 interface SubMenuItem {
@@ -65,23 +64,148 @@ const menuData: MenuItem[] = [
     { label: 'Article', href: '/articles' }
 ]
 
-// Map paths (prefix match) to scrolled-state styles. Add entries here for
-// any route that needs a custom navbar background or icon color when scrolled.
-const SCROLLED_STYLE_MAP: Record<string, { bgClass: string; iconClass: string; isCustom: boolean }> = {
-    '/collections': { bgClass: 'bg-grey-white', iconClass: 'text-black', isCustom: true }
+// Page-specific styling configuration for navbar and icons
+// Supports wildcard patterns (e.g., '/collections/*') for dynamic routes
+interface PageStyle {
+    navbar: {
+        default: string // navbar bg when not scrolled
+        scrolled: string // navbar bg when scrolled
+    }
+    icons: {
+        default: string // icon color when not scrolled & visible
+        scrolled: string // icon color when scrolled
+        menuOpen: string // icon color when menu is open
+        searchOpen: string // icon color when search is open
+    }
+    logo: {
+        default: 'LogoWhite' | 'LogoBlack'
+        scrolled: 'LogoWhite' | 'LogoBlack'
+        menuOpen?: 'LogoWhite' | 'LogoBlack'
+        searchOpen?: 'LogoWhite' | 'LogoBlack'
+    }
 }
 
-const getScrolledStyle = (pathname: string) => {
-    for (const key of Object.keys(SCROLLED_STYLE_MAP)) {
-        if (pathname.startsWith(key)) return SCROLLED_STYLE_MAP[key]
+const PAGE_STYLES: Record<string, PageStyle> = {
+    '/collections': {
+        navbar: {
+            default: 'bg-transparent',
+            scrolled: 'bg-grey-white'
+        },
+        icons: {
+            default: 'text-white',
+            scrolled: 'text-black',
+            menuOpen: 'text-white',
+            searchOpen: 'text-black'
+        },
+        logo: {
+            default: 'LogoWhite',
+            scrolled: 'LogoBlack'
+        }
+    },
+    '/collections/*': {
+        navbar: {
+            default: 'bg-transparent',
+            scrolled: 'bg-grey-white'
+        },
+        icons: {
+            default: 'text-black',
+            scrolled: 'text-black',
+            menuOpen: 'text-white',
+            searchOpen: 'text-black'
+        },
+        logo: {
+            default: 'LogoBlack',
+            scrolled: 'LogoBlack',
+            menuOpen: 'LogoWhite',
+            searchOpen: 'LogoBlack'
+        }
     }
-    return { bgClass: 'bg-[#0F0F0FCC] backdrop-blur-[20px]', iconClass: 'text-black', isCustom: false }
+}
+
+const DEFAULT_PAGE_STYLE: PageStyle = {
+    navbar: {
+        default: 'bg-transparent',
+        scrolled: 'bg-[#0F0F0FCC] backdrop-blur-[20px]'
+    },
+    icons: {
+        default: 'text-white',
+        scrolled: 'text-black',
+        menuOpen: 'text-white',
+        searchOpen: 'text-black'
+    },
+    logo: {
+        default: 'LogoWhite',
+        scrolled: 'LogoBlack',
+        menuOpen: 'LogoWhite',
+        searchOpen: 'LogoBlack'
+    }
+}
+
+const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const getPageStyle = (pathname: string): PageStyle => {
+    const keys = Object.keys(PAGE_STYLES)
+
+    // 1. First, try exact match (e.g., '/collections' only matches '/collections', not '/collections/abc')
+    for (const key of keys) {
+        if (!key.includes('*') && pathname === key) {
+            return PAGE_STYLES[key]
+        }
+    }
+
+    // 2. Then, try wildcard patterns (e.g., '/collections/*' matches '/collections/abc')
+    for (const key of keys) {
+        if (key.includes('*')) {
+            const parts = key.split('*').map(escapeRegExp)
+            const pattern = `^${parts.join('.*')}`
+            const re = new RegExp(pattern)
+            if (re.test(pathname)) return PAGE_STYLES[key]
+        }
+    }
+
+    // 3. Finally, fallback to default
+    return DEFAULT_PAGE_STYLE
+}
+
+// Helper to determine navbar background class based on all states
+const getNavbarBgClass = (pageStyle: PageStyle, isScrolled: boolean, isMenuOpen: boolean, isSearchOpen: boolean) => {
+    if (isMenuOpen) return 'bg-black'
+    if (isSearchOpen) return 'bg-white'
+    return isScrolled ? pageStyle.navbar.scrolled : pageStyle.navbar.default
+}
+
+// Helper to determine icon color class based on all states
+const getIconClass = (
+    pageStyle: PageStyle,
+    isScrolled: boolean,
+    isMenuOpen: boolean,
+    isSearchOpen: boolean,
+    isVisible: boolean
+) => {
+    if (isSearchOpen) return pageStyle.icons.searchOpen
+    if (isMenuOpen) return pageStyle.icons.menuOpen
+    if (isScrolled) return pageStyle.icons.scrolled
+    return isVisible ? pageStyle.icons.default : pageStyle.icons.scrolled
+}
+
+// Helper to determine logo variant
+const getLogoVariant = (
+    pageStyle: PageStyle,
+    isScrolled: boolean,
+    isMenuOpen: boolean,
+    isSearchOpen: boolean,
+    isVisible: boolean
+) => {
+    if (isSearchOpen) return 'LogoBlack'
+    if (isMenuOpen) return 'LogoWhite'
+    if (!isScrolled && isVisible) return pageStyle.logo.default
+    return pageStyle.logo.scrolled
 }
 
 const Headers = () => {
     const { t } = useTranslation(['collection', 'home', 'common'])
     const router = useRouter()
-    const scrolledStyle = getScrolledStyle(router.pathname || router.asPath || '/')
+    const pageStyle = getPageStyle(router.pathname || router.asPath || '/')
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -318,13 +442,11 @@ const Headers = () => {
         <>
             <div
                 className={classNames(
-                    'sticky top-0 z-[9999] bg-transparent py-2.5 transition-all duration-300 xl:py-3.5',
+                    'sticky top-0 z-[9999] py-2.5 transition-all duration-300 xl:py-3.5',
+                    getNavbarBgClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen),
                     {
-                        [scrolledStyle.bgClass]: isScrolled,
                         '-translate-y-full': !isVisible,
-                        'translate-y-0': isVisible,
-                        'bg-white': isSearchOpen,
-                        'bg-black': isMenuOpen
+                        'translate-y-0': isVisible
                     }
                 )}
             >
@@ -334,59 +456,29 @@ const Headers = () => {
                             'justify-end': isSearchOpen
                         })}
                     >
-                        <Switch>
-                            <Case condition={scrolledStyle.isCustom}>
-                                <Icons
-                                    icon={isMenuOpen ? 'XClose' : 'Hamburger'}
-                                    width={24}
-                                    height={24}
-                                    className={classNames('rotate-0 transition-all duration-300', {
-                                        [scrolledStyle.iconClass]: isScrolled,
-
-                                        'text-white': isVisible && !isScrolled,
-                                        hidden: isSearchOpen
-                                    })}
-                                    onClick={() => {
-                                        setIsMenuOpen(!isMenuOpen)
-                                        if (isMenuOpen) {
-                                            // Reset all states when closing menu
-                                            setHoveredMenuItem(null)
-                                            setSelectedSubMenuItem(null)
-                                        } else {
-                                            // Auto open Our Collections when opening menu on desktop
-                                            if (window.innerWidth >= 1024) {
-                                                setHoveredMenuItem(menuData[0])
-                                            }
-                                        }
-                                    }}
-                                />
-                            </Case>
-                            <Default>
-                                <Icons
-                                    icon={isMenuOpen ? 'XClose' : 'Hamburger'}
-                                    width={24}
-                                    height={24}
-                                    className={classNames('cursor-pointer', {
-                                        'text-black': isScrolled || isMenuOpen,
-                                        'text-white': (!isScrolled && !isMenuOpen) || isVisible,
-                                        hidden: isSearchOpen
-                                    })}
-                                    onClick={() => {
-                                        setIsMenuOpen(!isMenuOpen)
-                                        if (isMenuOpen) {
-                                            // Reset all states when closing menu
-                                            setHoveredMenuItem(null)
-                                            setSelectedSubMenuItem(null)
-                                        } else {
-                                            // Auto open Our Collections when opening menu on desktop
-                                            if (window.innerWidth >= 1024) {
-                                                setHoveredMenuItem(menuData[0])
-                                            }
-                                        }
-                                    }}
-                                />
-                            </Default>
-                        </Switch>
+                        <Icons
+                            icon={isMenuOpen ? 'XClose' : 'Hamburger'}
+                            width={24}
+                            height={24}
+                            className={classNames(
+                                'cursor-pointer transition-all duration-300',
+                                getIconClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible),
+                                { hidden: isSearchOpen }
+                            )}
+                            onClick={() => {
+                                setIsMenuOpen(!isMenuOpen)
+                                if (isMenuOpen) {
+                                    // Reset all states when closing menu
+                                    setHoveredMenuItem(null)
+                                    setSelectedSubMenuItem(null)
+                                } else {
+                                    // Auto open Our Collections when opening menu on desktop
+                                    if (window.innerWidth >= 1024) {
+                                        setHoveredMenuItem(menuData[0])
+                                    }
+                                }
+                            }}
+                        />
 
                         <Link
                             href='/'
@@ -394,79 +486,36 @@ const Headers = () => {
                                 hidden: isSearchOpen
                             })}
                         >
-                            <Switch>
-                                <Case condition={scrolledStyle.isCustom}>
-                                    <Icons
-                                        icon={!isScrolled ? 'LogoWhite' : 'LogoBlack'}
-                                        width={isMobile ? 46 : 54}
-                                        height={isMobile ? 44 : 52}
-                                        className={isSearchOpen ? 'hidden' : ''}
-                                    />
-                                </Case>
-                                <Default>
-                                    <Icons
-                                        icon={isVisible ? 'LogoWhite' : !isScrolled ? 'LogoWhite' : 'LogoBlack'}
-                                        width={isMobile ? 46 : 54}
-                                        height={isMobile ? 44 : 52}
-                                        className={isSearchOpen ? 'hidden' : ''}
-                                    />
-                                </Default>
-                            </Switch>
+                            <Icons
+                                icon={getLogoVariant(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)}
+                                width={isMobile ? 46 : 54}
+                                height={isMobile ? 44 : 52}
+                            />
                         </Link>
 
-                        <Switch>
-                            <Case condition={scrolledStyle.isCustom}>
-                                <Icons
-                                    icon={isSearchOpen ? 'XClose' : 'Search'}
-                                    width={24}
-                                    height={24}
-                                    onClick={() => {
-                                        const willOpen = !isSearchOpen
-                                        setIsSearchOpen(willOpen)
-                                        if (willOpen) {
-                                            // close menu when opening search
-                                            setIsMenuOpen(false)
-                                            setHoveredMenuItem(null)
-                                            setSelectedSubMenuItem(null)
+                        <Icons
+                            icon={isSearchOpen ? 'XClose' : 'Search'}
+                            width={24}
+                            height={24}
+                            onClick={() => {
+                                const willOpen = !isSearchOpen
+                                setIsSearchOpen(willOpen)
+                                if (willOpen) {
+                                    // close menu when opening search
+                                    setIsMenuOpen(false)
+                                    setHoveredMenuItem(null)
+                                    setSelectedSubMenuItem(null)
 
-                                            setSearchQuery('')
-                                            form.setFieldsValue({ search: '' })
-                                            setSearchResults([])
-                                        }
-                                    }}
-                                    className={classNames('cursor-pointer', {
-                                        [scrolledStyle.iconClass]: isScrolled,
-                                        'text-white': isVisible && !isScrolled,
-                                        'text-black': isSearchOpen
-                                    })}
-                                />
-                            </Case>
-                            <Default>
-                                <Icons
-                                    icon={isSearchOpen ? 'XClose' : 'Search'}
-                                    width={24}
-                                    height={24}
-                                    onClick={() => {
-                                        const willOpen = !isSearchOpen
-                                        setIsSearchOpen(willOpen)
-                                        if (willOpen) {
-                                            // close menu when opening search
-                                            setIsMenuOpen(false)
-                                            setHoveredMenuItem(null)
-                                            setSelectedSubMenuItem(null)
-
-                                            setSearchQuery('')
-                                            form.setFieldsValue({ search: '' })
-                                            setSearchResults([])
-                                        }
-                                    }}
-                                    className={classNames('cursor-pointer text-black', {
-                                        '!text-black': isSearchOpen,
-                                        'text-white': (!isScrolled && !isSearchOpen) || isVisible
-                                    })}
-                                />
-                            </Default>
-                        </Switch>
+                                    setSearchQuery('')
+                                    form.setFieldsValue({ search: '' })
+                                    setSearchResults([])
+                                }
+                            }}
+                            className={classNames(
+                                'cursor-pointer transition-colors',
+                                getIconClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)
+                            )}
+                        />
                     </div>
                 </Container>
             </div>
@@ -550,7 +599,10 @@ const Headers = () => {
                                 )}
                             >
                                 {hoveredMenuItem?.subMenu && (
-                                    <div className='space-y-8 xl:space-y-0'>
+                                    <div
+                                        className='space-y
+                                    -8 xl:space-y-0'
+                                    >
                                         {/* Breadcrumb - Mobile Only */}
                                         <div className='lg:hidden'>
                                             <Breadcrumb
