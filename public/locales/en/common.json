@@ -20,5 +20,6 @@
     "item": "Item",
     "accesoris": "Accesoris",
     "reserve": "Reserve",
-    "reserve_this": "Reserve This {{item}}"
+    "reserve_this": "Reserve This {{item}}",
+    "read_article": "Read Article"
 }

@@ -1,8 +1,8 @@
 {
     "hero": {
-        "title": " The RM <br /> Collection",
-        "sub_1": "CURATED PIECES",
-        "sub_2": "The premium luxury making time your own"
+        "title": " Curated Luxury, <br /> Timeless Value",
+        "sub_1": "Curated Pieces",
+        "sub_2": "Where Great Collections Begin"
     },
     "commitment": {
         "title": "Kelangkaan, Kualitas, Kolektibilitas",
@@ -18,9 +18,8 @@
         "view_more": "Lihat Lainnya"
     },
     "sell_reserve": {
-        "sell_title": "Jual Jam Anda",
-        "reserve_title": "Reservasi Jam Anda",
-        "learn_more": "Pelajari Lebih Lanjut"
+        "sell_title": "Jual Jam Tangan Anda",
+        "reserve_title": "Pre-Order Jam Tangan"
     },
     "timepiece": {
         "title": "Layanan Jam Tangan",
@@ -45,17 +44,20 @@
         }
     },
     "journey": {
-        "title": "Behind <br /> The Journey"
+        "title": "Behind <br /> The Journey",
+        "desc_1": "Sejak 2014, The Watch Collections menghadirkan jam tangan luxury dari berbagai brand ternama di dunia seperti Richard Mille, Patek Philippe, Audemars Piguet, Rolex, Cartier dan lainnya.",
+        "desc_2": "The Watch Collections juga menyediakan layanan in-store di Jakarta. Kami selalu memastikan setiap jam tangan yang kami tawarkan autentik, aman, dan terjamin keasliannya. <br/> Terinspirasi oleh seni dan craftsmanship pembuatan jam, kami berkomitmen membantu Anda menemukan jam tangan yang paling tepat dengan pelayanan yang mengutamakan kejujuran, rasa hormat, dan etika.",
+        "learn_our_story": "Tentang Kami"
     },
     "review": {
         "title": "Where Trust Speaks"
     },
     "social_media": {
-        "title": "New in Instagram",
-        "find_us_social_media": "Find Us in <br className='hidden xl:block' /> Social Media"
+        "title": "Instagram Kami",
+        "find_us_social_media": "Media <br className='hidden xl:block' /> Sosial Kami"
     },
     "cta": {
         "title": "The Watch <br /> Journal",
-        "description": "Discover, learn, and collect the world’s luxury watches"
+        "description": "Temukan dan pelajari informasi mendalam seputar jam tangan mewah"
     }
 }

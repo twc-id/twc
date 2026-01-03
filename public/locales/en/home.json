@@ -1,15 +1,15 @@
 {
     "hero": {
-        "title": " The RM <br /> Collection",
-        "sub_1": "CURATED PIECES",
-        "sub_2": "The premium luxury making time your own"
+        "title": " Curated Luxury, <br /> Timeless Value",
+        "sub_1": "Curated Pieces",
+        "sub_2": "Where Great Collections Begin"
     },
     "commitment": {
-        "title": "Rarity, Quality, Collectability",
+        "title": "Curated, Collected, Timeless",
         "description": "Connects collectors with luxury watches from around the world"
     },
     "highlight": {
-        "title": "Collection Highlight",
+        "title": "Featured Collection",
         "tabs": {
             "watches": "Watches",
             "accessories": "Accessories"
@@ -20,7 +20,8 @@
     "sell_reserve": {
         "sell_title": "Sell Your Watch",
         "reserve_title": "Reserve Your Watch",
-        "learn_more": "Learn More"
+        "learn_more": "Learn More",
+        "discover_more": "Discover More"
     },
     "timepiece": {
         "title": "Timepiece <br className='hidden xl:block' /> Services",
@@ -45,17 +46,20 @@
         }
     },
     "journey": {
-        "title": "Behind <br /> The Journey"
+        "title": "Behind <br /> The Journey",
+        "desc_1": "Since 2014, The Watch Collections has curated high-end timepieces from the world’s most prestigious brands, including Richard Mille, Patek Philippe, Audemars Piguet, Rolex, Cartier, and more.",
+        "desc_2": "We offer an in-store service in Jakarta, ensuring that every timepiece we present is authentic, safe, and trustworthy. <br/> Inspired by the art and craftsmanship of fine watches, we are committed to helping you find the perfect piece with honesty, respect, and ethical service.",
+        "learn_our_story": "Learn Our Story"
     },
     "review": {
         "title": "Where Trust Speaks"
     },
     "social_media": {
-        "title": "New in Instagram",
+        "title": "More on Instagram",
         "find_us_social_media": "Find Us in <br className='hidden xl:block' /> Social Media"
     },
     "cta": {
         "title": "The Watch <br /> Journal",
-        "description": "Discover, learn, and collect the world’s luxury watches"
+        "description": "Discover, learn, and explore the world of luxury timepieces"
     }
 }
