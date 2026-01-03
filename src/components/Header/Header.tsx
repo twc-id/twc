@@ -3,8 +3,10 @@ import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
+import { IconsProps } from '@components/Icon/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useTheme } from '@contexts/ThemeContext'
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
 import debounce from '@utils/debounce'
@@ -14,7 +16,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import Form, { Field } from 'rc-field-form'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 interface SubMenuItem {
@@ -35,6 +37,11 @@ const subMenuImages: Record<string, string> = {
     CONDITIONS: '/images/navbar/condition.webp',
     ACCESSORIES: '/images/navbar/accessories.webp'
 }
+
+const languages = [
+    { code: 'en', label: 'EN', flag: 'UsFlag' },
+    { code: 'id', label: 'ID', flag: 'IndoFlag' }
+]
 
 const menuData: MenuItem[] = [
     {
@@ -92,9 +99,9 @@ const PAGE_STYLES: Record<string, PageStyle> = {
             scrolled: 'bg-grey-white'
         },
         icons: {
-            default: 'text-white',
+            default: 'text-grey-200',
             scrolled: 'text-black',
-            menuOpen: 'text-white',
+            menuOpen: 'text-grey-200',
             searchOpen: 'text-black'
         },
         logo: {
@@ -110,7 +117,7 @@ const PAGE_STYLES: Record<string, PageStyle> = {
         icons: {
             default: 'text-black',
             scrolled: 'text-black',
-            menuOpen: 'text-white',
+            menuOpen: 'text-grey-200',
             searchOpen: 'text-black'
         },
         logo: {
@@ -128,9 +135,9 @@ const DEFAULT_PAGE_STYLE: PageStyle = {
         scrolled: 'bg-[#0F0F0FCC] backdrop-blur-[20px]'
     },
     icons: {
-        default: 'text-white',
+        default: 'text-grey-200',
         scrolled: 'text-black',
-        menuOpen: 'text-white',
+        menuOpen: 'text-grey-200',
         searchOpen: 'text-black'
     },
     logo: {
@@ -206,6 +213,12 @@ const Headers = () => {
     const { t } = useTranslation(['collection', 'home', 'common'])
     const router = useRouter()
     const pageStyle = getPageStyle(router.pathname || router.asPath || '/')
+
+    const currentLanguage = languages.find((lang) => lang.code === router.locale) || languages[0]
+
+    const handleLanguageChange = (langCode: string) => {
+        router.push(router.asPath, router.asPath, { locale: langCode })
+    }
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -482,7 +495,7 @@ const Headers = () => {
 
                         <Link
                             href='/'
-                            className={classNames('h-[52px] w-[54px]', {
+                            className={classNames('ml-[68px] h-[52px] w-[54px]', {
                                 hidden: isSearchOpen
                             })}
                         >
@@ -493,29 +506,108 @@ const Headers = () => {
                             />
                         </Link>
 
-                        <Icons
-                            icon={isSearchOpen ? 'XClose' : 'Search'}
-                            width={24}
-                            height={24}
-                            onClick={() => {
-                                const willOpen = !isSearchOpen
-                                setIsSearchOpen(willOpen)
-                                if (willOpen) {
-                                    // close menu when opening search
-                                    setIsMenuOpen(false)
-                                    setHoveredMenuItem(null)
-                                    setSelectedSubMenuItem(null)
+                        {/* Language Dropdown */}
+                        <div className='flex flex-row items-center gap-4'>
+                            <Menu as='div' className={classNames('relative', { hidden: isSearchOpen })}>
+                                {({ open }: any) => (
+                                    <>
+                                        <MenuButton
+                                            className={classNames(
+                                                'flex cursor-pointer flex-row items-center gap-2 transition-colors',
+                                                getIconClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)
+                                            )}
+                                            as='div'
+                                        >
+                                            <Icons
+                                                icon={currentLanguage.flag as IconsProps['icon']}
+                                                width={20}
+                                                height={15}
+                                            />
 
-                                    setSearchQuery('')
-                                    form.setFieldsValue({ search: '' })
-                                    setSearchResults([])
-                                }
-                            }}
-                            className={classNames(
-                                'cursor-pointer transition-colors',
-                                getIconClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)
-                            )}
-                        />
+                                            <span className='text-button-3-desktop hidden xl:block'>
+                                                {currentLanguage.label}
+                                            </span>
+                                            <Icons
+                                                icon='ChevronDown'
+                                                width={16}
+                                                height={16}
+                                                className={classNames(
+                                                    'hidden transform transition-transform duration-200 xl:block',
+                                                    {
+                                                        'rotate-180': open,
+                                                        'rotate-0': !open
+                                                    }
+                                                )}
+                                            />
+                                        </MenuButton>
+
+                                        <Transition
+                                            as={Fragment}
+                                            enter='transition ease-out duration-100'
+                                            enterFrom='transform opacity-0 scale-95'
+                                            enterTo='transform opacity-100 scale-100'
+                                            leave='transition ease-in duration-75'
+                                            leaveFrom='transform opacity-100 scale-100'
+                                            leaveTo='transform opacity-0 scale-95'
+                                        >
+                                            <MenuItems className='absolute right-0 z-10 mt-2  origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                                                {languages.map((lang) => (
+                                                    <MenuItem key={lang.code}>
+                                                        {({ active }) => (
+                                                            <button
+                                                                onClick={() => handleLanguageChange(lang.code)}
+                                                                className={classNames(
+                                                                    'flex w-full items-center justify-center gap-2 px-6 py-4 text-left transition-colors',
+                                                                    {
+                                                                        'bg-grey-100': active,
+                                                                        'bg-grey-300':
+                                                                            lang.code === currentLanguage.code &&
+                                                                            !active
+                                                                    }
+                                                                )}
+                                                            >
+                                                                <Icons
+                                                                    icon={lang.flag as IconsProps['icon']}
+                                                                    width={20}
+                                                                    height={15}
+                                                                />
+                                                                <span className='text-button-3-desktop text-grey-black'>
+                                                                    {lang.label}
+                                                                </span>
+                                                            </button>
+                                                        )}
+                                                    </MenuItem>
+                                                ))}
+                                            </MenuItems>
+                                        </Transition>
+                                    </>
+                                )}
+                            </Menu>
+
+                            <Icons
+                                icon={isSearchOpen ? 'XClose' : 'Search'}
+                                width={24}
+                                height={24}
+                                onClick={() => {
+                                    const willOpen = !isSearchOpen
+                                    setIsSearchOpen(willOpen)
+                                    if (willOpen) {
+                                        // close menu when opening search
+                                        setIsMenuOpen(false)
+                                        setHoveredMenuItem(null)
+                                        setSelectedSubMenuItem(null)
+
+                                        setSearchQuery('')
+                                        form.setFieldsValue({ search: '' })
+                                        setSearchResults([])
+                                    }
+                                }}
+                                className={classNames(
+                                    'cursor-pointer transition-colors',
+                                    getIconClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)
+                                )}
+                            />
+                        </div>
                     </div>
                 </Container>
             </div>
