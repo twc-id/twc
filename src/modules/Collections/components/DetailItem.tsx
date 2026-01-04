@@ -39,7 +39,8 @@ interface CollapseProps {
 const Collapse = ({ title, defaultExpanded, children, isOpen, onToggle }: CollapseProps) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(Boolean(defaultExpanded))
     // keep internal state in sync when controlled via isOpen prop
-    useLayoutEffect(() => {
+    const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
+    useIsomorphicLayoutEffect(() => {
         if (typeof isOpen === 'boolean') setIsExpanded(isOpen)
     }, [isOpen])
 
