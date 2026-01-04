@@ -5,12 +5,12 @@ import classNames from '@lib/classnames'
 import { cva, type VariantProps } from 'class-variance-authority'
 import React from 'react'
 
-// const disabledOutline: string[] = [
-//     'disabled:bg-[#F4F6F8]',
-//     'border-text-transparent-10',
-//     'disabled:border-none',
-//     'disabled:text-[#BBC2C8]'
-// ]
+const disabledOutline: string[] = [
+    'disabled:bg-button-primary-press',
+    'border-text-transparent-10',
+    'disabled:border-none',
+    'disabled:text-[#BBC2C8]'
+]
 
 const buttonVariants = cva(
     [
@@ -52,6 +52,13 @@ const buttonVariants = cva(
                     'border',
                     'border-grey-black',
                     'hover:border-grey-black'
+                ],
+                gray: [
+                    'bg-button-primary-press',
+                    'hover:bg-opacity-80',
+                    'disabled:bg-button-primary-press',
+                    'text-gray-500',
+                    ...disabledOutline
                 ]
                 // danger: [
                 //     'bg-error-500',
@@ -68,13 +75,7 @@ const buttonVariants = cva(
                 //     'hover:bg-error-100',
                 //     ...disabledOutline
                 // ],
-                // gray: [
-                //     'bg-gray-[#F4F6F8]',
-                //     'hover:bg-opacity-80',
-                //     'disabled:bg-[#F4F6F8]',
-                //     'text-gray-500',
-                //     ...disabledOutline
-                // ],
+
                 // grayOutline: ['bg-transparent', ...disabledOutline],
                 // primaryOutline: ['bg-transparent', 'border-primary-500', 'text-primary-500', ...disabledOutline]
             },

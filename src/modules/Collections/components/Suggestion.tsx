@@ -101,14 +101,10 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                                     )?.value
                                                 })}
                                         </p>
-                                        {p.purchasable ? (
+                                        {p.purchasable && (
                                             <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
                                                 {/* IDR {parseInt(p.price).toLocaleString('id-ID')} */}
                                                 {formatRupiah(p.price)}
-                                            </p>
-                                        ) : (
-                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-red-600'>
-                                                {t('common:sold_out')}
                                             </p>
                                         )}
                                     </div>

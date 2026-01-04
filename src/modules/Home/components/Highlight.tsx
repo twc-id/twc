@@ -255,12 +255,10 @@ const Highlight = () => {
                                                               )?.value
                                                           })}
                                                   </p>
-                                                  {product.purchasable ? (
+                                                  {product.purchasable && (
                                                       <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
                                                           {formatRupiah(product.price)}
                                                       </p>
-                                                  ) : (
-                                                      t('common:sold_out')
                                                   )}
                                               </div>
                                           </div>

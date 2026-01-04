@@ -9,6 +9,7 @@ import { useTheme } from '@contexts/ThemeContext'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
+import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import Fuse from 'fuse.js'
 import Image from 'next/image'
@@ -1094,17 +1095,10 @@ const Headers = () => {
                                                                             )?.value
                                                                         })}
                                                                 </p>
-                                                                {product?.price !== '' && (
+
+                                                                {product.purchasable && (
                                                                     <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                                                        IDR{' '}
-                                                                        {parseInt(product?.price).toLocaleString(
-                                                                            'id-ID'
-                                                                        )}
-                                                                    </p>
-                                                                )}
-                                                                {!product?.purchasable && (
-                                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-red-600'>
-                                                                        {t('common:sold_out')}
+                                                                        {formatRupiah(product.price)}
                                                                     </p>
                                                                 )}
                                                             </div>

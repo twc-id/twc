@@ -652,9 +652,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         })}
                                     </Button>
                                 ) : (
-                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-red-600'>
-                                        {t('common:sold_out')}
-                                    </p>
+                                    <button className='bg-grey-50 w-fit px-4 py-2'>
+                                        <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                            {t('common:sold')}
+                                        </p>
+                                    </button>
                                 )}
                             </div>
                         </div>
@@ -724,7 +726,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                     })}
                                                 </Button>
                                             ) : (
-                                                <div className='text-red-600'>{t('common:sold_out')}</div>
+                                                <button className='bg-grey-50 w-fit px-4 py-2'>
+                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                        {t('common:sold')}
+                                                    </p>
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -829,7 +835,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               })}
                                                           </Button>
                                                       ) : (
-                                                          <div className='text-red-600'>{t('common:sold_out')}</div>
+                                                          <button className='bg-grey-50 w-fit px-4 py-2'>
+                                                              <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                                  {t('common:sold')}
+                                                              </p>
+                                                          </button>
                                                       )}
                                                   </div>
                                               </div>

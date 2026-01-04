@@ -228,12 +228,10 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.purchasable ? (
+                                                    {product?.purchasable && (
                                                         <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
                                                             {formatRupiah(product.price)}
                                                         </p>
-                                                    ) : (
-                                                        t('common:sold_out')
                                                     )}
                                                 </div>
                                             </div>
@@ -324,12 +322,10 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.purchasable ? (
+                                                    {product?.purchasable && (
                                                         <p className='text-subheading-6-mobile text-accent-price-dark'>
                                                             {formatRupiah(product.price)}
                                                         </p>
-                                                    ) : (
-                                                        t('common:sold_out')
                                                     )}
                                                 </div>
                                             </div>

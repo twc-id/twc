@@ -1,5 +1,6 @@
 import UnstyledLink from '@components/links/UnstyledLink'
 import Loader from '@components/Loader'
+import { formatRupiah } from '@utils/currency'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
@@ -62,14 +63,9 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                                                 )?.value
                                             })}
                                     </p>
-                                    {item?.price !== '' && (
+                                    {item.purchasable && (
                                         <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
-                                            IDR {parseInt(item?.price).toLocaleString('id-ID')}
-                                        </p>
-                                    )}
-                                    {!item?.purchasable && (
-                                        <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-red-600'>
-                                            {t('common:sold_out')}
+                                            {formatRupiah(item.price)}
                                         </p>
                                     )}
                                 </div>
