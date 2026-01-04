@@ -19,7 +19,7 @@ const DEFAULT_TAB: TabKey = 'watches'
 
 const Collections = () => {
     const { t } = useTranslation(['collection'])
-    const filters = useCollectionsFilterStore.useFilters()
+
     const [data, setData] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -34,6 +34,8 @@ const Collections = () => {
 
     const router = useRouter()
     const setFilter = useCollectionsFilterStore.useSetFilter()
+
+    const filters = useCollectionsFilterStore.useFilters()
 
     const categoryId = selectedTab === 0 ? 15 : 16
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
@@ -274,9 +276,26 @@ const Collections = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.tab, router.isReady])
 
+    const decodeHTMLEntities = (text: string) => {
+        if (typeof window === 'undefined') return text // SSR safety
+        const txt = document.createElement('textarea')
+        txt.innerHTML = text
+        return txt.value
+    }
+
+    const filterBrandsName = brandOptions
+        .filter((b) => filters.brands.includes(b.id))
+        .map((b) => decodeHTMLEntities(b.name))
+
+    const filterBrands = filterBrandsName.join(', ')
+
+    const title = filterBrands
+        ? `${filterBrands} | The Watch Collections`
+        : 'The Watch Collections - Your proper wristgame supply'
+
     return (
         <>
-            <Seo title={`The Watch Collections - ${tabLabels[selectedTab]}`} />
+            <Seo title={title} />
             <Hero />
             <Wrapper
                 data={data}
