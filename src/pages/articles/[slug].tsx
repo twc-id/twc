@@ -1,3 +1,4 @@
+import { defaultLanguage } from '@constant/i18n'
 import { Article as ArticleType, articleKeys } from '@hooks/useArticle'
 import ArticleDetail from '@modules/Article/ArticleDetailPage'
 import blogFetchApi from '@pages/api/blogApi'
@@ -67,7 +68,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
 
         return {
             props: {
-                ...(await serverSideTranslations(locale ?? 'id', ['common'])),
+                ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
                 dehydratedState: dehydrate(queryClient),
                 article
             },

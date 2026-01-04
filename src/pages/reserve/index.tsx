@@ -7,7 +7,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale || defaultLanguage, ['components', 'common', 'pages', 'reserve']))
     },
-    revalidate: 3600
+    revalidate: 600
 })
 
 export default Reserve

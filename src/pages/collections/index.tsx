@@ -13,7 +13,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
             'home'
         ]))
     },
-    revalidate: 3600
+    revalidate: 600
 })
 
 export default Collections
