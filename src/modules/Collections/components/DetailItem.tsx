@@ -3,6 +3,7 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import Modal from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import { formatRupiah } from '@utils/currency'
@@ -10,6 +11,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
@@ -78,6 +80,7 @@ const PriceChart = dynamic(() => import('./PriceChart'), { ssr: false })
 
 const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }) => {
     const { t } = useTranslation(['collection', 'common'])
+    const router = useRouter()
     const pinRef = useRef<HTMLDivElement | null>(null)
     const scrollRef = useRef<HTMLDivElement | null>(null)
     const priceRef = useRef<HTMLDivElement | null>(null)
@@ -87,6 +90,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
     const [showTopSticky, setShowTopSticky] = useState(false)
     const [headerHeight, setHeaderHeight] = useState<number>(0)
+    const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     // Keep only the left images column pinned. Right side will scroll with the page.
@@ -193,6 +197,22 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         return () => window.removeEventListener('resize', measure)
     }, [])
 
+    // Listen for header visibility changes (Header sets `data-header-visible` on body)
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined
+
+        const body = document.body
+        const update = () => setIsHeaderVisible(body.dataset.headerVisible !== 'false')
+
+        // initial
+        update()
+
+        const mo = new MutationObserver(() => update())
+        mo.observe(body, { attributes: true, attributeFilter: ['data-header-visible'] })
+
+        return () => mo.disconnect()
+    }, [])
+
     // observe desktop price block visibility to show sticky header when it's out of view
     useEffect(() => {
         const el = priceRef.current
@@ -291,6 +311,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             })
         }
     }
+    console.log(product)
 
     // build basic info HTML and inject Brand at index 1
     const basicMetas = product?.meta_data?.filter((meta: any) => meta.key.startsWith('basic-info-')) || []
@@ -308,6 +329,10 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         value: meta.value
     }))
 
+    // Read is_new once from product meta_data (0 = false, 1 = true)
+    const isNewMeta = (product?.meta_data || []).find((m: any) => String(m.key) === 'is_new')
+    const isNewFlag = typeof isNewMeta !== 'undefined' ? Number(isNewMeta.value) === 1 : undefined
+
     const caliberItems = caliberValue.map((meta: any) => ({
         label: meta.key.replace('caliber-', '').replace(/-/g, ' '),
         value: meta.value
@@ -324,6 +349,18 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     }))
 
     basicItems.splice(1, 0, { label: 'brand', value: brandValue })
+
+    // If product has explicit `is_new` flag, ensure Basic Info contains a condition entry
+    // representing Brand New / Unworn so it appears in the Basic Info section.
+    if (isNewFlag === true) {
+        const existingConditionIdx = basicItems.findIndex((i: any) => String(i.label).toLowerCase() === 'condition')
+        if (existingConditionIdx > -1) {
+            basicItems[existingConditionIdx].value = 'Brand New / Unworn'
+        } else {
+            const insertAt = Math.min(2, basicItems.length)
+            basicItems.splice(insertAt, 0, { label: 'condition', value: 'Brand New / Unworn' })
+        }
+    }
 
     // merge status and condition into a single `condition` entry formatted as `status (condition)`
     try {
@@ -350,51 +387,130 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         console.warn('Failed to merge status/condition', e)
     }
 
+    const [conditionModalOpen, setConditionModalOpen] = useState(false)
+    const [conditionModalContent, setConditionModalContent] = useState<{
+        title: string
+        description: React.ReactNode
+    } | null>(null)
+
+    const getConditionContent = (val: string) => {
+        let v = String(val || '').toLowerCase()
+
+        // Normalize known aliases: 'unworn' should map to 'brand new'
+        if (v.includes('unworn')) v = v.replace(/unworn/g, 'brand new')
+
+        const descriptions: Record<string, { title: string; description: string }> = {
+            'brand new': {
+                title: 'Brand New / Unworn',
+                description:
+                    'The item is brand new with no signs of wear. It has no previous owner, and the warranty period starts from the date of your purchase.'
+            },
+            'like new': {
+                title: 'Like New',
+                description:
+                    'The item is like new. For older stock, the presentation box may show minor shelf wear and some protective stickers may be missing, but the watch itself has not been polished.'
+            },
+            'very good': {
+                title: 'Very Good',
+                description:
+                    'The item shows minor signs of wear, such as small, faint hairline scratches. The case retains immaculate chamfers and edges. The bracelet or strap may show slight stretch. All markings and engravings remain crisp and fully legible. The item may have undergone a professional polish without affecting the contours or edges.'
+            },
+            good: {
+                title: 'Good',
+                description:
+                    'The item shows noticeable signs of wear, including scratches, scuffs, or small dents. The bracelet or strap may be heavily stretched. Markings and engravings show wear but remain legible, and the watch may have undergone professional polishing.'
+            },
+            fair: {
+                title: 'Fair',
+                description:
+                    'The item shows pronounced, clearly visible signs of wear, including scratches and dents. The bracelet or strap also displays evident wear.'
+            },
+            incomplete: {
+                title: 'Incomplete',
+                description:
+                    'The item is incomplete and not in working condition. It is offered solely for repair or use as spare parts.'
+            }
+        }
+
+        let matched = ''
+        for (const k of Object.keys(descriptions)) {
+            if (v.includes(k)) {
+                matched = k
+                break
+            }
+        }
+
+        if (!matched) return null
+
+        const entry = descriptions[matched]
+        if (!entry) return null
+
+        return { title: entry.title, description: entry.description }
+    }
+    console.log(basicItems)
     const basicHtml = (() => {
         if (!basicItems || basicItems.length === 0) return 'No basic info available.'
 
-        const parts = basicItems.map((item: any) => {
+        const parts = basicItems.map((item: any, idx: number) => {
             const label = String(item.label)
 
             const underline = /condition|brand/.test(label.toLowerCase())
             const underlineClass = underline ? ' underline' : ''
-            // if label brand, add link to brand page
 
             if (label === 'brand' && item.value) {
-                return `
-                <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0${underlineClass}'>
-                        <a href='/collections?product_brand=${product.brands?.[0].id || ''}'>${item.value}</a>
-                    </p>
-                </div>
-                `
+                return (
+                    <div key={idx} className='flex flex-col gap-2'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
+                            {label}
+                        </p>
+                        <p
+                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
+                        >
+                            <a href={`/collections?product_brand=${product.brands?.[0].id || ''}`}>{item.value}</a>
+                        </p>
+                    </div>
+                )
             }
 
             if (label === 'condition' && item.value) {
-                const urlCondition = item.value.replace(/\s+/g, '-').replace(/\(/g, '').replace(/\)/g, '').toLowerCase()
+                const displayLabel = isNewFlag === true ? 'Brand New / Unworn' : String(item.value)
 
-                return `
-                <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                return (
+                    <div key={idx} className='flex flex-col gap-2'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
+                            {label}
+                        </p>
+                        <button
+                            type='button'
+                            onClick={() => {
+                                const c = getConditionContent(displayLabel)
+                                if (!c) return
+                                setConditionModalContent({ title: displayLabel, description: c.description })
+                                setConditionModalOpen(true)
+                            }}
+                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black text-left capitalize !mb-0${underlineClass}`}
+                        >
+                            {displayLabel}
+                        </button>
+                    </div>
+                )
+            }
 
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0${underlineClass}'>
-                        <a href='/collections?condition=${encodeURIComponent(urlCondition)}'>
-                            ${item.value}
-                        </a>
+            return (
+                <div key={idx} className='flex flex-col gap-2'>
+                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
+                        {label}
+                    </p>
+                    <p
+                        className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
+                    >
+                        {item.value}
                     </p>
                 </div>
-                `
-            }
-            return `
-                <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0${underlineClass}'>${item.value}</p>
-                </div>
-            `
+            )
         })
 
-        return `<div class='grid grid-rows-2 grid-cols-2 justify-between gap-y-6'>${parts.join('')}</div>`
+        return <div className='grid grid-cols-2 grid-rows-2 justify-between gap-y-6'>{parts}</div>
     })()
 
     const caliberHtml = (() => {
@@ -738,6 +854,41 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             </div>
                         )}
 
+                        {/* Mobile: sticky top bar (below header) with back button + product name */}
+                        {isMobile && (
+                            <div
+                                aria-hidden={!showTopSticky}
+                                role='status'
+                                style={{
+                                    position: 'fixed',
+                                    left: 0,
+                                    right: 0,
+                                    top: isHeaderVisible ? headerHeight : 0,
+                                    zIndex: 49,
+                                    transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
+                                    transition: 'transform 180ms ease',
+                                    pointerEvents: 'auto'
+                                }}
+                            >
+                                <div className='max-w-screen mx-auto'>
+                                    <div className='bg-grey-black flex items-center gap-4 px-4 py-5 shadow-md'>
+                                        <Icons
+                                            icon='ArrowLeft'
+                                            onClick={() => router.back()}
+                                            className='text-grey-white'
+                                            width={16}
+                                            height={16}
+                                        />
+                                        <div className='flex flex-col truncate'>
+                                            <h5 className='text-subheading-5-mobile text-grey-white truncate'>
+                                                {product.name}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Desktop sticky header rendered into document.body to avoid ScrollSmoother transforms */}
                         {typeof window !== 'undefined' && !isMobile
                             ? (createPortal(
@@ -749,7 +900,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                           left: 0,
                                           right: 0,
                                           top: 0,
-                                          zIndex: 11000,
+                                          zIndex: 49,
                                           transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
                                           transition: 'transform 180ms ease',
                                           pointerEvents: 'auto'
@@ -859,10 +1010,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         setOpenCollapse((curr) => (curr === item.title ? null : item.title))
                                     }
                                 >
-                                    <div
-                                        className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'
-                                        dangerouslySetInnerHTML={{ __html: item.content }}
-                                    />
+                                    <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
+                                        {typeof item.content === 'string' ? (
+                                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                                        ) : (
+                                            item.content
+                                        )}
+                                    </div>
                                 </Collapse>
                             ))}
                             <Collapse
@@ -888,6 +1042,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         </div>
                     </div>
                 </div>
+                {/* Condition Modal */}
+                <Modal
+                    open={conditionModalOpen}
+                    onClose={() => setConditionModalOpen(false)}
+                    closeBackdrop
+                    title='Watch Condition'
+                    withClose
+                    closePosition='right'
+                    fullscreen={isMobile}
+                >
+                    <div className='flex flex-col gap-4'>
+                        <h6
+                            className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black
+                        '
+                        >
+                            {conditionModalContent?.title}
+                        </h6>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
+                            {conditionModalContent?.description}
+                        </p>
+                    </div>
+                </Modal>
             </Container>
         </>
     )

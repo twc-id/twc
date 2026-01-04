@@ -381,6 +381,23 @@ const Headers = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [lastScrollY])
 
+    // Expose header visibility to other components via body dataset
+    useEffect(() => {
+        try {
+            document.body.dataset.headerVisible = String(isVisible)
+        } catch (err) {
+            // ignore in non-browser environments
+        }
+
+        return () => {
+            try {
+                delete document.body.dataset.headerVisible
+            } catch (err) {
+                // ignore
+            }
+        }
+    }, [isVisible])
+
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {
             document.body.style.overflow = 'hidden'

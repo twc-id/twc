@@ -1,3 +1,4 @@
+import Seo from '@components/Seo'
 import { WooCommerce } from '@lib/api'
 import CTADetail from '@modules/Collections/components/CTADetail'
 import DetailItem from '@modules/Collections/components/DetailItem'
@@ -30,9 +31,16 @@ const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
             mounted = false
         }
     }, [product?.id])
+    const title = `${product?.brands?.[0]?.name} - ${product?.name}`
+    const titleCapitalized = title
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
 
     return (
         <>
+            <Seo title={titleCapitalized} description={titleCapitalized} />
             <DetailItem product={product} priceHistory={priceHistory} productPrice={productPrice} />
             <Suggestion products={product} />
             <CTADetail />
