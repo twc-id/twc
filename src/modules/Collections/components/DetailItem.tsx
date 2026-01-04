@@ -315,7 +315,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             })
         }
     }
-    console.log(product)
 
     // build basic info HTML and inject Brand at index 1
     const basicMetas = product?.meta_data?.filter((meta: any) => meta.key.startsWith('basic-info-')) || []
@@ -451,7 +450,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
         return { title: entry.title, description: entry.description }
     }
-    console.log(basicItems)
+
     const basicHtml = (() => {
         if (!basicItems || basicItems.length === 0) return 'No basic info available.'
 
