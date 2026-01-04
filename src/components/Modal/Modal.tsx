@@ -16,6 +16,7 @@ interface ModalProps extends PropsWithChildren {
     width?: number
     footer?: React.ReactNode
     fullscreen?: boolean
+    dialogClassName?: string
     wrapperClassName?: string
     headerClassName?: string
     footerClassName?: string
@@ -32,6 +33,7 @@ const Modal = ({
     width,
     footer,
     fullscreen,
+    dialogClassName,
     wrapperClassName,
     headerClassName,
     footerClassName,
@@ -41,7 +43,7 @@ const Modal = ({
     <Transition appear show={open} as={Fragment}>
         <Dialog
             as='div'
-            className='relative z-50'
+            className={classNames('relative z-50', dialogClassName)}
             onClose={() => {
                 if (closeBackdrop) onClose()
             }}
@@ -71,7 +73,7 @@ const Modal = ({
                     >
                         <DialogPanel
                             className={classNames(
-                                "'w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
+                                "'w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
                                 wrapperClassName,
                                 {
                                     'h-[100dvh] w-[100vw] rounded-none p-3': fullscreen,
