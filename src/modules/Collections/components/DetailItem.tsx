@@ -2,6 +2,7 @@ import Breadcrumb from '@components/Breadcrumb'
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
 import Modal from '@components/Modal'
 import { useGSAP } from '@gsap/react'
@@ -86,6 +87,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const scrollRef = useRef<HTMLDivElement | null>(null)
     const priceRef = useRef<HTMLDivElement | null>(null)
     const [activeImageIndex, setActiveImageIndex] = useState(0)
+    const [imageModalOpen, setImageModalOpen] = useState(false)
+    const [imageModalIndex, setImageModalIndex] = useState(0)
 
     const [openCollapse, setOpenCollapse] = useState<string | null>('Description')
 
@@ -644,6 +647,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             <div
                                 key={index}
                                 className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'
+                                onClick={() => {
+                                    setImageModalIndex(index)
+                                    setImageModalOpen(true)
+                                }}
+                                role='button'
+                                tabIndex={0}
+                                aria-label={`Open image ${index + 1}`}
                             >
                                 <Image
                                     src={img.src || '/images/placeholder.png'}
@@ -1066,6 +1076,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </Modal>
             </Container>
+            {/* Image zoom modal */}
+            <ImageZoom
+                images={product.images}
+                open={imageModalOpen}
+                initialIndex={imageModalIndex}
+                onClose={() => setImageModalOpen(false)}
+            />
         </>
     )
 }
