@@ -473,7 +473,7 @@ const Headers = () => {
         <>
             <div
                 className={classNames(
-                    'sticky top-0 z-[9999] py-2.5 transition-all duration-300 xl:py-3.5',
+                    'sticky top-0 z-[99] py-2.5 transition-all duration-300 xl:py-3.5',
                     getNavbarBgClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen),
                     {
                         '-translate-y-full': !isVisible,
@@ -631,7 +631,7 @@ const Headers = () => {
             </div>
             {/* Dropdown Menu */}
             {isMenuOpen && (
-                <div className='animate-fade-in fixed inset-0 top-0 z-[9998] overflow-hidden bg-black pt-[80px]'>
+                <div className='animate-fade-in fixed inset-0 top-0 z-[98] overflow-hidden bg-black pt-[80px]'>
                     <Container className='h-full'>
                         <div className='flex h-full w-full gap-4 pt-5 xl:pt-10'>
                             {/* Grid 1: Main Menu - Hidden on mobile when submenu is selected */}
