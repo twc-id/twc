@@ -29,10 +29,10 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
     }
     return (
         <div ref={contentRef} className='scrollbar-none xl:max-h-screen xl:overflow-y-auto'>
-            <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3'>
-                {products && products.length > 0 ? (
-                    products.map((item: any) => (
-                        <UnstyledLink href={`/collections/${item.slug}`} key={item.id}>
+            {products && products.length > 0 ? (
+                products.map((item: any) => (
+                    <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3' key={item.id}>
+                        <UnstyledLink href={`/collections/${item.slug}`}>
                             <div className='flex flex-col items-center gap-1 overflow-hidden xl:gap-12' key={item.name}>
                                 <div className='relative h-[168px] w-[168px] overflow-hidden xl:h-[318px] xl:w-[318px]'>
                                     <Image
@@ -71,11 +71,16 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                                 </div>
                             </div>
                         </UnstyledLink>
-                    ))
-                ) : (
-                    <p>No products found.</p>
-                )}
-            </div>
+                    </div>
+                ))
+            ) : (
+                <p
+                    className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200
+                '
+                >
+                    {t('common:no_product')}
+                </p>
+            )}
         </div>
     )
 }
