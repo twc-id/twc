@@ -65,7 +65,7 @@ const Hero = () => {
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-6 xl:flex-row xl:items-end xl:gap-4'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 w-[350px] xl:w-[483px]'
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 w-[350px] xl:w-[500px]'
                             ref={h1Ref}
                         >
                             {t('hero.title')}
