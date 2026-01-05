@@ -22,5 +22,6 @@
     "accesoris": "Accesoris",
     "reserve": "Reserve",
     "reserve_this": "Reserve This {{item}}",
-    "read_article": "Read Article"
+    "read_article": "Read Article",
+    "no_product": "We couldn’t find a match of what you search, please choose other filter to continue."
 }
