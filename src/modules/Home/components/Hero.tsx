@@ -5,7 +5,7 @@ import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import { Trans, useTranslation } from 'next-i18next'
+import { Trans } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
@@ -18,10 +18,11 @@ if (typeof window !== 'undefined') {
 }
 
 const Hero = () => {
-    const { t } = useTranslation('home')
-    const h3Ref = useRef<HTMLHeadingElement>(null)
+    const h3RefFirst = useRef<HTMLHeadingElement>(null)
+    const h3RefSecond = useRef<HTMLHeadingElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
+    const timelineRef = useRef<any>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const swiperRef = useRef<SwiperType>()
     const videoRefs = useRef<Record<number | string, HTMLVideoElement | null>>({})
@@ -44,15 +45,40 @@ const Hero = () => {
         })
 
         // Animasi fade untuk h3 dengan durasi lebih lama
-        timeline.fromTo(h3Ref.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
+        timeline.fromTo(
+            [h3RefFirst.current, h3RefSecond.current],
+            { opacity: 0 },
+            { opacity: 1, duration: 1.5, ease: 'power2.out' }
+        )
 
         // Animasi h1 muncul dari bawah setelah h3 selesai
-        timeline.fromTo(h1Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+        timeline.fromTo(h1Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
+
+        // store timeline so we can restart it on slide change
+        timelineRef.current = timeline
 
         return () => {
             timeline.scrollTrigger?.kill()
+            try {
+                timeline.kill()
+            } catch (e) {
+                // ignore
+            }
+            timelineRef.current = null
         }
     }, [])
+
+    // Restart the timeline animation when active slide changes so text animates per slide
+    useEffect(() => {
+        try {
+            if (timelineRef.current) {
+                // restart from beginning for the new slide
+                timelineRef.current.restart()
+            }
+        } catch (e) {
+            // swallow errors in non-browser or if timeline not ready
+        }
+    }, [activeIndex])
 
     // Observe hero visibility to pause videos when not visible
     useEffect(() => {
@@ -102,21 +128,30 @@ const Hero = () => {
                     <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
                         <div className='flex flex-col justify-end gap-2'>
                             <h3
-                                ref={h3Ref}
+                                ref={h3RefFirst}
                                 className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
                             >
-                                {t('hero.sub_1')}
+                                {heroSlides &&
+                                    heroSlides[activeIndex] &&
+                                    heroSlides[activeIndex].video_banner?.sub_header}
                             </h3>
-                            <h1 ref={h1Ref} className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white'>
+                            <h1
+                                ref={h1Ref}
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:line-clamp-2 xl:w-[700px]'
+                            >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {t('hero.title')}
+                                    {heroSlides &&
+                                        heroSlides[activeIndex] &&
+                                        heroSlides[activeIndex].video_banner?.title}
                                 </Trans>
                             </h1>
                             <h3
-                                ref={h3Ref}
+                                ref={h3RefSecond}
                                 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
                             >
-                                {t('hero.sub_2')}
+                                {heroSlides &&
+                                    heroSlides[activeIndex] &&
+                                    heroSlides[activeIndex].video_banner?.sub_footer}
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>

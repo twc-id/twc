@@ -23,6 +23,12 @@ export interface AssetMedia {
     sizes: AssetMediaSizes
 }
 
+export interface VideoBanner {
+    sub_header: string
+    title: string
+    sub_footer: string
+}
+
 export interface Asset {
     id: number
     name: string
@@ -33,6 +39,7 @@ export interface Asset {
     media: AssetMedia
     created_at: string
     updated_at: string
+    video_banner?: VideoBanner
 }
 
 export interface AssetsResponse {
