@@ -110,7 +110,7 @@ const ReserveTimepiece = () => {
                                                         <Image
                                                             src={
                                                                 product.images?.[0]?.src ||
-                                                                '/images/placeholder-image.png'
+                                                                'https://placehold.co/300x473/png?text=TWC'
                                                             }
                                                             alt={product.name}
                                                             width={300}

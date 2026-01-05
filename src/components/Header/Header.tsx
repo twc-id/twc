@@ -1105,12 +1105,12 @@ const Headers = () => {
                                                             setCorrectedQuery('')
                                                         }}
                                                     >
-                                                        <div className='flex flex-col gap-1 overflow-hidden xl:gap-12'>
+                                                        <div className='relative flex flex-col gap-1 overflow-hidden xl:gap-12'>
                                                             <div className='mb-3 h-[168px] w-[168px] overflow-hidden xl:h-[309px] xl:w-[309px]'>
                                                                 <Image
                                                                     src={
                                                                         product.images[0]?.src ||
-                                                                        '/images/placeholder.png'
+                                                                        'https://placehold.co/168x309/png?text=TWC'
                                                                     }
                                                                     alt={product.name}
                                                                     width={isMobile ? 168 : 309}
@@ -1118,6 +1118,13 @@ const Headers = () => {
                                                                     className='h-full w-full object-contain'
                                                                 />
                                                             </div>
+                                                            {!product.purchasable && (
+                                                                <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
+                                                                    <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
+                                                                        Pre-order
+                                                                    </span>
+                                                                </div>
+                                                            )}
                                                             <div className='flex flex-col gap-1 text-center'>
                                                                 <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
                                                                     {product?.brands?.[0].name} •{' '}

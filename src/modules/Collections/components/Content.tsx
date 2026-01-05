@@ -36,17 +36,24 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                         {products.map((item: any) => (
                             <UnstyledLink href={`/collections/${item.slug}`} key={item.id}>
                                 <div
-                                    className='flex flex-col items-center gap-1 overflow-hidden xl:gap-12'
+                                    className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-12'
                                     key={item.name}
                                 >
                                     <div className='relative h-[168px] w-[168px] overflow-hidden xl:h-[318px] xl:w-[318px]'>
                                         <Image
-                                            src={item?.images?.[0]?.src || '/images/placeholder.png'}
+                                            src={item?.images?.[0]?.src || 'https://placehold.co/318x318/png?text=TWC'}
                                             alt={item?.name}
                                             width={isMobile ? 168 : 318}
                                             height={isMobile ? 168 : 318}
                                         />
                                     </div>
+                                    {!item.purchasable && (
+                                        <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
+                                            <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
+                                                Pre-order
+                                            </span>
+                                        </div>
+                                    )}
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>

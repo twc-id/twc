@@ -75,15 +75,23 @@ const Suggestion = ({ products }: SuggestionProps) => {
                     <div className='grid grid-cols-2 grid-rows-2 flex-row items-center gap-4 xl:flex xl:gap-[140px]'>
                         {related.map((p: any) => (
                             <Link href={`/collections/${p.slug ?? p.id}`} key={p.id}>
-                                <div onClick={handleSelect} className='flex w-full flex-col gap-1 xl:gap-12'>
+                                <div onClick={handleSelect} className='relative flex w-full flex-col gap-1 xl:gap-12'>
                                     <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
                                         <Image
-                                            src={p.images[0]?.src || '/images/placeholder.png'}
+                                            src={p.images[0]?.src || 'https://placehold.co/344x417/png?text=TWC'}
                                             alt={p.name}
                                             width={isMobile ? 168 : 344}
                                             height={isMobile ? 168 : 417}
                                         />
                                     </div>
+
+                                    {!p.purchasable && (
+                                        <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
+                                            <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
+                                                Pre-order
+                                            </span>
+                                        </div>
+                                    )}
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>

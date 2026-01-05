@@ -199,12 +199,16 @@ const Review = () => {
                                             <div className='absolute bottom-10 left-10 right-10 flex flex-row items-center gap-4 bg-white p-4'>
                                                 <div className='relative h-[88px] w-[88px] flex-shrink-0'>
                                                     <Image
-                                                        src={product.images[0]?.src || '/images/placeholder.webp'}
+                                                        src={
+                                                            product.images[0]?.src ||
+                                                            'https://placehold.co/88x88/png?text=TWC'
+                                                        }
                                                         alt={product.name}
                                                         fill
                                                         className='object-contain'
                                                     />
                                                 </div>
+
                                                 <div className='flex flex-col gap-1'>
                                                     <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
                                                         {product.brands?.[0].name} •{' '}
@@ -289,7 +293,10 @@ const Review = () => {
                                             <div className='absolute bottom-4 left-4 right-4 flex flex-row items-center gap-3 bg-white p-3'>
                                                 <div className='relative h-[126px] w-[104px] flex-shrink-0'>
                                                     <Image
-                                                        src={product.images[0]?.src || '/images/placeholder.webp'}
+                                                        src={
+                                                            product.images[0]?.src ||
+                                                            'https://placehold.co/600x400/png?text=TWC'
+                                                        }
                                                         alt={product.name || ''}
                                                         fill
                                                         className='object-contain'

@@ -586,7 +586,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     )
 
     const isWatch = product?.categories?.some((category: any) => category.name === 'Watches')
-
+    console.log('ads', product)
     return (
         <>
             <style jsx global>{`
@@ -635,27 +635,39 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
                         style={{ maxHeight: 'calc(100vh - 160px)' }}
                     >
-                        {product.images.map((img: any, index: number) => (
-                            <div
-                                key={index}
-                                className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'
-                                onClick={() => {
-                                    setImageModalIndex(index)
-                                    setImageModalOpen(true)
-                                }}
-                                role='button'
-                                tabIndex={0}
-                                aria-label={`Open image ${index + 1}`}
-                            >
+                        {product.images.lenght > 0 ? (
+                            product.images.map((img: any, index: number) => (
+                                <div
+                                    key={index}
+                                    className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'
+                                    onClick={() => {
+                                        setImageModalIndex(index)
+                                        setImageModalOpen(true)
+                                    }}
+                                    role='button'
+                                    tabIndex={0}
+                                    aria-label={`Open image ${index + 1}`}
+                                >
+                                    <Image
+                                        src={img.src || 'https://placehold.co/600x400/png?text=TWC'}
+                                        alt={product?.name}
+                                        layout='fill'
+                                        objectFit='contain'
+                                        className='object-center'
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <div className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'>
                                 <Image
-                                    src={img.src || '/images/placeholder.png'}
+                                    src='https://placehold.co/600x802/png?text=TWC'
                                     alt={product?.name}
                                     layout='fill'
                                     objectFit='contain'
                                     className='object-center'
                                 />
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
 
