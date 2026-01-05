@@ -189,7 +189,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     useEffect(() => {
         if (typeof window === 'undefined') return
         const measure = () => {
-            const hdr = document.querySelector('.sticky.top-0') as HTMLElement | null
+            const hdr = document.querySelector('.nav-header') as HTMLElement | null
             const h = hdr ? Math.ceil(hdr.getBoundingClientRect().height) : 0
             setHeaderHeight(h)
             // eslint-disable-next-line no-console
@@ -232,13 +232,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
         const io = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                // eslint-disable-next-line no-console
-                console.debug('Price IO:', {
-                    isIntersecting: entry.isIntersecting,
-                    intersectionRatio: entry.intersectionRatio,
-                    boundingTop: entry.boundingClientRect.top,
-                    headerHeight
-                })
                 setShowTopSticky(!entry.isIntersecting)
             })
         }, options)
@@ -620,7 +613,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     }
                 }
             `}</style>
-            <Container className='flex flex-col gap-14 pt-[100px] xl:flex-row xl:gap-20'>
+            <Container className='flex flex-col gap-14 pt-[230px] xl:flex-row xl:gap-20 xl:pt-[100px]'>
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
                 <div ref={pinRef as any} className='relative w-full xl:w-auto'>
                     {/* left vertical indicators */}
@@ -684,7 +677,10 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     )}
                     <div className='flex flex-col gap-14 xl:gap-12'>
                         <div className='flex flex-col gap-2'>
-                            <UnstyledLink href={`/collections?product_brand=${product.brands?.[0].id || ''}`}>
+                            <UnstyledLink
+                                href={`/collections?product_brand=${product.brands?.[0].id || ''}`}
+                                className='w-fit'
+                            >
                                 <h5
                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
                                     dangerouslySetInnerHTML={{
@@ -873,10 +869,10 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     position: 'fixed',
                                     left: 0,
                                     right: 0,
-                                    top: isHeaderVisible ? headerHeight : 0,
+                                    top: showTopSticky && isHeaderVisible ? headerHeight : 0,
                                     zIndex: 49,
                                     transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
-                                    transition: 'transform 180ms ease',
+                                    transition: 'transform 180ms ease, top 300ms ease',
                                     pointerEvents: 'auto'
                                 }}
                             >
@@ -909,10 +905,10 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                           position: 'fixed',
                                           left: 0,
                                           right: 0,
-                                          top: 0,
+                                          top: showTopSticky && isHeaderVisible ? headerHeight : 0,
                                           zIndex: 49,
                                           transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
-                                          transition: 'transform 180ms ease',
+                                          transition: 'transform 180ms ease, top 300ms ease',
                                           pointerEvents: 'auto'
                                       }}
                                   >
