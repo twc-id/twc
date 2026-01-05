@@ -17,7 +17,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import Form, { Field } from 'rc-field-form'
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 interface SubMenuItem {
@@ -226,7 +226,6 @@ const Headers = () => {
     const [hoveredMenuItem, setHoveredMenuItem] = useState<MenuItem | null>(null)
     const [selectedSubMenuItem, setSelectedSubMenuItem] = useState<SubMenuItem | null>(null)
     const [isVisible, setIsVisible] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
     const [brands, setBrands] = useState<any[]>([])
     const [searchResults, setSearchResults] = useState<any[]>([])
     const [isSearching, setIsSearching] = useState(false)
@@ -236,6 +235,10 @@ const Headers = () => {
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const { setIsDarkSection } = useTheme()
+
+    // Use ref to track scroll position to avoid stale closure issues
+    const lastScrollYRef = useRef(0)
+    const isVisibleRef = useRef(true)
 
     const handleBreadcrumbNavigate = (index: number) => {
         // index 0 -> Home, index 1 -> Our Collections
@@ -360,26 +363,58 @@ const Headers = () => {
     }, [isSearchOpen])
 
     useEffect(() => {
-        const handleScroll = debounce(() => {
-            const currentScrollY = window.scrollY
+        let ticking = false
 
-            setIsScrolled(currentScrollY > 0)
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // Get scroll position - works with both native scroll and ScrollSmoother
+                    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+                    const lastY = lastScrollYRef.current
+                    const scrollDirection = currentScrollY > lastY ? 'down' : 'up'
+                    const scrollDelta = Math.abs(currentScrollY - lastY)
+                    const currentVisible = isVisibleRef.current
 
-            // Show navbar when scrolling up or at top
-            if (currentScrollY < lastScrollY || currentScrollY < 10) {
-                setIsVisible(true)
+                    // Update scroll state
+                    setIsScrolled(currentScrollY > 0)
+
+                    let shouldShow = currentVisible
+
+                    // Always show at top
+                    if (currentScrollY < 10) {
+                        shouldShow = true
+                    }
+                    // Show navbar when scrolling up
+                    else if (scrollDirection === 'up' && scrollDelta > 1) {
+                        shouldShow = true
+                    }
+                    // Hide navbar when scrolling down
+                    else if (scrollDirection === 'down' && currentScrollY > 80 && scrollDelta > 1) {
+                        shouldShow = false
+                    }
+
+                    // Only update state if changed
+                    if (shouldShow !== currentVisible) {
+                        isVisibleRef.current = shouldShow
+                        setIsVisible(shouldShow)
+                    }
+
+                    // Update last position
+                    lastScrollYRef.current = currentScrollY
+                    ticking = false
+                })
+                ticking = true
             }
-            // Hide navbar when scrolling down
-            else if (currentScrollY > lastScrollY && currentScrollY > 10) {
-                setIsVisible(false)
-            }
+        }
 
-            setLastScrollY(currentScrollY)
-        }, 100)
+        // Listen to scroll event
+        window.addEventListener('scroll', handleScroll, { passive: true })
 
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [lastScrollY])
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // Expose header visibility to other components via body dataset
     useEffect(() => {
@@ -473,13 +508,13 @@ const Headers = () => {
         <>
             <div
                 className={classNames(
-                    'sticky top-0 z-[99] py-2.5 transition-all duration-300 xl:py-3.5',
-                    getNavbarBgClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen),
-                    {
-                        '-translate-y-full': !isVisible,
-                        'translate-y-0': isVisible
-                    }
+                    'nav-header fixed left-0 right-0 top-0 z-[99] py-2.5 transition-transform duration-300 xl:py-3.5',
+                    getNavbarBgClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen)
                 )}
+                style={{
+                    transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+                    willChange: 'transform'
+                }}
             >
                 <Container>
                     <div
