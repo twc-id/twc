@@ -137,13 +137,13 @@ const DEFAULT_PAGE_STYLE: PageStyle = {
     },
     icons: {
         default: 'text-grey-200',
-        scrolled: 'text-black',
+        scrolled: 'text-white',
         menuOpen: 'text-grey-200',
         searchOpen: 'text-black'
     },
     logo: {
         default: 'LogoWhite',
-        scrolled: 'LogoBlack',
+        scrolled: 'LogoWhite',
         menuOpen: 'LogoWhite',
         searchOpen: 'LogoBlack'
     }
