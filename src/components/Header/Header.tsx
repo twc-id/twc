@@ -790,9 +790,7 @@ const Headers = () => {
                                                                 />
                                                             </div>
                                                             <h3 className='text-paragraph-7-mobile text-grey-200 text-left'>
-                                                                By{' '}
-                                                                {subItem.label.charAt(0) +
-                                                                    subItem.label.slice(1).toLowerCase()}
+                                                                See All Accessories
                                                             </h3>
                                                         </UnstyledLink>
                                                     )
