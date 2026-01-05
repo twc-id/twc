@@ -1,5 +1,6 @@
 import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
+import { useAssets } from '@hooks/useAsset'
 import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
@@ -16,17 +17,6 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const heroSlides = [
-    {
-        id: 1,
-        video: 'https://mediumpurple-pig-833607.hostingersite.com/wp-content/uploads/2025/12/Banner-Video-TWC.mp4'
-    },
-    {
-        id: 2,
-        video: 'https://mediumpurple-pig-833607.hostingersite.com/wp-content/uploads/2025/12/Banner-Video-invishield.mp4'
-    }
-]
-
 const Hero = () => {
     const { t } = useTranslation('home')
     const h3Ref = useRef<HTMLHeadingElement>(null)
@@ -37,6 +27,8 @@ const Hero = () => {
     const videoRefs = useRef<Record<number | string, HTMLVideoElement | null>>({})
     const [isVisible, setIsVisible] = useState(true)
     const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
+    const { assets } = useAssets()
+    const heroSlides = assets?.filter((asset) => asset.media_type === 'video')
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -128,7 +120,7 @@ const Hero = () => {
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
-                            {heroSlides.map((_, index) => (
+                            {heroSlides?.map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => swiperRef.current?.slideToLoop(index)}
@@ -164,11 +156,11 @@ const Hero = () => {
                 allowTouchMove={false}
                 className='h-full w-full [&_.swiper-slide]:!opacity-100'
             >
-                {heroSlides.map((slide, idx) => (
+                {heroSlides?.map((slide, idx) => (
                     <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
                         {/* fallback poster image until video is ready */}
                         <Image
-                            src='/images/home/hero-home.webp'
+                            src={idx % 2 === 0 ? '/images/home/hero-home.webp' : '/images/about-us/hero.webp'}
                             alt='hero poster'
                             className='absolute inset-0 h-full w-full object-cover'
                             fill
@@ -189,8 +181,8 @@ const Hero = () => {
                             }}
                         >
                             {/* prefer webm when available, fallback to provided mp4 */}
-                            <source src={slide.video.replace(/\.mp4$/i, '.webm')} type='video/webm' />
-                            <source src={slide.video} type='video/mp4' />
+                            <source src={slide.media.url.replace(/\.mp4$/i, '.webm')} type='video/webm' />
+                            <source src={slide.media.url} type='video/mp4' />
                         </video>
 
                         {/* gradient overlay to keep text readable */}
