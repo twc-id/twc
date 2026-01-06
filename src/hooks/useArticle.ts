@@ -105,6 +105,10 @@ export interface Article {
     categories: number[]
     tags: number[]
     uagb_excerpt: string
+    reading_time: {
+        minutes: number
+        words: number
+    }
     _embedded?: {
         author?: ArticleAuthor[]
         'wp:featuredmedia'?: ArticleImage[]

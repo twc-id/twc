@@ -59,15 +59,20 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                         : `Category ${articleTags?.find((tag) => tag.id === selectedTagId)?.name} Latest Articles`
                 }
             />
-            <Container className='min-h-screen'>
-                <div className='flex flex-col gap-8 pb-12 xl:gap-10 xl:pb-[116px]'>
-                    <h1 className='text-[100px] leading-[90%]'>Latest News</h1>
+            <Container className='mt-20'>
+                <div className='flex flex-col gap-8 pb-12 pt-10 xl:gap-10 xl:pb-[116px]'>
+                    <h1
+                        className='xl:text-heading-1-desktop text-heading-1-mobile text-[100px] leading-[90%]
+                    '
+                    >
+                        The Watch Journal
+                    </h1>
                     <Tabs className='gap-10'>
                         <Tab
                             key='all'
                             isActive={selectedTagId === null}
                             onClick={() => setSelectedTagId(null)}
-                            className='w-fit'
+                            className='w-fit !pb-6'
                         >
                             All
                         </Tab>

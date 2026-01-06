@@ -20,26 +20,34 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
             </div>
         )
     }
+
     return (
         <div className='flex flex-row gap-8'>
             {initialArticles?.map((article: any, index: number) => {
                 const featuredImage = article._embedded?.['wp:featuredmedia']?.[0]?.source_url
                 const tags = article._embedded?.['wp:term']?.[1] || []
                 const isFirstArticle = index === 0
+
+                const estimateReadingTime = article.reading_time?.minutes
                 return (
                     <UnstyledLink
                         key={article.id}
                         href={`/articles/${article.slug}`}
-                        className='group mb-10 flex h-fit cursor-pointer flex-col gap-6'
+                        className='group mb-10 flex h-fit cursor-pointer flex-col gap-4'
                     >
                         <div
-                            className={classNames('relative w-full overflow-hidden', {
-                                'min-h-[554px] flex-shrink-0': isFirstArticle,
-                                'min-h-[337px] flex-shrink-0': !isFirstArticle
+                            className={classNames('relative mb-2 w-full overflow-hidden', {
+                                'min-h-[554px] min-w-[776px] flex-shrink-0': isFirstArticle,
+                                'min-h-[337px] min-w-[472px] flex-shrink-0': !isFirstArticle
                             })}
                         >
                             <Image
-                                src={featuredImage}
+                                src={
+                                    featuredImage ||
+                                    `https://placehold.co/${isFirstArticle ? 776 : 472}x${
+                                        isFirstArticle ? 554 : 337
+                                    }/png?text=TWC`
+                                }
                                 alt={article.title.rendered}
                                 // width={isFirstArticle ? 776 : 471}
                                 // height={isFirstArticle ? 554 : 337}
@@ -47,7 +55,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                 className='transition-transform duration-300 group-hover:scale-105'
                             />
                         </div>
-                        <h2 className='xl:text-paragraph-1-desktop text-button-1-desktop font-bold'>
+                        <h2 className='xl:text-paragraph-1-desktop text-paragraph-1-mobile'>
                             {article.title.rendered}
                         </h2>
                         <div className='flex items-center gap-2 '>
@@ -57,7 +65,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                     {tags.slice(0, 1).map((tag: any) => (
                                         <span
                                             key={tag.id}
-                                            className='border-grey-500 text-paragraph-9-desktop rounded-full border-[0.5px] px-3 py-1 font-medium text-gray-500'
+                                            className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
                                         >
                                             {tag.name}
                                         </span>
@@ -65,8 +73,8 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                 </div>
                             )}
 
-                            <span className='text-paragraph-7-desktop text-gray-500'>
-                                {formatDate(article.date, 'MMM, YYYY')}
+                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none text-gray-500'>
+                                {formatDate(article.date, 'MMM, YYYY')} | {estimateReadingTime} min read
                             </span>
                         </div>
                     </UnstyledLink>
