@@ -29,7 +29,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
                 )}
 
                 {/* Content */}
-                <div className='flex flex-col gap-4 pt-6'>
+                <div className='flex flex-col gap-4 xl:pt-6'>
                     {/* Title */}
                     <h3
                         className='group-hover:text-primary-500 xl:text-button-1-desktop text-button-1-mobile line-clamp-2 font-semibold text-gray-900'
@@ -49,9 +49,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
                                 </span>
                             ))}
 
-                        <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none text-gray-500'>
-                            {formatDate(article.date, 'MMM, YYYY')} | {estimateReadingTime} min read
-                        </span>
+                        <div className='flex flex-row gap-2'>
+                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none text-gray-500'>
+                                {formatDate(article.date, 'MMM, YYYY')}
+                            </span>
+                            <div className='border-r-grey-500 border' />
+                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none text-gray-500'>
+                                {estimateReadingTime} min read
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
