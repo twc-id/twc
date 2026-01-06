@@ -48,7 +48,7 @@ const Hero = () => {
         timeline.fromTo(
             [h3RefFirst.current, h3RefSecond.current],
             { opacity: 0 },
-            { opacity: 1, duration: 1.5, ease: 'power2.out' }
+            { opacity: 1, duration: 1, ease: 'power2.out' }
         )
 
         // Animasi h1 muncul dari bawah setelah h3 selesai
