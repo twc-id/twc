@@ -65,9 +65,9 @@ const menuData: MenuItem[] = [
             }
         ]
     },
+    { label: 'Watch Services', href: '/#service' },
     { label: 'Sell Your Watch', href: '/sell' },
     { label: 'Reserve Your Watch', href: '/reserve' },
-    { label: 'Pre-Order', href: '/pre-order' },
     { label: 'About Us', href: '/about-us' },
     { label: 'Article', href: '/articles' }
 ]
@@ -239,6 +239,7 @@ const Headers = () => {
     // Use ref to track scroll position to avoid stale closure issues
     const lastScrollYRef = useRef(0)
     const isVisibleRef = useRef(true)
+    const scrollPositionRef = useRef(0)
 
     const handleBreadcrumbNavigate = (index: number) => {
         // index 0 -> Home, index 1 -> Our Collections
@@ -435,26 +436,21 @@ const Headers = () => {
 
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {
+            // Save current scroll position
+            scrollPositionRef.current = window.scrollY
+
+            // Lock scroll without changing position (prevents visual jump)
             document.body.style.overflow = 'hidden'
-            document.body.style.position = 'fixed'
-            document.body.style.width = '100%'
-            document.body.style.top = `-${window.scrollY}px`
+            document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px` // Prevent layout shift from scrollbar
         } else {
-            const scrollY = document.body.style.top
-            document.body.style.overflow = 'unset'
-            document.body.style.position = 'static'
-            document.body.style.width = 'auto'
-            document.body.style.top = 'auto'
-            if (scrollY) {
-                window.scrollTo(0, parseInt(scrollY || '0') * -1)
-            }
+            // Restore scroll
+            document.body.style.overflow = ''
+            document.body.style.paddingRight = ''
         }
 
         return () => {
-            document.body.style.overflow = 'unset'
-            document.body.style.position = 'static'
-            document.body.style.width = 'auto'
-            document.body.style.top = 'auto'
+            document.body.style.overflow = ''
+            document.body.style.paddingRight = ''
         }
     }, [isMenuOpen, isSearchOpen])
 
@@ -1105,12 +1101,12 @@ const Headers = () => {
                                                             setCorrectedQuery('')
                                                         }}
                                                     >
-                                                        <div className='relative flex flex-col gap-1 overflow-hidden xl:gap-12'>
+                                                        <div className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-12'>
                                                             <div className='mb-3 h-[168px] w-[168px] overflow-hidden xl:h-[309px] xl:w-[309px]'>
                                                                 <Image
                                                                     src={
                                                                         product.images[0]?.src ||
-                                                                        'https://placehold.co/168x309/png?text=TWC'
+                                                                        'https://placehold.co/309x309/png?text=TWC'
                                                                     }
                                                                     alt={product.name}
                                                                     width={isMobile ? 168 : 309}
