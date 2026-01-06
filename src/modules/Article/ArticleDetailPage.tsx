@@ -10,10 +10,10 @@ interface ArticleDetailPageProps {
 
 const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
     return (
-        <div className='min-h-screen bg-white'>
-            <Seo title={article.title.rendered} description={article.uagb_excerpt} />
+        <>
+            <Seo title={article.title.rendered} description={article.uagb_excerpt} date={article.date} />
             <ArticleDetail article={article} />
-        </div>
+        </>
     )
 }
 
