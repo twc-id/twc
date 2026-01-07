@@ -131,6 +131,8 @@ export interface ArticleParams {
     author?: number
     orderby?: 'date' | 'id' | 'title' | 'slug' | 'modified'
     order?: 'asc' | 'desc'
+    exclude?: number | string
+    _fields?: string
     _embed?: boolean
 }
 
@@ -332,4 +334,39 @@ export const useArticlesByTag = (
             ...options
         }
     )
+}
+
+export const useRelatedArticles = (
+    articleId: number,
+    categoryIds: number[],
+    params: Omit<ArticleParams, 'categories' | 'exclude'> = {},
+    options?: Omit<UseQueryOptions<ArticlesResponse, AxiosError>, 'queryKey' | 'queryFn'>
+) => {
+    const fields = [
+        'id',
+        'date_gmt',
+        'slug',
+        'title',
+        'excerpt',
+        '_links',
+        '_embedded',
+        'reading_time',
+        'type',
+        'old_slugs'
+    ]
+
+    const relatedParams: ArticleParams = {
+        categories: categoryIds.join(','), // WP expects comma separated
+        exclude: articleId,
+        per_page: 4,
+        _embed: true,
+        _fields: fields.join(','),
+        ...params
+    }
+
+    return useArticles(relatedParams, {
+        enabled: categoryIds.length > 0 && !!articleId,
+        staleTime: 5 * 60 * 1000,
+        ...options
+    })
 }
