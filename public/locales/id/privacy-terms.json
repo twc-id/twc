@@ -1,0 +1,9 @@
+{
+    "privacy": {
+        "title": "Kebijakan Privasi",
+        "updated": "Kebijakan Privasi ini terakhir diperbarui pada <strong>{{time}}</strong>"
+    },
+    "terms": {
+        "title": "Syarat Layanan"
+    }
+}
