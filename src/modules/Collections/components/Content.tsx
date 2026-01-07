@@ -1,6 +1,7 @@
 import UnstyledLink from '@components/links/UnstyledLink'
 import Loader from '@components/Loader'
 import { formatRupiah } from '@utils/currency'
+import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
@@ -62,7 +63,7 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                                         </p>
                                         <h4
                                             className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'
-                                            dangerouslySetInnerHTML={{ __html: item.name }}
+                                            dangerouslySetInnerHTML={{ __html: sanitize(item.name) }}
                                         />
 
                                         <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>

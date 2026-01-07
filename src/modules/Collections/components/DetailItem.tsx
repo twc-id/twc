@@ -10,6 +10,7 @@ import classNames from '@lib/classnames'
 import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { sanitize } from 'isomorphic-dompurify'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -696,7 +697,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 <h5
                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
                                     dangerouslySetInnerHTML={{
-                                        __html: product.brands?.[0].name
+                                        __html: sanitize(product.brands?.[0].name)
                                     }}
                                 />
                             </UnstyledLink>
@@ -1030,7 +1031,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 >
                                     <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
                                         {typeof item.content === 'string' ? (
-                                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                                            <div dangerouslySetInnerHTML={{ __html: sanitize(item.content) }} />
                                         ) : (
                                             item.content
                                         )}

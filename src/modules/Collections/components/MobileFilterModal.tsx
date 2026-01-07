@@ -5,6 +5,7 @@ import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import { Dialog, Transition } from '@headlessui/react'
 import classNames from '@lib/classnames'
+import { sanitize } from 'isomorphic-dompurify'
 import debounce from 'lodash/debounce'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
@@ -272,7 +273,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                 >
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: option.name
+                                            __html: sanitize(option.name)
                                         }}
                                     />
                                 </Checklist>
@@ -299,7 +300,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     >
                                         <div
                                             dangerouslySetInnerHTML={{
-                                                __html: option.name
+                                                __html: sanitize(option.name)
                                             }}
                                         />
                                     </Checklist>

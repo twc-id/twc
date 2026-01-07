@@ -12,6 +12,7 @@ import classNames from '@lib/classnames'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import Fuse from 'fuse.js'
+import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -781,7 +782,7 @@ const Headers = () => {
                                                                     href={`/collections?product_brand=${item.id}`}
                                                                     className='xl:text-button-4-desktop text-button-4-mobile text-grey-200 hover:text-grey-100'
                                                                     dangerouslySetInnerHTML={{
-                                                                        __html: item.name
+                                                                        __html: sanitize(item.name)
                                                                     }}
                                                                     // eslint-disable-next-line react/no-children-prop
                                                                     children={undefined}
@@ -986,7 +987,7 @@ const Headers = () => {
                                                         href={`/collections?product_brand=${item.id}`}
                                                         className='text-button-1-mobile text-grey-200 block text-left transition-colors'
                                                         dangerouslySetInnerHTML={{
-                                                            __html: item.name
+                                                            __html: sanitize(item.name)
                                                         }}
                                                         // eslint-disable-next-line react/no-children-prop
                                                         children={undefined}
@@ -1132,7 +1133,9 @@ const Headers = () => {
                                                                 </p>
                                                                 <h4
                                                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'
-                                                                    dangerouslySetInnerHTML={{ __html: product.name }}
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: sanitize(product.name)
+                                                                    }}
                                                                 />
 
                                                                 <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>

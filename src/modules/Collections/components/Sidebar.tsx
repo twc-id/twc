@@ -4,6 +4,7 @@ import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import classNames from '@lib/classnames'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
+import { sanitize } from 'isomorphic-dompurify'
 import debounce from 'lodash/debounce'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -273,7 +274,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                         >
                             <div
                                 dangerouslySetInnerHTML={{
-                                    __html: option.name
+                                    __html: sanitize(option.name)
                                 }}
                             />
                         </Checklist>

@@ -6,6 +6,7 @@ import { WooCommerce } from '@lib/api'
 import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
@@ -220,7 +221,7 @@ const Review = () => {
                                                     </p>
                                                     <h4
                                                         className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black'
-                                                        dangerouslySetInnerHTML={{ __html: product.name }}
+                                                        dangerouslySetInnerHTML={{ __html: sanitize(product.name) }}
                                                     />
                                                     {product?.meta_data?.key?.startsWith('pre-owned-') && (
                                                         <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
@@ -313,7 +314,7 @@ const Review = () => {
                                                     </p>
                                                     <h4
                                                         className='text-subheading-6-mobile text-grey-black'
-                                                        dangerouslySetInnerHTML={{ __html: product.name }}
+                                                        dangerouslySetInnerHTML={{ __html: sanitize(product.name) }}
                                                     />
                                                     {/* <p className='text-paragraph-11-mobile text-grey-500'>
                                                         {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}

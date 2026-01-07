@@ -2,6 +2,7 @@ import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import { Article } from '@hooks/useArticle'
 import { formatDate } from '@utils/format-date'
+import { sanitize } from 'isomorphic-dompurify'
 import React from 'react'
 
 interface ArticleDetailProps {
@@ -32,7 +33,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                             <Container className='flex !w-[60%] flex-col items-center gap-4'>
                                 <h1
                                     className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white relative z-10 text-center'
-                                    dangerouslySetInnerHTML={{ __html: article.title.rendered }}
+                                    dangerouslySetInnerHTML={{ __html: sanitize(article.title.rendered) }}
                                 />
                                 {/* Categories */}
                                 {categories.length > 0 && (
@@ -42,9 +43,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                                                 <span
                                                     key={category.id}
                                                     className='border-grey-white xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
-                                                >
-                                                    {category.name}
-                                                </span>
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: sanitize(category.name)
+                                                    }}
+                                                />
                                             ))}
                                         </div>
                                         <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
@@ -69,7 +71,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                             lastItemClassName='!text-grey-black xl:text-button-5-desktop text-button-5-mobile'
                         />
                         {/* Content */}
-                        <div className=' article' dangerouslySetInnerHTML={{ __html: article.content.rendered }} />
+                        <div
+                            className=' article'
+                            dangerouslySetInnerHTML={{ __html: sanitize(article.content.rendered) }}
+                        />
                     </Container>
                 </div>
             </article>
