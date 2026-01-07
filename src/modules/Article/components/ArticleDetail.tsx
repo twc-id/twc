@@ -3,7 +3,8 @@ import Container from '@components/Container'
 import { Article } from '@hooks/useArticle'
 import { formatDate } from '@utils/format-date'
 import { sanitize } from 'isomorphic-dompurify'
-import React from 'react'
+import NProgress from 'nprogress'
+import React, { useEffect } from 'react'
 
 interface ArticleDetailProps {
     article: Article
@@ -14,9 +15,53 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
 
     const categories = article._embedded?.['wp:term']?.[0] || []
 
+    useEffect(() => {
+        // Configure NProgress
+        NProgress.configure({ showSpinner: false })
+
+        let ticking = false
+
+        const updateReadingProgress = () => {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop
+            const scrollHeight = document.documentElement.scrollHeight
+            const clientHeight = document.documentElement.clientHeight
+
+            // Calculate reading progress (0 to 1)
+            const progress = scrollTop / (scrollHeight - clientHeight)
+
+            // Only show progress after user starts scrolling
+            if (scrollTop > 0) {
+                // Clamp progress between 0 and 1, keep at 1 when at bottom
+                const clampedProgress = Math.min(Math.max(progress, 0), 1)
+                NProgress.set(clampedProgress)
+            } else {
+                // Hide progress bar when at the top
+                // NProgress.done()
+            }
+
+            ticking = false
+        }
+
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateReadingProgress)
+                ticking = true
+            }
+        }
+
+        // Add scroll listener
+        window.addEventListener('scroll', handleScroll, { passive: true })
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+            NProgress.done()
+        }
+    }, [])
+
     return (
         <>
-            <article>
+            <article id='article-detail' className='mt-20'>
                 {/* Header */}
                 <header>
                     {/* Featured Image */}
