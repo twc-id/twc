@@ -15,7 +15,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
 
     return (
         <>
-            <article className='pb-8'>
+            <article>
                 {/* Header */}
                 <header>
                     {/* Featured Image */}
@@ -23,7 +23,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                         <div
                             className='relative h-[848px] pt-[107px] xl:h-[960px] xl:pt-[120px]'
                             style={{
-                                backgroundImage: `linear-gradient(360deg, rgba(1, 1, 1, 0) 50%, #010101 91.3%), url('${featuredImage}')`,
+                                backgroundImage: `linear-gradient(360deg, rgba(1, 1, 1, 0) 40.64%, #010101 91.3%), url('${featuredImage}')`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 backgroundRepeat: 'no-repeat'
