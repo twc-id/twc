@@ -2,6 +2,7 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
 import classNames from '@lib/classnames'
 import { formatDate } from '@utils/format-date'
+import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
 import React from 'react'
 
@@ -25,7 +26,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
         <div className='flex flex-row gap-8'>
             {initialArticles?.map((article: any, index: number) => {
                 const featuredImage = article._embedded?.['wp:featuredmedia']?.[0]?.source_url
-                const tags = article._embedded?.['wp:term']?.[1] || []
+                const category = article._embedded?.['wp:term']?.[0] || []
                 const isFirstArticle = index === 0
 
                 const estimateReadingTime = article.reading_time?.minutes
@@ -60,15 +61,14 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                         </h2>
                         <div className='flex items-center gap-2 '>
                             {/* Tags */}
-                            {tags.length > 0 && (
+                            {category.length > 0 && (
                                 <div className='flex flex-wrap gap-2'>
-                                    {tags.slice(0, 1).map((tag: any) => (
+                                    {category.slice(0, 1).map((categories: any) => (
                                         <span
-                                            key={tag.id}
+                                            key={categories.id}
                                             className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
-                                        >
-                                            {tag.name}
-                                        </span>
+                                            dangerouslySetInnerHTML={{ __html: sanitize(categories.name) }}
+                                        />
                                     ))}
                                 </div>
                             )}
