@@ -165,24 +165,6 @@ const PAGE_STYLES: Record<string, PageStyle> = {
             menuOpen: 'LogoWhite',
             searchOpen: 'LogoBlack'
         }
-    },
-    '/privacy-policy': {
-        navbar: {
-            default: 'bg-transparent',
-            scrolled: 'bg-[#0F0F0FCC] backdrop-blur-[20px]'
-        },
-        icons: {
-            default: 'text-grey-200',
-            scrolled: 'text-black',
-            menuOpen: 'text-grey-200',
-            searchOpen: 'text-black'
-        },
-        logo: {
-            default: 'LogoBlack',
-            scrolled: 'LogoBlack',
-            menuOpen: 'LogoWhite',
-            searchOpen: 'LogoBlack'
-        }
     }
 }
 
