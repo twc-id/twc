@@ -1,5 +1,6 @@
 import Container from '@components/Container'
 import Seo from '@components/Seo'
+import Skeleton from '@components/Skeleton'
 import usePages, { Page } from '@hooks/usePages'
 import { Locale } from '@utils/currency'
 import { formatDate } from '@utils/format-date'
@@ -13,10 +14,28 @@ interface PrivacyPolicyProps {
 
 const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
     const { t } = useTranslation('privacy-terms')
-    const { data } = usePages(locale === 'id' ? 'kebijakan-privasi' : 'privacy-policy', { _embed: true })
+    const { data, isLoading } = usePages(locale === 'id' ? 'kebijakan-privasi' : 'privacy-policy', { _embed: true })
 
     const pages = data as Page
     const title = pages?.title?.rendered
+
+    if (isLoading) {
+        return (
+            <div className='min-h-screen'>
+                <Container className='flex flex-col gap-20 py-[200px] xl:py-40'>
+                    <div className='flex flex-col gap-4'>
+                        <Skeleton className='h-10 w-1/2' />
+                        <Skeleton className='h-6 w-1/4  ' />
+                    </div>
+                    <div className='space-y-4'>
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton key={index} className='h-4 w-full' />
+                        ))}
+                    </div>
+                </Container>
+            </div>
+        )
+    }
     return (
         <>
             <Seo title={title || 'Privacy Policy'} />
