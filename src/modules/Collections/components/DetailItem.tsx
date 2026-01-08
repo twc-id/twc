@@ -636,7 +636,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
                         style={{ maxHeight: 'calc(100vh - 160px)' }}
                     >
-                        {product.images.lenght > 0 ? (
+                        {product.images.length > 0 ? (
                             product.images.map((img: any, index: number) => (
                                 <div
                                     key={index}
