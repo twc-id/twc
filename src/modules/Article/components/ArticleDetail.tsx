@@ -61,52 +61,51 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
 
     return (
         <>
-            <article id='article-detail' className='mt-20'>
+            <div id='article-detail' className=''>
                 {/* Header */}
-                <header>
+                <header className='min-h-screen'>
                     {/* Featured Image */}
-                    {featuredImage && (
-                        <div
-                            className='relative h-[848px] pt-[107px] xl:h-[960px] xl:pt-[120px]'
-                            style={{
-                                backgroundImage: `linear-gradient(360deg, rgba(1, 1, 1, 0) 40.64%, #010101 91.3%), url('${featuredImage}')`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat'
-                            }}
-                        >
-                            <Container className='flex !w-[60%] flex-col items-center gap-4'>
-                                <h1
-                                    className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white relative z-10 text-center'
-                                    dangerouslySetInnerHTML={{ __html: sanitize(article.title.rendered) }}
-                                />
-                                {/* Categories */}
-                                {categories.length > 0 && (
-                                    <div className='flex flex-row items-center gap-2 '>
-                                        <div className='flex flex-wrap gap-2'>
-                                            {categories.map((category) => (
-                                                <span
-                                                    key={category.id}
-                                                    className='border-grey-white xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: sanitize(category.name)
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                        <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
-                                            {formatDate(article.date, 'MMM, YYYY')}
-                                        </span>
-                                        <div className='bg-grey-white mb-1 h-[13px] w-[1px]' />
 
-                                        <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
-                                            {article.reading_time?.minutes} min read
-                                        </span>
+                    <div
+                        className='relative h-[848px] pt-[107px] xl:h-[960px] xl:pt-[120px]'
+                        style={{
+                            backgroundImage: `linear-gradient(360deg, rgba(1, 1, 1, 0) 40.64%, #010101 91.3%), url('${featuredImage}')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                        }}
+                    >
+                        <Container className='flex !w-[60%] flex-col items-center gap-4'>
+                            <h1
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white relative z-10 text-center'
+                                dangerouslySetInnerHTML={{ __html: sanitize(article.title.rendered) }}
+                            />
+                            {/* Categories */}
+                            {categories.length > 0 && (
+                                <div className='flex flex-row items-center gap-2 '>
+                                    <div className='flex flex-wrap gap-2'>
+                                        {categories.map((category) => (
+                                            <span
+                                                key={category.id}
+                                                className='border-grey-white xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
+                                                dangerouslySetInnerHTML={{
+                                                    __html: sanitize(category.name)
+                                                }}
+                                            />
+                                        ))}
                                     </div>
-                                )}
-                            </Container>
-                        </div>
-                    )}
+                                    <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
+                                        {formatDate(article.date, 'MMM, YYYY')}
+                                    </span>
+                                    <div className='bg-grey-white mb-1 h-[13px] w-[1px]' />
+
+                                    <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
+                                        {article.reading_time?.minutes} min read
+                                    </span>
+                                </div>
+                            )}
+                        </Container>
+                    </div>
                 </header>
                 <div className='py-14 xl:py-20'>
                     <Container className='flex flex-col gap-14 xl:!w-[55%] xl:!min-w-0 xl:gap-20'>
@@ -122,7 +121,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                         />
                     </Container>
                 </div>
-            </article>
+            </div>
             <style jsx>{`
                 .article {
                     img {
