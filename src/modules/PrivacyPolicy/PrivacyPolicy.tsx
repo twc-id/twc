@@ -39,7 +39,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
     return (
         <>
             <Seo title={title || 'Privacy Policy'} />
-            <Container className='flex flex-col gap-20 pt-[200px] xl:pt-40'>
+            <Container className='flex flex-col gap-20 py-[200px] xl:py-40'>
                 <div className='flex flex-col gap-4'>
                     <h1 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-black'>{title}</h1>
                     <span className='xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
