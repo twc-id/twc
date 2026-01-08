@@ -137,7 +137,7 @@ const Footer = () => {
 
                     <div className='flex flex-col gap-12 xl:hidden'>
                         {/* Logo */}
-                        <Link href='/'>
+                        <Link href='/' className='w-fit'>
                             <Icons icon='LogoWhite' width={58} height={55} />
                         </Link>
                         <div className='flex w-full flex-row gap-12'>

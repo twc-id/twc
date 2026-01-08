@@ -136,15 +136,13 @@ const PAGE_STYLES: Record<string, PageStyle> = {
         },
         icons: {
             default: 'text-grey-200',
-            scrolled: 'text-black',
+            scrolled: 'text-grey-white',
             menuOpen: 'text-grey-200',
             searchOpen: 'text-black'
         },
         logo: {
             default: 'LogoBlack',
-            scrolled: 'LogoBlack',
-            menuOpen: 'LogoWhite',
-            searchOpen: 'LogoBlack'
+            scrolled: 'LogoWhite'
         }
     },
 
@@ -155,15 +153,45 @@ const PAGE_STYLES: Record<string, PageStyle> = {
         },
         icons: {
             default: 'text-grey-200',
-            scrolled: 'text-black',
+            scrolled: 'text-grey-white',
             menuOpen: 'text-grey-200',
             searchOpen: 'text-black'
         },
         logo: {
             default: 'LogoBlack',
-            scrolled: 'LogoBlack',
-            menuOpen: 'LogoWhite',
-            searchOpen: 'LogoBlack'
+            scrolled: 'LogoWhite'
+        }
+    },
+    '/privacy-policy': {
+        navbar: {
+            default: 'bg-transparent',
+            scrolled: 'bg-[#0F0F0FCC] backdrop-blur-[20px]'
+        },
+        icons: {
+            default: 'text-grey-200',
+            scrolled: 'text-grey-white',
+            menuOpen: 'text-grey-200',
+            searchOpen: 'text-black'
+        },
+        logo: {
+            default: 'LogoBlack',
+            scrolled: 'LogoWhite'
+        }
+    },
+    '/terms': {
+        navbar: {
+            default: 'bg-transparent',
+            scrolled: 'bg-[#0F0F0FCC] backdrop-blur-[20px]'
+        },
+        icons: {
+            default: 'text-grey-200',
+            scrolled: 'text-grey-white',
+            menuOpen: 'text-grey-200',
+            searchOpen: 'text-black'
+        },
+        logo: {
+            default: 'LogoBlack',
+            scrolled: 'LogoWhite'
         }
     }
 }
