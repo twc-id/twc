@@ -2,7 +2,6 @@ import BaseDialog from '@components/dialog/BaseDialog'
 import Footer from '@components/Footer'
 import Header from '@components/Header/Header'
 import { inter, overpass } from '@helpers/font'
-import classNames from '@lib/classnames'
 import useDialogStore from '@store/useDialogStore'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
@@ -79,31 +78,45 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             setTimeout(() => scrollToHash(window.location.hash), 50)
         }
 
-        // handle future route changes that include a hash
-        const onRouteChange = (url: string) => {
+        // handle route changes
+        const onRouteChangeComplete = (url: string) => {
+            // Handle hash scrolling
             const hashIndex = url.indexOf('#')
-            if (hashIndex === -1) return
-            const hash = url.substring(hashIndex)
-            setTimeout(() => scrollToHash(hash), 50)
+            if (hashIndex !== -1) {
+                const hash = url.substring(hashIndex)
+                setTimeout(() => scrollToHash(hash), 100)
+            } else {
+                // Scroll to top for non-hash navigation
+                const smoother = smootherRef.current || (ScrollSmoother.get && ScrollSmoother.get())
+                if (smoother && typeof (smoother as any).scrollTo === 'function') {
+                    try {
+                        ;(smoother as any).scrollTo(0, false) // instant scroll to top
+                    } catch (e) {
+                        window.scrollTo(0, 0)
+                    }
+                } else {
+                    window.scrollTo(0, 0)
+                }
+            }
+
+            // Refresh ScrollTrigger after route change to recalculate positions
+            setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 50)
         }
-        router.events.on('routeChangeComplete', onRouteChange)
+
+        router.events.on('routeChangeComplete', onRouteChangeComplete)
 
         return () => {
-            router.events.off('routeChangeComplete', onRouteChange)
+            router.events.off('routeChangeComplete', onRouteChangeComplete)
             smootherRef.current?.kill && (smootherRef.current as any).kill()
         }
     })
 
-    const ignorePath = ['/articles']
-
     return (
         <div className={`${inter.className} ${overpass.variable}`}>
             <Header />
-            <div
-                className={classNames('relative -mt-20 overflow-hidden', {
-                    'mt-[72px] xl:mt-20': ignorePath.includes(router.pathname)
-                })}
-            >
+            <div className='relative -mt-20 overflow-hidden'>
                 <div ref={smoothWrapperRef} id='smooth-wrapper-home'>
                     <div ref={smoothContentRef} id='smooth-content-home'>
                         {children}
