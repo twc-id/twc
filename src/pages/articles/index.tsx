@@ -10,6 +10,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     const queryClient = new QueryClient()
     const page = 1
     const per_page = 12
+    let initialArticles = {
+        data: [],
+        totalPages: 0,
+        totalPosts: 0
+    }
+    let articleTags = { data: [] }
 
     try {
         // Prefetch articles
@@ -22,7 +28,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
                 _embed: true
             }
         })
-        const articleTags = await blogFetchApi({
+        const articleTag = await blogFetchApi({
             url: '/tags',
             method: 'GET',
             params: {
@@ -33,16 +39,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
         // Set the data in the query cache
         queryClient.setQueryData(articleKeys.list({ page, per_page, _embed: true }), articlesData)
 
-        return {
-            props: {
-                ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
-                dehydratedState: dehydrate(queryClient),
-                initialArticles: articlesData,
-                articleTags: articleTags.data,
-                page
-            },
-            revalidate: 60 // Revalidate every 60 seconds
-        }
+        initialArticles = articlesData
+        articleTags = articleTag
     } catch (error) {
         return {
             props: {
@@ -52,6 +50,17 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             },
             revalidate: 60
         }
+    }
+
+    return {
+        props: {
+            ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
+            dehydratedState: dehydrate(queryClient),
+            initialArticles,
+            articleTags: articleTags.data,
+            page
+        },
+        revalidate: 60 // Revalidate every 60 seconds
     }
 }
 

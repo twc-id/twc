@@ -38,6 +38,8 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     const queryClient = new QueryClient()
     const slug = params?.slug as string
 
+    let article: ArticleType | null = null
+
     if (!slug) {
         return {
             notFound: true
@@ -55,7 +57,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
             }
         })
 
-        const article = response.data[0]
+        article = response.data[0]
 
         if (!article) {
             return {
@@ -65,19 +67,19 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
 
         // Set the data in the query cache
         queryClient.setQueryData(articleKeys.detail(article.id), article)
-
-        return {
-            props: {
-                ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
-                dehydratedState: dehydrate(queryClient),
-                article
-            },
-            revalidate: 60 // Revalidate every 60 seconds
-        }
     } catch (error) {
         return {
             notFound: true
         }
+    }
+
+    return {
+        props: {
+            ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
+            dehydratedState: dehydrate(queryClient),
+            article
+        },
+        revalidate: 60 // Revalidate every 60 seconds
     }
 }
 

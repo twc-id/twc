@@ -11,6 +11,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
+    let product: any = null
+    let priceHistory: any[] = []
     try {
         const raw = ctx.params?.slug
         const slug = Array.isArray(raw) ? raw[raw.length - 1] : String(raw ?? '')
@@ -20,10 +22,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
         const products = resp.data || []
         if (!products || products.length === 0) return { notFound: true }
 
-        const product = products[0]
-
-        // fetch price history on build (non-blocking failures)
-        let priceHistory: any[] = []
+        product = products[0]
 
         try {
             const priceHistRes = await WooCommerce.get(`price-history/${product.id}`)
@@ -34,23 +33,23 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
         // `productPrice` (harga/stok yang berubah sangat cepat) dipindahkan ke client-side
         // sehingga halaman tetap SSG + ISR dan tidak tergantung pada data realtime per-build.
-
-        return {
-            props: {
-                product,
-                priceHistory,
-                ...(await serverSideTranslations(ctx.locale || defaultLanguage, [
-                    'components',
-                    'pages',
-                    'common',
-                    'home',
-                    'collection'
-                ]))
-            },
-            revalidate: 60
-        }
     } catch (err) {
         return { notFound: true }
+    }
+
+    return {
+        props: {
+            product,
+            priceHistory,
+            ...(await serverSideTranslations(ctx.locale || defaultLanguage, [
+                'components',
+                'pages',
+                'common',
+                'home',
+                'collection'
+            ]))
+        },
+        revalidate: 60
     }
 }
 
