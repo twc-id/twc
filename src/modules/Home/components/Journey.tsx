@@ -143,21 +143,20 @@ const Journey = () => {
                         </h1>
                         <div className='hidden xl:block'>
                             <UnstyledLink href='/about-us'>
-                                <Button>{t('common:learn_our_story')}</Button>
+                                <Button>{t('journey.learn_our_story')}</Button>
                             </UnstyledLink>
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>
                         <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud
+                            <Trans i18nKey='journey.desc_1' components={{ br: <br /> }}>
+                                {t('journey.desc_1')}
+                            </Trans>
                         </span>
                         <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
-                            Exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
-                            autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel
-                            illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui
-                            blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+                            <Trans i18nKey='journey.desc_2' components={{ br: <br /> }}>
+                                {t('journey.desc_2')}
+                            </Trans>
                         </span>
                     </div>
                     <div className='block xl:hidden'>
