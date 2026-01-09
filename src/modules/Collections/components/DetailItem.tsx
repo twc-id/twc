@@ -463,7 +463,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         <p
                             className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
                         >
-                            <a href={`/collections?product_brand=${product.brands?.[0].id || ''}`}>{item.value}</a>
+                            <a href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}>{item.value}</a>
                         </p>
                     </div>
                 )
@@ -691,13 +691,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     <div className='flex flex-col gap-14 xl:gap-12'>
                         <div className='flex flex-col gap-2'>
                             <UnstyledLink
-                                href={`/collections?product_brand=${product.brands?.[0].id || ''}`}
+                                href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}
                                 className='w-fit'
                             >
                                 <h5
                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
                                     dangerouslySetInnerHTML={{
-                                        __html: sanitize(product.brands?.[0].name)
+                                        __html: sanitize(product?.brands?.[0]?.name)
                                     }}
                                 />
                             </UnstyledLink>
