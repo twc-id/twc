@@ -105,8 +105,20 @@ const Hero = () => {
             try {
                 if (idx === activeIndex && isVisible) {
                     v.muted = true
-                    const p = v.play()
-                    if (p && typeof p.then === 'function') p.catch(() => {})
+                    // Ensure video is loaded before attempting to play
+                    if (v.readyState < 3) {
+                        // readyState < HAVE_FUTURE_DATA, need to load first
+                        v.load()
+                        // Wait for video to be ready
+                        const onCanPlay = () => {
+                            v.play().catch(() => {})
+                            v.removeEventListener('canplay', onCanPlay)
+                        }
+                        v.addEventListener('canplay', onCanPlay)
+                    } else {
+                        // Video is ready, play immediately
+                        v.play().catch(() => {})
+                    }
                 } else {
                     v.pause()
                     try {
@@ -209,7 +221,8 @@ const Hero = () => {
                             muted
                             playsInline
                             preload='auto'
-                            onCanPlay={() => setVideoLoaded((s) => ({ ...s, [idx]: true }))}
+                            autoPlay={idx === 0}
+                            onLoadedData={() => setVideoLoaded((s) => ({ ...s, [idx]: true }))}
                             style={{
                                 opacity: videoLoaded[idx] ? 1 : 0,
                                 transition: 'opacity 400ms ease'
