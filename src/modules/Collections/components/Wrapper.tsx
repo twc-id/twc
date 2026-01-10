@@ -10,7 +10,7 @@ import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 interface WrapperProps {
@@ -48,6 +48,7 @@ const Wrapper: React.FC<WrapperProps> = ({
     const sectionRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
+    const [isPin, setIsPin] = useState(false)
 
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
@@ -77,29 +78,53 @@ const Wrapper: React.FC<WrapperProps> = ({
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: 'top 80%',
-                    // end will be calculated based on the inner content height so the section remains pinned
-                    end: () => {
-                        const contentEl: any = contentRef.current
-                        if (!contentEl) return '+=100%'
-                        const extra = 100 // small buffer
-                        const delta = Math.max(0, contentEl.scrollHeight - window.innerHeight + extra)
-                        return `+=${delta}`
-                    },
+                    end: 'bottom 20%',
                     id: 'collections-wrapper-animation',
-                    toggleActions: 'restart none none reset'
+                    toggleActions: 'restart none none reset',
+                    markers: true
                 }
             })
 
             timeline.fromTo(topRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
 
-            // pin the top header only; content will be scrollable inside the pinned section
+            // Pin the entire section and scroll-jack the content
             pinTriggerRef.current = ScrollTrigger.create({
-                trigger: topRef.current,
-                start: 'top top',
+                trigger: sectionRef.current,
+                start: '60px top',
+                onEnterBack: () => {
+                    setIsPin(true)
+                },
+                onEnter: () => {
+                    setIsPin(true)
+                },
+                onLeaveBack: () => {
+                    setIsPin(false)
+                },
+                onLeave: () => {
+                    setIsPin(false)
+                },
+                end: () => {
+                    const contentEl: any = contentRef.current
+                    if (!contentEl) return '+=100%'
+                    // Calculate the scrollable height of content
+                    const contentScrollHeight = contentEl.scrollHeight - contentEl.clientHeight
+                    return `+=${contentScrollHeight + window.innerHeight}`
+                },
                 pin: true,
-                pinSpacing: false,
+                pinSpacing: true,
                 id: 'collections-wrapper-top-pin',
-                pinnedContainer: sectionRef.current
+                markers: true,
+                onUpdate: (self) => {
+                    const contentEl: any = contentRef.current
+                    if (!contentEl) return
+
+                    // Calculate how much we should scroll the content
+                    const contentScrollHeight = contentEl.scrollHeight - contentEl.clientHeight
+                    const scrollAmount = self.progress * contentScrollHeight
+
+                    // Apply scroll to content
+                    contentEl.scrollTop = scrollAmount
+                }
             })
 
             return () => {
@@ -115,9 +140,26 @@ const Wrapper: React.FC<WrapperProps> = ({
         }
     }, [])
 
+    // Refresh ScrollTrigger when data changes (e.g., "Show More" is clicked)
+    useEffect(() => {
+        if (!isMobile && data && data.length > 0) {
+            // Wait for DOM to update, then refresh ScrollTrigger
+            const timeout = setTimeout(() => {
+                ScrollTrigger.refresh()
+            }, 100)
+
+            return () => clearTimeout(timeout)
+        }
+    }, [data, isMobile])
+
     return (
         <Container className='relative flex flex-col gap-14 pt-14 xl:gap-10 xl:pt-20' ref={sectionRef}>
-            <div className='bg-grey-white dark:bg-grey-black z-50 flex justify-between  xl:pb-10' ref={topRef}>
+            <div
+                className={classNames('bg-grey-white dark:bg-grey-black z-[100] flex justify-between xl:pb-10', {
+                    '!pb-0': isPin
+                })}
+                ref={topRef}
+            >
                 <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
                     Our Collections
                 </h2>
