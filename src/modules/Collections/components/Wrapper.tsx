@@ -80,8 +80,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                     start: 'top 80%',
                     end: 'bottom 20%',
                     id: 'collections-wrapper-animation',
-                    toggleActions: 'restart none none reset',
-                    markers: true
+                    toggleActions: 'restart none none reset'
                 }
             })
 
@@ -113,7 +112,6 @@ const Wrapper: React.FC<WrapperProps> = ({
                 pin: true,
                 pinSpacing: true,
                 id: 'collections-wrapper-top-pin',
-                markers: true,
                 onUpdate: (self) => {
                     const contentEl: any = contentRef.current
                     if (!contentEl) return
