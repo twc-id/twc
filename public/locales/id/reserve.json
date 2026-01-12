@@ -1,9 +1,9 @@
 {
     "title": "The Watch Collection - Reserve Your Spot",
     "hero": {
-        "title": "Tidak menemukan jam tangan yang Anda inginkan di koleksi kami?",
-        "subtitle": "We can source more for you",
-        "description": "Pesan jam tangan yang Anda inginkan dan tim The Watch Collections akan mengamankannya untuk Anda.",
+        "title": "Belum menemukan jam tangan yang Anda inginkan?",
+        "subtitle": "Kami dapat menyediakan lebih banyak untuk Anda",
+        "description": "Kami dapat menyediakan lebih banyak untuk Anda",
         "items": {
             "1": {
                 "title": "Klasik Mewah"
@@ -18,32 +18,33 @@
     },
 
     "reserve_time_pieces": {
-        "title": "Reserve Your Timepieces",
-        "description": "Discover More of Reserveable Watches"
+        "title": "Pre-Order Jam Tangan",
+        "description": "Temukan Jam Tangan yang Dapat Anda Pesan"
     },
     "how_to_reserve": {
-        "title": "How to Reserve in The Watch Collections?",
+        "title": "Bagaimana Cara Pre-Order di The Watch Collections?",
         "steps": {
             "1": {
-                "title": "Choose Your Timepiece",
-                "description": "Browse our curated selection and pick the watch you’d like to reserve."
+                "title": "Pilih Jam Tangan yang Anda Inginkan",
+                "description": "Telusuri koleksi jam tangan kami dan tentukan pilihan Anda."
             },
             "2": {
-                "title": "Submit Your Reservation Request",
-                "description": "Share your details and preferred timeframe so we can securely hold the watch for you."
+                "title": "Isi Detail Reservasi",
+                "description": "Isi informasi serta tentukan waktu yang Anda inginkan untuk melihat jam tersebut."
             },
             "3": {
-                "title": "Receive Confirmation",
-                "description": "We’ll verify availability, confirm your reservation, and outline inspection and payment options."
+                "title": "Konfirmasi",
+                "description": "Kami akan memeriksa ketersediaan, mengonfirmasi pemesanan Anda, membimbing proses inspeksi, dan menjelaskan opsi pembayaran."
             },
             "4": {
-                "title": "Secure Payment & Delivery",
-                "description": "Complete payment and choose insured shipping or in-person handover for your reserved watch."
+                "title": "Pembayaran dan Pengiriman",
+                "description": "Setelah pembayaran selesai, Anda dapat memilih metode pengiriman (mengambil langsung di toko atau dikirim dengan layanan yang dilindungi asuransi)."
             }
         }
     },
     "cta": {
-        "title": "Reserve Your Watch Now",
-        "description": "Learn and choose the world’s luxury watches"
+        "title": "Pesan Jam Tangan Impian Anda",
+        "description": "Pilih jam tangan mewah terbaik dari seluruh dunia",
+        "button": "Pesan Sekarang"
     }
 }

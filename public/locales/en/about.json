@@ -1,21 +1,21 @@
 {
     "title": "The Watch Collections - Your proper wristgame supply",
     "hero": {
-        "title": "Your Watch Atelier",
-        "description": "Provide high end timepiece collections from the most luxurious brands in the world."
+        "title": "Home of Luxury Timepieces",
+        "description": "Providing a curated selection of luxury timepieces"
     },
     "white_space": {
-        "description": " The Watch Collections was ventured, established in 2014 and our headquarter is located in Jakarta, Indonesia. To be truly inspired by the art, craft of every concept and story to produce such a fine mechanical timepiece, this urge us to offer our customers the perfect timepiece for them."
+        "description": "The Watch Collections is an independent watch dealer established in 2014 and headquartered in Jakarta, Indonesia. A deep appreciation for the art and craftsmanship of mechanical timepieces drives us to connect every customer with a watch that truly reflects them."
     },
     "journey": {
         "title": "Behind The Journey",
-        "description": "Our story is one of passion, expertise, and a relentless pursuit of perfection in every watch",
-        "description_2": "Since our establishment in 2014, The Watch Collections has been dedicated to curating anexceptional selection of timepieces that embody craftsmanship, innovation, and timelessdesign. Our journey began with a passion for horology and a commitment to providing watchenthusiasts with access to the finest brands and models from around the world. Over theyears, we have expanded our offerings, built strong relationships with renowned watchmakers,and cultivated a community of discerning collectors. Today, The Watch Collections stands as a testament to our unwavering dedication to excellence in the world of luxury timepieces."
+        "description": "Since the beginning, The Watch Collections has curated luxurious timepieces from the world’s top brands, including Audemars Piguet, Richard Mille, Rolex, Patek Philippe, Hublot, and more.",
+        "description_2": "We are dedicated to providing an exceptional in-store experience, ensuring that every timepiece is authentic, safe, and trustworthy. With honesty, expertise, and ethical service, we are here to help you find the perfect watch."
     },
     "service": {
         "title": "Giving The Best Services",
-        "description": "Our mission is to build a long term relationship with our customers, by pursuing an exceptional customer service and support in the importance of a smart investment.",
-        "quote": "Nothing is more important than having the trust of our customers. We ensure that our customers are treated with proper ethics, respect and honesty into all aspects of our business.",
+        "description": "Our mission is to build long-term relationships with our customers by delivering expert service, support, and guidance in making a smart investment",
+        "quote": "“Nothing is more important than earning our customers’ trust. We ensure every customer is treated with proper ethics, respect, and honesty in every aspect of our business.”",
         "founder": "- The Watch Collections"
     },
     "location": {
@@ -23,6 +23,7 @@
     },
     "cta": {
         "title": "Know Us More",
-        "description": "Discuss how we can help you about your timepieces"
+        "description": "Discover who we are and explore the curated timepieces we offer",
+        "button": "Explore Our Collections"
     }
 }

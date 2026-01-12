@@ -24,5 +24,15 @@
     "reserve_this": "Reserve This {{item}}",
     "read_article": "Read Article",
     "no_product": "Kami tidak dapat menemukan kecocokan dari apa yang Anda cari, silakan pilih filter lain untuk melanjutkan.",
-    "discover_more": "Temukan Lebih Banyak"
+    "discover_more": "Temukan Lebih Banyak",
+    "header": {
+        "empty_search": "Kami tidak dapat menemukan kecocokan dari apa yang Anda cari, silakan periksa ejaan",
+        "cta": {
+            "title": "Belum menemukan jam tangan yang Anda inginkan?",
+            "description": "Kami akan membantu Anda mendapatkannya",
+            "contact_us": "Hubungi Kami"
+        }
+    },
+    "search_result": "Hasil Pencarian",
+    "suggestion": "Saran"
 }

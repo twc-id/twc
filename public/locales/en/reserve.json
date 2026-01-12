@@ -1,9 +1,9 @@
 {
     "title": "The Watch Collection - Reserve Your Spot",
     "hero": {
-        "title": "Didn't find your desired watch on our collections?",
+        "title": "Couldn’t find the watch you’re looking for?",
         "subtitle": "We can source more for you",
-        "description": "Reserve your desired watch and The Watch Collections team will secure it for you.",
+        "description": "Pre-order your desired watch, and we will secure it exclusively for you",
 
         "items": {
             "1": {
@@ -18,32 +18,33 @@
         }
     },
     "reserve_time_pieces": {
-        "title": "Reserve Your Timepieces",
-        "description": "Discover More of Reserveable Watches"
+        "title": "Pre-Order Your Timepieces",
+        "description": " Discover More Pre-Order Watches"
     },
     "how_to_reserve": {
-        "title": "How to Reserve in The Watch Collections?",
+        "title": "How to Pre-Order at The Watch Collections?",
         "steps": {
             "1": {
-                "title": "Choose Your Timepiece",
-                "description": "Browse our curated selection and pick the watch you’d like to reserve."
+                "title": "Choose your Timepiece",
+                "description": "Explore our curated collection and select the piece you'd like to reserve."
             },
             "2": {
-                "title": "Submit Your Reservation Request",
-                "description": "Share your details and preferred timeframe so we can securely hold the watch for you."
+                "title": "Provide Your Reservation Details",
+                "description": "Share your information and preferred timeframe so we can hold the watch for you."
             },
             "3": {
                 "title": "Receive Confirmation",
-                "description": "We’ll verify availability, confirm your reservation, and outline inspection and payment options."
+                "description": "We'll verify availability, confirm your reservation, and guide you through inspection and payment options."
             },
             "4": {
-                "title": "Secure Payment & Delivery",
-                "description": "Complete payment and choose insured shipping or in-person handover for your reserved watch."
+                "title": "Secure Payment and Delivery",
+                "description": "Complete your payment and choose insured shipping or in-store pickup."
             }
         }
     },
     "cta": {
-        "title": "Reserve Your Watch Now",
-        "description": "Learn and choose the world’s luxury watches"
+        "title": "Pre-Order Your Watch Now",
+        "description": "Explore and choose from the world’s luxury timepieces",
+        "button": "Book an Appointment"
     }
 }

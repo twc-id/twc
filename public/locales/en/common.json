@@ -24,5 +24,15 @@
     "reserve_this": "Reserve This {{item}}",
     "read_article": "Read Article",
     "no_product": "We couldn’t find a match of what you search, please choose other filter to continue.",
-    "discover_more": "Discover More"
+    "discover_more": "Discover More",
+    "header": {
+        "empty_search": "We couldn’t find a match of what you search, please check the spelling",
+        "cta": {
+            "title": "Can’t Find Your Desired Watch?",
+            "description": "Reach out to us, we’ll help you find it",
+            "contact_us": "Contact Us"
+        }
+    },
+    "search_result": "Search Results",
+    "suggestion": "Suggestions"
 }
