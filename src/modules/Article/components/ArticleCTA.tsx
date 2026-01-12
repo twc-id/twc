@@ -1,18 +1,18 @@
 import Button from '@components/buttons/Button'
 import Image from 'next/image'
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 
 const ArticleCTA = () => {
+    const { t } = useTranslation('articles')
     return (
         <div className='pt-4 xl:pt-[76px]'>
             <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-12 overflow-hidden xl:flex-row'>
                 <div className='flex min-w-[380px] flex-col items-start gap-5 px-5 pt-8 xl:gap-6 xl:pl-20 xl:pr-0'>
-                    <h2 className='text-heading-2-desktop text-grey-white'>Know More News</h2>
-                    <p className='text-paragraph-6-desktop text-grey-100'>
-                        Ask and discuss with us about your timepieces
-                    </p>
+                    <h2 className='text-heading-2-desktop text-grey-white'>{t('cta.title')}</h2>
+                    <p className='text-paragraph-6-desktop text-grey-100'>{t('cta.description')}</p>
                     <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
-                        Learn More
+                        {t('common:learn_more')}
                     </Button>
                 </div>
 

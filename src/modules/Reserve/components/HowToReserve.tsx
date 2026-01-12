@@ -106,7 +106,7 @@ const HowToReserve = () => {
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white  xl:max-w-[574px]'>
                             {t('how_to_reserve.title')}
                         </h1>
-                        <Button className='h-full w-fit'>{t('common:book_appointment')}</Button>
+                        <Button className='h-full w-fit'>{t('cta.button')}</Button>
                     </div>
                     <div
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'

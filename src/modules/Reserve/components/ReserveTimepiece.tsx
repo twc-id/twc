@@ -102,7 +102,7 @@ const ReserveTimepiece = () => {
                                         {({ isActive }) => (
                                             <div
                                                 className={`transition-all duration-300 ${
-                                                    isActive ? 'scale-105' : 'scale-90 opacity-75'
+                                                    isActive ? 'scale-100' : 'scale-75 opacity-75'
                                                 }`}
                                             >
                                                 <div className='flex flex-col items-center gap-2.5'>
@@ -113,8 +113,9 @@ const ReserveTimepiece = () => {
                                                                 'https://placehold.co/300x473/png?text=TWC'
                                                             }
                                                             alt={product.name}
-                                                            width={300}
-                                                            height={473}
+                                                            width={0}
+                                                            height={0}
+                                                            className='h-full w-full object-cover'
                                                             unoptimized
                                                         />
                                                     </div>

@@ -310,6 +310,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         }
     }
 
+    const isWatch = product?.categories?.some((category: any) => category.name === 'Watches')
+
     // build basic info HTML and inject Brand at index 1
     const basicMetas = product?.meta_data?.filter((meta: any) => meta.key.startsWith('basic-info-')) || []
 
@@ -320,6 +322,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const breceletValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('bracelet-')) || []
 
     const brandValue = product?.brands?.[0]?.name ?? ''
+    const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
+    const accessoriesDetailsValue =
+        product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-details')) || []
 
     const basicItems = basicMetas.map((meta: any) => ({
         label: meta.key.replace('basic-info-', '').replace(/-/g, ' '),
@@ -342,6 +347,16 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
     const breceletItems = breceletValue.map((meta: any) => ({
         label: meta.key.replace('bracelet-', '').replace(/-/g, ' '),
+        value: meta.value
+    }))
+
+    const accessoriesItems = accessoriesValue.map((meta: any) => ({
+        label: meta.key.replace('accessories-type', '').replace(/-/g, ' '),
+        value: meta.value
+    }))
+
+    const accessoriesDetailsItems = accessoriesDetailsValue.map((meta: any) => ({
+        label: meta.key.replace('accessories-details', '').replace(/-/g, ' '),
         value: meta.value
     }))
 
@@ -558,35 +573,90 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         return `<div class='grid grid-rows-2 grid-cols-2 justify-between gap-y-6'>${parts.join('')}</div>`
     })()
 
-    const dataCollapse = [
-        {
-            title: 'Description',
-            content: product?.description || 'No description available.'
-        },
-        {
-            title: 'Basic Info',
-            content: basicHtml
-        },
-        {
-            title: 'Caliber',
-            content: caliberHtml
-        },
-        {
-            title: 'Case',
-            content: caseHtml
-        },
-        {
-            title: 'Bracelet/strap',
-            content: breceletHtml
-        }
-    ]
+    const accessoriesHtml = (() => {
+        if (!accessoriesItems || accessoriesItems.length === 0) return 'No accessories info available.'
+
+        const parts = accessoriesItems.map((item: any) => {
+            const label = String(item.label)
+            return `
+                <div class='flex flex-col gap-2'>
+                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                </div>
+            `
+        })
+        return `<div class='flex flex-col'>${parts.join('')}</div>`
+    })()
+
+    const accessoriesDetailsHtml = (() => {
+        if (!accessoriesDetailsItems || accessoriesDetailsItems.length === 0)
+            return 'No accessories details info available.'
+
+        return (
+            <div className='flex flex-col gap-6'>
+                {accessoriesDetailsItems.map((item: any, idx: number) => {
+                    return (
+                        <div key={idx} className='flex flex-col gap-2'>
+                            <p
+                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0 capitalize'
+                                dangerouslySetInnerHTML={{
+                                    __html: sanitize(item.value)
+                                }}
+                            />
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    })()
+
+    let dataCollapse: { title: string; content: any }[] = []
+
+    if (isWatch) {
+        dataCollapse = [
+            {
+                title: 'Description',
+                content: product?.description || 'No description available.'
+            },
+            {
+                title: 'Basic Info',
+                content: basicHtml
+            },
+            {
+                title: 'Caliber',
+                content: caliberHtml
+            },
+            {
+                title: 'Case',
+                content: caseHtml
+            },
+            {
+                title: 'Bracelet/strap',
+                content: breceletHtml
+            }
+        ]
+    } else {
+        dataCollapse = [
+            {
+                title: 'Description',
+                content: product?.description || 'No description available.'
+            },
+            {
+                title: 'Type',
+                content: accessoriesHtml || 'No type available.'
+            },
+            {
+                title: 'Details',
+                content: accessoriesDetailsHtml || 'No details available.'
+            }
+        ]
+    }
     const isPositiveChange = Boolean(
         priceHistory &&
             priceHistory.length > 1 &&
             priceHistory[priceHistory.length - 1].price_change > priceHistory[0].price_change
     )
 
-    const isWatch = product?.categories?.some((category: any) => category.name === 'Watches')
     console.log('ads', product)
     return (
         <>
@@ -706,7 +776,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 {product.name}
                             </h1>
 
-                            {product.meta_data.find((meta: any) => meta.key === 'reference') && (
+                            {product.meta_data.find((meta: any) => meta.key === 'reference') && isWatch && (
                                 <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
                                     Ref.{' '}
                                     <span className=''>
@@ -1038,18 +1108,20 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     </div>
                                 </Collapse>
                             ))}
-                            <Collapse
-                                key='Performance'
-                                title='Performance'
-                                isOpen={openCollapse === 'Performance'}
-                                onToggle={() =>
-                                    setOpenCollapse((curr) => (curr === 'Performance' ? null : 'Performance'))
-                                }
-                            >
-                                <div className='py-4'>
-                                    <PriceChart productPrice={productPrice} />
-                                </div>
-                            </Collapse>
+                            {isWatch && (
+                                <Collapse
+                                    key='Performance'
+                                    title='Performance'
+                                    isOpen={openCollapse === 'Performance'}
+                                    onToggle={() =>
+                                        setOpenCollapse((curr) => (curr === 'Performance' ? null : 'Performance'))
+                                    }
+                                >
+                                    <div className='py-4'>
+                                        <PriceChart productPrice={productPrice} />
+                                    </div>
+                                </Collapse>
+                            )}
                         </div>
                         <div className='flex w-full flex-col gap-2 rounded-lg bg-[#F7F7F7] p-5'>
                             <span className='text-grey-black xl:text-subheading-5-desktop text-subheading-5-mobile'>

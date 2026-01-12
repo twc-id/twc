@@ -64,7 +64,7 @@ const CTA = () => {
                             rel='noopener noreferrer'
                         >
                             <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
-                                {t('common:book_appointment')}
+                                {t('cta.button')}
                             </Button>
                         </a>
                     </div>

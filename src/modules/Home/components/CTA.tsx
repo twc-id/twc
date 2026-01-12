@@ -1,5 +1,6 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
@@ -51,6 +52,7 @@ const CTA = () => {
                                 {t('cta.title')}
                             </Trans>
                         </h2>
+
                         <p
                             className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-100'
                             ref={paragraphRef}
@@ -58,19 +60,14 @@ const CTA = () => {
                             {t('cta.description')}
                         </p>
 
-                        <a
-                            href='
-                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
+                        <UnstyledLink href='/articles'>
                             <Button
                                 variant='secondary'
                                 className='!bg-grey-white xl:!text-button-3-desktop !text-button-3-mobile !rounded-none'
                             >
-                                {t('common:learn_more')}
+                                {t('common:read_article')}
                             </Button>
-                        </a>
+                        </UnstyledLink>
                     </div>
 
                     <div

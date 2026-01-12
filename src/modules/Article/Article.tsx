@@ -5,6 +5,7 @@ import Tabs, { Tab } from '@components/Tabs'
 import { ArticleTag, useArticles } from '@hooks/useArticle'
 import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import ArticleHero from '@modules/Article/components/ArticleHero'
+import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -17,6 +18,7 @@ interface ArticleProps {
 }
 
 const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 1 }) => {
+    const { t } = useTranslation('articles')
     const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
@@ -55,8 +57,11 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
             <Seo
                 title={
                     selectedTagId === null
-                        ? 'The Watch Collections - When Quality Meets Perfection'
-                        : `Category ${articleTags?.find((tag) => tag.id === selectedTagId)?.name} Latest Articles`
+                        ? t('title')
+                        : // : `Category ${articleTags?.find((tag) => tag.id === selectedTagId)?.name} Latest Articles`
+                          t('subtitle', {
+                              article: articleTags?.find((tag) => tag.id === selectedTagId)?.name || ''
+                          })
                 }
             />
             <Container className='pt-[72px] xl:pt-20'>
@@ -65,7 +70,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                         className='xl:text-heading-1-desktop text-heading-1-mobile text-[100px] leading-[90%]
                     '
                     >
-                        The Watch Journal
+                        {t('the_watch_journal')}
                     </h1>
                     <Tabs className='gap-10'>
                         <Tab
@@ -74,7 +79,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                             onClick={() => setSelectedTagId(null)}
                             className='w-fit !pb-6'
                         >
-                            All
+                            {t('tab.all')}
                         </Tab>
                         {articleTags?.map((tag) => (
                             <Tab

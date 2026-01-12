@@ -44,7 +44,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     } catch (error) {
         return {
             props: {
-                ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
+                ...(await serverSideTranslations(locale || defaultLanguage, ['common', 'articles'])),
                 initialArticles: { data: [], totalPages: 0, totalPosts: 0 },
                 page
             },
@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
     return {
         props: {
-            ...(await serverSideTranslations(locale || defaultLanguage, ['common'])),
+            ...(await serverSideTranslations(locale || defaultLanguage, ['common', 'articles'])),
             dehydratedState: dehydrate(queryClient),
             initialArticles,
             articleTags: articleTags.data,

@@ -74,7 +74,7 @@ const SellReserve = () => {
                     {t('sell_reserve.reserve_title')}
                 </h1>
                 <UnstyledLink href='/reserve'>
-                    <Button>{t('sell_reserve.discover_more')}</Button>
+                    <Button>{t('sell_reserve.cta_reserve')}</Button>
                 </UnstyledLink>
             </div>
         </section>

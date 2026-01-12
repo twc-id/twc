@@ -51,10 +51,10 @@ const Hero = () => {
                 <Container>
                     <div className='flex w-full flex-col   gap-6  xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[720px] '
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 xl:line-clamp-3'
                             ref={h1Ref}
                         >
-                            <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>
+                            <Trans i18nKey='sell:hero.title' components={{ br: <br className='' /> }}>
                                 {t('hero.title')}
                             </Trans>
                         </h1>

@@ -2,6 +2,7 @@
 import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import Input from '@components/forms/Input'
+import CTA from '@components/Header/CTA'
 import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
@@ -1130,7 +1131,7 @@ const Headers = () => {
 
                                 <div className='flex flex-col gap-6'>
                                     <h4 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'>
-                                        {searchQuery ? 'Search Results' : 'Suggestions'}
+                                        {searchQuery ? t('common:search_result') : t('common:suggestion')}
                                     </h4>
                                     {/* Typo correction message */}
                                     {correctedQuery && searchQuery && (
@@ -1228,8 +1229,11 @@ const Headers = () => {
                                                 ))}
                                             </div>
                                         ) : searchQuery ? (
-                                            <div className='text-grey-400 py-10 text-center'>
-                                                No products found for "{searchQuery}"
+                                            <div className='flex flex-col gap-6'>
+                                                <div className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile text-center'>
+                                                    {t('common:header.empty_search')}
+                                                </div>
+                                                <CTA />
                                             </div>
                                         ) : null}
                                     </div>

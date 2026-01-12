@@ -321,7 +321,7 @@ const Hero = () => {
             {/* Description */}
             <Container>
                 <div className='flex flex-row justify-end pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]' ref={descriptionRef}>
-                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 line-clamp-2 text-left xl:w-[374px]'>
+                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 line-clamp-2 text-left xl:w-[400px]'>
                         {t('hero.description')}
                     </p>
                 </div>
