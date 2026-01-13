@@ -20,6 +20,7 @@ const Sell = () => {
             <Benefit />
             <HowToSell />
             <Consign />
+
             <Faq />
             <CTA />
         </>

@@ -58,28 +58,7 @@ const Faq = () => {
     const faqRef = useRef<HTMLDivElement>(null)
     const { setIsDarkSection } = useTheme()
 
-    const items = [
-        {
-            question: t('faq.items.1.question'),
-            answer: t('faq.items.1.answer')
-        },
-        {
-            question: t('faq.items.2.question'),
-            answer: t('faq.items.2.answer')
-        },
-        {
-            question: t('faq.items.3.question'),
-            answer: t('faq.items.3.answer')
-        },
-        {
-            question: t('faq.items.4.question'),
-            answer: t('faq.items.4.answer')
-        },
-        {
-            question: t('faq.items.5.question'),
-            answer: t('faq.items.5.answer')
-        }
-    ]
+    const items = Object.values(t('faq.items', { returnObjects: true })) as { question: string; answer: string }[]
 
     useGSAP(() => {
         if (!sectionRef.current) return

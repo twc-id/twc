@@ -54,11 +54,11 @@ const Hero = () => {
                 backgroundRepeat: 'no-repeat'
             }}
         >
-            <div className='absolute inset-x-0 bottom-0 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
+            <div className='absolute inset-x-0 bottom-10 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
                 <Container>
                     <div className='flex w-full flex-col justify-end  gap-6 xl:items-end xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-2 xl:w-[500px] xl:text-right'
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 xl:line-clamp-2 xl:w-[700px] xl:text-right'
                             ref={h1Ref}
                         >
                             <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>
