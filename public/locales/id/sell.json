@@ -2,66 +2,70 @@
     "title": "The Watch Collections - Jual Jam Tangan Mewah Anda",
     "hero": {
         "title": "Buat Ruang untuk yang Berikutnya",
-        "description": "Jual cepat atau maksimalkan nilai jam tangan Anda."
+        "description": "Jual sekarang dan dapatkan nilai terbaik untuk jam tangan Anda"
     },
     "white_space": {
-        "description": "Menawarkan nilai terbaik untuk jam tangan Anda berdasarkan penilaian dan harga pasar terbaru."
+        "description": "Dapatkan nilai terbaik untuk jam tangan Anda berdasarkan penilaian profesional dan harga pasar terkini"
     },
     "benefit": {
         "items": {
             "1": {
-                "title": "Jam Tangan Inklusif",
-                "description": "Nikmati layanan inklusif untuk berbagai jam tangan bergengsi, dirawat sebagaimana mestinya."
+                "title": "Bantuan Profesional",
+                "description": "Tim ahli kami akan membantu penjualan jam tangan Anda."
             },
             "2": {
                 "title": "Jual dengan Mudah",
-                "description": "Pilih metode penjualan ideal untuk jam tangan mewah Anda yang dirancang untuk mengoptimalkan pengembalian Anda dengan mudah."
+                "description": "Dapatkan metode penjualan yang tepat dan mudah, dibantu oleh tim ahli kami."
             },
             "3": {
                 "title": "Harga Terbaik",
-                "description": "The Watch Collections menilai dan akan memberikan Anda harga terbaik untuk jam tangan berharga Anda."
+                "description": "The Watch Collections akan melakukan penilaian dan memberikan harga terbaik untuk jam tangan Anda."
             }
         }
     },
     "how_to_sell": {
-        "title": "Bagaimana Cara Menjual di The Watch Collections?",
+        "title": "Bagaimana Cara Menjual?",
         "steps": {
             "1": {
-                "title": "Kirim Detail Jam Tangan",
-                "description": "Beritahu kami detail jam tangan Anda dalam janji penilaian"
+                "title": "Jadwalkan Kunjungan dan Beri Detail Jam Anda",
+                "description": "Atur waktu dengan tim kami dan beri informasi lengkap tentang jam Anda."
             },
             "2": {
-                "title": "Terima Penawaran",
-                "description": "Anda akan menerima penawaran berdasarkan informasi yang Anda berikan kepada kami dan berdasarkan penilaian ahli"
+                "title": "Proses Penawaran",
+                "description": "Anda akan menerima penawaran berdasarkan informasi yang anda berikan dan penilaian tim kami."
             },
             "3": {
                 "title": "Kirim Jam Tangan",
-                "description": "Jika Anda setuju dengan penilaian, kami akan mengatur agar jam tangan Anda dikirim atau diambil dengan aman"
+                "description": "Setelah Anda menyetujui penawaran tersebut, kami akan mengatur pengiriman atau pengambilan jam tangan."
             },
             "4": {
                 "title": "Terima Pembayaran",
-                "description": "Beritahu kami detail jam tangan Anda dalam janji penilaian"
+                "description": "Anda akan menerima pembayaran setelah jam tangan sampai di tangan kami."
             }
         }
     },
     "consign": {
-        "title": "Bagaimana dengan Konsinyasi di The Watch Collections?",
+        "title": "Bagaimana Cara Menitipkan Jam Tangan untuk Dijual?",
         "steps": {
             "1": {
-                "title": "Kirim Jam Tangan Anda",
-                "description": "Bagikan detail dan foto jam tangan Anda untuk pemeriksaan kelayakan awal"
+                "title": "Beri Informasi Lengkap dan Kirim Jam Tangan",
+                "description": "Beri informasi lengkap dan foto jam tangan anda, lalu kami akan menjadwalkan pengiriman atau pengambilan jam tangan untuk proses penilaian oleh tim kami."
             },
             "2": {
-                "title": "Otentikasi Ahli",
-                "description": "Spesialis kami memverifikasi keaslian dan kondisi untuk menentukan nilai pasar yang adil"
+                "title": "Kirim Jam Tangan",
+                "description": "Setelah detail dikirim, kami akan mengatur pengiriman atau pengambilan jam tangan untuk penilaian oleh tim kami."
             },
             "3": {
-                "title": "Pameran & Daftar",
-                "description": "Kami menyajikan jam tangan Anda secara profesional dan mendaftarkannya untuk menjangkau pembeli serius dan berkualitas"
+                "title": "Proses Penilaian",
+                "description": "Spesialis kami akan melakukan pemeriksaan keaslian dan kondisi jam tangan Anda untuk menentukan nilai terbaik."
             },
             "4": {
-                "title": "Penjualan & Pembayaran",
-                "description": "Setelah jam tangan Anda terjual, kami akan mengatur pembayaran cepat dan aman kepada Anda"
+                "title": "Presentasi & Listing",
+                "description": "Kami akan menampilkan jam tangan Anda secara profesional agar dapat menjangkau calon pembeli."
+            },
+            "5": {
+                "title": "Pembayaran",
+                "description": "Setelah jam tangan terjual, kami akan mengurus transaksinya dan melakukan pembayaran kepada Anda secepatnya."
             }
         }
     },
@@ -69,29 +73,54 @@
         "title": "Pertanyaan yang Sering Diajukan",
         "items": {
             "1": {
-                "question": "Bagaimana cara menilai jam tangan saya?",
-                "answer": "Anda dapat menilai jam tangan Anda dengan mengatur janji penilaian penilaian dengan ahli kami, yang akan menilai kondisi, keaslian, dan nilai pasar jam tangan Anda."
+                "question": "Jam tangan jenis apa saja yang bisa saya jual atau titipkan untuk jual?",
+                "answer": "Kami menerima berbagai jenis jam tangan mewah selama memenuhi standar penilaian kami"
             },
             "2": {
-                "question": "Berapa lama waktu yang dibutuhkan untuk menjual jam tangan saya?",
-                "answer": "Waktu yang dibutuhkan untuk menjual jam tangan Anda dapat bervari berdasarkan faktor-faktor seperti permintaan, penetapan harga, dan kondisi pasar."
+                "question": "Dalam kondisi apa jam tangan saya bisa dijual atau dititipkan untuk dijual?",
+                "answer": "Selama kami dapat memastikan keaslian jam tangan Anda, kami dapat membelinya. Namun, jika Anda ingin menitipkan untuk dijual (consign), kami akan melakukan proses pemeriksaan yang lebih menyeluruh oleh para ahli."
             },
             "3": {
-                "question": "Apakah ada biaya untuk menilai jam tangan saya?",
-                "answer": "Penilaian jam tangan biasanya gratis, tetapi harap periksa dengan The Watch Collections untuk kebijakan spesifik mereka."
+                "question": "Bagaimana The Watch Collections melakukan penilaian jam tangan? ",
+                "answer": "Kirim jam tangan Anda kepada kami agar para ahli atau teknisi kami dapat memeriksa keasliannya. Jika perlu, kami akan membuka jam tangan tersebut untuk memeriksa komponen dan mesin di dalamnya. "
             },
             "4": {
-                "question": "Bagaimana saya menerima pembayaran untuk jam tangan saya?",
-                "answer": "Setelah jam tangan Anda terjual, Anda dapat menerima pembayaran melalui transfer bank, cek, atau metode pembayaran lain yang disepakati dengan The Watch Collections."
+                "question": "Bagaimana harga jual ditentukan?",
+                "answer": "Harga jual ditentukan berdasarkan kondisi dan kelengkapan jam, nilai pasar saat ini, dan penilaian tim ahli"
             },
             "5": {
-                "question": "Apakah saya perlu mengirim jam tangan saya untuk penilaian?",
-                "answer": "Tergantung pada kebijakan The Watch Collections, Anda mungkin perlu mengirim jam tangan Anda atau menjadwalkan janji temu langsung untuk penilaian."
+                "question": "Apakah ada biaya komisi?",
+                "answer": "Untuk menitipjual (consignment), sistem kami mewajibkan pihak yang menitipjual untuk menentukan harga tertentu, dan tim kami akan memberikan nilai terbaik berdasarkan penawaran dari pembeli. Kami akan menjadi pihak ketiga yang memastikan transaksi berlangsung dengan aman"
+            },
+            "6": {
+                "question": "Bagaimana saya bisa mengetahui nilai jam tangan saya?",
+                "answer": "Kirimkan informasi dan foto jam tangan Anda. Para ahli kami akan memberikan penilaian berdasarkan data pasar dan kondisi jam tangan."
+            },
+            "7": {
+                "question": "Bagaimana cara saya menerima pembayaran dari The Watch Collections?",
+                "answer": "Kami cukup fleksibel, bisa dalam bentuk uang tunai, transfer bank, atau pembayaran online."
+            },
+            "8": {
+                "question": "Apakah saya bisa membuat janji untuk konsultasi offline?",
+                "answer": "Bisa. Jadwalkan kunjungan dan temui kami di toko untuk konsultasi langsung."
+            },
+            "9": {
+                "question": "Di mana lokasi toko offline The Watch Collections?",
+                "answer": "Jl. Pantai Mutiara Regatta Blok TG1 B-C, Pluit, Kecamatan Penjaringan, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14450, Indonesia."
+            },
+            "10": {
+                "question": "Apa manfaat menjual jam tangan di The Watch Collections?",
+                "answer": "Anda akan mendapatkan autentikasi oleh tim ahli, penentuan harga pasar yang adil, transaksi yang aman, presentasi jam tangan secara profesional, dan pendampingan penuh selama proses penjualan atau penitipan penjualan."
+            },
+            "11": {
+                "question": "Bagaimana cara menghubungi The Watch Collections?",
+                "answer": "Hubungi kami melalui WhatsApp: +628121396688"
             }
         }
     },
     "cta": {
         "title": "Jual Jam Tangan Anda",
-        "description": "Buat janji untuk membahas penjualan jam tangan impian Anda"
+        "description": "Jadwalkan konsultasi dengan tim kami",
+        "button": "Buat Janji Konsultasi"
     }
 }
