@@ -30,6 +30,7 @@ const Review = () => {
     const contentDesktopRef = useRef<HTMLDivElement>(null)
     const contentMobileRef = useRef<HTMLDivElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
+    const hasAnimatedRef = useRef(false)
 
     const getData = async () => {
         try {
@@ -78,20 +79,35 @@ const Review = () => {
 
     useGSAP(() => {
         if (!contentDesktopRef.current || !contentMobileRef.current || !sectionRef.current) return
+        if (hasAnimatedRef.current || !data.length) return
 
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
-                toggleActions: 'restart none none reset'
+                toggleActions: 'play none none reset',
+                id: 'review-animation'
             }
         })
 
         timeline.fromTo(
             [contentDesktopRef.current, contentMobileRef.current],
             { opacity: 0, y: 60 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power2.out',
+                onComplete: () => {
+                    hasAnimatedRef.current = true
+                }
+            }
         )
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+            timeline.kill()
+        }
     }, [data])
 
     if (isLoading) {

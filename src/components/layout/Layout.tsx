@@ -112,7 +112,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             router.events.off('routeChangeComplete', onRouteChangeComplete)
             smootherRef.current?.kill && (smootherRef.current as any).kill()
         }
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const ignorePath = ['/articles', '/articles/[slug]']
 

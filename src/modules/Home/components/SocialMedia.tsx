@@ -112,8 +112,7 @@ const Instagram = () => {
                 start: 'top 80%',
                 end: 'bottom 20%',
                 toggleActions: 'play none none reset',
-                onEnter: () => timeline.restart(),
-                onEnterBack: () => timeline.restart()
+                id: 'social-media-animation'
             }
         })
 
@@ -138,6 +137,11 @@ const Instagram = () => {
             },
             '-=0.5'
         )
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+            timeline.kill()
+        }
     }, [isLoading])
 
     if (isLoading) {

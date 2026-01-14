@@ -16,7 +16,7 @@ const Journey = () => {
     const { t } = useTranslation('home')
     const sectionRef = useRef<HTMLElement>(null)
     const rightRef = useRef<HTMLDivElement>(null)
-    const imageContainerRef = useRef<HTMLImageElement>(null)
+    const imageContainerRef = useRef<HTMLDivElement>(null) // Changed to div ref
 
     useGSAP(() => {
         // Tunggu sampai semua layout stabil
@@ -26,7 +26,8 @@ const Journey = () => {
                     trigger: sectionRef.current,
                     start: 'top 80%',
                     end: 'bottom 20%',
-                    toggleActions: 'restart none none reset'
+                    toggleActions: 'play none none reset',
+                    id: 'journey-timeline'
                 }
             })
             // Animasi kanan fade in
@@ -36,67 +37,67 @@ const Journey = () => {
                 { opacity: 1, x: 0, duration: 1, ease: 'power2.out' }
             )
 
-            // Pin image dengan refresh dan onRefresh callback
-            ScrollTrigger.create({
-                trigger: imageContainerRef.current,
-                start: 'top top',
-                end: 'bottom top',
-                pin: true,
-                pinnedContainer: sectionRef.current,
-                pinSpacing: true,
-                id: 'journey-pin',
-                refreshPriority: -1, // Lower priority to run after other ScrollTriggers
-                onRefresh: () => {
-                    // Callback saat refresh terjadi
-                }
-            })
+            // Pin image container untuk semua screen sizes (mobile & desktop)
+            // Trigger harus actual DOM div, bukan Next.js Image component
+            if (imageContainerRef.current) {
+                ScrollTrigger.create({
+                    trigger: imageContainerRef.current,
+                    start: 'top top',
+                    end: () => `+=${imageContainerRef.current?.offsetHeight || 0}`,
+                    pin: true,
+                    pinSpacing: false,
+                    id: 'journey-pin',
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                    markers: false // Set true for debugging
+                })
+            }
+
+            return timeline
         }
 
         // Delay initialization untuk memastikan layout component lain sudah stabil
+        let timeline: gsap.core.Timeline | null = null
         const timer = setTimeout(() => {
-            initScrollTrigger()
-            // Refresh semua ScrollTrigger setelah inisialisasi
+            timeline = initScrollTrigger()
+            // Single refresh after init
             ScrollTrigger.refresh()
-        }, 100)
+        }, 200)
 
         // Cleanup
         return () => {
             clearTimeout(timer)
             ScrollTrigger.getById('journey-pin')?.kill()
+            ScrollTrigger.getById('journey-timeline')?.kill()
+            timeline?.kill()
         }
-    }, [sectionRef])
+    }, [])
 
     // Effect untuk menangani resize dan refresh ScrollTrigger
     useEffect(() => {
-        const handleResize = () => {
-            // Delay refresh untuk memastikan layout sudah stabil
-            setTimeout(() => {
-                ScrollTrigger.refresh()
-            }, 100)
-        }
-
-        // Listen untuk perubahan layout dari component lain
-        const handleLayoutChange = () => {
-            ScrollTrigger.refresh()
-        }
-
-        window.addEventListener('resize', handleResize)
-
-        // Custom event listener jika component lain mengirim event perubahan layout
-        window.addEventListener('layoutChange', handleLayoutChange)
-
-        // Use a ResizeObserver (lighter) with a debounced refresh.
-        // Keep a one-shot MutationObserver fallback for attribute changes.
-        let resizeObserver: ResizeObserver | null = null
-        let mo: MutationObserver | null = null
         let refreshTimer: any = null
 
-        const scheduleRefresh = (delay = 100) => {
+        const scheduleRefresh = (delay = 150) => {
             clearTimeout(refreshTimer)
             refreshTimer = setTimeout(() => {
                 ScrollTrigger.refresh()
             }, delay)
         }
+
+        const handleResize = () => {
+            scheduleRefresh(200)
+        }
+
+        const handleLayoutChange = () => {
+            scheduleRefresh(150)
+        }
+
+        window.addEventListener('resize', handleResize)
+        window.addEventListener('layoutChange', handleLayoutChange)
+
+        // Use ResizeObserver with debouncing
+        let resizeObserver: ResizeObserver | null = null
+        let mo: MutationObserver | null = null
 
         if (sectionRef.current?.parentElement) {
             try {
@@ -164,15 +165,8 @@ const Journey = () => {
                     </div>
                 </div>
             </Container>
-            <div className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
-                <Image
-                    src='/images/home/journey-hero.webp'
-                    alt='journey'
-                    fill
-                    className='object-cover'
-                    ref={imageContainerRef}
-                    unoptimized
-                />
+            <div ref={imageContainerRef} className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
+                <Image src='/images/home/journey-hero.webp' alt='journey' fill className='object-cover' unoptimized />
             </div>
         </section>
     )

@@ -59,7 +59,8 @@ const TimePieceService = () => {
 
     useGSAP(() => {
         // Track dark section state dengan ScrollTrigger
-        ScrollTrigger.create({
+        const darkModeTrigger = ScrollTrigger.create({
+            id: 'timepiece-dark-mode',
             trigger: sectionRef.current,
             start: 'top center',
             end: 'bottom top',
@@ -80,9 +81,7 @@ const TimePieceService = () => {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
-                toggleActions: 'play none none reset',
-                onEnter: () => timeline.restart(),
-                onEnterBack: () => timeline.restart()
+                toggleActions: 'play none none reset'
             }
         })
 
@@ -111,6 +110,7 @@ const TimePieceService = () => {
                             window.dispatchEvent(
                                 new CustomEvent('layoutChange', { detail: { component: 'TimePieceService' } })
                             )
+                            ScrollTrigger.refresh()
                         }, 100)
                     }
                 },
@@ -133,6 +133,7 @@ const TimePieceService = () => {
             )
         })
         return () => {
+            darkModeTrigger?.kill()
             timeline.scrollTrigger?.kill()
             timeline.kill()
             mm.revert()

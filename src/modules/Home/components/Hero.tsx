@@ -38,9 +38,7 @@ const Hero = () => {
                 start: 'top 80%',
                 end: 'bottom 20%',
                 id: 'home-hero-animation',
-                toggleActions: 'restart none none reset',
-                onEnter: () => timeline.restart(),
-                onEnterBack: () => timeline.restart()
+                toggleActions: 'play none none reset'
             }
         })
 
@@ -71,8 +69,8 @@ const Hero = () => {
     // Restart the timeline animation when active slide changes so text animates per slide
     useEffect(() => {
         try {
-            if (timelineRef.current) {
-                // restart from beginning for the new slide
+            if (timelineRef.current && !timelineRef.current.isActive()) {
+                // restart from beginning for the new slide, only if not currently animating
                 timelineRef.current.restart()
             }
         } catch (e) {

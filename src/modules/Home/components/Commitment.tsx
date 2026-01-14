@@ -23,7 +23,8 @@ const Commitment = () => {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
-                toggleActions: 'restart none none reset'
+                toggleActions: 'play none none reset',
+                id: 'commitment-timeline'
             }
         })
 
@@ -33,10 +34,10 @@ const Commitment = () => {
             descRef.current,
             { opacity: 0, x: 50 },
             { opacity: 1, x: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5' // overlap with previous animation
+            '-=0.5'
         )
 
-        // Pin image saat scroll - dengan ID untuk debugging
+        // Pin image saat scroll
         const pinTrigger = ScrollTrigger.create({
             trigger: imageContainerRef.current,
             start: 'top top',
@@ -49,6 +50,8 @@ const Commitment = () => {
 
         // Cleanup
         return () => {
+            timeline.scrollTrigger?.kill()
+            timeline.kill()
             pinTrigger.kill()
         }
     }, [])
