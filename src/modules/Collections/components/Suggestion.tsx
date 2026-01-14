@@ -54,13 +54,17 @@ const Suggestion = ({ products }: SuggestionProps) => {
                         {related.map((p: any) => (
                             <Link href={`/collections/${p.slug ?? p.id}`} key={p.id}>
                                 <div onClick={handleSelect} className='relative flex w-full flex-col gap-1 xl:gap-12'>
-                                    <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
-                                        <Image
-                                            src={p.images[0]?.src || 'https://placehold.co/344x417/png?text=TWC'}
-                                            alt={p.name}
-                                            width={isMobile ? 168 : 344}
-                                            height={isMobile ? 168 : 417}
-                                        />
+                                    <div className='flex items-center justify-center xl:h-[417px] xl:w-[344px]'>
+                                        <div className='h-[158px] w-[99px] overflow-hidden xl:h-[319px] xl:w-[196px]'>
+                                            <Image
+                                                src={p.images[0]?.src || 'https://placehold.co/344x417/png?text=TWC'}
+                                                alt={p.name}
+                                                width={0}
+                                                height={0}
+                                                className='h-full w-full object-cover'
+                                                unoptimized
+                                            />
+                                        </div>
                                     </div>
 
                                     {!p.purchasable && (

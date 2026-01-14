@@ -25,23 +25,34 @@ if (typeof window !== 'undefined') {
 const Highlight = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any>(null)
-    const [tab, setTab] = useState<string>(t('highlight.tabs.watches'))
+    const [isLoading, setIsLoading] = useState(false)
+    const [tab, setTab] = useState<string>('watches')
     const swiperRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const tabsRef = useRef<HTMLDivElement>(null)
+    const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
-    const tabs = [t('highlight.tabs.watches'), t('highlight.tabs.accessories')]
+    const tabs = [
+        {
+            label: t('highlight.tabs.watches'),
+            value: 'watches'
+        },
+        { label: t('highlight.tabs.accessories'), value: 'accessories' }
+    ]
 
     const getData = async (categoryId: number) => {
         try {
             setData(null)
+            setIsLoading(true)
             const response = await WooCommerce.get(`products?tag=54&category=${categoryId}`)
             setData(response.data)
         } catch (error) {
             // Error fetching products
             setData([])
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -54,12 +65,16 @@ const Highlight = () => {
 
     useEffect(() => {
         // determine category id based on selected tab label
-        const isWatches = tab === t('highlight.tabs.watches')
+        const isWatches = tab === tabs[0].value
         const categoryId = isWatches ? 15 : 16
         getData(categoryId)
-    }, [tab, t])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tab])
 
     useGSAP(() => {
+        // Only animate once on initial load
+        if (hasAnimatedRef.current) return
+
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
@@ -80,8 +95,8 @@ const Highlight = () => {
             '-=0.7'
         )
 
-        // Animasi swiper items fade in satu per satu
-        if (data && data.length > 0) {
+        // Animasi swiper items fade in satu per satu (hanya jika data ada dan tidak loading)
+        if (data && data.length > 0 && !isLoading) {
             timeline.fromTo(
                 '.swiper-slide',
                 { opacity: 0, y: 30 },
@@ -94,12 +109,15 @@ const Highlight = () => {
                 },
                 '-=0.5'
             )
+
+            // Mark as animated after first successful animation
+            hasAnimatedRef.current = true
         }
 
         return () => {
             timeline.scrollTrigger?.kill()
         }
-    }, [data])
+    }, [data, isLoading])
 
     useEffect(() => {
         // ensure swiper updates after data changes (remount or refresh)
@@ -114,7 +132,6 @@ const Highlight = () => {
 
     // determine slides per view for current viewport and derive loop/group behavior
     const slidesPerViewCurrent = isMobile ? 2 : 4
-    const slidesGroup = Math.min(slidesPerViewCurrent, Math.max(1, data?.length || 1))
     const enableLoop = !isMobile && (data?.length || 0) > slidesPerViewCurrent
 
     const hasFewSlides = Array.isArray(data) && data.length <= slidesPerViewCurrent
@@ -136,15 +153,15 @@ const Highlight = () => {
                     >
                         {tabs.map((item) => (
                             <button
-                                key={item}
-                                onClick={() => handleChangeTab(item)}
+                                key={item.value}
+                                onClick={() => handleChangeTab(item.value)}
                                 className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
-                                    item === tab
+                                    item.value === tab
                                         ? 'bg-grey-black text-grey-white'
                                         : 'bg-grey-white text-grey-black hover:bg-grey-100'
                                 }`}
                             >
-                                {item}
+                                {item.label}
                             </button>
                         ))}
                     </div>
@@ -155,11 +172,7 @@ const Highlight = () => {
                         key={`highlight-swiper-${tab}`}
                         modules={[Navigation, Grid]}
                         spaceBetween={24}
-                        // slidesPerView={Math.min((data?.length as number) || 1, slidesPerViewCurrent)}
-
                         slidesPerView={4}
-                        slidesPerGroup={slidesGroup}
-                        // centeredSlides
                         loop={enableLoop}
                         allowTouchMove={true}
                         draggable={true}
@@ -188,40 +201,25 @@ const Highlight = () => {
                             },
                             1280: {
                                 slidesPerView: 4,
-                                slidesPerGroup: 4,
                                 spaceBetween: 24
                             }
                         }}
                     >
-                        {data === null
-                            ? // when loading, render skeleton slides inside swiper so layout matches
-                              tab === t('highlight.tabs.accessories')
-                                ? Array.from({ length: Math.max(1, slidesPerViewCurrent) }).map((_, idx) => (
-                                      <SwiperSlide key={`skeleton-static-${idx}`} className='!w-[168px] xl:!w-[344px]'>
-                                          <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                              <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
-                                              <div className='flex flex-col gap-1 text-center'>
-                                                  <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
-                                              </div>
+                        {isLoading && data === null
+                            ? // when loading with no data, render skeleton slides inside swiper so layout matches
+                              Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
+                                  <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                      <div className='flex w-full flex-col gap-1 xl:gap-12'>
+                                          <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                                          <div className='flex flex-col gap-1 text-center'>
+                                              <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
+                                              <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
+                                              <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
+                                              <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
                                           </div>
-                                      </SwiperSlide>
-                                  ))
-                                : Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
-                                      <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
-                                          <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                              <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
-                                              <div className='flex flex-col gap-1 text-center'>
-                                                  <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-3 w-20 animate-pulse rounded' />
-                                                  <div className='bg-grey-100 mx-auto mt-2 h-4 w-32 animate-pulse rounded' />
-                                              </div>
-                                          </div>
-                                      </SwiperSlide>
-                                  ))
+                                      </div>
+                                  </SwiperSlide>
+                              ))
                             : data?.map((product: any) => (
                                   <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
                                       <UnstyledLink href={`/collections/${product.slug}`}>
