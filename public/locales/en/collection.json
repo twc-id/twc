@@ -6,7 +6,8 @@
     },
     "our_collection": "Our Collection",
     "suggestion": {
-        "title": "You May Also Like These Watches",
+        "watches": "You May Also Like These Watches",
+        "accessories": "You May Also Like These Accessories",
         "empty": "No suggestions available"
     },
     "cta": {
@@ -16,5 +17,31 @@
     "cta_detail": {
         "title": "Collect Now",
         "description": "Ask and discuss with us to collect your timepieces"
+    },
+    "condition": {
+        "brand_new": {
+            "title": "Brand New",
+            "description": "Brand new, unworn, never been resized. Warranty starts from the date shown in the watch certificate."
+        },
+        "unworn": {
+            "title": "Unworn",
+            "description": "Unworn, previously resized, in pristine condition. Warranty starts from the date shown in the watch certificate."
+        },
+        "like_new": {
+            "title": "Like New",
+            "description": "Lightly used, possibly showing minor hairline scratches. For older stock, the box may display minor signs of wear, such as missing some protective stickers."
+        },
+        "very_mint": {
+            "title": "Very Mint",
+            "description": "Shows minor wear, like faint hairline scratches. Case edges remain sharp. The bracelet or strap may have a slight stretch. Markings and engravings are clear."
+        },
+        "mint": {
+            "title": "Mint",
+            "description": "Shows signs of wear, including scratches, scuffs, or small dents. The bracelet or strap may be stretched. Markings and engravings show wear but remain visible."
+        },
+        "good": {
+            "title": "Good",
+            "description": "Shows signs of wear, including scratches, scuffs, or small dents. The bracelet or strap may be heavily stretched. Markings and engravings show wear but remain visible."
+        }
     }
 }

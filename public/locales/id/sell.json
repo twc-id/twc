@@ -49,21 +49,17 @@
         "steps": {
             "1": {
                 "title": "Beri Informasi Lengkap dan Kirim Jam Tangan",
-                "description": "Beri informasi lengkap dan foto jam tangan anda, lalu kami akan menjadwalkan pengiriman atau pengambilan jam tangan untuk proses penilaian oleh tim kami."
+                "description": "Beri informasi lengkap dan foto jam tangan anda, lalu kami akan menjadwalkan pengiriman atau pengambilan jam tangan untuk proses penilaian oleh tim kami"
             },
             "2": {
-                "title": "Kirim Jam Tangan",
-                "description": "Setelah detail dikirim, kami akan mengatur pengiriman atau pengambilan jam tangan untuk penilaian oleh tim kami."
-            },
-            "3": {
                 "title": "Proses Penilaian",
                 "description": "Spesialis kami akan melakukan pemeriksaan keaslian dan kondisi jam tangan Anda untuk menentukan nilai terbaik."
             },
-            "4": {
+            "3": {
                 "title": "Presentasi & Listing",
                 "description": "Kami akan menampilkan jam tangan Anda secara profesional agar dapat menjangkau calon pembeli."
             },
-            "5": {
+            "4": {
                 "title": "Pembayaran",
                 "description": "Setelah jam tangan terjual, kami akan mengurus transaksinya dan melakukan pembayaran kepada Anda secepatnya."
             }

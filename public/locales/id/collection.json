@@ -6,7 +6,8 @@
     },
     "our_collection": "Our Collection",
     "suggestion": {
-        "title": "You May Also Like These Watches",
+        "watches": "Anda Mungkin Juga Menyukai Jam Tangan Ini",
+        "accessories": "Anda Mungkin Juga Menyukai Aksesori Ini",
         "empty": "No suggestions available"
     },
     "cta": {
@@ -16,5 +17,31 @@
     "cta_detail": {
         "title": "Collect Now",
         "description": "Ask and discuss with us to collect your timepieces"
+    },
+    "condition": {
+        "brand_new": {
+            "title": "Baru",
+            "description": "Baru, tidak pernah dipakai, tidak pernah di-resize. Garansi dimulai dari tanggal yang tertera pada detail jam."
+        },
+        "unworn": {
+            "title": "Tidak Pernah Digunakan",
+            "description": "Tidak pernah dipakai, pernah di-resize, kondisi masih sempurna. Garansi dimulai dari tanggal yang tertera pada detail jam."
+        },
+        "like_new": {
+            "title": "Seperti Baru",
+            "description": "Pernah dipakai sesekali, kemungkinan menunjukkan goresan halus. Untuk stok lama, kotak mungkin menampilkan tanda pernah dipakai, seperti misalnya hilangnya beberapa stiker pelindung."
+        },
+        "very_mint": {
+            "title": "Sangat Mulus",
+            "description": "Ada sedikit jejak pemakaian, misalnya goresan halus. Tepi casing dalam kondisi baik. Bracelet atau strap mungkin sedikit melar. Ukiran jelas terlihat."
+        },
+        "mint": {
+            "title": "Mulus",
+            "description": "Ada jejak pemakaian, termasuk goresan, lecet, atau sedikit penyok. Bracelet atau strap mungkin sudah cukup melar. Ukiran terlihat aus namun masih jelas."
+        },
+        "good": {
+            "title": "Baik",
+            "description": "Jejak pemakaian jelas terlihat, mungkin termasuk goresan dan ada bagian penyok. Bracelet atau strap mungkin sudah melar. Ukiran aus, tapi masih jelas terlihat."
+        }
     }
 }
