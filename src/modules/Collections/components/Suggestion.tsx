@@ -59,12 +59,13 @@ const Suggestion = ({ products }: SuggestionProps) => {
 
         fetchRelated()
     }, [isMobile, products?.related_ids])
+    const isWatch = products?.categories?.some((category: any) => category.name === 'Watches')
 
     return (
         <Container className='py-14 xl:py-[116px]'>
             <div className='flex flex-col items-center gap-4 xl:gap-12'>
                 <h1 className='xl:text-subheading-1-desktop text-subheading-1-mobile'>
-                    {t('collection:suggestion.title')}
+                    {t(`collection:suggestion.${isWatch ? 'watches' : 'accessories'}`)}
                 </h1>
 
                 {isLoading ? (

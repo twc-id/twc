@@ -413,34 +413,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
         const descriptions: Record<string, { title: string; description: string }> = {
             'brand new': {
-                title: 'Brand New / Unworn',
-                description:
-                    'The item is brand new with no signs of wear. It has no previous owner, and the warranty period starts from the date of your purchase.'
+                title: t('condition.brand_new.title'),
+                description: t('condition.brand_new.description')
+            },
+            unworn: {
+                title: t('condition.unworn.title'),
+                description: t('condition.unworn.description')
             },
             'like new': {
-                title: 'Like New',
-                description:
-                    'The item is like new. For older stock, the presentation box may show minor shelf wear and some protective stickers may be missing, but the watch itself has not been polished.'
+                title: t('condition.like_new.title'),
+                description: t('condition.like_new.description')
             },
-            'very good': {
-                title: 'Very Good',
-                description:
-                    'The item shows minor signs of wear, such as small, faint hairline scratches. The case retains immaculate chamfers and edges. The bracelet or strap may show slight stretch. All markings and engravings remain crisp and fully legible. The item may have undergone a professional polish without affecting the contours or edges.'
+            'very mint': {
+                title: t('condition.very_mint.title'),
+                description: t('condition.very_mint.description')
+            },
+            mint: {
+                title: t('condition.mint.title'),
+                description: t('condition.mint.description')
             },
             good: {
-                title: 'Good',
-                description:
-                    'The item shows noticeable signs of wear, including scratches, scuffs, or small dents. The bracelet or strap may be heavily stretched. Markings and engravings show wear but remain legible, and the watch may have undergone professional polishing.'
-            },
-            fair: {
-                title: 'Fair',
-                description:
-                    'The item shows pronounced, clearly visible signs of wear, including scratches and dents. The bracelet or strap also displays evident wear.'
-            },
-            incomplete: {
-                title: 'Incomplete',
-                description:
-                    'The item is incomplete and not in working condition. It is offered solely for repair or use as spare parts.'
+                title: t('condition.good.title'),
+                description: t('condition.good.description')
             }
         }
 
@@ -851,11 +845,18 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     </div>
                                 )}
                                 {product.purchasable ? (
-                                    <Button variant='secondaryInverse' block>
-                                        {t('common:reserve_this', {
-                                            item: isWatch ? t('common:watch') : t('common:item')
-                                        })}
-                                    </Button>
+                                    <a
+                                        href='
+                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        <Button variant='secondaryInverse' block>
+                                            {t('common:reserve_this', {
+                                                item: isWatch ? t('common:watch') : t('common:accesoris')
+                                            })}
+                                        </Button>
+                                    </a>
                                 ) : (
                                     <button className='bg-grey-50 w-fit px-4 py-2'>
                                         <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
@@ -1071,7 +1072,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                       {product.purchasable ? (
                                                           <Button variant='secondaryInverse'>
                                                               {t('common:reserve_this', {
-                                                                  item: isWatch ? t('common:watch') : t('common:item')
+                                                                  item: isWatch
+                                                                      ? t('common:watch')
+                                                                      : t('common:accesoris')
                                                               })}
                                                           </Button>
                                                       ) : (
