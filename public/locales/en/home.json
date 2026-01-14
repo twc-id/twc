@@ -21,7 +21,7 @@
         "sell_title": "Sell Your Watch",
         "reserve_title": "Reserve Your Watch",
         "learn_more": "Learn More",
-        "discover_more": "Discover More"
+        "cta_reserve": "Discover More"
     },
     "timepiece": {
         "title": "Timepiece <br className='hidden xl:block' /> Services",
