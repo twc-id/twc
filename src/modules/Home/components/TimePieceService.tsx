@@ -63,10 +63,17 @@ const TimePieceService = () => {
             trigger: sectionRef.current,
             start: 'top center',
             end: 'bottom top',
-            onEnter: () => setIsDarkSection(true),
-            onLeaveBack: () => setIsDarkSection(false),
-            onEnterBack: () => setIsDarkSection(true)
+            onEnter: () => {
+                setIsDarkSection(true)
+            },
+            onLeaveBack: () => {
+                setIsDarkSection(false)
+            },
+            onEnterBack: () => {
+                setIsDarkSection(true)
+            }
         })
+        const mm = gsap.matchMedia()
 
         const timeline = gsap.timeline({
             scrollTrigger: {
@@ -88,26 +95,48 @@ const TimePieceService = () => {
             '-=0.7'
         )
 
-        timeline.fromTo(
-            '.service-slide',
-            { opacity: 0, y: 30 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power2.out',
-                stagger: 0.15,
-                onComplete: () => {
-                    // Dispatch custom event setelah animasi selesai untuk memberitahu component lain
-                    setTimeout(() => {
-                        window.dispatchEvent(
-                            new CustomEvent('layoutChange', { detail: { component: 'TimePieceService' } })
-                        )
-                    }, 100)
-                }
-            },
-            '-=0.5'
-        )
+        mm.add('(min-width: 1280px)', () => {
+            timeline.fromTo(
+                '.service-slide',
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    stagger: 0.15,
+                    onComplete: () => {
+                        // Dispatch custom event setelah animasi selesai untuk memberitahu component lain
+                        setTimeout(() => {
+                            window.dispatchEvent(
+                                new CustomEvent('layoutChange', { detail: { component: 'TimePieceService' } })
+                            )
+                        }, 100)
+                    }
+                },
+                '-=0.5'
+            )
+        })
+
+        mm.add('(max-width: 1279px)', () => {
+            timeline.fromTo(
+                '.service-slide',
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    stagger: 0.15
+                },
+                '-=0.5'
+            )
+        })
+        return () => {
+            timeline.scrollTrigger?.kill()
+            timeline.kill()
+            mm.revert()
+        }
     }, [])
 
     return (
