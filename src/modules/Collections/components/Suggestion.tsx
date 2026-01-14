@@ -1,12 +1,12 @@
 import Container from '@components/Container'
-import { WooCommerce } from '@lib/api'
+import { useRelatedProducts } from '@hooks/useProduct'
 import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 interface SuggestionProps {
@@ -18,9 +18,10 @@ if (typeof window !== 'undefined') {
 
 const Suggestion = ({ products }: SuggestionProps) => {
     const { t } = useTranslation(['home', 'common', 'collection'])
-    const [related, setRelated] = useState<any[]>([])
-    const [isLoading, setIsLoading] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+
+    // Use the related products hook
+    const { data: related = [], isLoading } = useRelatedProducts(products?.id, isMobile ? 4 : 3)
 
     const handleSelect = () => {
         if (typeof window === 'undefined') return
@@ -35,30 +36,6 @@ const Suggestion = ({ products }: SuggestionProps) => {
         }
     }
 
-    useEffect(() => {
-        const fetchRelated = async () => {
-            const ids: number[] = products?.related_ids || []
-            if (!ids || ids.length === 0) {
-                setRelated([])
-                return
-            }
-
-            setIsLoading(true)
-            try {
-                const includeParam = ids.join(',')
-                const resp = await WooCommerce.get(`products?include=${includeParam}&per_page=${isMobile ? 4 : 3}`)
-                const data = resp?.data || []
-                setRelated(data)
-            } catch (err) {
-                console.error('Error fetching related products', err)
-                setRelated([])
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchRelated()
-    }, [isMobile, products?.related_ids])
     const isWatch = products?.categories?.some((category: any) => category.name === 'Watches')
 
     return (

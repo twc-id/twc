@@ -651,7 +651,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             priceHistory[priceHistory.length - 1].price_change > priceHistory[0].price_change
     )
 
-    console.log('ads', product)
     return (
         <>
             <style jsx global>{`

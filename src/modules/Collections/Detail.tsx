@@ -1,9 +1,9 @@
 import Seo from '@components/Seo'
-import { WooCommerce } from '@lib/api'
+import { useProductPrice } from '@hooks/useProduct'
 import CTADetail from '@modules/Collections/components/CTADetail'
 import DetailItem from '@modules/Collections/components/DetailItem'
 import Suggestion from '@modules/Collections/components/Suggestion'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 interface PageProps {
     product?: any
@@ -11,26 +11,9 @@ interface PageProps {
 }
 
 const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
-    const [productPrice, setProductPrice] = useState<any | null>(null)
+    // Use the product price hook instead of manual fetching
+    const { data: productPrice } = useProductPrice(product?.id)
 
-    useEffect(() => {
-        let mounted = true
-        const fetchPrice = async () => {
-            try {
-                if (!product?.id) return
-                const res = await WooCommerce.get(`product-price/${product.id}`)
-                if (!mounted) return
-                setProductPrice(res?.data ?? null)
-            } catch (e) {
-                if (mounted) setProductPrice(null)
-            }
-        }
-
-        fetchPrice()
-        return () => {
-            mounted = false
-        }
-    }, [product?.id])
     const title = `${product?.brands?.[0]?.name} - ${product?.name}`
     const titleCapitalized = title
         .toLowerCase()

@@ -1,4 +1,5 @@
 import Seo from '@components/Seo'
+import { useProductBrands } from '@hooks/useProduct'
 import { WooCommerce } from '@lib/api'
 import CTA from '@modules/Collections/components/CTA'
 import Hero from '@modules/Collections/components/Hero'
@@ -29,8 +30,6 @@ const Collections = () => {
 
     const [selectedTab, setSelectedTab] = useState<number>(0)
     const [isInitialized, setIsInitialized] = useState(false)
-    const [brandOptions, setBrandOptions] = useState<Array<{ id: string; name: string }>>([])
-    const [isLoadingBrands, setIsLoadingBrands] = useState(true)
 
     const router = useRouter()
     const setFilter = useCollectionsFilterStore.useSetFilter()
@@ -40,45 +39,11 @@ const Collections = () => {
     const categoryId = selectedTab === 0 ? 15 : 16
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
 
-    // Fetch brands once and keep in parent so Sidebar can receive via props
-    useEffect(() => {
-        let mounted = true
-        const fetchBrands = async () => {
-            try {
-                const perPage = 100
-                const first = await WooCommerce.get(`products/brands?page=1&per_page=${perPage}`)
-                const firstData = first.data || []
-                const totalHeader =
-                    parseInt(first.headers?.['x-wp-total'] ?? first.headers?.['X-WP-Total'] ?? '0', 10) || null
-                if (!mounted) return
-                let allBrands = firstData
+    // Use the product brands hook instead of manual fetching
+    const { data: brands = [], isLoading: isLoadingBrands } = useProductBrands()
 
-                if (totalHeader && totalHeader > firstData.length) {
-                    const pages = Math.ceil(totalHeader / perPage)
-                    const promises: Array<Promise<any>> = []
-                    for (let p = 2; p <= pages; p++) {
-                        promises.push(WooCommerce.get(`products/brands?page=${p}&per_page=${perPage}`))
-                    }
-                    const rest = await Promise.all(promises)
-                    rest.forEach((r) => {
-                        allBrands = allBrands.concat(r.data || [])
-                    })
-                }
-
-                const normalized = (allBrands || []).map((b: any) => ({ id: String(b.id), name: b.name }))
-                if (mounted) setBrandOptions(normalized)
-                if (mounted) setIsLoadingBrands(false)
-            } catch (err) {
-                console.error('Error fetching brands', err)
-                if (mounted) setIsLoadingBrands(false)
-            }
-        }
-
-        fetchBrands()
-        return () => {
-            mounted = false
-        }
-    }, [])
+    // Transform brands to the format expected by the component
+    const brandOptions = brands.map((b) => ({ id: String(b.id), name: b.name }))
 
     const fetchPage = async (pageToFetch: number, append = false) => {
         try {
