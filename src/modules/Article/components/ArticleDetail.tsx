@@ -1,6 +1,7 @@
 import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import { Article } from '@hooks/useArticle'
+import Suggestion from '@modules/Article/components/Suggestion'
 import { formatDate } from '@utils/format-date'
 import { sanitize } from 'isomorphic-dompurify'
 import NProgress from 'nprogress'
@@ -8,9 +9,11 @@ import React, { useEffect } from 'react'
 
 interface ArticleDetailProps {
     article: Article
+    products?: any
+    isLoading?: boolean
 }
 
-const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
+const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoading }) => {
     const featuredImage = article._embedded?.['wp:featuredmedia']?.[0]?.source_url
 
     const categories = article._embedded?.['wp:term']?.[0] || []
@@ -119,6 +122,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article }) => {
                             className=' article'
                             dangerouslySetInnerHTML={{ __html: sanitize(article.content.rendered) }}
                         />
+                        <Suggestion products={products} isLoading={isLoading} />
                     </Container>
                 </div>
             </div>
