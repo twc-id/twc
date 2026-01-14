@@ -1,7 +1,9 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
+import { IconsProps } from '@components/Icon/Icon'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { Trans, useTranslation } from 'next-i18next'
@@ -51,6 +53,33 @@ const Instagram = () => {
             embedUrl: 'https://www.instagram.com/p/DR3_2Omkf5t/?utm_source=ig_embed&utm_campaign=loading',
             caption: 'TWC - The Watch Collections'
         }
+    ]
+
+    const socialMediaItems = [
+        {
+            name: 'Instagram',
+            url: 'https://instagram.com/thewatchcollections',
+            icon: 'Instagram',
+            handle: '@thewatchcollections'
+        }
+        // {
+        //     name: 'Youtube',
+        //     url: 'https://youtube.com/thewatchcollections',
+        //     icon: 'Youtube',
+        //     handle: '@thewatchcollections'
+        // },
+        // {
+        //     name: 'Tiktok',
+        //     url: 'https://tiktok.com/@thewatchcollections',
+        //     icon: 'Tiktok',
+        //     handle: '@thewatchcollections'
+        // },
+        // {
+        //     name: 'LinkedIn',
+        //     url: 'https://linkedin.com/company/thewatchcollections',
+        //     icon: 'LinkedIn',
+        //     handle: '@thewatchcollections'
+        // }
     ]
 
     useEffect(() => {
@@ -200,81 +229,40 @@ const Instagram = () => {
                     </div>
 
                     {/* Find Us in Social Media */}
-                    <div className='flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10'>
+                    <div
+                        className={classNames(
+                            'flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10',
+                            {
+                                'justify-start': socialMediaItems.length < 2
+                            }
+                        )}
+                    >
                         <h3 className='xl:text-heading-3-desktop text-heading-3-mobile text-grey-black flex-shrink-0 whitespace-pre-line '>
                             <Trans i18nKey='social_media.find_us_social_media' components={{ br: <br /> }}>
                                 {t('social_media.find_us_social_media')}
                             </Trans>
                         </h3>
                         <div className='grid flex-shrink-0 grid-cols-2 grid-rows-2 flex-row gap-x-5  gap-y-5 xl:flex xl:gap-[72px]'>
-                            <a
-                                href='https://instagram.com/thewatchcollections'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
-                            >
-                                <Icons
-                                    icon='Instagram'
-                                    width={32}
-                                    height={32}
-                                    className='text-grey-900 hover:text-grey-500'
-                                />
+                            {socialMediaItems.map((item) => (
+                                <a
+                                    key={item.name}
+                                    href={item.url}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
+                                >
+                                    <Icons
+                                        icon={item.icon as IconsProps['icon']}
+                                        width={32}
+                                        height={32}
+                                        className='text-grey-900 hover:text-grey-500'
+                                    />
 
-                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
-                                    @thewatchcollections
-                                </span>
-                            </a>
-                            <a
-                                href='https://instagram.com/thewatchcollections'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
-                            >
-                                <Icons
-                                    icon='Youtube'
-                                    width={32}
-                                    height={32}
-                                    className='text-grey-900 hover:text-grey-500'
-                                />
-
-                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
-                                    @thewatchcollections
-                                </span>
-                            </a>
-                            <a
-                                href='https://instagram.com/thewatchcollections'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
-                            >
-                                <Icons
-                                    icon='Tiktok'
-                                    width={32}
-                                    height={32}
-                                    className='text-grey-900 hover:text-grey-500'
-                                />
-
-                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
-                                    @thewatchcollections
-                                </span>
-                            </a>
-                            <a
-                                href='https://instagram.com/thewatchcollections'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
-                            >
-                                <Icons
-                                    icon='LinkedIn'
-                                    width={32}
-                                    height={32}
-                                    className='text-grey-900 hover:text-grey-500'
-                                />
-
-                                <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
-                                    @thewatchcollections
-                                </span>
-                            </a>
+                                    <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                        {item.handle}
+                                    </span>
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>
