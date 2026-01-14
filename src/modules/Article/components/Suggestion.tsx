@@ -69,7 +69,7 @@ const Suggestion = ({ products, isLoading }: SuggestionProps) => {
                                     </div>
                                 )}
 
-                                <div className='flex w-[217px] flex-col gap-1 text-center'>
+                                <div className='flex flex-col gap-1 text-center xl:w-[217px]'>
                                     <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
                                         {p.brands?.[0].name} •{' '}
                                         {p.meta_data.find((meta: any) => meta.key === 'reference')?.value}

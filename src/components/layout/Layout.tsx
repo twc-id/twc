@@ -2,6 +2,7 @@ import BaseDialog from '@components/dialog/BaseDialog'
 import Footer from '@components/Footer'
 import Header from '@components/Header/Header'
 import { inter, overpass } from '@helpers/font'
+import classNames from '@lib/classnames'
 import useDialogStore from '@store/useDialogStore'
 import gsap from 'gsap'
 import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
@@ -113,10 +114,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         }
     })
 
+    const ignorePath = ['/articles', '/articles/[slug]']
+
+    const isIgnored = ignorePath.includes(router.pathname)
+
     return (
         <div className={`${inter.className} ${overpass.variable}`}>
             <Header />
-            <div className='relative -mt-20 overflow-hidden'>
+            <div
+                className={classNames('relative -mt-20 overflow-hidden', {
+                    '!mt-0': isIgnored
+                })}
+            >
                 <div ref={smoothWrapperRef} id='smooth-wrapper-home'>
                     <div ref={smoothContentRef} id='smooth-content-home'>
                         {children}

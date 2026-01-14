@@ -6,6 +6,7 @@ import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import RelatedArticles from '@modules/Article/components/RelatedArticles'
 import React, { useEffect, useState } from 'react'
 import { When } from 'react-if'
+import { useMediaQuery } from 'react-responsive'
 
 import ArticleDetail from './components/ArticleDetail'
 
@@ -20,10 +21,11 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
     )
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
     const fetchDefaultSuggestions = async () => {
         try {
             setIsLoading(true)
-            const response = await WooCommerce.get(`products?tag=33&category=15&per_page=3`)
+            const response = await WooCommerce.get(`products?tag=33&category=15&per_page=${isMobile ? 4 : 3}`)
             setProducts(response.data || [])
         } catch (err) {
             console.error('Error fetching default suggestions', err)
@@ -35,6 +37,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
 
     useEffect(() => {
         fetchDefaultSuggestions()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     console.log(products)
 
