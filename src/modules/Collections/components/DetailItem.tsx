@@ -818,7 +818,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                 }
                                             )}
                                         >
-                                            {isPositiveChange ? '+' : '-'}
+                                            {isPositiveChange ? '+' : ''}
                                             {(
                                                 ((priceHistory[priceHistory.length - 1].price_change -
                                                     priceHistory[0].price_change) /
@@ -894,7 +894,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                             'text-red-600': !isPositiveChange
                                                         })}
                                                     >
-                                                        {isPositiveChange ? '+' : '-'}
+                                                        {isPositiveChange ? '+' : ''}
                                                         {(
                                                             ((priceHistory[priceHistory.length - 1].price_change -
                                                                 priceHistory[0].price_change) /
@@ -1034,7 +1034,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       }
                                                                   )}
                                                               >
-                                                                  {isPositiveChange ? '+' : '-'}
+                                                                  {isPositiveChange ? '+' : ''}
                                                                   {(
                                                                       ((priceHistory[priceHistory.length - 1]
                                                                           .price_change -
