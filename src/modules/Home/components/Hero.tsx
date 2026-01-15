@@ -28,6 +28,7 @@ const Hero = () => {
     const videoRefs = useRef<Record<number | string, HTMLVideoElement | null>>({})
     const [isVisible, setIsVisible] = useState(true)
     const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
+    const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
     const { assets } = useAssets()
     const heroSlides = assets?.filter((asset) => asset.media_type === 'video')
 
@@ -93,32 +94,59 @@ const Hero = () => {
         return () => io.disconnect()
     }, [])
 
-    // Play only the active slide video and pause others; also pause when hero not visible
+    // Enhanced video playback with proper loading state and error handling
     useEffect(() => {
         const vids = videoRefs.current
         Object.keys(vids).forEach((k) => {
             const idx = Number(k)
             const v = vids[k]
             if (!v) return
+
             try {
                 if (idx === activeIndex && isVisible) {
                     v.muted = true
-                    // Ensure video is loaded before attempting to play
-                    if (v.readyState < 3) {
-                        // readyState < HAVE_FUTURE_DATA, need to load first
-                        v.load()
-                        // Wait for video to be ready
-                        const onCanPlay = () => {
-                            v.play().catch(() => {})
-                            v.removeEventListener('canplay', onCanPlay)
+
+                    // Function to attempt playing the video with retries
+                    const attemptPlay = async (retryCount = 0) => {
+                        try {
+                            // Ensure video has enough data before playing
+                            if (v.readyState < 2) {
+                                // HAVE_CURRENT_DATA
+                                await new Promise<void>((resolve) => {
+                                    const onCanPlay = () => {
+                                        v.removeEventListener('canplay', onCanPlay)
+                                        resolve()
+                                    }
+                                    v.addEventListener('canplay', onCanPlay)
+                                    // Set a timeout in case canplay never fires
+                                    setTimeout(() => {
+                                        v.removeEventListener('canplay', onCanPlay)
+                                        resolve()
+                                    }, 3000)
+                                })
+                            }
+
+                            // Attempt to play
+                            await v.play()
+                            setVideoReady((prev) => ({ ...prev, [idx]: true }))
+                        } catch (err) {
+                            // Retry logic for common playback errors
+                            if (retryCount < 2) {
+                                setTimeout(() => attemptPlay(retryCount + 1), 500)
+                            } else {
+                                console.warn(`Video ${idx} failed to play after retries:`, err)
+                            }
                         }
-                        v.addEventListener('canplay', onCanPlay)
-                    } else {
-                        // Video is ready, play immediately
-                        v.play().catch(() => {})
                     }
+
+                    // Start the play attempt
+                    if (v.readyState < 3) {
+                        v.load()
+                    }
+                    attemptPlay()
                 } else {
                     v.pause()
+                    setVideoReady((prev) => ({ ...prev, [idx]: false }))
                     try {
                         v.currentTime = 0
                     } catch (e) {
@@ -126,7 +154,7 @@ const Hero = () => {
                     }
                 }
             } catch (e) {
-                // swallow
+                console.warn('Video control error:', e)
             }
         })
     }, [activeIndex, isVisible])
@@ -218,11 +246,25 @@ const Hero = () => {
                             className='absolute inset-0 h-full w-full object-cover'
                             muted
                             playsInline
-                            preload='auto'
-                            autoPlay={idx === 0}
-                            onLoadedData={() => setVideoLoaded((s) => ({ ...s, [idx]: true }))}
+                            preload='metadata'
+                            onLoadedData={() => {
+                                setVideoLoaded((s) => ({ ...s, [idx]: true }))
+                            }}
+                            onCanPlay={() => {
+                                setVideoReady((s) => ({ ...s, [idx]: true }))
+                            }}
+                            onWaiting={() => {
+                                setVideoReady((s) => ({ ...s, [idx]: false }))
+                            }}
+                            onPlaying={() => {
+                                setVideoReady((s) => ({ ...s, [idx]: true }))
+                            }}
+                            onError={(e) => {
+                                console.warn(`Video ${idx} error:`, e)
+                                setVideoReady((s) => ({ ...s, [idx]: false }))
+                            }}
                             style={{
-                                opacity: videoLoaded[idx] ? 1 : 0,
+                                opacity: videoReady[idx] || videoLoaded[idx] ? 1 : 0,
                                 transition: 'opacity 400ms ease'
                             }}
                         >
