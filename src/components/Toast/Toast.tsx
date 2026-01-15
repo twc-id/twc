@@ -1,7 +1,8 @@
 import React from 'react'
-import { toast as toasts, Toaster, ToastOptions } from 'react-hot-toast'
+import { toast as toasts, Toaster, ToasterProps, ToastOptions } from 'react-hot-toast'
+import { useMediaQuery } from 'react-responsive'
 
-const successClassName = '!bg-[#08AA54] xl:text-[16xp]'
+const successClassName = '!bg-grey-black/80 xl:text-[16xp]'
 
 const errorClassName = '!bg-[#C9353F] xl:text-[16xp]'
 
@@ -9,8 +10,10 @@ const infoClassName = '!bg-primary-300 xl:text-[16xp]'
 
 const defaultOptions: ToastOptions = {
     duration: 3000,
-    className: `${successClassName} xl:leading-6 text-sm !text-white !rounded-2xl`
+    className: `${successClassName} xl:leading-6 text-sm !text-white `
 }
+
+interface Props extends ToasterProps {}
 
 const toast = {
     success: (message: string, options?: ToastOptions) =>
@@ -61,7 +64,23 @@ const toast = {
     }
 }
 
-const Toast = () => <Toaster />
+const Toast: React.FC<Props> = () => {
+    const isDesktop = useMediaQuery({ minWidth: 1280 })
+
+    const defaultOptionsResponsive: ToastOptions = {
+        ...defaultOptions,
+        position: isDesktop ? 'top-center' : 'bottom-center'
+    }
+
+    return (
+        <Toaster
+            containerClassName='twc-toast !font-semibold !rounded-md !bottom-[100px]'
+            toastOptions={{
+                ...defaultOptionsResponsive
+            }}
+        />
+    )
+}
 
 export { toast }
 export default Toast

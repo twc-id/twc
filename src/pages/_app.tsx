@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import DismissableToast from '@components/DismissableToast'
 import Layout from '@components/layout/Layout'
+import Toast from '@components/Toast'
 import { ThemeProvider } from '@contexts/ThemeContext'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import gsap from 'gsap'
@@ -44,9 +44,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
                 </Head>
                 <HydrationBoundary state={pageProps.dehydratedState}>
+                    <Toast />
                     <Layout>
                         {/* <CustomCursor /> */}
-                        <DismissableToast />
                         <Component {...pageProps} />
                     </Layout>
                 </HydrationBoundary>
