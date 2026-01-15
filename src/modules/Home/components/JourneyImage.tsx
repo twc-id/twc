@@ -13,14 +13,28 @@ const JourneyImage = () => {
     const sectionRef = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
+        if (!imageContainerRef.current) return
+
+        // Get actual height of the image container
+        const containerHeight = imageContainerRef.current.offsetHeight
+        // Calculate pin distance (container height + some buffer)
+        const pinDistance = Math.max(containerHeight * 0.5, 200) // At least 200px or 50% of container height
+
         // Pin image saat scroll - dengan ID untuk debugging
         const pinTrigger = ScrollTrigger.create({
             trigger: imageContainerRef.current,
             start: 'top top',
-            end: '+=100%',
+            end: `+=${pinDistance}`,
             pin: true,
             pinSpacing: false,
-            id: 'journey-pin'
+            id: 'journey-image-pin',
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                // Log untuk debugging jika perlu
+                if (process.env.NODE_ENV === 'development' && self.direction === 1) {
+                    console.log('[JourneyImage Pin] progress:', self.progress.toFixed(2))
+                }
+            }
         })
 
         // Cleanup
@@ -28,10 +42,11 @@ const JourneyImage = () => {
             pinTrigger.kill()
         }
     }, [])
+
     return (
         <div ref={sectionRef} className='pb-16 xl:pb-[116px]'>
             <div ref={imageContainerRef} className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
-                <Image src='/images/home/journey-hero.webp' alt='journey' fill className='object-cover' />
+                <Image src='/images/home/journey-hero.webp' alt='journey' fill className='object-cover' unoptimized />
             </div>
         </div>
     )

@@ -39,17 +39,28 @@ const Journey = () => {
 
             // Pin image container untuk semua screen sizes (mobile & desktop)
             // Trigger harus actual DOM div, bukan Next.js Image component
-            if (imageContainerRef.current) {
+            if (imageContainerRef.current && rightRef.current) {
+                // Calculate pin end based on content height
+                const contentHeight = rightRef.current?.offsetHeight || 0
+                // Add some buffer space
+                const pinDistance = Math.max(contentHeight, 300)
+
                 ScrollTrigger.create({
                     trigger: imageContainerRef.current,
                     start: 'top top',
-                    end: () => `+=${imageContainerRef.current?.offsetHeight || 0}`,
+                    end: `+=${pinDistance}`,
                     pin: true,
                     pinSpacing: false,
                     id: 'journey-pin',
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
-                    markers: false // Set true for debugging
+                    markers: false, // Set true for debugging
+                    onUpdate: (self) => {
+                        // Log untuk debugging jika perlu
+                        if (process.env.NODE_ENV === 'development' && self.direction === 1) {
+                            console.log('[Journey Pin] progress:', self.progress.toFixed(2))
+                        }
+                    }
                 })
             }
 
