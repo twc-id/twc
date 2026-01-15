@@ -277,6 +277,9 @@ const getLogoVariant = (
     return pageStyle.logo.scrolled
 }
 
+// Paths where navbar should not be sticky (stay at top only)
+const NON_STICKY_PATHS = ['/']
+
 const Headers = () => {
     const { t } = useTranslation(['collection', 'home', 'common'])
     const router = useRouter()
@@ -446,19 +449,29 @@ const Headers = () => {
                     // Update scroll state
                     setIsScrolled(currentScrollY > 0)
 
+                    // Check if current path is in non-sticky list (exact match)
+                    const isNonStickyPath = NON_STICKY_PATHS.includes(router.pathname)
+
                     let shouldShow = currentVisible
 
-                    // Always show at top
-                    if (currentScrollY < 10) {
-                        shouldShow = true
+                    // For non-sticky paths, only show at top
+                    if (isNonStickyPath && isMobile) {
+                        shouldShow = currentScrollY < 10
                     }
-                    // Show navbar when scrolling up
-                    else if (scrollDirection === 'up' && scrollDelta > 1) {
-                        shouldShow = true
-                    }
-                    // Hide navbar when scrolling down
-                    else if (scrollDirection === 'down' && currentScrollY > 80 && scrollDelta > 1) {
-                        shouldShow = false
+                    // Regular sticky behavior for other paths
+                    else {
+                        // Always show at top
+                        if (currentScrollY < 10) {
+                            shouldShow = true
+                        }
+                        // Show navbar when scrolling up
+                        else if (scrollDirection === 'up' && scrollDelta > 1) {
+                            shouldShow = true
+                        }
+                        // Hide navbar when scrolling down
+                        else if (scrollDirection === 'down' && currentScrollY > 80 && scrollDelta > 1) {
+                            shouldShow = false
+                        }
                     }
 
                     // Only update state if changed
