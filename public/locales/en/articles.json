@@ -7,6 +7,8 @@
     },
     "cta": {
         "title": "Know More News",
-        "description": "Be the first to know our latest updates and articles"
+        "description": "Subscribe to our Newsletter",
+        "button": "Subscribe",
+        "placeholder": "What’s your email?"
     }
 }

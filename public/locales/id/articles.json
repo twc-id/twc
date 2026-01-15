@@ -7,7 +7,9 @@
     },
 
     "cta": {
-        "title": "Stay Updated",
-        "description": "Jangan Ketinggalan Informasi dan Artikel Terbaru"
+        "title": "Langganan Newsletter Kami",
+        "description": "Selalu Dapatkan Informasi dan Artikel Terbaru",
+        "button": "Berlangganan",
+        "placeholder": "Masukkan email Anda"
     }
 }

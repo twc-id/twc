@@ -5,11 +5,11 @@
         "sub_2": "Where Great Collections Begin"
     },
     "commitment": {
-        "title": "Curated, Collected, Timeless",
-        "description": "Menghubungkan kolektor dengan jam tangan mewah dari seluruh dunia"
+        "title": "Abadi. Berkelas. Terkurasi",
+        "description": "Jam Tangan Berkelas. Momen Layak Dikenang"
     },
     "highlight": {
-        "title": "Sorotan Koleksi",
+        "title": "Koleksi Unggulan",
         "tabs": {
             "watches": "Jam Tangan",
             "accessories": "Aksesoris"
@@ -20,28 +20,24 @@
     "sell_reserve": {
         "sell_title": "Jual Jam Tangan <br className='hidden xl:block' />  Anda",
         "reserve_title": "Pre-Order Jam Tangan",
-        "cta_sell": "Jual Sekarang",
-        "cta_reserve": "Pesan Sekarang"
+        "cta_sell": "Pelajari Lebih Lanjut",
+        "cta_reserve": "Lihat Selengkapnya"
     },
     "timepiece": {
         "title": "Layanan Kami",
         "book_now": "Pesan Layanan",
         "items": {
             "1": {
-                "label": "Cleaning",
-                "description": "Professional cleaning services to keep your watch clean and well maintained"
+                "label": "Perawatan dan Pemeliharaan",
+                "description": "Layanan pembersihan, pemolesan, hingga pemeriksaan lengkap. Tim kami akan memastikan jam tangan Anda selalu dalam kondisi terbaik."
             },
             "2": {
-                "label": "Polishing",
-                "description": "Polish your watch by professional to make it shine like new"
+                "label": "Perbaikan dan Penggantian",
+                "description": "Penggantian baterai, <i>bracelet</i>, atau <i>strap</i>, kaca, dan komponen lainnya untuk menjaga kualitas jam tangan Anda."
             },
             "3": {
-                "label": "Battery Replacement",
-                "description": "Replace watch batteries quickly and easily with precision"
-            },
-            "4": {
-                "label": "Glass Replacement",
-                "description": "Repair or replace cracked or scratched watch glass"
+                "label": "Invishield Watch Protective Film/Anti-Gores Invishield",
+                "description": "Pemasangan lapisan pelindung untuk menjaga jam tangan Anda, dilengkapi dengan garansi seumur hidup."
             }
         }
     },
@@ -55,8 +51,8 @@
         "title": "Where Trust Speaks"
     },
     "social_media": {
-        "title": "Instagram Kami",
-        "find_us_social_media": "Media <br className='hidden xl:block' /> Sosial Kami"
+        "title": "Kunjungi Instagram Kami",
+        "find_us_social_media": "Lihat <br className='hidden xl:block' /> Media Sosial Kami"
     },
     "cta": {
         "title": "The Watch <br /> Journal",

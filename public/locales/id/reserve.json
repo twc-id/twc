@@ -3,7 +3,7 @@
     "hero": {
         "title": "Belum menemukan jam tangan yang Anda inginkan?",
         "subtitle": "Kami dapat menyediakan lebih banyak untuk Anda",
-        "description": "Kami dapat menyediakan lebih banyak untuk Anda",
+        "description": "Pre-order jam tangan impian, kami akan membantu Anda mendapatkannya",
         "items": {
             "1": {
                 "title": "Klasik Mewah"
@@ -19,7 +19,7 @@
 
     "reserve_time_pieces": {
         "title": "Pre-Order Jam Tangan",
-        "description": "Temukan Jam Tangan yang Dapat Anda Pesan"
+        "description": "Lihat Jam Tangan yang Dapat Anda Pesan"
     },
     "how_to_reserve": {
         "title": "Bagaimana Cara Pre-Order di The Watch Collections?",

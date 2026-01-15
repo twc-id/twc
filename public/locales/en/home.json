@@ -5,7 +5,7 @@
         "sub_2": "Where Great Collections Begin"
     },
     "commitment": {
-        "title": "Curated, Collected, Timeless",
+        "title": "Timeless. Worthwhile. Curated",
         "description": "Timepieces Worth Collecting. Moments Worth Keeping."
     },
     "highlight": {
@@ -28,16 +28,16 @@
         "book_now": "Book Now",
         "items": {
             "1": {
-                "label": "Cleaning",
-                "description": "Professional cleaning services to keep your watch clean and well maintained"
+                "label": "Care and Maintenance",
+                "description": "From cleaning and polishing to a complete check-up, we keep your timepiece flawless with expert care."
             },
             "2": {
-                "label": "Polishing",
-                "description": "Polish your watch by professional to make it shine like new"
+                "label": "Repairs and Replacements",
+                "description": "Battery, bracelet, strap, glass, and parts replacement to keep your timepiece in perfect condition."
             },
             "3": {
-                "label": "Battery Replacement",
-                "description": "Replace watch batteries quickly and easily with precision"
+                "label": "Invishield Watch Protective Film",
+                "description": "Protective layer to safeguard your timepiece, complete with a lifetime warranty."
             },
             "4": {
                 "label": "Glass Replacement",

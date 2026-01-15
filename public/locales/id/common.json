@@ -1,8 +1,8 @@
 {
-    "learn_more": "Learn More",
+    "learn_more": "Lebih Lanjut",
     "follow_us": "Follow Us",
-    "book_appointment": "Book an Appointment",
-    "view_all": "View All",
+    "book_appointment": "Buat Janji",
+    "view_all": "Lihat Semua",
     "loading": "Loading",
     "show_more": "Show More",
     "filter": {
@@ -22,7 +22,7 @@
     "accesoris": "Aksesoris",
     "reserve": "Reserve",
     "reserve_this": "Reserve This {{item}}",
-    "read_article": "Read Article",
+    "read_article": "Baca Artikel",
     "no_product": "Kami tidak dapat menemukan kecocokan dari apa yang Anda cari, silakan pilih filter lain untuk melanjutkan.",
     "discover_more": "Temukan Lebih Banyak",
     "header": {
