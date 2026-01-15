@@ -1,4 +1,5 @@
 import Button from '@components/buttons/Button'
+import Input from '@components/forms/Input'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
@@ -11,9 +12,20 @@ const ArticleCTA = () => {
                 <div className='flex min-w-[380px] flex-col items-start gap-5 px-5 pt-8 xl:gap-6 xl:pl-20 xl:pr-0'>
                     <h2 className='text-heading-2-desktop text-grey-white'>{t('cta.title')}</h2>
                     <p className='text-paragraph-6-desktop text-grey-100'>{t('cta.description')}</p>
-                    <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
-                        {t('common:learn_more')}
-                    </Button>
+
+                    <div className='flex w-full flex-row items-center gap-2'>
+                        <Input
+                            name='email'
+                            size='md'
+                            placeholder={t('cta.placeholder')}
+                            className='!border-grey-200 !rounded-none bg-transparent'
+                            inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 text-grey-200 !px-0'
+                        />
+
+                        <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
+                            {t('cta.button')}
+                        </Button>
+                    </div>
                 </div>
 
                 <div

@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import { useTranslation } from 'next-i18next'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -71,7 +71,9 @@ const Service = () => {
                             {t('service.title')}
                         </h2>
                         <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 max-w-2xl'>
-                            {t('service.description')}
+                            <Trans i18nKey='service.description' components={{ br: <br className='mb-2' /> }}>
+                                {t('service.description')}
+                            </Trans>
                         </p>
                     </div>
                     <div className='relative overflow-hidden xl:h-[511px] xl:w-[736px]' ref={rightRef}>

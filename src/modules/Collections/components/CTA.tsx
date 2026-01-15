@@ -41,8 +41,8 @@ const CTA = () => {
     return (
         <section className='bg-grey-white py-6 xl:py-[116px]' ref={sectionRef}>
             <Container>
-                <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between'>
-                    <div className='flex w-full flex-col items-start gap-5 px-5 pt-8 xl:max-w-[442px] xl:gap-6 xl:pl-20 xl:pr-0'>
+                <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between xl:gap-0'>
+                    <div className='flex w-full flex-col items-start gap-5 px-5 pt-8 xl:max-w-[486px] xl:gap-6 xl:pl-20 xl:pr-0'>
                         <h2
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
                             ref={headingref}

@@ -3,7 +3,7 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
-import { useTranslation } from 'next-i18next'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -53,7 +53,7 @@ const SellReserve = () => {
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
-                    {t('sell_reserve.sell_title')}
+                    <Trans i18nKey='home:sell_reserve.sell_title'>{t('sell_reserve.sell_title')}</Trans>
                 </h1>
                 <UnstyledLink href='/sell'>
                     <Button>{t('common:learn_more')}</Button>

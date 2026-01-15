@@ -1,7 +1,6 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
-import UnstyledLink from '@components/links/UnstyledLink'
 import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -48,12 +47,6 @@ const TimePieceService = () => {
             image: '/images/home/service-battery.webp',
             label: t('timepiece.items.3.label'),
             description: t('timepiece.items.3.description')
-        },
-        {
-            id: 4,
-            image: '/images/home/service-glass.webp',
-            label: t('timepiece.items.4.label'),
-            description: t('timepiece.items.4.description')
         }
     ]
 
@@ -203,7 +196,7 @@ const TimePieceService = () => {
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
                                     <div className='flex  flex-col gap-6'>
-                                        <div className='relative w-[302px]'>
+                                        <div className='relative h-[403px] w-[302px] overflow-hidden'>
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>
@@ -211,7 +204,9 @@ const TimePieceService = () => {
                                                 {service.label}
                                             </h3>
                                             <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
-                                                {service.description}
+                                                <Trans i18nKey={`timepiece.items.${service.id}.description`}>
+                                                    {service.description}
+                                                </Trans>
                                             </p>
                                         </div>
                                     </div>
@@ -226,7 +221,7 @@ const TimePieceService = () => {
                         <Swiper
                             modules={[Navigation, Pagination]}
                             spaceBetween={16}
-                            slidesPerView={1.25}
+                            slidesPerView='auto'
                             pagination={{ el: '.timepiece-pagination', clickable: true }}
                             onSwiper={(swiper) => {
                                 swiperMobileRef.current = swiper
@@ -245,13 +240,6 @@ const TimePieceService = () => {
                                             <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
-                                            <UnstyledLink
-                                                href='#'
-                                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-accent-price-dark font-semibold
-                                                underline'
-                                            >
-                                                {t('timepiece.book_now')}
-                                            </UnstyledLink>
                                         </div>
                                     </div>
                                 </SwiperSlide>
