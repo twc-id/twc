@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CookieConsent styles */
+@import 'vanilla-cookieconsent/dist/cookieconsent.css';
+@import './cookieconsent.css';
+
 @layer base {
     html,
     body {

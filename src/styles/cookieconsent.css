@@ -1,0 +1,330 @@
+/* Custom CookieConsent Styles */
+
+/* Root variables - Light mode */
+:root {
+    --cc-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --cc-modal-border-radius: 12px;
+    --cc-btn-border-radius: 8px;
+    --cc-btn-primary-bg: #000;
+    --cc-btn-primary-bg-hover: #333;
+    --cc-btn-primary-text: #fff;
+    --cc-btn-secondary-bg: #f3f4f6;
+    --cc-btn-secondary-bg-hover: #e5e7eb;
+    --cc-btn-secondary-text: #1f2937;
+    --cc-modal-bg: #ffffff;
+    --cc-modal-text: #111827;
+    --cc-modal-text-secondary: #6b7280;
+    --cc-modal-border: #e5e7eb;
+    --cc-modal-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    --cc-link-color: #3b82f6;
+    --cc-link-hover-color: #2563eb;
+}
+
+/* Dark mode - matches with dark theme */
+.dark {
+    --cc-btn-primary-bg: #fff;
+    --cc-btn-primary-bg-hover: #f3f4f6;
+    --cc-btn-primary-text: #000;
+    --cc-btn-secondary-bg: #374151;
+    --cc-btn-secondary-bg-hover: #4b5563;
+    --cc-btn-secondary-text: #f9fafb;
+    --cc-modal-bg: #1f2937;
+    --cc-modal-text: #f9fafb;
+    --cc-modal-text-secondary: #9ca3af;
+    --cc-modal-border: #374151;
+    --cc-modal-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --cc-link-color: #60a5fa;
+    --cc-link-hover-color: #3b82f6;
+}
+
+/* Main consent modal */
+.cm {
+    font-family: var(--cc-font-family) !important;
+    background: var(--cc-modal-bg) !important;
+    color: var(--cc-modal-text) !important;
+    border: 1px solid var(--cc-modal-border) !important;
+    border-radius: var(--cc-modal-border-radius) !important;
+    box-shadow: var(--cc-modal-shadow) !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.cm--box {
+    max-width: 500px;
+    width: calc(100% - 40px);
+    margin: 20px;
+    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modal title */
+.cm__title {
+    color: var(--cc-modal-text) !important;
+    font-weight: 700 !important;
+    font-size: 1.125rem !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.025em;
+}
+
+/* Modal description */
+.cm__desc {
+    color: var(--cc-modal-text-secondary) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.25rem !important;
+}
+
+/* Buttons container */
+.cm__btns {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Buttons - All styles */
+.cm__btn {
+    border-radius: var(--cc-btn-border-radius) !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border: none !important;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+}
+
+.cm__btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.cm__btn:active {
+    transform: translateY(0);
+}
+
+/* Accept all button - Primary */
+.cm__btn--accept,
+[data-cc='accept-all'] {
+    background: var(--cc-btn-primary-bg) !important;
+    color: var(--cc-btn-primary-text) !important;
+}
+
+.cm__btn--accept:hover,
+[data-cc='accept-all']:hover {
+    background: var(--cc-btn-primary-bg-hover) !important;
+}
+
+/* Reject/Manage buttons - Secondary */
+.cm__btn--reject,
+.cm__btn--settings,
+[data-cc='accept-necessary'],
+[data-cc='show-preferences'] {
+    background: var(--cc-btn-secondary-bg) !important;
+    color: var(--cc-btn-secondary-text) !important;
+}
+
+.cm__btn--reject:hover,
+.cm__btn--settings:hover,
+[data-cc='accept-necessary']:hover,
+[data-cc='show-preferences']:hover {
+    background: var(--cc-btn-secondary-bg-hover) !important;
+}
+
+/* Footer links */
+.cm__footer {
+    margin-top: 1rem !important;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cc-modal-border) !important;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+}
+
+.cm__footer a {
+    color: var(--cc-modal-text-secondary) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+
+.cm__footer a:hover {
+    color: var(--cc-link-color) !important;
+}
+
+/* Preferences Modal */
+.pm {
+    font-family: var(--cc-font-family) !important;
+    background: var(--cc-modal-bg) !important;
+    color: var(--cc-modal-text) !important;
+    border: 1px solid var(--cc-modal-border) !important;
+    border-radius: var(--cc-modal-border-radius) !important;
+    box-shadow: var(--cc-modal-shadow) !important;
+    backdrop-filter: blur(10px);
+}
+
+.pm__header {
+    border-bottom: 1px solid var(--cc-modal-border) !important;
+    padding: 1.5rem !important;
+}
+
+.pm__title {
+    color: var(--cc-modal-text) !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    letter-spacing: -0.025em;
+}
+
+/* Close button */
+.pm__close {
+    color: var(--cc-modal-text-secondary) !important;
+    transition: color 0.2s ease;
+}
+
+.pm__close:hover {
+    color: var(--cc-modal-text) !important;
+}
+
+/* Sections */
+.pm__section {
+    border-bottom: 1px solid var(--cc-modal-border) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.pm__section:last-child {
+    border-bottom: none !important;
+}
+
+.pm__section-title {
+    color: var(--cc-modal-text) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.pm__section-desc {
+    color: var(--cc-modal-text-secondary) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+}
+
+/* Toggle switch */
+.pm__toggle {
+    background: var(--cc-btn-secondary-bg) !important;
+    border: 2px solid var(--cc-modal-border) !important;
+}
+
+.pm__toggle--checked {
+    background: var(--cc-btn-primary-bg) !important;
+    border-color: var(--cc-btn-primary-bg) !important;
+}
+
+/* Badge */
+.pm__badge {
+    background: var(--cc-btn-primary-bg) !important;
+    color: var(--cc-btn-primary-text) !important;
+    font-size: 0.625rem !important;
+    font-weight: 700 !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Buttons in preferences modal */
+.pm__btn {
+    border-radius: var(--cc-btn-border-radius) !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+    border: none !important;
+}
+
+.pm__btn--accept {
+    background: var(--cc-btn-primary-bg) !important;
+    color: var(--cc-btn-primary-text) !important;
+}
+
+.pm__btn--accept:hover {
+    background: var(--cc-btn-primary-bg-hover) !important;
+}
+
+.pm__btn--reject {
+    background: var(--cc-btn-secondary-bg) !important;
+    color: var(--cc-btn-secondary-text) !important;
+}
+
+.pm__btn--reject:hover {
+    background: var(--cc-btn-secondary-bg-hover) !important;
+}
+
+/* Service counter */
+.pm__counter {
+    background: var(--cc-btn-secondary-bg) !important;
+    color: var(--cc-modal-text) !important;
+    border-radius: 9999px;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    padding: 0.25rem 0.75rem !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .cm--box {
+        width: calc(100% - 20px);
+        margin: 10px;
+        max-width: none;
+    }
+
+    .cm__btns {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cm__btn {
+        width: 100%;
+    }
+
+    .pm {
+        width: calc(100% - 20px) !important;
+        max-height: 90vh !important;
+    }
+
+    .cm__footer {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar for preferences modal */
+.pm__bodies {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.pm__bodies::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pm__bodies::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.pm__bodies::-webkit-scrollbar-thumb {
+    background: var(--cc-modal-border);
+    border-radius: 3px;
+}
+
+.pm__bodies::-webkit-scrollbar-thumb:hover {
+    background: var(--cc-modal-text-secondary);
+}
