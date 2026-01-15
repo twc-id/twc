@@ -1,11 +1,25 @@
 import Button from '@components/buttons/Button'
 import Input from '@components/forms/Input'
+import { useNewsletterSubscription } from '@hooks/useNewsletterSubscription'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
+import Form, { Field } from 'rc-field-form'
 import React from 'react'
 
 const ArticleCTA = () => {
     const { t } = useTranslation('articles')
+    const [form] = Form.useForm()
+    const { subscribe, loading } = useNewsletterSubscription()
+
+    const handleSubscribe = async (values: { email: string }) => {
+        const { email } = values
+        const result = await subscribe(email)
+
+        if (result.success) {
+            form.resetFields()
+        }
+    }
+
     return (
         <div className='pt-4 xl:pt-[76px]'>
             <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-12 overflow-hidden xl:flex-row'>
@@ -13,19 +27,34 @@ const ArticleCTA = () => {
                     <h2 className='text-heading-2-desktop text-grey-white'>{t('cta.title')}</h2>
                     <p className='text-paragraph-6-desktop text-grey-100'>{t('cta.description')}</p>
 
-                    <div className='flex w-full flex-row items-center gap-2'>
-                        <Input
+                    <Form form={form} onFinish={handleSubscribe} className='flex w-full flex-row items-center gap-2'>
+                        <Field
                             name='email'
-                            size='md'
-                            placeholder={t('cta.placeholder')}
-                            className='!border-grey-200 !rounded-none bg-transparent'
-                            inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 text-grey-200 !px-0'
-                        />
+                            rules={[
+                                { required: true, message: 'Please enter your email' },
+                                { type: 'email', message: 'Please enter a valid email address' }
+                            ]}
+                        >
+                            <Input
+                                size='md'
+                                placeholder={t('cta.placeholder')}
+                                className='!border-grey-200 !rounded-none bg-transparent'
+                                inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 text-grey-200 !px-0'
+                                autoComplete='email'
+                                disabled={loading}
+                            />
+                        </Field>
 
-                        <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
+                        <Button
+                            type='submit'
+                            variant='secondary'
+                            className='!bg-grey-white !text-button-3-desktop !rounded-none'
+                            loading={loading}
+                            disabled={loading}
+                        >
                             {t('cta.button')}
                         </Button>
-                    </div>
+                    </Form>
                 </div>
 
                 <div
