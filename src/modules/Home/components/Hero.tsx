@@ -5,6 +5,7 @@ import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
@@ -30,7 +31,20 @@ const Hero = () => {
     const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
     const { assets } = useAssets()
-    const heroSlides = assets?.filter((asset) => asset.media_type === 'video')
+    const router = useRouter()
+    const heroSlides = assets
+        ?.filter((asset) => asset.media_type === 'video')
+        .sort((a, b) => {
+            // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
+            const getSuffixNumber = (name: string) => {
+                const parts = name.split('_')
+                const lastPart = parts[parts.length - 1]
+                const num = parseInt(lastPart, 10)
+                return isNaN(num) ? 0 : num
+            }
+            return getSuffixNumber(a.name) - getSuffixNumber(b.name)
+        })
+    const lang = router.locale || 'en'
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -171,16 +185,16 @@ const Hero = () => {
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&
-                                    heroSlides[activeIndex].video_banner?.sub_header}
+                                    heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
                             </h3>
                             <h1
                                 ref={h1Ref}
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:line-clamp-2 xl:w-[700px]'
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:w-[700px]'
                             >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
                                     {heroSlides &&
                                         heroSlides[activeIndex] &&
-                                        heroSlides[activeIndex].video_banner?.title}
+                                        heroSlides[activeIndex].video_banner?.[lang]?.title}
                                 </Trans>
                             </h1>
                             <h3
@@ -189,7 +203,7 @@ const Hero = () => {
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&
-                                    heroSlides[activeIndex].video_banner?.sub_footer}
+                                    heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
