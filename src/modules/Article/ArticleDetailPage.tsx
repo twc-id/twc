@@ -39,7 +39,6 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
         fetchDefaultSuggestions()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    console.log(products)
 
     return (
         <>

@@ -15,8 +15,6 @@ const detectLanguage = (): string => {
     return 'en'
 }
 
-console.log('Cookie Consent language detected:', detectLanguage())
-
 export const getCookieConsentConfig = (): CookieConsentConfig => ({
     root: 'body',
     autoShow: true,
