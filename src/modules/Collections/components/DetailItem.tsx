@@ -854,7 +854,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         </Button>
                                     </a>
                                 ) : (
-                                    <button className='bg-grey-50 w-fit px-4 py-2'>
+                                    <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                         <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
                                             {t('common:sold')}
                                         </p>
@@ -928,7 +928,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                     })}
                                                 </Button>
                                             ) : (
-                                                <button className='bg-grey-50 w-fit px-4 py-2'>
+                                                <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                                     <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
                                                         {t('common:sold')}
                                                     </p>
@@ -1074,7 +1074,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               })}
                                                           </Button>
                                                       ) : (
-                                                          <button className='bg-grey-50 w-fit px-4 py-2'>
+                                                          <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                                               <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
                                                                   {t('common:sold')}
                                                               </p>
