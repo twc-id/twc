@@ -100,11 +100,11 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
 
     const conditionOptions = [
         { id: 'brand-new', name: 'Brand New' },
+        { id: 'pre-owned-unworn', name: 'Pre-Owned (Unworn)' },
         { id: 'pre-owned-like-new', name: 'Pre-Owned (Like New)' },
-        { id: 'pre-owned-very-good', name: 'Pre-Owned (Very Good)' },
-        { id: 'pre-owned-good', name: 'Pre-Owned (Good)' },
-        { id: 'pre-owned-fair', name: 'Pre-Owned (Fair)' },
-        { id: 'pre-owned-incomplete', name: 'Pre-Owned (Incomplete)' }
+        { id: 'pre-owned-very-mint', name: 'Pre-Owned (Very Mint)' },
+        { id: 'pre-owned-mint', name: 'Pre-Owned (Mint)' },
+        { id: 'pre-owned-good', name: 'Pre-Owned (Good)' }
     ]
 
     const genderOptions = [
@@ -269,7 +269,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 setFilter(key, newValues)
                             }}
                             checked={filters[key].includes(option.id)}
-                            textClassName='xl:text-paragraph-7-desktop text-paragraph-7-mobile'
+                            textClassName='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none'
                             size='sm'
                         >
                             <div

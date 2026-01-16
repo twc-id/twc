@@ -406,10 +406,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     } | null>(null)
 
     const getConditionContent = (val: string) => {
-        let v = String(val || '').toLowerCase()
-
-        // Normalize known aliases: 'unworn' should map to 'brand new'
-        if (v.includes('unworn')) v = v.replace(/unworn/g, 'brand new')
+        const v = String(val || '').toLowerCase()
 
         const descriptions: Record<string, { title: string; description: string }> = {
             'brand new': {

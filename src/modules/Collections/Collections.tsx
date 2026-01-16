@@ -76,11 +76,11 @@ const Collections = () => {
             // Condition: include is_new if selected, and include status+condition pairs for pre-owned selections.
             const conditionValues = filters?.condition || []
             const preOwnedMap: Record<string, string> = {
+                'pre-owned-unworn': 'Unworn',
                 'pre-owned-like-new': 'Like New',
-                'pre-owned-very-good': 'Very Good',
-                'pre-owned-good': 'Good',
-                'pre-owned-fair': 'Fair',
-                'pre-owned-incomplete': 'Incomplete'
+                'pre-owned-very-mint': 'Very Mint',
+                'pre-owned-mint': 'Mint',
+                'pre-owned-good': 'Good'
             }
             if (conditionValues.length > 0) {
                 if (conditionValues.includes('brand-new')) {
