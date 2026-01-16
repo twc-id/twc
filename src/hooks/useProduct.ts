@@ -171,11 +171,11 @@ const fetchProducts = async (params?: ProductParams): Promise<ProductsResponse> 
 
             // Condition
             const preOwnedMap: Record<string, string> = {
+                'pre-owned-unworn': 'Unworn',
                 'pre-owned-like-new': 'Like New',
-                'pre-owned-very-good': 'Very Good',
-                'pre-owned-good': 'Good',
-                'pre-owned-fair': 'Fair',
-                'pre-owned-incomplete': 'Incomplete'
+                'pre-owned-very-mint': 'Very Mint',
+                'pre-owned-mint': 'Mint',
+                'pre-owned-good': 'Good'
             }
 
             if (filters.condition && filters.condition.length > 0) {
