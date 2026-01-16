@@ -1066,13 +1066,20 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                                                   <div>
                                                       {product.purchasable ? (
-                                                          <Button variant='secondaryInverse'>
-                                                              {t('common:reserve_this', {
-                                                                  item: isWatch
-                                                                      ? t('common:watch')
-                                                                      : t('common:accesoris')
-                                                              })}
-                                                          </Button>
+                                                          <a
+                                                              href='
+                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                                                              target='_blank'
+                                                              rel='noopener noreferrer'
+                                                          >
+                                                              <Button variant='secondaryInverse'>
+                                                                  {t('common:reserve_this', {
+                                                                      item: isWatch
+                                                                          ? t('common:watch')
+                                                                          : t('common:accesoris')
+                                                                  })}
+                                                              </Button>
+                                                          </a>
                                                       ) : (
                                                           <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                                               <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
