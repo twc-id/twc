@@ -28,7 +28,7 @@ const Checklist = ({ size, children, textClassName, onChange, ...props }: Checkl
             <div className='w-fit'>
                 <Checkbox size={getCheckboxSize()} {...props} />
             </div>
-            <span className={classNames('text-grey-black dark:text-grey-white', textClassName)}>{children}</span>
+            <div className={classNames('text-grey-black dark:text-grey-white', textClassName)}>{children}</div>
         </div>
     )
 }
