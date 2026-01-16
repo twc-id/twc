@@ -162,12 +162,14 @@ export const getCookieConsentConfig = (): CookieConsentConfig => ({
     },
     onFirstConsent: ({ cookie }) => {
         if (cookie.categories.includes('analytics')) {
-            initGAAfterConsent()
+            // Fire and forget - don't block the consent flow
+            void initGAAfterConsent()
         }
     },
     onChange: ({ cookie }) => {
         if (cookie.categories.includes('analytics')) {
-            initGAAfterConsent()
+            // Fire and forget - don't block the consent flow
+            void initGAAfterConsent()
         } else if (typeof window !== 'undefined') {
             // Clear GA cookies
             document.cookie.split(';').forEach((c) => {
