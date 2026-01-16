@@ -28,6 +28,9 @@ export interface VideoBanner {
     title: string
     sub_footer: string
 }
+export interface VideoBannerLocalized {
+    [key: string]: VideoBanner
+}
 
 export interface Asset {
     id: number
@@ -39,7 +42,7 @@ export interface Asset {
     media: AssetMedia
     created_at: string
     updated_at: string
-    video_banner?: VideoBanner
+    video_banner?: VideoBannerLocalized
 }
 
 export interface AssetsResponse {
