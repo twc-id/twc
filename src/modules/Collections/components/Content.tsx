@@ -58,8 +58,16 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                            {item?.brands?.[0]?.name} •{' '}
-                                            {item?.meta_data?.find((meta: any) => meta.key === 'reference')?.value}
+                                            {item?.brands?.[0]?.name}
+                                            {item?.meta_data?.find((meta: any) => meta.key === 'reference')?.value && (
+                                                <>
+                                                    {` • `}
+                                                    {
+                                                        item?.meta_data?.find((meta: any) => meta.key === 'reference')
+                                                            ?.value
+                                                    }
+                                                </>
+                                            )}
                                         </p>
                                         <h4
                                             className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'

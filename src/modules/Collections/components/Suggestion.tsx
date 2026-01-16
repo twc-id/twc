@@ -77,8 +77,13 @@ const Suggestion = ({ products }: SuggestionProps) => {
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                            {p.brands?.[0].name} •{' '}
-                                            {p.meta_data.find((meta: any) => meta.key === 'reference')?.value}
+                                            {p.brands?.[0].name}
+                                            {p.meta_data.find((meta: any) => meta.key === 'reference')?.value && (
+                                                <>
+                                                    {` • `}
+                                                    {p.meta_data.find((meta: any) => meta.key === 'reference')?.value}
+                                                </>
+                                            )}
                                         </p>
                                         <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
                                             {p.name}
