@@ -4,10 +4,13 @@ import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -33,6 +36,7 @@ const Highlight = () => {
     const tabsRef = useRef<HTMLDivElement>(null)
     const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const router = useRouter()
 
     const tabs = [
         {
@@ -293,7 +297,14 @@ const Highlight = () => {
                         ) : (
                             <div />
                         )}
-                        <UnstyledLink href='/collections'>
+                        <UnstyledLink
+                            href='/collections'
+                            onClick={() => {
+                                trackEvent(GA_EVENTS.VIEW_MORE, {
+                                    page: router.pathname
+                                })
+                            }}
+                        >
                             <Button variant='primary' className='hover:!border-grey-black/50 hover:text-grey-black/50'>
                                 {t('highlight.view_more')}
                             </Button>

@@ -10,6 +10,8 @@ import { useTheme } from '@contexts/ThemeContext'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import Fuse from 'fuse.js'
@@ -721,6 +723,11 @@ const Headers = () => {
                                     const willOpen = !isSearchOpen
                                     setIsSearchOpen(willOpen)
                                     if (willOpen) {
+                                        // Track search event when opening search
+                                        trackEvent(GA_EVENTS.SEARCH, {
+                                            page: router.pathname
+                                        })
+
                                         // close menu when opening search
                                         setIsMenuOpen(false)
                                         setHoveredMenuItem(null)
