@@ -2,7 +2,7 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
 import classNames from '@lib/classnames'
 import { formatDate } from '@utils/format-date'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
 import React from 'react'
 
@@ -67,7 +67,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                         <span
                                             key={categories.id}
                                             className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
-                                            dangerouslySetInnerHTML={{ __html: sanitize(categories.name) }}
+                                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(categories.name) }}
                                         />
                                     ))}
                                 </div>

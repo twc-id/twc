@@ -3,7 +3,7 @@ import Container from '@components/Container'
 import { Article } from '@hooks/useArticle'
 import Suggestion from '@modules/Article/components/Suggestion'
 import { formatDate } from '@utils/format-date'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
 
@@ -81,7 +81,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                         <Container className='flex !w-[60%] flex-col items-center gap-4'>
                             <h1
                                 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white relative z-10 text-center'
-                                dangerouslySetInnerHTML={{ __html: sanitize(article.title.rendered) }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.title.rendered) }}
                             />
                             {/* Categories */}
                             {categories.length > 0 && (
@@ -92,7 +92,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                                                 key={category.id}
                                                 className='border-grey-white xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
                                                 dangerouslySetInnerHTML={{
-                                                    __html: sanitize(category.name)
+                                                    __html: sanitizeHtml(category.name)
                                                 }}
                                             />
                                         ))}
@@ -120,7 +120,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                         {/* Content */}
                         <div
                             className=' article'
-                            dangerouslySetInnerHTML={{ __html: sanitize(article.content.rendered) }}
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content.rendered) }}
                         />
                         <Suggestion products={products} isLoading={isLoading} />
                     </Container>

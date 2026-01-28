@@ -14,8 +14,8 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
+import { sanitizeHtml } from '@utils/html'
 import Fuse from 'fuse.js'
-import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -876,7 +876,7 @@ const Headers = () => {
                                                                     href={`/collections?product_brand=${item.id}`}
                                                                     className='xl:text-button-4-desktop text-button-4-mobile text-grey-200 hover:text-grey-100'
                                                                     dangerouslySetInnerHTML={{
-                                                                        __html: sanitize(item.name)
+                                                                        __html: sanitizeHtml(item.name)
                                                                     }}
                                                                     // eslint-disable-next-line react/no-children-prop
                                                                     children={undefined}
@@ -1081,7 +1081,7 @@ const Headers = () => {
                                                         href={`/collections?product_brand=${item.id}`}
                                                         className='text-button-1-mobile text-grey-200 block text-left transition-colors'
                                                         dangerouslySetInnerHTML={{
-                                                            __html: sanitize(item.name)
+                                                            __html: sanitizeHtml(item.name)
                                                         }}
                                                         // eslint-disable-next-line react/no-children-prop
                                                         children={undefined}
@@ -1218,26 +1218,31 @@ const Headers = () => {
                                                                 </div>
                                                             )}
                                                             <div className='flex flex-col gap-1 text-center'>
-                                                                <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                                                    {product?.brands?.[0].name}
-                                                                    {product?.meta_data?.find(
-                                                                        (meta: any) => meta.key === 'reference'
-                                                                    )?.value && (
-                                                                        <>
-                                                                            {` • `}
-                                                                            {
-                                                                                product?.meta_data?.find(
-                                                                                    (meta: any) =>
-                                                                                        meta.key === 'reference'
-                                                                                )?.value
-                                                                            }
-                                                                        </>
-                                                                    )}
-                                                                </p>
+                                                                <p
+                                                                    className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: sanitizeHtml(`
+                                                                        ${product?.brands?.[0]?.name || ''}
+                                                                        ${
+                                                                            product?.meta_data?.find(
+                                                                                (meta: any) => meta.key === 'reference'
+                                                                            )?.value
+                                                                                ? ` • ${
+                                                                                      product?.meta_data?.find(
+                                                                                          (meta: any) =>
+                                                                                              meta.key === 'reference'
+                                                                                      )?.value
+                                                                                  }`
+                                                                                : ''
+                                                                        }
+                                                                        `)
+                                                                    }}
+                                                                />
+
                                                                 <h4
                                                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'
                                                                     dangerouslySetInnerHTML={{
-                                                                        __html: sanitize(product.name)
+                                                                        __html: sanitizeHtml(product.name)
                                                                     }}
                                                                 />
 

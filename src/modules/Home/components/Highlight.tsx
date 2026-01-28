@@ -7,6 +7,7 @@ import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
+import { sanitizeHtml } from '@utils/html'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -255,20 +256,27 @@ const Highlight = () => {
                                               )}
 
                                               <div className='flex flex-col gap-1 text-center'>
-                                                  <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                                      {product.brands?.[0].name}
-                                                      {product.meta_data.find((meta: any) => meta.key === 'reference')
-                                                          ?.value && (
-                                                          <>
-                                                              {` • `}
-                                                              {
-                                                                  product.meta_data.find(
-                                                                      (meta: any) => meta.key === 'reference'
-                                                                  )?.value
-                                                              }
-                                                          </>
-                                                      )}
-                                                  </p>
+                                                  <p
+                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                                      dangerouslySetInnerHTML={{
+                                                          __html: sanitizeHtml(`
+                                                                ${product.brands?.[0]?.name || ''}
+                                                                ${
+                                                                    product.meta_data.find(
+                                                                        (meta: any) => meta.key === 'reference'
+                                                                    )?.value
+                                                                        ? ` • ${
+                                                                              product.meta_data.find(
+                                                                                  (meta: any) =>
+                                                                                      meta.key === 'reference'
+                                                                              )?.value
+                                                                          }`
+                                                                        : ''
+                                                                }
+                                                            `)
+                                                      }}
+                                                  />
+
                                                   <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
                                                       {product.name}
                                                   </h3>

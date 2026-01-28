@@ -3,7 +3,7 @@ import Loader from '@components/Loader'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
@@ -71,21 +71,28 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
                                     )}
 
                                     <div className='flex flex-col gap-1 text-center'>
-                                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'>
-                                            {item?.brands?.[0]?.name}
-                                            {item?.meta_data?.find((meta: any) => meta.key === 'reference')?.value && (
-                                                <>
-                                                    {` • `}
-                                                    {
-                                                        item?.meta_data?.find((meta: any) => meta.key === 'reference')
-                                                            ?.value
-                                                    }
-                                                </>
-                                            )}
-                                        </p>
+                                        <p
+                                            className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                            dangerouslySetInnerHTML={{
+                                                __html: sanitizeHtml(`
+                                                ${item?.brands?.[0]?.name || ''}
+                                                ${
+                                                    item?.meta_data?.find((meta: any) => meta.key === 'reference')
+                                                        ?.value
+                                                        ? ` • ${
+                                                              item?.meta_data?.find(
+                                                                  (meta: any) => meta.key === 'reference'
+                                                              )?.value
+                                                          }`
+                                                        : ''
+                                                }
+                                            `)
+                                            }}
+                                        />
+
                                         <h4
                                             className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'
-                                            dangerouslySetInnerHTML={{ __html: sanitize(item.name) }}
+                                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.name) }}
                                         />
 
                                         <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>

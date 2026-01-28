@@ -2,7 +2,7 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import { Article } from '@hooks/useArticle'
 import classNames from '@lib/classnames'
 import { formatDate } from '@utils/format-date'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
 import React from 'react'
 
@@ -40,7 +40,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, titleClassName, meta
                             'group-hover:text-primary-500 xl:text-button-1-desktop text-button-1-mobile line-clamp-2 font-semibold text-gray-900',
                             titleClassName
                         )}
-                        dangerouslySetInnerHTML={{ __html: sanitize(article.title.rendered) }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.title.rendered) }}
                     />
 
                     {/* Meta */}
@@ -53,7 +53,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, titleClassName, meta
                                     <span
                                         key={categories.id}
                                         className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
-                                        dangerouslySetInnerHTML={{ __html: sanitize(categories.name) }}
+                                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(categories.name) }}
                                     />
                                 ))}
 

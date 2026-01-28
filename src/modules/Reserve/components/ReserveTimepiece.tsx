@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import { sanitizeHtml } from '@utils/html'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -130,9 +131,12 @@ const ReserveTimepiece = () => {
 
                                                         {isActive && (
                                                             <div className='flex flex-col gap-1 pb-6 text-center'>
-                                                                <p className='text-sm uppercase tracking-wider text-gray-500'>
-                                                                    {product.brands?.[0]?.name}
-                                                                </p>
+                                                                <p
+                                                                    className='text-sm uppercase tracking-wider text-gray-500'
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: sanitizeHtml(product.brands?.[0]?.name)
+                                                                    }}
+                                                                />
                                                                 <h3 className='line-clamp-3 text-lg font-semibold text-gray-900'>
                                                                     {product.name}
                                                                 </h3>

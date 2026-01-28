@@ -4,7 +4,7 @@ import Skeleton from '@components/Skeleton'
 import usePages, { Page } from '@hooks/usePages'
 import { Locale } from '@utils/currency'
 import { formatDate } from '@utils/format-date'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import { Trans, useTranslation } from 'next-i18next'
 import React from 'react'
 
@@ -51,7 +51,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
                 <div
                     className='privacy-policy'
                     dangerouslySetInnerHTML={{
-                        __html: sanitize(pages?.content?.rendered || '')
+                        __html: sanitizeHtml(pages?.content?.rendered || '')
                     }}
                 />
                 <style jsx>{`

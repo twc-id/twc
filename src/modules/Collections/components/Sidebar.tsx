@@ -4,7 +4,7 @@ import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import classNames from '@lib/classnames'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
-import { sanitize } from 'isomorphic-dompurify'
+import { sanitizeHtml } from '@utils/html'
 import debounce from 'lodash/debounce'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -282,7 +282,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                         >
                             <div
                                 dangerouslySetInnerHTML={{
-                                    __html: sanitize(option.name)
+                                    __html: sanitizeHtml(option.name)
                                 }}
                             />
                         </Checklist>
@@ -290,7 +290,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-black dark:text-grey-white text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
                         >
                             RESET
                         </button>
@@ -381,7 +381,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-black dark:text-grey-white text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
                         >
                             RESET
                         </button>
@@ -414,7 +414,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-black dark:text-grey-white text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
                         >
                             RESET
                         </button>

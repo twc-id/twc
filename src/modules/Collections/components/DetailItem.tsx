@@ -8,9 +8,9 @@ import Modal from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import { formatRupiah } from '@utils/currency'
+import { sanitizeHtml } from '@utils/html'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import { sanitize } from 'isomorphic-dompurify'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -591,7 +591,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             <p
                                 className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0 capitalize'
                                 dangerouslySetInnerHTML={{
-                                    __html: sanitize(item.value)
+                                    __html: sanitizeHtml(item.value)
                                 }}
                             />
                         </div>
@@ -757,7 +757,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 <h5
                                     className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
                                     dangerouslySetInnerHTML={{
-                                        __html: sanitize(product?.brands?.[0]?.name)
+                                        __html: sanitizeHtml(product?.brands?.[0]?.name)
                                     }}
                                 />
                             </UnstyledLink>
@@ -998,9 +998,12 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                   <h4 className='text-subheading-4-desktop text-grey-white capitalize'>
                                                       {product.name}
                                                   </h4>
-                                                  <p className='text-grey-200 text-paragraph-7-desktop uppercase'>
-                                                      {product.brands?.[0]?.name}
-                                                  </p>
+                                                  <p
+                                                      className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                      dangerouslySetInnerHTML={{
+                                                          __html: sanitizeHtml(product.brands?.[0]?.name)
+                                                      }}
+                                                  />
                                               </div>
 
                                               <div className='flex items-center gap-8'>
@@ -1107,7 +1110,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 >
                                     <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
                                         {typeof item.content === 'string' ? (
-                                            <div dangerouslySetInnerHTML={{ __html: sanitize(item.content) }} />
+                                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }} />
                                         ) : (
                                             item.content
                                         )}
