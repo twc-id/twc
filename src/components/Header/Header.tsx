@@ -882,7 +882,10 @@ const Headers = () => {
                                                                     }}
                                                                     // eslint-disable-next-line react/no-children-prop
                                                                     children={undefined}
-                                                                    onClick={() => setIsMenuOpen(false)}
+                                                                    onClick={() => {
+                                                                        setIsMenuOpen(false)
+                                                                        trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                    }}
                                                                 />
                                                             ))}
                                                         </div>
@@ -905,7 +908,10 @@ const Headers = () => {
                                                             key={subItem.label}
                                                             href={subItem.href || '/collections?tab=accessories'}
                                                             className='group flex w-full cursor-pointer flex-col gap-4'
-                                                            onClick={() => setIsMenuOpen(false)}
+                                                            onClick={() => {
+                                                                setIsMenuOpen(false)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                            }}
                                                         >
                                                             <div className='h-[218px] w-full overflow-hidden'>
                                                                 <Image
@@ -982,7 +988,11 @@ const Headers = () => {
                                                                                 : '#'
                                                                         }
                                                                         className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
-                                                                        onClick={() => setIsMenuOpen(false)}
+                                                                        onClick={() => {
+                                                                            setIsMenuOpen(false)
+
+                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                        }}
                                                                     >
                                                                         {item}
                                                                     </UnstyledLink>
@@ -1011,14 +1021,25 @@ const Headers = () => {
                                                             {hoveredMenuItem.subMenu
                                                                 .find((item) => item.label === 'Conditions')
                                                                 ?.items?.map((item) => (
-                                                                    <button
+                                                                    <UnstyledLink
                                                                         key={item}
-                                                                        type='button'
+                                                                        href={
+                                                                            item === 'Brand New'
+                                                                                ? '/collections?condition=brand-new'
+                                                                                : item === 'Pre-Owned'
+                                                                                ? '/collections?condition=pre-owned-very-good'
+                                                                                : '#'
+                                                                        }
                                                                         className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
+                                                                        onClick={() => {
+                                                                            setIsMenuOpen(false)
+
+                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                        }}
                                                                         onKeyDown={handleSubSubMenuItemKeyDown}
                                                                     >
                                                                         {item}
-                                                                    </button>
+                                                                    </UnstyledLink>
                                                                 ))}
                                                         </div>
                                                     </div>
@@ -1040,7 +1061,10 @@ const Headers = () => {
                                                             <UnstyledLink
                                                                 href='/collections?tab=accessories'
                                                                 className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
-                                                                onClick={() => setIsMenuOpen(false)}
+                                                                onClick={() => {
+                                                                    setIsMenuOpen(false)
+                                                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                }}
                                                             >
                                                                 See All Accessories
                                                             </UnstyledLink>
@@ -1087,7 +1111,10 @@ const Headers = () => {
                                                         }}
                                                         // eslint-disable-next-line react/no-children-prop
                                                         children={undefined}
-                                                        onClick={() => setIsMenuOpen(false)}
+                                                        onClick={() => {
+                                                            setIsMenuOpen(false)
+                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                        }}
                                                     />
                                                 ))}
                                         </div>
@@ -1106,7 +1133,10 @@ const Headers = () => {
                                                                 : '#'
                                                         }
                                                         className='text-button-1-mobile text-grey-200 block text-left transition-colors'
-                                                        onClick={() => setIsMenuOpen(false)}
+                                                        onClick={() => {
+                                                            setIsMenuOpen(false)
+                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                        }}
                                                     >
                                                         {item}
                                                     </UnstyledLink>
@@ -1119,7 +1149,10 @@ const Headers = () => {
                                                 <UnstyledLink
                                                     href='/collections?tab=accessories'
                                                     className='text-button-1-mobile text-grey-200 block text-left transition-colors'
-                                                    onClick={() => setIsMenuOpen(false)}
+                                                    onClick={() => {
+                                                        setIsMenuOpen(false)
+                                                        trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                    }}
                                                 >
                                                     See All Accessories
                                                 </UnstyledLink>
