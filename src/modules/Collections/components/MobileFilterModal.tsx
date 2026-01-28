@@ -134,7 +134,10 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
         { id: 'unisex', name: 'Unisex' }
     ]
 
-    const sortByOptions = [
+    const sortByOptions: Array<{
+        id: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+        name: string
+    }> = [
         { id: 'default', name: 'Newest Arrival' },
         { id: 'year-asc', name: 'Year: Newest first' },
         { id: 'year-desc', name: 'Year: Oldest first' },

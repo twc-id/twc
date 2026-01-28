@@ -86,16 +86,18 @@ export interface ProductsResponse {
     hasMore: boolean
 }
 
+export type SortByOption = 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+
 export interface ProductFilters {
     brands?: string[]
     condition?: string[]
     gender?: string[]
     availability?: string[]
     priceRange?: {
-        min?: number
-        max?: number
+        min?: string
+        max?: string
     }
-    sortBy?: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+    sortBy?: SortByOption
 }
 
 export interface ProductParams {
@@ -111,6 +113,95 @@ export interface ProductParams {
 }
 
 // ==================== API FUNCTIONS ====================
+
+/**
+ * Build filter query parameters from ProductFilters
+ * Returns object with queryParams array and metaArr array for by-meta endpoint
+ */
+export const buildProductFiltersQuery = (filters: ProductFilters) => {
+    const queryParams: string[] = []
+    const metaArr: Array<any> = []
+    let useMetaEndpoint = false
+
+    // Sorting
+    if (filters.sortBy) {
+        if (filters.sortBy === 'price-asc' || filters.sortBy === 'price-desc') {
+            queryParams.push('orderby=price')
+        }
+        if (filters.sortBy === 'year-asc' || filters.sortBy === 'year-desc') {
+            queryParams.push('orderby=date')
+        }
+        if (filters.sortBy === 'price-asc' || filters.sortBy === 'year-asc') {
+            queryParams.push('order=asc')
+        }
+        if (filters.sortBy === 'price-desc' || filters.sortBy === 'year-desc') {
+            queryParams.push('order=desc')
+        }
+    }
+
+    // Brands
+    if (filters.brands && filters.brands.length > 0) {
+        queryParams.push(`product_brand=${filters.brands.join(',')}`)
+        useMetaEndpoint = true
+    }
+
+    // Condition mapping
+    const preOwnedMap: Record<string, string> = {
+        'pre-owned-unworn': 'Unworn',
+        'pre-owned-like-new': 'Like New',
+        'pre-owned-very-mint': 'Very Mint',
+        'pre-owned-mint': 'Mint',
+        'pre-owned-good': 'Good'
+    }
+
+    if (filters.condition && filters.condition.length > 0) {
+        if (filters.condition.includes('brand-new')) {
+            metaArr.push({ key: 'is_new', value: '1' })
+            useMetaEndpoint = true
+        }
+
+        if (filters.condition.includes('new-old-stock')) {
+            metaArr.push({ key: 'basic-info-status', value: 'New Old Stock' })
+            useMetaEndpoint = true
+        }
+
+        const selectedPreOwned = filters.condition.filter((c: string) => c.startsWith('pre-owned-'))
+        if (selectedPreOwned.length > 0) {
+            metaArr.push({ key: 'basic-info-status', value: 'Pre-Owned' })
+            selectedPreOwned.forEach((id: string) => {
+                const condValue = preOwnedMap[id]
+                if (condValue) {
+                    metaArr.push({ key: 'basic-info-condition', value: condValue })
+                }
+            })
+            useMetaEndpoint = true
+        }
+    }
+
+    // Gender
+    if (filters.gender && filters.gender.length > 0) {
+        filters.gender.forEach((g: string) => {
+            metaArr.push({ key: 'basic-info-gender', value: g })
+        })
+        useMetaEndpoint = true
+    }
+
+    // Availability
+    if (filters.availability && filters.availability.length > 0) {
+        queryParams.push(`stock_status=${filters.availability.join(',')}`)
+        useMetaEndpoint = true
+    }
+
+    // Price range
+    if (filters.priceRange?.min) {
+        queryParams.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
+    }
+    if (filters.priceRange?.max) {
+        queryParams.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
+    }
+
+    return { queryParams, metaArr, useMetaEndpoint }
+}
 
 /**
  * Fetch products with optional filters and pagination
@@ -141,83 +232,15 @@ const fetchProducts = async (params?: ProductParams): Promise<ProductsResponse> 
             queryParams.push(`search=${encodeURIComponent(params.search)}`)
         }
 
-        // Handle filters if provided
-        const filters = params?.filters
+        // Build filter queries using shared function
+        let metaArr: Array<any> = []
         let useMetaEndpoint = false
-        const metaArr: Array<any> = []
 
-        if (filters) {
-            // Sorting
-            if (filters.sortBy) {
-                if (filters.sortBy === 'price-asc' || filters.sortBy === 'price-desc') {
-                    queryParams.push('orderby=price')
-                }
-                if (filters.sortBy === 'year-asc' || filters.sortBy === 'year-desc') {
-                    queryParams.push('orderby=date')
-                }
-                if (filters.sortBy === 'price-asc' || filters.sortBy === 'year-asc') {
-                    queryParams.push('order=asc')
-                }
-                if (filters.sortBy === 'price-desc' || filters.sortBy === 'year-desc') {
-                    queryParams.push('order=desc')
-                }
-            }
-
-            // Brands
-            if (filters.brands && filters.brands.length > 0) {
-                queryParams.push(`product_brand=${filters.brands.join(',')}`)
-                useMetaEndpoint = true
-            }
-
-            // Condition
-            const preOwnedMap: Record<string, string> = {
-                'pre-owned-unworn': 'Unworn',
-                'pre-owned-like-new': 'Like New',
-                'pre-owned-very-mint': 'Very Mint',
-                'pre-owned-mint': 'Mint',
-                'pre-owned-good': 'Good'
-            }
-
-            if (filters.condition && filters.condition.length > 0) {
-                if (filters.condition.includes('brand-new')) {
-                    metaArr.push({ key: 'is_new', value: '1' })
-                    useMetaEndpoint = true
-                }
-
-                const selectedPreOwned = filters.condition.filter((c: string) => c.startsWith('pre-owned-'))
-                if (selectedPreOwned.length > 0) {
-                    metaArr.push({ key: 'basic-info-status', value: 'Pre-Owned' })
-                    selectedPreOwned.forEach((id: string) => {
-                        const condValue = preOwnedMap[id]
-                        if (condValue) {
-                            metaArr.push({ key: 'basic-info-condition', value: condValue })
-                        }
-                    })
-                    useMetaEndpoint = true
-                }
-            }
-
-            // Gender
-            if (filters.gender && filters.gender.length > 0) {
-                filters.gender.forEach((g: string) => {
-                    metaArr.push({ key: 'basic-info-gender', value: g })
-                })
-                useMetaEndpoint = true
-            }
-
-            // Availability
-            if (filters.availability && filters.availability.length > 0) {
-                queryParams.push(`stock_status=${filters.availability.join(',')}`)
-                useMetaEndpoint = true
-            }
-
-            // Price range
-            if (filters.priceRange?.min) {
-                queryParams.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
-            }
-            if (filters.priceRange?.max) {
-                queryParams.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
-            }
+        if (params?.filters) {
+            const filterQuery = buildProductFiltersQuery(params.filters)
+            queryParams.push(...filterQuery.queryParams)
+            metaArr = filterQuery.metaArr
+            useMetaEndpoint = filterQuery.useMetaEndpoint
         }
 
         let response

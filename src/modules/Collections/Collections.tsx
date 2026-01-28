@@ -1,5 +1,5 @@
 import Seo from '@components/Seo'
-import { useProductBrands } from '@hooks/useProduct'
+import { buildProductFiltersQuery, useProductBrands } from '@hooks/useProduct'
 import { WooCommerce } from '@lib/api'
 import CTA from '@modules/Collections/components/CTA'
 import Hero from '@modules/Collections/components/Hero'
@@ -49,110 +49,34 @@ const Collections = () => {
         try {
             if (append) setIsLoadingMore(true)
             else setIsLoading(true)
-            // Use proper WooCommerce pagination: `page` and `per_page`
+
             const perPage = 10
-            const params: string[] = []
-            params.push(`page=${pageToFetch}`)
-            params.push(`per_page=${perPage}`)
+            const baseParams: string[] = [`page=${pageToFetch}`, `per_page=${perPage}`, `category=${categoryId}`]
 
-            // Build a single meta-array combining selected filters.
-            // This sends one request to `products/by-meta` with multiple meta objects (can include multiple entries per key).
-            const brandValues = filters?.brands || []
-            const productBrandParam = brandValues.length > 0 ? brandValues.join(',') : ''
+            // Build filter queries using shared function from useProduct.ts
+            const { queryParams: filterParams, metaArr, useMetaEndpoint } = buildProductFiltersQuery(filters || {})
 
-            // Sorting params (support price and date sorting)
-            let orderByParam = ''
-            let orderParam = ''
-            if (filters?.sortBy) {
-                if (filters.sortBy === 'price-asc' || filters.sortBy === 'price-desc') orderByParam = 'orderby=price'
-                if (filters.sortBy === 'year-asc' || filters.sortBy === 'year-desc') orderByParam = 'orderby=date'
+            const hasFilters = useMetaEndpoint || filterParams.length > 0
 
-                if (filters.sortBy === 'price-asc' || filters.sortBy === 'year-asc') orderParam = 'order=asc'
-                if (filters.sortBy === 'price-desc' || filters.sortBy === 'year-desc') orderParam = 'order=desc'
-            }
-
-            const metaArr: Array<any> = []
-
-            // Condition: include is_new if selected, and include status+condition pairs for pre-owned selections.
-            const conditionValues = filters?.condition || []
-            const preOwnedMap: Record<string, string> = {
-                'pre-owned-unworn': 'Unworn',
-                'pre-owned-like-new': 'Like New',
-                'pre-owned-very-mint': 'Very Mint',
-                'pre-owned-mint': 'Mint',
-                'pre-owned-good': 'Good'
-            }
-            if (conditionValues.length > 0) {
-                if (conditionValues.includes('brand-new')) {
-                    metaArr.push({ key: 'is_new', value: '1' })
-                }
-                if (conditionValues.includes('new-old-stock')) {
-                    metaArr.push({ key: 'basic-info-status', value: 'New Old Stock' })
-                }
-                const selectedPreOwned = conditionValues.filter((c: string) => c.startsWith('pre-owned-'))
-                if (selectedPreOwned.length > 0) {
-                    // add status once
-                    metaArr.push({ key: 'basic-info-status', value: 'Pre-Owned' })
-                    // add one entry per selected condition
-                    selectedPreOwned.forEach((id: string) => {
-                        const condValue = preOwnedMap[id]
-                        if (!condValue) return
-                        metaArr.push({ key: 'basic-info-condition', value: condValue })
-                    })
-                }
-            }
-
-            // Gender: add each selected gender as its own meta entry (multiple entries allowed)
-            const genderValues = filters?.gender || []
-            genderValues.forEach((g: string) => metaArr.push({ key: 'basic-info-gender', value: g }))
-
-            // Availability: add each selected availability as `stock_status` meta entry
-            // Availability values (will be sent as query param `stock_status` for /by-meta)
-            const availabilityValues = filters?.availability || []
-
-            // You can add other meta entries here (availability, price range as two entries etc.)
-
-            // If no meta entries, no brand param, and no price range, fallback to products?
-            const hasPriceRange = !!(filters.priceRange?.min || filters.priceRange?.max)
-            const hasAvailability = availabilityValues.length > 0
-
-            if (metaArr.length === 0 && !productBrandParam && !hasPriceRange && !hasAvailability) {
-                params.push(`category=${categoryId}`)
-                if (filters.priceRange?.min)
-                    params.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
-                if (filters.priceRange?.max)
-                    params.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
-                if (orderByParam) params.push(orderByParam)
-                if (orderParam) params.push(orderParam)
-                const response = await WooCommerce.get(`products?${params.join('&')}`)
+            if (!hasFilters) {
+                // No filters - use simple products endpoint
+                const response = await WooCommerce.get(`products?${baseParams.join('&')}`)
                 const fetched = response.data || []
                 const totalHeader =
                     parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null
                 setTotal(totalHeader)
 
-                if (append) {
-                    setData((prev) => [...prev, ...fetched])
-                } else {
-                    setData(fetched)
-                }
+                if (append) setData((prev) => [...prev, ...fetched])
+                else setData(fetched)
 
                 setHasMore(fetched.length === perPage)
             } else {
-                // Build single by-meta request with combined meta array and optional product_brand param
-
-                const q: string[] = []
-                q.push(`page=${pageToFetch}`)
-                q.push(`per_page=${perPage}`)
-                q.push(`category=${categoryId}`)
-                if (filters.priceRange?.min) q.push(`min_price=${encodeURIComponent(String(filters.priceRange.min))}`)
-                if (filters.priceRange?.max) q.push(`max_price=${encodeURIComponent(String(filters.priceRange.max))}`)
-                if (productBrandParam) q.push(`product_brand=${productBrandParam}`)
-                if (availabilityValues.length > 0) q.push(`stock_status=${availabilityValues.join(',')}`)
-                if (orderByParam) q.push(orderByParam)
-                if (orderParam) q.push(orderParam)
+                // Has filters - use by-meta endpoint
+                const allParams = [...baseParams, ...filterParams]
                 const metaParam = encodeURIComponent(JSON.stringify(metaArr))
-
-                const response = await WooCommerce.get(`products/by-meta?meta=${metaParam}&relation=AND&${q.join('&')}`)
+                const response = await WooCommerce.get(
+                    `products/by-meta?meta=${metaParam}&relation=AND&${allParams.join('&')}`
+                )
                 const fetched = response.data?.data || response.data || []
                 const totalHeader =
                     parseInt(response.headers?.['x-wp-total'] ?? response.headers?.['X-WP-Total'] ?? '0', 10) || null

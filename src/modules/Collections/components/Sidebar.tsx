@@ -117,7 +117,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
         { id: 'unisex', name: 'Unisex' }
     ]
 
-    const sortByOptions = [
+    const sortByOptions: Array<{
+        id: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+        name: string
+    }> = [
         { id: 'default', name: 'Default' },
         { id: 'price-asc', name: 'Price: Low to High' },
         { id: 'price-desc', name: 'Price: High to Low' },

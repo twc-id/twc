@@ -3,6 +3,8 @@ import { produce } from 'immer'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export type SortByOption = 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+
 export interface FilterOptions {
     brands: string[]
     availability: string[]
@@ -12,7 +14,7 @@ export interface FilterOptions {
         min?: string
         max?: string
     }
-    sortBy: string
+    sortBy: SortByOption
 }
 
 interface CollectionsFilterStore {
