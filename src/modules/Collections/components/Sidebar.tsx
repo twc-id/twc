@@ -3,6 +3,8 @@ import Input from '@components/forms/Input'
 import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import { sanitizeHtml } from '@utils/html'
 import debounce from 'lodash/debounce'
@@ -215,6 +217,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
             debounce((min?: string, max?: string) => {
                 if (min !== '' && typeof min !== 'undefined' && max !== '' && typeof max !== 'undefined') {
                     setFilter('priceRange', { min, max })
+                    trackEvent(GA_EVENTS.FILTER_SELECTED)
                 }
             }, 500),
         [setFilter]
@@ -275,6 +278,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     newValues = currentValues.filter((id: string) => id !== option.id)
                                 }
                                 setFilter(key, newValues)
+                                trackEvent(GA_EVENTS.FILTER_SELECTED)
                             }}
                             checked={filters[key].includes(option.id)}
                             textClassName='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none'
@@ -348,12 +352,13 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                             return priceQuickOptions.map((opt) => (
                                 <div className='flex items-center gap-2' key={opt.id}>
                                     <RadioButton
-                                        onChange={() =>
+                                        onChange={() => {
                                             setFilter('priceRange', {
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                        }
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                        }}
                                         checked={
                                             (filters.priceRange.min ?? undefined) === opt.min &&
                                             (filters.priceRange.max ?? undefined) === opt.max
@@ -364,12 +369,13 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     />
                                     <span
                                         className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
-                                        onClick={() =>
+                                        onClick={() => {
                                             setFilter('priceRange', {
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                        }
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                        }}
                                     >
                                         {opt.label}
                                     </span>
@@ -397,7 +403,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                         <div className='flex flex-row gap-2' key={option.id}>
                             <RadioButton
                                 key={option?.id}
-                                onChange={() => setFilter('sortBy', option?.id)}
+                                onChange={() => {
+                                    setFilter('sortBy', option?.id)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                }}
                                 checked={filters.sortBy === option?.id}
                                 name='sort-by'
                                 value={option?.id}
@@ -405,7 +414,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                             />
                             <span
                                 className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
-                                onClick={() => setFilter('sortBy', option?.id)}
+                                onClick={() => {
+                                    setFilter('sortBy', option?.id)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                }}
                             >
                                 {option?.name}
                             </span>

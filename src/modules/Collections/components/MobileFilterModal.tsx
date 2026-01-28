@@ -5,6 +5,8 @@ import Icons from '@components/Icon'
 import RadioButton from '@components/RadioButton'
 import { Dialog, Transition } from '@headlessui/react'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { sanitizeHtml } from '@utils/html'
 import debounce from 'lodash/debounce'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
@@ -215,6 +217,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
 
     const handleApply = () => {
         onApply(tempFilters)
+        trackEvent(GA_EVENTS.FILTER_SELECTED)
         onClose()
     }
 
