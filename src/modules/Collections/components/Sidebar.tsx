@@ -203,7 +203,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
         else delete q.sortBy
 
         // replace without navigation
-        router.replace({ pathname: router.pathname, query: q }, undefined, { shallow: true })
+        router.replace({ pathname: router.pathname, query: q }, undefined, { shallow: true, scroll: false })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, router.isReady])
 
