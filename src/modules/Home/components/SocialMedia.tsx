@@ -4,6 +4,8 @@ import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { Trans, useTranslation } from 'next-i18next'
@@ -175,6 +177,7 @@ const Instagram = () => {
                             href='https://www.instagram.com/thewatchcollections/'
                             target='_blank'
                             rel='noopener noreferrer'
+                            onClick={() => trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)}
                         >
                             <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
                                 {t('common:follow_us')}
