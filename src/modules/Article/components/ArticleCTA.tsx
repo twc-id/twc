@@ -1,21 +1,35 @@
 import Button from '@components/buttons/Button'
 import Input from '@components/forms/Input'
 import { useNewsletterSubscription } from '@hooks/useNewsletterSubscription'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import Form, { Field } from 'rc-field-form'
 import React from 'react'
 
 const ArticleCTA = () => {
     const { t } = useTranslation('articles')
+    const router = useRouter()
     const [form] = Form.useForm()
     const { subscribe, loading } = useNewsletterSubscription()
+
+    const articlePath = router.pathname.startsWith('/articles/')
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
 
     const handleSubscribe = async (values: { email: string }) => {
         const { email } = values
         const result = await subscribe(email)
 
         if (result.success) {
+            if (articlePath) {
+                trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER, {
+                    'Page title': pageTitle
+                })
+            } else {
+                trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER)
+            }
             form.resetFields()
         }
     }
@@ -38,7 +52,7 @@ const ArticleCTA = () => {
                             <Input
                                 size='md'
                                 placeholder={t('cta.placeholder')}
-                                className='!border-grey-200 !rounded-none bg-transparent'
+                                className='!border-grey-200 w-[200px] !rounded-none bg-transparent'
                                 inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 text-grey-200 !px-0'
                                 autoComplete='email'
                                 disabled={loading}
@@ -50,7 +64,7 @@ const ArticleCTA = () => {
                             variant='secondary'
                             className='!bg-grey-white !text-button-3-desktop !rounded-none'
                             loading={loading}
-                            disabled={loading}
+                            disabled={loading || form.getFieldValue('email')?.length === 0}
                         >
                             {t('cta.button')}
                         </Button>
