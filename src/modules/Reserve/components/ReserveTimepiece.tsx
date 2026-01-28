@@ -32,7 +32,7 @@ const ReserveTimepiece = () => {
     const getData = async () => {
         setIsLoading(true)
         try {
-            const response = await WooCommerce.get(`products?tag=54&category=15&per_page=10`)
+            const response = await WooCommerce.get(`products?tag=54&category=15,16&per_page=10`)
 
             setData(response.data)
         } catch (error) {
@@ -100,54 +100,66 @@ const ReserveTimepiece = () => {
                                 }}
                                 className='timepiece-swiper'
                             >
-                                {data.map((product: any) => (
-                                    <SwiperSlide key={product.id}>
-                                        {({ isActive }) => (
-                                            <UnstyledLink
-                                                href={`/collections/${product.slug}`}
-                                                onClick={() => {
-                                                    trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
-                                                }}
-                                            >
-                                                <div
-                                                    className={`transition-all duration-300 ${
-                                                        isActive ? 'scale-100' : 'scale-75 opacity-75'
-                                                    }`}
+                                {data.map((product: any) => {
+                                    const isWatch = product?.categories?.some(
+                                        (category: any) => category.name === 'Watches'
+                                    )
+                                    return (
+                                        <SwiperSlide key={product.id}>
+                                            {({ isActive }) => (
+                                                <UnstyledLink
+                                                    href={`/collections/${product.slug}`}
+                                                    onClick={() => {
+                                                        console.log('isWatch', isWatch, product)
+                                                        if (isWatch) {
+                                                            trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                        } else {
+                                                            trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                        }
+                                                    }}
                                                 >
-                                                    <div className='flex flex-col items-center gap-2.5'>
-                                                        <div className='relative h-[473px] w-[300px] overflow-hidden'>
-                                                            <Image
-                                                                src={
-                                                                    product.images?.[0]?.src ||
-                                                                    'https://placehold.co/300x473/png?text=TWC'
-                                                                }
-                                                                alt={product.name}
-                                                                width={0}
-                                                                height={0}
-                                                                className='h-full w-full object-cover'
-                                                                unoptimized
-                                                            />
-                                                        </div>
-
-                                                        {isActive && (
-                                                            <div className='flex flex-col gap-1 pb-6 text-center'>
-                                                                <p
-                                                                    className='text-sm uppercase tracking-wider text-gray-500'
-                                                                    dangerouslySetInnerHTML={{
-                                                                        __html: sanitizeHtml(product.brands?.[0]?.name)
-                                                                    }}
+                                                    <div
+                                                        className={`transition-all duration-300 ${
+                                                            isActive ? 'scale-100' : 'scale-75 opacity-75'
+                                                        }`}
+                                                    >
+                                                        <div className='flex flex-col items-center gap-2.5'>
+                                                            <div className='relative h-[473px] w-[300px] overflow-hidden'>
+                                                                <Image
+                                                                    src={
+                                                                        product.images?.[0]?.src ||
+                                                                        'https://placehold.co/300x473/png?text=TWC'
+                                                                    }
+                                                                    alt={product.name}
+                                                                    width={0}
+                                                                    height={0}
+                                                                    className='h-full w-full object-cover'
+                                                                    unoptimized
                                                                 />
-                                                                <h3 className='line-clamp-3 text-lg font-semibold text-gray-900'>
-                                                                    {product.name}
-                                                                </h3>
                                                             </div>
-                                                        )}
+
+                                                            {isActive && (
+                                                                <div className='flex flex-col gap-1 pb-6 text-center'>
+                                                                    <p
+                                                                        className='text-sm uppercase tracking-wider text-gray-500'
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: sanitizeHtml(
+                                                                                product.brands?.[0]?.name
+                                                                            )
+                                                                        }}
+                                                                    />
+                                                                    <h3 className='line-clamp-3 text-lg font-semibold text-gray-900'>
+                                                                        {product.name}
+                                                                    </h3>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </UnstyledLink>
-                                        )}
-                                    </SwiperSlide>
-                                ))}
+                                                </UnstyledLink>
+                                            )}
+                                        </SwiperSlide>
+                                    )
+                                })}
                             </Swiper>
                         )}
 

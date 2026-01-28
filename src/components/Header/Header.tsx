@@ -582,6 +582,8 @@ const Headers = () => {
         }
     }
 
+    const isWatch = searchResults?.[0]?.categories?.some((category: any) => category.name === 'Watches')
+
     return (
         <>
             <div
@@ -1194,7 +1196,12 @@ const Headers = () => {
                                                             setSearchQuery('')
                                                             setSearchResults([])
                                                             setCorrectedQuery('')
-                                                            trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+
+                                                            if (isWatch) {
+                                                                trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                            } else {
+                                                                trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                            }
                                                         }}
                                                     >
                                                         <div className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-12'>
