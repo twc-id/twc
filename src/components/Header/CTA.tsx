@@ -2,6 +2,7 @@ import Button from '@components/buttons/Button'
 import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -54,7 +55,7 @@ const CTA = () => {
                     </p>
 
                     <a
-                        href='https://wa.me/628121396688?text=Hello%20TheWatchCollections%2C'
+                        href={getWhatsAppLinkFromTemplate('navigation')}
                         target='_blank'
                         rel='noopener noreferrer'
                         onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}

@@ -3,6 +3,7 @@ import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -25,7 +26,7 @@ const Footer = () => {
                 { title: 'Watch Service', href: '/#service' },
                 {
                     title: 'Book an Appointment',
-                    href: 'https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                    href: getWhatsAppLinkFromTemplate('bookAppointment')
                 }
             ]
         },
@@ -36,7 +37,7 @@ const Footer = () => {
                 { title: 'About Us', href: '/about-us' },
                 {
                     title: 'Contact',
-                    href: 'https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                    href: getWhatsAppLinkFromTemplate('navigation')
                 },
                 {
                     title: 'Instagram',

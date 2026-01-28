@@ -3,6 +3,7 @@ import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -60,8 +61,7 @@ const CTA = () => {
                             {t('cta.description')}
                         </p>
                         <a
-                            href='
-                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                            href={getWhatsAppLinkFromTemplate('sellMain')}
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}

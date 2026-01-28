@@ -1,6 +1,7 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { useGSAP } from '@gsap/react'
+import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
@@ -63,7 +64,7 @@ const Location = () => {
                             <div className='flex flex-row items-center gap-4'>
                                 <Icons icon='Whatsapp' width={32} height={32} />
                                 <a
-                                    href='https://wa.me/628121396688?text=Hello%20TheWatchCollections%2C'
+                                    href={getWhatsAppLinkFromTemplate('aboutUs')}
                                     target='_blank'
                                     rel='noopener noreferrer'
                                     className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
@@ -110,7 +111,7 @@ const Location = () => {
                         <div className='flex flex-row items-center gap-4'>
                             <Icons icon='Whatsapp' width={32} height={32} />
                             <a
-                                href='https://wa.me/628121396688?text=Hello%20TheWatchCollections%2C'
+                                href={getWhatsAppLinkFromTemplate('aboutUs')}
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 className='text-paragraph-6-desktop text-grey-500'

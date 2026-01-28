@@ -11,6 +11,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
+import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import dynamic from 'next/dynamic'
@@ -844,8 +845,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 )}
                                 {product.purchasable ? (
                                     <a
-                                        href='
-                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                                        href={getWhatsAppLinkFromTemplate(
+                                            'detailProduct',
+                                            product.name,
+                                            typeof window !== 'undefined'
+                                                ? window.location.href
+                                                : `/collections/${product.slug}`
+                                        )}
                                         target='_blank'
                                         rel='noopener noreferrer'
                                         onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
@@ -924,12 +930,25 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                                         <div className='ml-4 flex shrink-0 items-center'>
                                             {product.purchasable ? (
-                                                <Button variant='secondaryInverse'>
-                                                    {' '}
-                                                    {t('common:reserve', {
-                                                        item: isWatch ? t('common:watch') : t('common:item')
-                                                    })}
-                                                </Button>
+                                                <a
+                                                    href={getWhatsAppLinkFromTemplate(
+                                                        'detailProduct',
+                                                        product.name,
+                                                        typeof window !== 'undefined'
+                                                            ? window.location.href
+                                                            : `/collections/${product.slug}`
+                                                    )}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                    onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                                >
+                                                    <Button variant='secondaryInverse'>
+                                                        {' '}
+                                                        {t('common:reserve', {
+                                                            item: isWatch ? t('common:watch') : t('common:item')
+                                                        })}
+                                                    </Button>
+                                                </a>
                                             ) : (
                                                 <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                                     <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
@@ -1073,8 +1092,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                   <div>
                                                       {product.purchasable ? (
                                                           <a
-                                                              href='
-                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                                                              href={getWhatsAppLinkFromTemplate(
+                                                                  'detailProduct',
+                                                                  product.name,
+                                                                  typeof window !== 'undefined'
+                                                                      ? window.location.href
+                                                                      : `/collections/${product.slug}`
+                                                              )}
                                                               target='_blank'
                                                               rel='noopener noreferrer'
                                                               onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
