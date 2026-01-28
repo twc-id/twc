@@ -1,6 +1,8 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -106,7 +108,15 @@ const HowToReserve = () => {
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white  xl:max-w-[574px]'>
                             {t('how_to_reserve.title')}
                         </h1>
-                        <Button className='h-full w-fit'>{t('cta.button')}</Button>
+                        <a
+                            href='
+                        https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                        >
+                            <Button className='h-full w-fit'>{t('cta.button')}</Button>
+                        </a>
                     </div>
                     <div
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'

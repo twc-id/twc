@@ -90,6 +90,15 @@ const Footer = () => {
                                         <UnstyledLink
                                             href={link.href}
                                             className='text-button-4-desktop text-grey-white'
+                                            onClick={() => {
+                                                if (link.title === 'Book an Appointment') {
+                                                    articlePath || productDetailPath
+                                                        ? trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                              'Page title': pageTitle
+                                                          })
+                                                        : trackEvent(GA_EVENTS.CONTACT_WA)
+                                                }
+                                            }}
                                         >
                                             {link.title}
                                         </UnstyledLink>

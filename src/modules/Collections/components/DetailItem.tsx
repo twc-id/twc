@@ -7,6 +7,8 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import Modal from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import gsap from 'gsap'
@@ -846,6 +848,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
                                         target='_blank'
                                         rel='noopener noreferrer'
+                                        onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
                                     >
                                         <Button variant='secondaryInverse' block>
                                             {t('common:reserve_this', {
@@ -1074,6 +1077,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
                                                               target='_blank'
                                                               rel='noopener noreferrer'
+                                                              onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
                                                           >
                                                               <Button variant='secondaryInverse'>
                                                                   {t('common:reserve_this', {

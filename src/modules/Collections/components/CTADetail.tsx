@@ -1,9 +1,12 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
@@ -13,9 +16,12 @@ if (typeof window !== 'undefined') {
 
 const CTADetail = () => {
     const { t } = useTranslation('collection')
+    const router = useRouter()
     const sectionRef = useRef<HTMLDivElement>(null)
     const headingref = useRef<HTMLHeadingElement>(null)
     const paragraphRef = useRef<HTMLParagraphElement>(null)
+
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -63,6 +69,11 @@ const CTADetail = () => {
                         https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
                             target='_blank'
                             rel='noopener noreferrer'
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Page title': pageTitle
+                                })
+                            }
                         >
                             <Button
                                 variant='secondary'
