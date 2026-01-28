@@ -120,7 +120,12 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
 
     const conditionOptions = [
         { id: 'brand-new', name: 'Brand New' },
-        { id: 'pre-owned-like-new', name: 'Pre-Owned' }
+        { id: 'new-old-stock', name: 'New Old Stock' },
+        { id: 'pre-owned-unworn', name: 'Pre-Owned (Unworn)' },
+        { id: 'pre-owned-like-new', name: 'Pre-Owned (Like New)' },
+        { id: 'pre-owned-very-mint', name: 'Pre-Owned (Very Mint)' },
+        { id: 'pre-owned-mint', name: 'Pre-Owned (Mint)' },
+        { id: 'pre-owned-good', name: 'Pre-Owned (Good)' }
     ]
 
     const genderOptions = [
@@ -129,7 +134,10 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
         { id: 'unisex', name: 'Unisex' }
     ]
 
-    const sortByOptions = [
+    const sortByOptions: Array<{
+        id: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+        name: string
+    }> = [
         { id: 'default', name: 'Newest Arrival' },
         { id: 'year-asc', name: 'Year: Newest first' },
         { id: 'year-desc', name: 'Year: Oldest first' },

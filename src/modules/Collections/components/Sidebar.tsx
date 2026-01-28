@@ -100,6 +100,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
 
     const conditionOptions = [
         { id: 'brand-new', name: 'Brand New' },
+        {
+            id: 'new-old-stock',
+            name: 'New Old Stock'
+        },
         { id: 'pre-owned-unworn', name: 'Pre-Owned (Unworn)' },
         { id: 'pre-owned-like-new', name: 'Pre-Owned (Like New)' },
         { id: 'pre-owned-very-mint', name: 'Pre-Owned (Very Mint)' },
@@ -113,7 +117,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
         { id: 'unisex', name: 'Unisex' }
     ]
 
-    const sortByOptions = [
+    const sortByOptions: Array<{
+        id: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
+        name: string
+    }> = [
         { id: 'default', name: 'Default' },
         { id: 'price-asc', name: 'Price: Low to High' },
         { id: 'price-desc', name: 'Price: High to Low' },
@@ -199,7 +206,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
         else delete q.sortBy
 
         // replace without navigation
-        router.replace({ pathname: router.pathname, query: q }, undefined, { shallow: true })
+        router.replace({ pathname: router.pathname, query: q }, undefined, { shallow: true, scroll: false })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, router.isReady])
 
