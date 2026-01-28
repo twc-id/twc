@@ -1,10 +1,12 @@
 import Container from '@components/Container'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useRelatedProducts } from '@hooks/useProduct'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -52,7 +54,21 @@ const Suggestion = ({ products }: SuggestionProps) => {
                 ) : (
                     <div className='grid grid-cols-2 grid-rows-2 flex-row items-center gap-4 xl:flex xl:gap-[140px]'>
                         {related.map((p: any) => (
-                            <Link href={`/collections/${p.slug ?? p.id}`} key={p.id}>
+                            <UnstyledLink
+                                href={`/collections/${p.slug ?? p.id}`}
+                                key={p.id}
+                                onClick={() => {
+                                    if (isWatch) {
+                                        trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                            'Page title': p.name
+                                        })
+                                    } else {
+                                        trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                            'Page title': p.name
+                                        })
+                                    }
+                                }}
+                            >
                                 <div onClick={handleSelect} className='relative flex w-full flex-col gap-1 xl:gap-12'>
                                     <div className='flex items-center justify-center xl:h-[417px] xl:w-[344px]'>
                                         <div className='h-[158px] w-[99px] overflow-hidden xl:h-[319px] xl:w-[196px]'>
@@ -104,7 +120,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                         )}
                                     </div>
                                 </div>
-                            </Link>
+                            </UnstyledLink>
                         ))}
                     </div>
                 )}

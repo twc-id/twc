@@ -5,6 +5,8 @@ import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -100,38 +102,45 @@ const ReserveTimepiece = () => {
                                 {data.map((product: any) => (
                                     <SwiperSlide key={product.id}>
                                         {({ isActive }) => (
-                                            <div
-                                                className={`transition-all duration-300 ${
-                                                    isActive ? 'scale-100' : 'scale-75 opacity-75'
-                                                }`}
+                                            <UnstyledLink
+                                                href={`/collections/${product.slug}`}
+                                                onClick={() => {
+                                                    trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                }}
                                             >
-                                                <div className='flex flex-col items-center gap-2.5'>
-                                                    <div className='relative h-[473px] w-[300px] overflow-hidden'>
-                                                        <Image
-                                                            src={
-                                                                product.images?.[0]?.src ||
-                                                                'https://placehold.co/300x473/png?text=TWC'
-                                                            }
-                                                            alt={product.name}
-                                                            width={0}
-                                                            height={0}
-                                                            className='h-full w-full object-cover'
-                                                            unoptimized
-                                                        />
-                                                    </div>
-
-                                                    {isActive && (
-                                                        <div className='flex flex-col gap-1 pb-6 text-center'>
-                                                            <p className='text-sm uppercase tracking-wider text-gray-500'>
-                                                                {product.brands?.[0]?.name}
-                                                            </p>
-                                                            <h3 className='line-clamp-3 text-lg font-semibold text-gray-900'>
-                                                                {product.name}
-                                                            </h3>
+                                                <div
+                                                    className={`transition-all duration-300 ${
+                                                        isActive ? 'scale-100' : 'scale-75 opacity-75'
+                                                    }`}
+                                                >
+                                                    <div className='flex flex-col items-center gap-2.5'>
+                                                        <div className='relative h-[473px] w-[300px] overflow-hidden'>
+                                                            <Image
+                                                                src={
+                                                                    product.images?.[0]?.src ||
+                                                                    'https://placehold.co/300x473/png?text=TWC'
+                                                                }
+                                                                alt={product.name}
+                                                                width={0}
+                                                                height={0}
+                                                                className='h-full w-full object-cover'
+                                                                unoptimized
+                                                            />
                                                         </div>
-                                                    )}
+
+                                                        {isActive && (
+                                                            <div className='flex flex-col gap-1 pb-6 text-center'>
+                                                                <p className='text-sm uppercase tracking-wider text-gray-500'>
+                                                                    {product.brands?.[0]?.name}
+                                                                </p>
+                                                                <h3 className='line-clamp-3 text-lg font-semibold text-gray-900'>
+                                                                    {product.name}
+                                                                </h3>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </UnstyledLink>
                                         )}
                                     </SwiperSlide>
                                 ))}
@@ -174,7 +183,12 @@ const ReserveTimepiece = () => {
                         {t('reserve_time_pieces.description')}
                     </h3>
 
-                    <UnstyledLink href='/collections'>
+                    <UnstyledLink
+                        href='/collections'
+                        onClick={() => {
+                            trackEvent(GA_EVENTS.INTEREST_WATCHES)
+                        }}
+                    >
                         <Button variant='secondaryInverse'>{t('common:view_all')}</Button>
                     </UnstyledLink>
                 </div>

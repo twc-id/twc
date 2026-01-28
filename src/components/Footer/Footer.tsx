@@ -1,12 +1,21 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 const Footer = () => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const router = useRouter()
+
+    const articlePath = router.pathname.startsWith('/articles/')
+    const productDetailPath = router.pathname.startsWith('/collections/')
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+
     const items = [
         {
             name: 'Our Services',
@@ -29,7 +38,10 @@ const Footer = () => {
                     title: 'Contact',
                     href: 'https://api.whatsapp.com/send/?phone=628121396688&text=Hello+TheWatchCollections%2C&type=phone_number&app_absent=0'
                 },
-                { title: 'Instagram', href: 'https://instagram.com/thewatchcollections' },
+                {
+                    title: 'Instagram',
+                    href: 'https://instagram.com/thewatchcollections'
+                },
                 {
                     title: 'Store Location',
                     href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
@@ -94,6 +106,15 @@ const Footer = () => {
                                         <UnstyledLink
                                             href={link.href}
                                             className='text-button-4-desktop text-grey-white'
+                                            onClick={() => {
+                                                if (link.title === 'Instagram') {
+                                                    articlePath || productDetailPath
+                                                        ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                                              'Page title': pageTitle
+                                                          })
+                                                        : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
+                                                }
+                                            }}
                                         >
                                             {link.title}
                                         </UnstyledLink>
@@ -166,6 +187,13 @@ const Footer = () => {
                                             <UnstyledLink
                                                 href={link.href}
                                                 className='text-button-4-desktop text-grey-white'
+                                                onClick={() => {
+                                                    articlePath || productDetailPath
+                                                        ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                                              'Page title': pageTitle
+                                                          })
+                                                        : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
+                                                }}
                                             >
                                                 {link.title}
                                             </UnstyledLink>

@@ -723,10 +723,18 @@ const Headers = () => {
                                     const willOpen = !isSearchOpen
                                     setIsSearchOpen(willOpen)
                                     if (willOpen) {
-                                        // Track search event when opening search
-                                        trackEvent(GA_EVENTS.SEARCH, {
-                                            page: router.pathname
-                                        })
+                                        const articlePath = router.pathname.startsWith('/articles/')
+                                        const productDetailPath = router.pathname.startsWith('/collections/')
+                                        const pageTitle =
+                                            typeof window !== 'undefined' ? document.title : router.pathname
+
+                                        if (articlePath || productDetailPath) {
+                                            trackEvent(GA_EVENTS.SEARCH, {
+                                                'Page title': pageTitle
+                                            })
+                                        } else {
+                                            trackEvent(GA_EVENTS.SEARCH)
+                                        }
 
                                         // close menu when opening search
                                         setIsMenuOpen(false)
@@ -1186,6 +1194,7 @@ const Headers = () => {
                                                             setSearchQuery('')
                                                             setSearchResults([])
                                                             setCorrectedQuery('')
+                                                            trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
                                                         }}
                                                     >
                                                         <div className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-12'>

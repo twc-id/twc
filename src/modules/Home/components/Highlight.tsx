@@ -10,7 +10,6 @@ import { formatRupiah } from '@utils/currency'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -36,7 +35,6 @@ const Highlight = () => {
     const tabsRef = useRef<HTMLDivElement>(null)
     const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
-    const router = useRouter()
 
     const tabs = [
         {
@@ -226,7 +224,16 @@ const Highlight = () => {
                               ))
                             : data?.map((product: any) => (
                                   <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
-                                      <UnstyledLink href={`/collections/${product.slug}`}>
+                                      <UnstyledLink
+                                          href={`/collections/${product.slug}`}
+                                          onClick={() => {
+                                              if (tab === 'watches') {
+                                                  trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                              } else {
+                                                  trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                              }
+                                          }}
+                                      >
                                           <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
                                               <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
                                                   <Image
@@ -306,9 +313,11 @@ const Highlight = () => {
                         <UnstyledLink
                             href='/collections'
                             onClick={() => {
-                                trackEvent(GA_EVENTS.VIEW_MORE, {
-                                    page: router.pathname
-                                })
+                                if (tab === 'watches') {
+                                    trackEvent(GA_EVENTS.INTEREST_WATCHES)
+                                } else {
+                                    trackEvent(GA_EVENTS.INTEREST_ACCESSORIES)
+                                }
                             }}
                         >
                             <Button variant='primary' className='hover:!border-grey-black/50 hover:text-grey-black/50'>

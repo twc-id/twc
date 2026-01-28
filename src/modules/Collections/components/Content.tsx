@@ -1,5 +1,7 @@
 import UnstyledLink from '@components/links/UnstyledLink'
 import Loader from '@components/Loader'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitize } from 'isomorphic-dompurify'
 import Image from 'next/image'
@@ -29,13 +31,25 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, contentRef }) =>
             </div>
         )
     }
+
+    const isWatch = products?.[0]?.categories?.some((category: any) => category.name === 'Watches')
     return (
         <div ref={contentRef} className='scrollbar-none xl:max-h-screen xl:overflow-hidden'>
             <If condition={products && products.length > 0}>
                 <Then>
                     <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3'>
                         {products.map((item: any) => (
-                            <UnstyledLink href={`/collections/${item.slug}`} key={item.id}>
+                            <UnstyledLink
+                                href={`/collections/${item.slug}`}
+                                key={item.id}
+                                onClick={() => {
+                                    if (isWatch) {
+                                        trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                    } else {
+                                        trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                    }
+                                }}
+                            >
                                 <div
                                     className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-12'
                                     key={item.name}
