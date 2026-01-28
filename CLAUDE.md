@@ -22,6 +22,10 @@ yarn lint:strict      # ESLint with max 1 warning (for CI)
 yarn test             # Run Jest tests
 yarn test:watch       # Jest in watch mode
 
+# E2E Testing (Playwright)
+# Playwright MCP tools are available for browser testing
+# Use mcp__playwright__browser_* tools to navigate, click, and test UI
+
 # Formatting
 yarn format           # Format code with Prettier
 yarn format:check     # Check formatting without modifying
@@ -122,11 +126,26 @@ const useStore = createSelectorHooks(useStoreBase)
 -   Primary instance in `src/lib/api.ts` via `createWooCommerceInstance()`
 -   Uses Basic auth with base64-encoded consumer key/secret
 -   Custom fetch wrapper in same file for Bearer token endpoints
+-   **Shared filter logic**: Use `buildProductFiltersQuery(filters)` from `@hooks/useProduct` for consistent filter handling across components
 
 **Authentication:**
 
 -   Token stored via `@utils/auth` (getAuth, resetAuth)
 -   Auto-logout on 401 response
+
+**Product Filter System:**
+
+Filters are managed through:
+
+-   `src/store/useCollectionsFilterStore.tsx` - Zustand store with `FilterOptions` type
+-   `src/hooks/useProduct.ts` - Exports `buildProductFiltersQuery()` shared function
+-   `src/modules/Collections/Collections.tsx` - Uses shared query builder for filtering
+-   `src/modules/Collections/components/Sidebar.tsx` - Desktop filter sidebar
+-   `src/modules/Collections/components/MobileFilterModal.tsx` - Mobile filter modal
+
+Filter options include: brands, availability, condition (brand-new, new-old-stock, pre-owned-\*), gender, priceRange, sortBy
+
+**Important:** When updating router.query with `router.replace()`, always include `scroll: false` option to prevent unwanted scroll-to-top behavior during filter changes.
 
 ## Module Architecture
 
