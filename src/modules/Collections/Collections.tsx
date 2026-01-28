@@ -86,6 +86,9 @@ const Collections = () => {
                 if (conditionValues.includes('brand-new')) {
                     metaArr.push({ key: 'is_new', value: '1' })
                 }
+                if (conditionValues.includes('new-old-stock')) {
+                    metaArr.push({ key: 'basic-info-status', value: 'New Old Stock' })
+                }
                 const selectedPreOwned = conditionValues.filter((c: string) => c.startsWith('pre-owned-'))
                 if (selectedPreOwned.length > 0) {
                     // add status once
@@ -148,6 +151,7 @@ const Collections = () => {
                 if (orderByParam) q.push(orderByParam)
                 if (orderParam) q.push(orderParam)
                 const metaParam = encodeURIComponent(JSON.stringify(metaArr))
+
                 const response = await WooCommerce.get(`products/by-meta?meta=${metaParam}&relation=AND&${q.join('&')}`)
                 const fetched = response.data?.data || response.data || []
                 const totalHeader =
