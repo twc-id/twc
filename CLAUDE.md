@@ -221,7 +221,7 @@ Git Flow Release Branch Prompt
 
 Install Git Flow if not already installed:
 
-```bash
+````bash
 # macOS
 brew install git-flow-avh
 
@@ -284,9 +284,30 @@ git flow release finish X.Y.Z
 What happens during git flow release finish:
 
 1. Merge message editor opens → Fill with changelog format (see step 6)
-2. Tag message editor opens → You can leave empty or add tag message
+2. Tag message editor opens → **REQUIRED**: Enter date in parentheses format `(Month DD, YYYY)`
 3. Merges to both main and develop branches
 4. Deletes the release branch
+
+**Troubleshooting: If `git flow release finish` fails during tagging:**
+
+If you see `fatal: no tag message?` error, the merge was successful but tagging failed. Complete the release manually:
+
+```bash
+# Create the tag manually (message only needs date in parentheses)
+git tag -a X.Y.Z -m "(Month DD, YYYY)"
+
+# Example:
+# git tag -a 2.0.1 -m "(February 18, 2026)"
+
+# Switch to dev branch and merge the release
+git checkout dev
+git merge release/X.Y.Z --no-edit
+
+# Delete the release branch
+git branch -D release/X.Y.Z
+
+# Continue with step 7 (Push to Remote)
+````
 
 6. Changelog Format (Merge Message)
 
@@ -295,51 +316,66 @@ In the merge message editor, use this format:
 Month DD, YYYY
 
 ### Added
-- Feature A description
-- Feature B description
+
+-   Feature A description
+-   Feature B description
 
 ### Fixed
-- Bug A fix
-- Bug B fix
+
+-   Bug A fix
+-   Bug B fix
 
 ### Changed
-- Change A description
+
+-   Change A description
 
 ### Removed
-- Removed feature A
+
+-   Removed feature A
 
 Save and close the editor.
 
 7. Push to Remote
 
 # Pull latest changes first
+
 git pull origin main
 git pull origin develop
 
 # Push branches
+
 git push origin main
 git push origin develop
 
 # Push tag
+
 git push origin X.Y.Z
+
 # Example: git push origin 4.1.4
 
 Notes
 
-- Always start release from develop branch
-- Use semantic versioning (major.minor.patch)
-- Tag format: plain version number without 'v' prefix (e.g., 4.1.4)
-- Changelog format: Month DD, YYYY (e.g., January 17, 2026)
-- If conflicts occur during merge, resolve them and continue with git flow release finish --continue
+-   Always start release from dev branch (NOT develop - the branch name is `dev`)
+-   Use semantic versioning (major.minor.patch)
+-   Tag format: plain version number without 'v' prefix (e.g., 4.1.4)
+-   Changelog format: Month DD, YYYY (e.g., January 17, 2026)
+-   If conflicts occur during merge, resolve them and continue with git flow release finish --continue
+-   If tagging fails during `git flow release finish`, follow the troubleshooting steps above
 
 Useful Commands
 
 # List release branches
+
 git branch | grep release
 
 # Abort a release
+
 git flow release abort
 
 # Show release status
+
 git flow release status
+
+```
+
 ```
