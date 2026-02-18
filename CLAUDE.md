@@ -259,21 +259,21 @@ git flow release start X.Y.Z
 
 3. Update Version
 
-Update your version file (e.g., env.ts):
+**Important:** Update BOTH version files:
 
 // For package.json
 {
   "version": "4.1.4"
 }
 
-OR
+// For src/constant/env.ts
+export const APP_VERSION = '4.1.4'
 
-// For env.ts
-export const APP_VERSION = "v4.1.4"
+Note: APP_VERSION uses plain version format without 'v' prefix (e.g., '4.1.4' not 'v4.1.4')
 
 4. Commit Version Change
 
-git add <version-file>
+git add package.json src/constant/env.ts
 git commit -m "build: X.Y.Z"
 
 5. Finish Release
