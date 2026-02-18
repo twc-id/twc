@@ -1,7 +1,9 @@
 import Button from '@components/buttons/Button'
+import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
+import { Trans, useTranslation } from 'next-i18next'
 import React, { useRef } from 'react'
 
 if (typeof window !== 'undefined') {
@@ -9,6 +11,8 @@ if (typeof window !== 'undefined') {
 }
 
 const SellReserve = () => {
+    const { t } = useTranslation(['home'])
+
     const sectionRef = useRef<HTMLElement>(null)
     const sellRef = useRef<HTMLDivElement>(null)
     const reserveRef = useRef<HTMLDivElement>(null)
@@ -18,7 +22,10 @@ const SellReserve = () => {
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
-                toggleActions: 'restart none none reset'
+                end: 'bottom 20%',
+                toggleActions: 'play none none reset',
+                onEnter: () => timeline.restart(),
+                onEnterBack: () => timeline.restart()
             }
         })
 
@@ -33,7 +40,7 @@ const SellReserve = () => {
     return (
         <section
             ref={sectionRef}
-            className='relative z-10 flex flex-col gap-2 bg-white px-4 py-16 xl:flex-row xl:px-5 xl:py-[160px]'
+            className='xl:py[160px] dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 py-16  xl:flex-row  xl:px-5 '
         >
             <div
                 ref={sellRef}
@@ -41,12 +48,16 @@ const SellReserve = () => {
                     backgroundImage:
                         "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/sell.webp')",
                     backgroundSize: '100% auto',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundPositionY: 'top'
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>Sell Your Watch</h1>
-                <Button>Learn More</Button>
+                <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
+                    <Trans i18nKey='home:sell_reserve.sell_title'>{t('sell_reserve.sell_title')}</Trans>
+                </h1>
+                <UnstyledLink href='/sell'>
+                    <Button>{t('common:learn_more')}</Button>
+                </UnstyledLink>
             </div>
             <div
                 ref={reserveRef}
@@ -54,12 +65,17 @@ const SellReserve = () => {
                     backgroundImage:
                         "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/reserve.webp')",
                     backgroundSize: '100% auto',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundPositionY: 'top'
+                    // backgroundRepeat: 'no-repeat'
                 }}
                 className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
-                <h1 className='text-heading-2-desktop text-grey-white'>Reserve Your Watch</h1>
-                <Button>Learn More</Button>
+                <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
+                    {t('sell_reserve.reserve_title')}
+                </h1>
+                <UnstyledLink href='/reserve'>
+                    <Button>{t('sell_reserve.cta_reserve')}</Button>
+                </UnstyledLink>
             </div>
         </section>
     )

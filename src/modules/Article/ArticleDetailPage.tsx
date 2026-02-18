@@ -1,6 +1,12 @@
+import Container from '@components/Container'
 import Seo from '@components/Seo'
-import { Article as ArticleType } from '@hooks/useArticle'
-import React from 'react'
+import { Article as ArticleType, useRelatedArticles } from '@hooks/useArticle'
+import { WooCommerce } from '@lib/api'
+import ArticleCTA from '@modules/Article/components/ArticleCTA'
+import RelatedArticles from '@modules/Article/components/RelatedArticles'
+import React, { useEffect, useState } from 'react'
+import { When } from 'react-if'
+import { useMediaQuery } from 'react-responsive'
 
 import ArticleDetail from './components/ArticleDetail'
 
@@ -9,11 +15,42 @@ interface ArticleDetailPageProps {
 }
 
 const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
+    const { data: relatedArticles } = useRelatedArticles(
+        article.id,
+        article._embedded?.['wp:term']?.[0]?.map((term) => term.id) || []
+    )
+    const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const fetchDefaultSuggestions = async () => {
+        try {
+            setIsLoading(true)
+            const response = await WooCommerce.get(`products?tag=33&category=15&per_page=${isMobile ? 4 : 3}`)
+            setProducts(response.data || [])
+        } catch (err) {
+            console.error('Error fetching default suggestions', err)
+            setProducts([])
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchDefaultSuggestions()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
-        <div className='min-h-screen bg-white'>
-            <Seo title={article.title.rendered} description={article.uagb_excerpt} />
-            <ArticleDetail article={article} />
-        </div>
+        <>
+            <Seo title={article.title.rendered} description={article.uagb_excerpt} date={article.date} />
+            <ArticleDetail article={article} products={products} isLoading={isLoading} />
+            <When condition={relatedArticles && relatedArticles.data.length > 0}>
+                <RelatedArticles article={relatedArticles} />
+            </When>
+            <Container className='pb-14 xl:pb-[116px]'>
+                <ArticleCTA />
+            </Container>
+        </>
     )
 }
 

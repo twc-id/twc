@@ -5,6 +5,7 @@ import plugin from 'tailwindcss/plugin'
 import fontSize from './src/tailwind-config/font-sizes.config'
 
 export default {
+    darkMode: ['class', '[data-theme="dark"]'],
     content: ['./src/**/*.{js,jsx,ts,tsx}'],
     theme: {
         extend: {

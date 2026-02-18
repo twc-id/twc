@@ -28,7 +28,7 @@ const Loader: React.FC<LoadersProps> = ({ type = defaultType, width, height, col
 Loader.defaultProps = {
     width: 80,
     height: 80,
-    color: '#14B2E6',
+    color: '#010101',
     label: 'Loading',
     type: defaultType
 }

@@ -1,0 +1,50 @@
+{
+    "title": "The Watch Collection - Reserve Your Spot",
+    "hero": {
+        "title": "Belum menemukan jam tangan yang Anda inginkan?",
+        "subtitle": "Kami dapat menyediakan lebih banyak untuk Anda",
+        "description": "Pre-order jam tangan impian, kami akan membantu Anda mendapatkannya",
+        "items": {
+            "1": {
+                "title": "Klasik Mewah"
+            },
+            "2": {
+                "title": "Koleksi Olahraga"
+            },
+            "3": {
+                "title": "Seri Vintage"
+            }
+        }
+    },
+
+    "reserve_time_pieces": {
+        "title": "Pre-Order Jam Tangan",
+        "description": "Lihat Jam Tangan yang Dapat Anda Pesan"
+    },
+    "how_to_reserve": {
+        "title": "Bagaimana Cara Pre-Order di The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Pilih Jam Tangan yang Anda Inginkan",
+                "description": "Telusuri koleksi jam tangan kami dan tentukan pilihan Anda."
+            },
+            "2": {
+                "title": "Isi Detail Reservasi",
+                "description": "Isi informasi serta tentukan waktu yang Anda inginkan untuk melihat jam tersebut."
+            },
+            "3": {
+                "title": "Konfirmasi",
+                "description": "Kami akan memeriksa ketersediaan, mengonfirmasi pemesanan Anda, membimbing proses inspeksi, dan menjelaskan opsi pembayaran."
+            },
+            "4": {
+                "title": "Pembayaran dan Pengiriman",
+                "description": "Setelah pembayaran selesai, Anda dapat memilih metode pengiriman (mengambil langsung di toko atau dikirim dengan layanan yang dilindungi asuransi)."
+            }
+        }
+    },
+    "cta": {
+        "title": "Pesan Jam Tangan Impian Anda",
+        "description": "Pilih jam tangan mewah terbaik dari seluruh dunia",
+        "button": "Pesan Sekarang"
+    }
+}

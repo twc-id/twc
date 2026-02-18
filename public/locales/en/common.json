@@ -1,3 +1,38 @@
 {
-    "hello-world": "Hello World"
+    "learn_more": "Learn More",
+    "follow_us": "Follow Us",
+    "book_appointment": "Book an Appointment",
+    "view_all": "View All",
+    "loading": "Loading",
+    "show_more": "Show More",
+    "filter": {
+        "brand": "Brand",
+        "price_range": "Price Range",
+        "availability": "Availability",
+        "gender": "Gender",
+        "sort_by": "Sort By"
+    },
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "pre_order": "Pre-order",
+    "sold_out": "Sold Out",
+    "sold": "Sold",
+    "watch": "Watch",
+    "item": "Item",
+    "accesoris": "Accesoris",
+    "reserve": "Reserve",
+    "reserve_this": "Reserve This {{item}}",
+    "read_article": "Read Article",
+    "no_product": "We couldn’t find a match of what you search, please choose other filter to continue.",
+    "discover_more": "Discover More",
+    "header": {
+        "empty_search": "We couldn’t find a match of what you search, please check the spelling",
+        "cta": {
+            "title": "Can’t Find Your Desired Watch?",
+            "description": "Reach out to us, we’ll help you find it",
+            "contact_us": "Contact Us"
+        }
+    },
+    "search_result": "Search Results",
+    "suggestion": "Suggestions"
 }

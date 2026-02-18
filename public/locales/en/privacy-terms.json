@@ -1,0 +1,10 @@
+{
+    "privacy": {
+        "title": "Privacy Policy",
+        "updated": "This Privacy Policy was last updated on <strong>{{time}}</strong>"
+    },
+    "terms": {
+        "title": "Terms of Use",
+        "updated": "These Terms of Use were last updated on <strong>{{time}}</strong>"
+    }
+}

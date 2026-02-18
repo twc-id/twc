@@ -1,3 +1,38 @@
 {
-    "hello-world": "Halo Dunia"
+    "learn_more": "Lebih Lanjut",
+    "follow_us": "Follow Us",
+    "book_appointment": "Buat Janji",
+    "view_all": "Lihat Semua",
+    "loading": "Loading",
+    "show_more": "Show More",
+    "filter": {
+        "brand": "Brand",
+        "price_range": "Price Range",
+        "availability": "Availability",
+        "gender": "Gender",
+        "sort_by": "Sort By"
+    },
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "pre_order": "Pre-order",
+    "sold_out": "Sold Out",
+    "sold": "Sold",
+    "watch": "Jam",
+    "item": "Item",
+    "accesoris": "Aksesoris",
+    "reserve": "Reserve",
+    "reserve_this": "Reserve This {{item}}",
+    "read_article": "Baca Artikel",
+    "no_product": "Kami tidak dapat menemukan kecocokan dari apa yang Anda cari, silakan pilih filter lain untuk melanjutkan.",
+    "discover_more": "Temukan Lebih Banyak",
+    "header": {
+        "empty_search": "Kami tidak dapat menemukan kecocokan dari apa yang Anda cari, silakan periksa ejaan",
+        "cta": {
+            "title": "Belum menemukan jam tangan yang Anda inginkan?",
+            "description": "Kami akan membantu Anda mendapatkannya",
+            "contact_us": "Hubungi Kami"
+        }
+    },
+    "search_result": "Hasil Pencarian",
+    "suggestion": "Saran"
 }

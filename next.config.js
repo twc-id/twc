@@ -14,7 +14,28 @@ const nextConfig = {
 
     // Uncomment to add domain whitelist
     images: {
-        domains: ['mediumpurple-pig-833607.hostingersite.com']
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'mediumpurple-pig-833607.hostingersite.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.jakpost.net'
+            },
+            {
+                protocol: 'https',
+                hostname: 'scontent-sin6-4.cdninstagram.com'
+            },
+            {
+                protocol: 'https',
+                hostname: '*.cdninstagram.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'placehold.co'
+            }
+        ]
     },
 
     // SVGR

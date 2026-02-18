@@ -1,0 +1,65 @@
+{
+    "hero": {
+        "title": " Curated Luxury, <br /> Timeless Value",
+        "sub_1": "Curated Pieces",
+        "sub_2": "Where Great Collections Begin"
+    },
+    "commitment": {
+        "title": "Timeless. Worthwhile. Curated",
+        "description": "Timepieces Worth Collecting. Moments Worth Keeping."
+    },
+    "highlight": {
+        "title": "Featured Collection",
+        "tabs": {
+            "watches": "Watches",
+            "accessories": "Accessories"
+        },
+        "pre_owned": "Pre-owned • {{year}}",
+        "view_more": "View More"
+    },
+    "sell_reserve": {
+        "sell_title": "Sell Your Watch",
+        "reserve_title": "Reserve Your Watch",
+        "learn_more": "Learn More",
+        "cta_reserve": "Discover More"
+    },
+    "timepiece": {
+        "title": "Timepiece <br className='hidden xl:block' /> Services",
+        "book_now": "Book Now",
+        "items": {
+            "1": {
+                "label": "Care and Maintenance",
+                "description": "From cleaning and polishing to a complete check-up, we keep your timepiece flawless with expert care."
+            },
+            "2": {
+                "label": "Repairs and Replacements",
+                "description": "Battery, bracelet, strap, glass, and parts replacement to keep your timepiece in perfect condition."
+            },
+            "3": {
+                "label": "Invishield Watch Protective Film",
+                "description": "Protective layer to safeguard your timepiece, complete with a lifetime warranty."
+            },
+            "4": {
+                "label": "Glass Replacement",
+                "description": "Repair or replace cracked or scratched watch glass"
+            }
+        }
+    },
+    "journey": {
+        "title": "Behind <br /> The Journey",
+        "desc_1": "Since 2014, The Watch Collections has curated high-end timepieces from the world’s most prestigious brands, including Richard Mille, Patek Philippe, Audemars Piguet, Rolex, Cartier, and more.",
+        "desc_2": "We offer an in-store service in Jakarta, ensuring that every timepiece we present is authentic, safe, and trustworthy. <br/> Inspired by the art and craftsmanship of fine watches, we are committed to helping you find the perfect piece with honesty, respect, and ethical service.",
+        "learn_our_story": "Learn Our Story"
+    },
+    "review": {
+        "title": "Where Trust Speaks"
+    },
+    "social_media": {
+        "title": "More on Instagram",
+        "find_us_social_media": "Find Us in <br className='hidden xl:block' /> Social Media"
+    },
+    "cta": {
+        "title": "The Watch <br /> Journal",
+        "description": "Discover, learn, and explore the world of luxury timepieces"
+    }
+}
