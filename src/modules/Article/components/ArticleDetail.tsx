@@ -4,7 +4,6 @@ import { Article } from '@hooks/useArticle'
 import Suggestion from '@modules/Article/components/Suggestion'
 import { formatDate } from '@utils/format-date'
 import { sanitizeHtml } from '@utils/html'
-import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
 
 interface ArticleDetailProps {
@@ -19,8 +18,24 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
     const categories = article._embedded?.['wp:term']?.[0] || []
 
     useEffect(() => {
-        // Configure NProgress
-        NProgress.configure({ showSpinner: false })
+        // Create custom article reading progress bar (isolated from router NProgress)
+        let progressBar = document.getElementById('article-reading-progress')
+        if (!progressBar) {
+            progressBar = document.createElement('div')
+            progressBar.id = 'article-reading-progress'
+            progressBar.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 3px;
+                background: #000000;
+                z-index: 99998;
+                width: 0%;
+                transition: width 200ms ease-out;
+                pointer-events: none;
+            `
+            document.body.appendChild(progressBar)
+        }
 
         let ticking = false
 
@@ -29,17 +44,18 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
             const scrollHeight = document.documentElement.scrollHeight
             const clientHeight = document.documentElement.clientHeight
 
-            // Calculate reading progress (0 to 1)
-            const progress = scrollTop / (scrollHeight - clientHeight)
+            // Calculate reading progress (0 to 100)
+            const progress = (scrollTop / (scrollHeight - clientHeight)) * 100
 
             // Only show progress after user starts scrolling
             if (scrollTop > 0) {
-                // Clamp progress between 0 and 1, keep at 1 when at bottom
-                const clampedProgress = Math.min(Math.max(progress, 0), 1)
-                NProgress.set(clampedProgress)
+                const clampedProgress = Math.min(Math.max(progress, 0), 100)
+                progressBar.style.width = `${clampedProgress}%`
+                progressBar.style.opacity = '1'
             } else {
                 // Hide progress bar when at the top
-                // NProgress.done()
+                progressBar.style.width = '0%'
+                progressBar.style.opacity = '0'
             }
 
             ticking = false
@@ -55,10 +71,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
         // Add scroll listener
         window.addEventListener('scroll', handleScroll, { passive: true })
 
-        // Cleanup
+        // Cleanup - remove the progress bar element when component unmounts
         return () => {
             window.removeEventListener('scroll', handleScroll)
-            NProgress.done()
+            progressBar?.remove()
         }
     }, [])
 
@@ -151,7 +167,6 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                             left: 50%;
 
                             height: auto;
-                            width: 70%;
                         }
                     }
 

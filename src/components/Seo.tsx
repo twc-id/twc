@@ -5,14 +5,14 @@ const defaultMeta = {
     title: 'The Watch Collections - When Quality Meets Perfection',
     siteName: 'The Watch Collections',
     description: 'We provide of the high end timepiece collections from the most luxurious brands in the world.',
-    url: 'https://thewatchcollections.com',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
     type: 'website',
     robots: 'follow, index',
     /**
      * No need to be filled, will be populated with openGraph function
      * If you wish to use a normal image, just specify the path below
      */
-    image: 'https://thewatchcollections.com/images/large-og.png'
+    image: `${process.env.NEXT_PUBLIC_BASE_URL}/images/large-og.png`
 }
 
 type SeoProps = {
