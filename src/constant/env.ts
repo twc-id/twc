@@ -5,6 +5,7 @@ export const showLogger = isLocal ? true : process.env.NEXT_PUBLIC_SHOW_LOGGER =
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 export const API_WP_URL = process.env.NEXT_PUBLIC_WP_URL
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
 export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV
 
 export const CONSUMER_KEY = process.env.NEXT_PUBLIC_CONSUMER_KEY

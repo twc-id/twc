@@ -44,7 +44,7 @@ const createWooCommerceInstance = (config?: WooCommerceConfig) => {
     const authHeader = `Basic ${toBase64(`${consumerKey}:${consumerSecret}`)}`
 
     return new WooCommerceRestApi({
-        url: config?.url ?? 'https://mediumpurple-pig-833607.hostingersite.com',
+        url: config?.url ?? 'https://store.thewatchcollections.com',
         consumerKey,
         consumerSecret,
         version: config?.version ?? ('wc/v3' as any),
