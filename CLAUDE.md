@@ -175,7 +175,7 @@ Example: `src/modules/Collections/` contains the collections page with sidebar f
 **External Images:**
 
 -   Image domains must be whitelisted in `next.config.js` under `images.remotePatterns`
--   Currently whitelisted: `mediumpurple-pig-833607.hostingersite.com`, `img.jakpost.net`, `*.cdninstagram.com`, `placehold.co`
+-   Currently whitelisted: `store.thewatchcollections.com`, `img.jakpost.net`, `*.cdninstagram.com`, `placehold.co`
 -   Add new domains using the pattern: `{ protocol: 'https', hostname: 'your-domain.com' }`
 
 **Internationalization:**
@@ -213,15 +213,13 @@ Example: `src/modules/Collections/` contains the collections page with sidebar f
 
 The main branch for PRs is `pages-directory` (check git status to confirm current branch).
 
-Git Flow Release Branch Prompt
-
-# Git Flow Release Management
+## Git Flow Release Management
 
 ## Prerequisites
 
 Install Git Flow if not already installed:
 
-````bash
+```bash
 # macOS
 brew install git-flow-avh
 
@@ -231,30 +229,35 @@ sudo apt-get install git-flow
 # Initialize git flow in repo (first time only)
 git flow init
 # Use default branch names: main (production), develop (development)
+```
 
-Version Bumping Rules
+### Version Bumping Rules
 
 | Change Type                         | Example       | Version Bump          |
-|-------------------------------------|---------------|-----------------------|
+| ----------------------------------- | ------------- | --------------------- |
 | Bug fixes                           | 4.1.3 → 4.1.4 | Patch (last number)   |
 | New features (backwards compatible) | 4.1.3 → 4.2.0 | Minor (middle number) |
 | Breaking changes                    | 4.1.3 → 5.0.0 | Major (first number)  |
 
-Release Steps
+### Release Steps
 
 1. Pre-release Checks
 
 # Ensure develop branch is up to date
+
 git checkout develop
 git pull origin develop
 
 # Check current version
+
 # (Check your version file, e.g., package.json, version.ts, etc.)
 
 2. Start Release Branch
 
 # Replace X.Y.Z with the NEW version number
+
 git flow release start X.Y.Z
+
 # Example: git flow release start 4.1.4
 
 3. Update Version
@@ -263,7 +266,7 @@ git flow release start X.Y.Z
 
 // For package.json
 {
-  "version": "4.1.4"
+"version": "4.1.4"
 }
 
 // For src/constant/env.ts
@@ -279,6 +282,7 @@ git commit -m "build: X.Y.Z"
 5. Finish Release
 
 git flow release finish X.Y.Z
+
 # Example: git flow release finish 4.1.4
 
 What happens during git flow release finish:
@@ -307,9 +311,9 @@ git merge release/X.Y.Z --no-edit
 git branch -D release/X.Y.Z
 
 # Continue with step 7 (Push to Remote)
-````
+```
 
-6. Changelog Format (Merge Message)
+### 6. Changelog Format (Merge Message)
 
 In the merge message editor, use this format:
 
@@ -335,7 +339,7 @@ Month DD, YYYY
 
 Save and close the editor.
 
-7. Push to Remote
+### 7. Push to Remote
 
 # Pull latest changes first
 
@@ -353,7 +357,7 @@ git push origin X.Y.Z
 
 # Example: git push origin 4.1.4
 
-Notes
+### Notes
 
 -   Always start release from dev branch (NOT develop - the branch name is `dev`)
 -   Use semantic versioning (major.minor.patch)
@@ -362,7 +366,7 @@ Notes
 -   If conflicts occur during merge, resolve them and continue with git flow release finish --continue
 -   If tagging fails during `git flow release finish`, follow the troubleshooting steps above
 
-Useful Commands
+### Useful Commands
 
 # List release branches
 
@@ -375,7 +379,3 @@ git flow release abort
 # Show release status
 
 git flow release status
-
-```
-
-```
