@@ -17,7 +17,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'mediumpurple-pig-833607.hostingersite.com'
+                hostname: 'store.thewatchcollections.com'
             },
             {
                 protocol: 'https',

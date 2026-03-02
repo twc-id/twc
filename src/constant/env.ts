@@ -5,6 +5,7 @@ export const showLogger = isLocal ? true : process.env.NEXT_PUBLIC_SHOW_LOGGER =
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 export const API_WP_URL = process.env.NEXT_PUBLIC_WP_URL
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
 export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV
 
 export const CONSUMER_KEY = process.env.NEXT_PUBLIC_CONSUMER_KEY
@@ -12,4 +13,4 @@ export const CONSUMER_SECRET = process.env.NEXT_PUBLIC_CONSUMER_SECRET
 
 export const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 export const COOKIE_PREFIX = process.env.NEXT_PUBLIC_COOKIE_PREFIX
-export const APP_VERSION = '2.0.2'
+export const APP_VERSION = '2.0.3'

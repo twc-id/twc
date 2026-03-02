@@ -1,8 +1,9 @@
+import { API_WP_URL } from '@constant/env'
 import axios, { AxiosRequestConfig, getAdapter } from 'axios'
 import { throttleAdapterEnhancer } from 'axios-extensions'
 
 const client = axios.create({
-    baseURL: 'https://mediumpurple-pig-833607.hostingersite.com/wp-json/wp/v2',
+    baseURL: API_WP_URL,
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -21,7 +22,7 @@ const blogFetchApi = async <T = any>(
 }
 
 const clientFetchDictionary = axios.create({
-    baseURL: 'https://mediumpurple-pig-833607.hostingersite.com/wp-json/wp/v2',
+    baseURL: API_WP_URL,
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
