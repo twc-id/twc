@@ -235,43 +235,45 @@ const Instagram = () => {
                         ))}
                     </div>
 
-                    {/* Find Us in Social Media */}
-                    <div
-                        className={classNames(
-                            'flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10',
-                            {
-                                'justify-start': socialMediaItems.length < 2
-                            }
-                        )}
-                    >
-                        <h3 className='xl:text-heading-3-desktop text-heading-3-mobile text-grey-black flex-shrink-0 whitespace-pre-line '>
-                            <Trans i18nKey='social_media.find_us_social_media' components={{ br: <br /> }}>
-                                {t('social_media.find_us_social_media')}
-                            </Trans>
-                        </h3>
-                        <div className='grid flex-shrink-0 grid-cols-2 grid-rows-2 flex-row gap-x-5  gap-y-5 xl:flex xl:gap-[72px]'>
-                            {socialMediaItems.map((item) => (
-                                <a
-                                    key={item.name}
-                                    href={item.url}
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                    className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
-                                >
-                                    <Icons
-                                        icon={item.icon as IconsProps['icon']}
-                                        width={32}
-                                        height={32}
-                                        className='text-grey-900 hover:text-grey-500'
-                                    />
+                    {/* Find Us in Social Media - only show if more than 1 social media platform */}
+                    {socialMediaItems.length > 1 && (
+                        <div
+                            className={classNames(
+                                'flex w-full flex-col justify-between gap-8 xl:flex-row xl:items-center xl:pt-10',
+                                {
+                                    'justify-start': socialMediaItems.length < 2
+                                }
+                            )}
+                        >
+                            <h3 className='xl:text-heading-3-desktop text-heading-3-mobile text-grey-black flex-shrink-0 whitespace-pre-line '>
+                                <Trans i18nKey='social_media.find_us_social_media' components={{ br: <br /> }}>
+                                    {t('social_media.find_us_social_media')}
+                                </Trans>
+                            </h3>
+                            <div className='grid flex-shrink-0 grid-cols-2 grid-rows-2 flex-row gap-x-5  gap-y-5 xl:flex xl:gap-[72px]'>
+                                {socialMediaItems.map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.url}
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        className='flex flex-col gap-3 xl:flex-row xl:items-center xl:gap-4'
+                                    >
+                                        <Icons
+                                            icon={item.icon as IconsProps['icon']}
+                                            width={32}
+                                            height={32}
+                                            className='text-grey-900 hover:text-grey-500'
+                                        />
 
-                                    <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
-                                        {item.handle}
-                                    </span>
-                                </a>
-                            ))}
+                                        <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                            {item.handle}
+                                        </span>
+                                    </a>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </Container>
         </section>
