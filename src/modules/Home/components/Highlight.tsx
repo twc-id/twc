@@ -170,12 +170,12 @@ const Highlight = () => {
                     </div>
                 </div>
 
-                <div className=''>
+                <div className='overflow-hidden'>
                     <Swiper
                         key={`highlight-swiper-${tab}`}
                         modules={[Navigation, Grid]}
-                        spaceBetween={24}
-                        slidesPerView={4}
+                        spaceBetween={16}
+                        slidesPerView='auto'
                         loop={enableLoop}
                         allowTouchMove={true}
                         draggable={true}
@@ -187,7 +187,7 @@ const Highlight = () => {
                             320: {
                                 slidesPerView: 2,
                                 slidesPerGroup: 2,
-                                spaceBetween: 16,
+                                spaceBetween: 12,
                                 grid: {
                                     rows: 2,
                                     fill: 'row'
@@ -196,13 +196,17 @@ const Highlight = () => {
                             768: {
                                 slidesPerView: 2,
                                 slidesPerGroup: 2,
-                                spaceBetween: 20,
+                                spaceBetween: 16,
                                 grid: {
                                     rows: 2,
                                     fill: 'row'
                                 }
                             },
                             1280: {
+                                slidesPerView: 3.5,
+                                spaceBetween: 20
+                            },
+                            1536: {
                                 slidesPerView: 4,
                                 spaceBetween: 24
                             }
@@ -211,9 +215,12 @@ const Highlight = () => {
                         {isLoading && data === null
                             ? // when loading with no data, render skeleton slides inside swiper so layout matches
                               Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
-                                  <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                  <SwiperSlide
+                                      key={`skeleton-${idx}`}
+                                      className='!w-[168px] xl:!w-auto xl:max-w-[320px]'
+                                  >
                                       <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                          <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                                          <div className='bg-grey-100 aspect-[344/417] w-full animate-pulse xl:h-[417px]' />
                                           <div className='flex flex-col gap-1 text-center'>
                                               <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
                                               <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
@@ -224,7 +231,7 @@ const Highlight = () => {
                                   </SwiperSlide>
                               ))
                             : data?.map((product: any) => (
-                                  <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
+                                  <SwiperSlide key={product.id} className='!w-[168px] xl:!w-auto xl:max-w-[320px]'>
                                       <UnstyledLink
                                           href={`/collections/${product.slug}`}
                                           onClick={() => {
@@ -236,15 +243,16 @@ const Highlight = () => {
                                           }}
                                       >
                                           <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
-                                              <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
+                                              <div className='aspect-[344/417] w-full overflow-hidden xl:h-[417px]'>
                                                   <Image
                                                       src={
                                                           product.images[0]?.src ||
                                                           'https://placehold.co/344x417/png?text=TWC'
                                                       }
                                                       alt={product.name}
-                                                      width={isMobile ? 168 : 344}
-                                                      height={isMobile ? 168 : 417}
+                                                      width={344}
+                                                      height={417}
+                                                      className='object-cover'
                                                   />
                                               </div>
                                               {!product.purchasable && (
@@ -257,7 +265,7 @@ const Highlight = () => {
 
                                               <div className='flex flex-col gap-1 text-center'>
                                                   <p
-                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 truncate px-2 uppercase'
                                                       dangerouslySetInnerHTML={{
                                                           __html: sanitizeHtml(`
                                                                 ${product.brands?.[0]?.name || ''}
@@ -277,10 +285,10 @@ const Highlight = () => {
                                                       }}
                                                   />
 
-                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
                                                       {product.name}
                                                   </h3>
-                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 truncate px-2'>
                                                       {product?.meta_data?.key?.startsWith('pre-owned-') &&
                                                           t('highlight.pre_owned', {
                                                               year: product.meta_data.find((meta: any) =>
@@ -289,7 +297,7 @@ const Highlight = () => {
                                                           })}
                                                   </p>
                                                   {product.purchasable && (
-                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark truncate px-2'>
                                                           {formatRupiah(product.price)}
                                                       </p>
                                                   )}
