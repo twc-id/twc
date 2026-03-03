@@ -1,6 +1,5 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
-import Icons from '@components/Icon'
 import { useTheme } from '@contexts/ThemeContext'
 import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -30,7 +29,7 @@ const TimePieceService = () => {
     const titleRef = useRef<HTMLHeadingElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
 
-    const { isDarkSection, setIsDarkSection } = useTheme()
+    const { setIsDarkSection } = useTheme()
 
     const items = [
         {
@@ -137,8 +136,8 @@ const TimePieceService = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-hidden pb-16 xl:pb-[160px]' id='service'>
-            <Container className='relative flex flex-col justify-between gap-14 xl:flex-row xl:gap-10'>
+        <section ref={sectionRef} className='overflow-hidden py-16 xl:py-[160px]' id='service'>
+            <Container className='relative flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
                         <h2
@@ -160,22 +159,6 @@ const TimePieceService = () => {
                             </a>
                         </div>
                     </div>
-                    <div className='hidden flex-row gap-4 xl:flex'>
-                        <Button
-                            className='h!-8 !w-8'
-                            onClick={() => swiperDesktopRef.current?.slidePrev()}
-                            variant={isDarkSection ? 'secondary' : 'primary'}
-                        >
-                            <Icons icon='ChevronLeft' width={20} height={20} />
-                        </Button>
-                        <Button
-                            className='h!-8 !w-8'
-                            onClick={() => swiperDesktopRef.current?.slideNext()}
-                            variant={isDarkSection ? 'secondary' : 'primary'}
-                        >
-                            <Icons icon='ChevronRight' width={20} height={20} />
-                        </Button>
-                    </div>
                 </div>
                 {/* desktop */}
                 <div
@@ -196,6 +179,7 @@ const TimePieceService = () => {
                                 overflow: 'visible'
                             }}
                             className='!overflow-visible'
+                            wrapperClass='justify-end'
                         >
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>

@@ -14,7 +14,7 @@
     }
 
     body {
-        @apply dark:bg-grey-black bg-white transition-colors duration-500;
+        @apply dark:bg-grey-black bg-white transition-colors duration-300;
     }
 
     /* ScrollSmoother styles */

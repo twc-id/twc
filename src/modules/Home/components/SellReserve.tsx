@@ -35,12 +35,17 @@ const SellReserve = () => {
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
         )
+
+        return () => {
+            timeline.scrollTrigger?.kill()
+            timeline.kill()
+        }
     }, [])
 
     return (
         <section
             ref={sectionRef}
-            className='xl:py[160px] dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 py-16  xl:flex-row  xl:px-5 '
+            className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 pt-16 xl:flex-row  xl:px-5  xl:pt-[160px] '
         >
             <div
                 ref={sellRef}
