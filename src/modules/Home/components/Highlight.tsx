@@ -158,7 +158,7 @@ const Highlight = () => {
                             <button
                                 key={item.value}
                                 onClick={() => handleChangeTab(item.value)}
-                                className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
+                                className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors focus:outline-none xl:w-[137px] ${
                                     item.value === tab
                                         ? 'bg-grey-black text-grey-white'
                                         : 'bg-grey-white text-grey-black hover:bg-grey-100'
@@ -176,13 +176,18 @@ const Highlight = () => {
                         modules={[Navigation, Grid]}
                         spaceBetween={16}
                         slidesPerView='auto'
+                        // slidesPerView={2}
+                        // slidesPerGroup={2}
+                        // grid={{
+                        //     rows: 2,
+                        //     fill: 'row'
+                        // }}
                         loop={enableLoop}
                         allowTouchMove={true}
                         draggable={true}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper
                         }}
-                        wrapperClass='max-[1279px]:justify-between'
                         breakpoints={{
                             320: {
                                 slidesPerView: 2,
@@ -203,22 +208,29 @@ const Highlight = () => {
                                 }
                             },
                             1280: {
-                                slidesPerView: 3.5,
-                                spaceBetween: 20
+                                slidesPerView: 4,
+                                slidesPerGroup: 1,
+                                spaceBetween: 16,
+                                grid: {
+                                    rows: 1,
+                                    fill: 'row'
+                                }
                             },
                             1536: {
                                 slidesPerView: 4,
-                                spaceBetween: 24
+                                slidesPerGroup: 1,
+                                spaceBetween: 24,
+                                grid: {
+                                    rows: 1,
+                                    fill: 'row'
+                                }
                             }
                         }}
                     >
                         {isLoading && data === null
                             ? // when loading with no data, render skeleton slides inside swiper so layout matches
                               Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
-                                  <SwiperSlide
-                                      key={`skeleton-${idx}`}
-                                      className='!w-[168px] xl:!w-auto xl:max-w-[320px]'
-                                  >
+                                  <SwiperSlide key={`skeleton-${idx}`}>
                                       <div className='flex w-full flex-col gap-1 xl:gap-12'>
                                           <div className='bg-grey-100 aspect-[344/417] w-full animate-pulse xl:h-[417px]' />
                                           <div className='flex flex-col gap-1 text-center'>
@@ -231,7 +243,7 @@ const Highlight = () => {
                                   </SwiperSlide>
                               ))
                             : data?.map((product: any) => (
-                                  <SwiperSlide key={product.id} className='!w-[168px] xl:!w-auto xl:max-w-[320px]'>
+                                  <SwiperSlide key={product.id}>
                                       <UnstyledLink
                                           href={`/collections/${product.slug}`}
                                           onClick={() => {
@@ -312,13 +324,13 @@ const Highlight = () => {
                             <div className='flex items-center gap-4'>
                                 <button
                                     onClick={() => swiperRef.current?.slidePrev()}
-                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors focus:outline-none'
                                 >
                                     <Icons icon='ChevronLeft' width={20} height={20} />
                                 </button>
                                 <button
                                     onClick={() => swiperRef.current?.slideNext()}
-                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors focus:outline-none'
                                 >
                                     <Icons icon='ChevronRight' width={20} height={20} />
                                 </button>
