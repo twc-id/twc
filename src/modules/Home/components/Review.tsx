@@ -163,7 +163,7 @@ const Review = () => {
                     </h1>
                     <div className='hidden flex-row gap-4 xl:flex'>
                         <Button
-                            className='!h-8 !w-8'
+                            className='!h-8 !w-8 !p-0'
                             onClick={() => swiperDesktopRef.current?.slidePrev()}
                             // disabled={!canScrollLeft}
                             variant='secondary'
@@ -171,7 +171,7 @@ const Review = () => {
                             <Icons icon='ChevronLeft' width={20} height={20} />
                         </Button>
                         <Button
-                            className='!h-8 !w-8'
+                            className='!h-8 !w-8 !p-0'
                             onClick={() => swiperDesktopRef.current?.slideNext()}
                             // disabled={!canScrollRight}
                             variant='secondary'
