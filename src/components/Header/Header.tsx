@@ -690,7 +690,7 @@ const Headers = () => {
                                                             <button
                                                                 onClick={() => handleLanguageChange(lang.code)}
                                                                 className={classNames(
-                                                                    'flex w-full items-center justify-center gap-2 px-6 py-4 text-left transition-colors',
+                                                                    'flex w-full items-center justify-center gap-2 px-6 py-4 text-left transition-colors focus:outline-none',
                                                                     {
                                                                         'bg-grey-100': active,
                                                                         'bg-grey-300':
@@ -934,7 +934,7 @@ const Headers = () => {
                                                     <button
                                                         key={subItem.label}
                                                         type='button'
-                                                        className='group flex w-full cursor-pointer flex-col gap-4'
+                                                        className='group flex w-full cursor-pointer flex-col gap-4 focus:outline-none'
                                                         onClick={() => setSelectedSubMenuItem(subItem)}
                                                     >
                                                         <div className='h-[218px] w-full overflow-hidden'>

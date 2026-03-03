@@ -26,7 +26,7 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
     return (
         <div className='border-grey-100 border-b py-3 xl:px-4'>
             <button
-                className='flex w-full items-center justify-between text-left'
+                className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({
                     onClick: () => setIsExpanded(!isExpanded)
                 })}

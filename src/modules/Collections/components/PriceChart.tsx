@@ -380,7 +380,7 @@ const PriceChart: React.FC<Props> = ({ productPrice }) => {
                         key={k}
                         onClick={() => fetchPeriod(k)}
                         disabled={loadingPeriod}
-                        className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-md border px-4 py-2 !leading-none ${
+                        className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-md border px-4 py-2 !leading-none focus:outline-none ${
                             k === selectedPeriod ? 'bg-black text-white' : 'bg-white text-gray-500'
                         }`}
                     >

@@ -172,7 +172,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                             key={`${item}-${idx}`}
                             onClick={() => onTabChange?.(idx)}
                             className={classNames(
-                                'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors',
+                                'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
                                 {
                                     'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
                                     'bg-grey-white text-grey-black hover:bg-grey-100': idx !== (selectedTab ?? 0),

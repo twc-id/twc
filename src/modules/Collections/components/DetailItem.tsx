@@ -59,7 +59,7 @@ const Collapse = ({ title, defaultExpanded, children, isOpen, onToggle }: Collap
     return (
         <div className='border-grey-100 border-b pb-2'>
             <button
-                className='flex w-full items-center justify-between text-left'
+                className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({ onClick: handleClick })}
             >
                 <h4 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black dark:text-grey-white'>
@@ -494,7 +494,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 setConditionModalContent({ title: displayLabel, description: c.description })
                                 setConditionModalOpen(true)
                             }}
-                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black text-left capitalize !mb-0${underlineClass}`}
+                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black text-left capitalize !mb-0${underlineClass} focus:outline-none`}
                         >
                             {displayLabel}
                         </button>
@@ -686,7 +686,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             <button
                                 key={i}
                                 onClick={() => scrollToImage(i)}
-                                className={`rounded-full transition-all duration-200 ${
+                                className={`rounded-full transition-all duration-200 focus:outline-none ${
                                     i === activeImageIndex ? 'bg-grey-500 h-1.5 w-1.5' : 'bg-grey-200 h-1 w-1'
                                 }`}
                                 aria-label={`Image ${i + 1}`}

@@ -54,7 +54,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                                 type='button'
                                 onClick={() => onNavigate(index, item)}
                                 className={classNames(
-                                    'text-grey-200 text-subheading-7-desktop  whitespace-nowrap text-left',
+                                    'text-grey-200 text-subheading-7-desktop  whitespace-nowrap text-left focus:outline-none',
                                     navigationClassName,
                                     {
                                         'hover:text-primary dark:hover:!text-dark-primary': Boolean(item?.href)
