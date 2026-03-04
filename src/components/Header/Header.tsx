@@ -857,7 +857,12 @@ const Headers = () => {
                                         <button
                                             key={item.label}
                                             type='button'
-                                            className='text-grey-200 hover:text-grey-white  w-full cursor-pointer text-left outline-none transition-colors '
+                                            className={classNames(
+                                                'w-full cursor-pointer text-left outline-none transition-colors',
+                                                hoveredMenuItem === item
+                                                    ? 'xl:text-grey-white hover:text-grey-200'
+                                                    : 'text-grey-200 hover:text-grey-white'
+                                            )}
                                             onMouseEnter={() => {
                                                 if (window.innerWidth >= 1024) {
                                                     setHoveredMenuItem(item)

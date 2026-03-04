@@ -49,6 +49,47 @@
         background-clip: padding-box;
     }
 
+    /* ScrollSmoother: Fix white lines between sections */
+    /* Primary fix: will-change on smooth-content wrapper itself */
+    #smooth-content-home {
+        transform: translateZ(0);
+        -webkit-transform: translate3d(0, 0, 0);
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+    /* Ensure sections with different backgrounds don't show gaps */
+    section[class*='bg-'],
+    [class*='bg-'] section {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ScrollSmoother: Fix sub-pixel white lines between sections on home page */
+    /* #smooth-content-home {
+        background-color: #000;
+    } */
+
+    /* Apply transform to force GPU rendering */
+    #smooth-content-home > * {
+        transform: translateZ(0);
+        -webkit-transform: translate3d(0, 0, 0);
+        will-change: transform;
+    }
+
+    /* Ensure all direct children of smooth-content-home have black background */
+    /* #smooth-content-home > section,
+    #smooth-content-home > div {
+        background-color: #000;
+    } */
+
+    /* Also ensure parent wrappers have proper background */
+    /* #smooth-wrapper,
+    #smooth-content {
+        background-color: #000 !important;
+    } */
+
     .layout {
         /* 1100px */
         max-width: 68.75rem;
@@ -61,7 +102,7 @@
 
     /* Class to adjust with sticky footer */
     .min-h-main {
-        @apply min-h-[calc(100vh-56px)];
+        @apply min-h-[calc(100dvh-56px)];
     }
 }
 
