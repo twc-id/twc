@@ -79,29 +79,29 @@ const Hero = () => {
                 pinTrigger = ScrollTrigger.create({
                     trigger: pinSectionRef.current,
                     start: 'top top',
-                    end: '+=150%',
+                    end: '+=200%',
                     pin: true,
-                    scrub: 1,
+                    scrub: true, // Use true for smoother 1:1 scroll mapping
+                    anticipatePin: 1, // Pre-calculate pin position for smoother experience
                     onUpdate: (self) => {
                         const progress = self.progress
                         const currentIndex = Math.min(Math.floor(progress * 3), 2)
 
                         setActiveIndex(currentIndex)
 
-                        // Move items horizontally
+                        // Move items horizontally - use immediate set for smoother mobile
                         itemRefs.current.forEach((item, index) => {
                             if (!item) return
 
                             const isActive = index === currentIndex
                             const offsetFromActive = index - currentIndex
-                            const xPosition = offsetFromActive * 180 // horizontal spacing
+                            const xPosition = offsetFromActive * 180
 
-                            gsap.to(item, {
+                            // Use gsap.set for instant position update (no lag)
+                            gsap.set(item, {
                                 x: xPosition,
                                 opacity: isActive ? 1 : 0.6,
-                                scale: isActive ? 1 : 0.9,
-                                duration: 0.6,
-                                ease: 'power2.out'
+                                scale: isActive ? 1 : 0.9
                             })
                         })
                     }
@@ -178,6 +178,28 @@ const Hero = () => {
             pinTrigger?.kill()
         }
     }, [isMobile])
+
+    // Animate mobile items when activeIndex changes
+    React.useEffect(() => {
+        if (!isMobile) return
+
+        itemRefs.current.forEach((item, index) => {
+            if (!item) return
+
+            const isActive = index === activeIndex
+            const offsetFromActive = index - activeIndex
+            const xPosition = offsetFromActive * 180
+
+            gsap.to(item, {
+                x: xPosition,
+                opacity: isActive ? 1 : 0.6,
+                scale: isActive ? 1 : 0.9,
+                duration: 0.5,
+                ease: 'power2.out'
+            })
+        })
+    }, [activeIndex, isMobile])
+
     return (
         <section ref={sectionRef} className='bg-grey-black pt-[200px] xl:pt-[240px]'>
             <Container className='pb-14 xl:pb-[116px]'>
@@ -223,6 +245,7 @@ const Hero = () => {
                                         itemRefs.current[index] = el
                                     }}
                                     className='absolute h-[172px] w-[172px] cursor-pointer'
+                                    onClick={() => setActiveIndex(index)}
                                 >
                                     <Image
                                         src={item.image}

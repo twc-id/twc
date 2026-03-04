@@ -25,7 +25,7 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
     return (
         <div className='border-grey-100 border-b px-4 py-3'>
             <button
-                className='flex w-full items-center justify-between text-left'
+                className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
@@ -294,7 +294,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -387,7 +387,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -426,7 +426,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>

@@ -34,7 +34,6 @@ const Highlight = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const tabsRef = useRef<HTMLDivElement>(null)
-    const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const tabs = [
@@ -75,15 +74,12 @@ const Highlight = () => {
     }, [tab])
 
     useGSAP(() => {
-        // Only animate once on initial load
-        if (hasAnimatedRef.current) return
-
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 id: 'highlight-animation',
-                toggleActions: 'restart none none reset'
+                toggleActions: 'play none none none'
             }
         })
 
@@ -112,13 +108,11 @@ const Highlight = () => {
                 },
                 '-=0.5'
             )
-
-            // Mark as animated after first successful animation
-            hasAnimatedRef.current = true
         }
 
         return () => {
             timeline.scrollTrigger?.kill()
+            timeline.kill()
         }
     }, [data, isLoading])
 
@@ -158,7 +152,7 @@ const Highlight = () => {
                             <button
                                 key={item.value}
                                 onClick={() => handleChangeTab(item.value)}
-                                className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors xl:w-[137px] ${
+                                className={`xl:text-button-3-desktop text-button-3-mobile w-full py-3 transition-colors focus:outline-none xl:w-[137px] ${
                                     item.value === tab
                                         ? 'bg-grey-black text-grey-white'
                                         : 'bg-grey-white text-grey-black hover:bg-grey-100'
@@ -170,24 +164,29 @@ const Highlight = () => {
                     </div>
                 </div>
 
-                <div className=''>
+                <div className='overflow-hidden'>
                     <Swiper
                         key={`highlight-swiper-${tab}`}
                         modules={[Navigation, Grid]}
-                        spaceBetween={24}
-                        slidesPerView={4}
+                        spaceBetween={16}
+                        slidesPerView='auto'
+                        // slidesPerView={2}
+                        // slidesPerGroup={2}
+                        // grid={{
+                        //     rows: 2,
+                        //     fill: 'row'
+                        // }}
                         loop={enableLoop}
                         allowTouchMove={true}
                         draggable={true}
                         onSwiper={(swiper) => {
                             swiperRef.current = swiper
                         }}
-                        wrapperClass='max-[1279px]:justify-between'
                         breakpoints={{
                             320: {
                                 slidesPerView: 2,
                                 slidesPerGroup: 2,
-                                spaceBetween: 16,
+                                spaceBetween: 12,
                                 grid: {
                                     rows: 2,
                                     fill: 'row'
@@ -196,7 +195,7 @@ const Highlight = () => {
                             768: {
                                 slidesPerView: 2,
                                 slidesPerGroup: 2,
-                                spaceBetween: 20,
+                                spaceBetween: 16,
                                 grid: {
                                     rows: 2,
                                     fill: 'row'
@@ -204,16 +203,30 @@ const Highlight = () => {
                             },
                             1280: {
                                 slidesPerView: 4,
-                                spaceBetween: 24
+                                slidesPerGroup: 1,
+                                spaceBetween: 16,
+                                grid: {
+                                    rows: 1,
+                                    fill: 'row'
+                                }
+                            },
+                            1536: {
+                                slidesPerView: 4,
+                                slidesPerGroup: 1,
+                                spaceBetween: 24,
+                                grid: {
+                                    rows: 1,
+                                    fill: 'row'
+                                }
                             }
                         }}
                     >
                         {isLoading && data === null
                             ? // when loading with no data, render skeleton slides inside swiper so layout matches
                               Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
-                                  <SwiperSlide key={`skeleton-${idx}`} className='!w-[168px] xl:!w-[344px]'>
+                                  <SwiperSlide key={`skeleton-${idx}`}>
                                       <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                          <div className='bg-grey-100 h-[168px] w-[168px] animate-pulse xl:h-[417px] xl:w-[344px]' />
+                                          <div className='bg-grey-100 aspect-[344/417] w-full animate-pulse xl:h-[417px]' />
                                           <div className='flex flex-col gap-1 text-center'>
                                               <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
                                               <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
@@ -224,7 +237,7 @@ const Highlight = () => {
                                   </SwiperSlide>
                               ))
                             : data?.map((product: any) => (
-                                  <SwiperSlide key={product.id} className='!w-[168px] xl:!w-[344px]'>
+                                  <SwiperSlide key={product.id}>
                                       <UnstyledLink
                                           href={`/collections/${product.slug}`}
                                           onClick={() => {
@@ -236,15 +249,16 @@ const Highlight = () => {
                                           }}
                                       >
                                           <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
-                                              <div className='h-[168px] w-[168px] overflow-hidden xl:h-[417px] xl:w-[344px]'>
+                                              <div className='aspect-[344/417] w-full overflow-hidden xl:h-[417px]'>
                                                   <Image
                                                       src={
                                                           product.images[0]?.src ||
                                                           'https://placehold.co/344x417/png?text=TWC'
                                                       }
                                                       alt={product.name}
-                                                      width={isMobile ? 168 : 344}
-                                                      height={isMobile ? 168 : 417}
+                                                      width={344}
+                                                      height={417}
+                                                      className='object-cover'
                                                   />
                                               </div>
                                               {!product.purchasable && (
@@ -257,7 +271,7 @@ const Highlight = () => {
 
                                               <div className='flex flex-col gap-1 text-center'>
                                                   <p
-                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 truncate px-2 uppercase'
                                                       dangerouslySetInnerHTML={{
                                                           __html: sanitizeHtml(`
                                                                 ${product.brands?.[0]?.name || ''}
@@ -277,10 +291,10 @@ const Highlight = () => {
                                                       }}
                                                   />
 
-                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
+                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
                                                       {product.name}
                                                   </h3>
-                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 truncate px-2'>
                                                       {product?.meta_data?.key?.startsWith('pre-owned-') &&
                                                           t('highlight.pre_owned', {
                                                               year: product.meta_data.find((meta: any) =>
@@ -289,7 +303,7 @@ const Highlight = () => {
                                                           })}
                                                   </p>
                                                   {product.purchasable && (
-                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark truncate px-2'>
                                                           {formatRupiah(product.price)}
                                                       </p>
                                                   )}
@@ -304,13 +318,13 @@ const Highlight = () => {
                             <div className='flex items-center gap-4'>
                                 <button
                                     onClick={() => swiperRef.current?.slidePrev()}
-                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors focus:outline-none'
                                 >
                                     <Icons icon='ChevronLeft' width={20} height={20} />
                                 </button>
                                 <button
                                     onClick={() => swiperRef.current?.slideNext()}
-                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors'
+                                    className='border-grey-200  flex h-8 w-8 items-center justify-center border transition-colors focus:outline-none'
                                 >
                                     <Icons icon='ChevronRight' width={20} height={20} />
                                 </button>

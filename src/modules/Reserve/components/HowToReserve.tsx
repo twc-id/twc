@@ -157,7 +157,7 @@ const HowToReserve = () => {
                             <button
                                 key={index}
                                 onClick={() => scrollToItem(index)}
-                                className={`mx-1 rounded-full transition-all duration-300 ${
+                                className={`mx-1 rounded-full transition-all duration-300 focus:outline-none ${
                                     index === activeIndex ? 'bg-grey-white h-1.5 w-1.5' : 'bg-grey-200 h-1 w-1'
                                 }`}
                             />

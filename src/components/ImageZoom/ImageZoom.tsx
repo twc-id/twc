@@ -65,7 +65,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                         <button
                             key={i}
                             onClick={() => handleThumbClick(i)}
-                            className={classNames('w-[92px] transition-opacity', {
+                            className={classNames('w-[92px] transition-opacity focus:outline-none', {
                                 'opacity-100': i === index,
                                 'opacity-50': i !== index
                             })}
@@ -127,11 +127,17 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                     </div>
 
                                     <div className='bg-dropdown-menu-overlay absolute bottom-[20%] left-1/2 flex w-fit -translate-x-1/2 transform items-center justify-center gap-6 rounded-full xl:bottom-14'>
-                                        <button onClick={() => zoomOut()} className=' text-grey-white  py-2 pl-4'>
+                                        <button
+                                            onClick={() => zoomOut()}
+                                            className=' text-grey-white  py-2 pl-4 focus:outline-none'
+                                        >
                                             −
                                         </button>
                                         <div className=' text-grey-white py-2'>{Math.round((scale || 1) * 100)}%</div>
-                                        <button onClick={() => zoomIn()} className=' text-grey-white py-2 pr-4'>
+                                        <button
+                                            onClick={() => zoomIn()}
+                                            className=' text-grey-white py-2 pr-4 focus:outline-none'
+                                        >
                                             +
                                         </button>
                                     </div>

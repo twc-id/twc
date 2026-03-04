@@ -211,9 +211,12 @@ const Hero = () => {
                                 <button
                                     key={index}
                                     onClick={() => swiperRef.current?.slideToLoop(index)}
-                                    className={classNames('bg-grey-500 relative h-[3px] w-8 overflow-hidden', {
-                                        'w-16': activeIndex === index
-                                    })}
+                                    className={classNames(
+                                        'bg-grey-500 relative h-[3px] w-8 overflow-hidden focus:outline-none',
+                                        {
+                                            'w-16': activeIndex === index
+                                        }
+                                    )}
                                 >
                                     <div
                                         key={`progress-${activeIndex}-${index}`}

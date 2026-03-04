@@ -27,7 +27,7 @@ const Collapse = ({ title, defaultExpanded, children, showCount, count }: Collap
     return (
         <div className='border-grey-100 border-b py-3'>
             <button
-                className='flex w-full items-center justify-between text-left'
+                className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
@@ -323,7 +323,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70'
+                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -414,7 +414,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70'
+                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -447,7 +447,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70'
+                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -493,7 +493,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     </Dialog.Title>
                                     <button
                                         type='button'
-                                        className='text-grey-400 hover:text-grey-600'
+                                        className='text-grey-400 hover:text-grey-600 focus:outline-none'
                                         onClick={onClose}
                                     >
                                         <Icons icon='XClose' width={24} height={24} />
@@ -534,7 +534,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     </Button>
                                     <button
                                         type='button'
-                                        className='text-button-3-mobile text-grey-black w-full py-2 text-center hover:opacity-70'
+                                        className='text-button-3-mobile text-grey-black w-full py-2 text-center hover:opacity-70 focus:outline-none'
                                         onClick={resetAllFilters}
                                     >
                                         Reset All

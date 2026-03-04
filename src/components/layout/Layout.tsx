@@ -31,29 +31,50 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     //#endregion  //*======== Store ===========
 
     React.useEffect(() => {
-        smootherRef.current = ScrollSmoother.create({
+        const smoother = ScrollSmoother.create({
             wrapper: smoothWrapperRef.current,
             content: smoothContentRef.current,
             smooth: 1.2,
             effects: false,
-            smoothTouch: false,
-            normalizeScroll: false
+            smoothTouch: 1, // Enable smooth touch with value 1 to prevent pin flickering
+            normalizeScroll: true // Fix pin flickering on mobile
         })
+
+        // Store in ref AND make globally accessible via window for debugging
+        smootherRef.current = smoother
+        if (typeof window !== 'undefined') {
+            ;(window as any).scrollSmootherInstance = smoother
+        }
 
         // if URL contains a hash (e.g. /about-us#location), scroll after smoother is ready
         const scrollToHash = (hash?: string) => {
             const targetId = (hash || window.location.hash || '').replace('#', '')
             if (!targetId) return
 
+            // Dispatch event to close mobile menu
+            window.dispatchEvent(new CustomEvent('closeMobileMenu'))
+
             const tryScroll = () => {
                 const el = document.getElementById(targetId)
                 if (!el) return false
 
-                // prefer ScrollSmoother if available
-                const smoother = smootherRef.current || (ScrollSmoother.get && ScrollSmoother.get())
+                // Try to get ScrollSmoother from ref first, then global, then .get()
+                let smoother = smootherRef.current
+                if (!smoother && typeof window !== 'undefined') {
+                    smoother = (window as any).scrollSmootherInstance
+                }
+                if (!smoother && ScrollSmoother.get) {
+                    smoother = ScrollSmoother.get() || null
+                }
+
                 if (smoother && typeof (smoother as any).scrollTo === 'function') {
                     try {
-                        ;(smoother as any).scrollTo(el)
+                        // Use getBoundingClientRect for accurate position relative to viewport
+                        const rect = el.getBoundingClientRect()
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+                        const offsetTop = rect.top + scrollTop
+                        // Scroll to the position using ScrollSmoother
+                        ;(smoother as any).scrollTo(offsetTop, true)
                         return true
                     } catch {
                         // fallback to native scroll
@@ -64,14 +85,77 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 return true
             }
 
-            // retry a few times since content may render after navigation/animations
-            let attempts = 0
-            const maxAttempts = 20
-            const interval = setInterval(() => {
-                if (tryScroll() || ++attempts >= maxAttempts) {
-                    clearInterval(interval)
+            // Get smoother instance
+            let smoother = smootherRef.current
+            if (!smoother && typeof window !== 'undefined') {
+                smoother = (window as any).scrollSmootherInstance
+            }
+            if (!smoother && ScrollSmoother.get) {
+                smoother = ScrollSmoother.get() || null
+            }
+
+            // Check current scroll position
+            const currentScrollTop = smoother
+                ? (smoother as any).scrollTop()
+                : window.pageYOffset || document.documentElement.scrollTop
+            const isAtTop = currentScrollTop < 50 // Consider "at top" if within 50px
+
+            // Only scroll-to-top-first if user is at the top of the page
+            // This ensures dark→light mode transition is visible when clicking from navbar
+            // If user scrolled down (e.g., clicking from footer), go directly to target
+            if (isAtTop) {
+                // Scroll to top first (instant)
+                if (smoother && typeof (smoother as any).scrollTo === 'function') {
+                    try {
+                        ;(smoother as any).scrollTo(0, false) // false = instant scroll
+                    } catch {
+                        window.scrollTo(0, 0)
+                    }
+                } else {
+                    window.scrollTo(0, 0)
                 }
-            }, 50)
+
+                // Refresh ScrollTrigger after scrolling to top
+                setTimeout(() => {
+                    ScrollTrigger.refresh()
+                }, 50)
+
+                // Then scroll to target section (with animation)
+                setTimeout(() => {
+                    // retry a few times since content may render after navigation/animations
+                    let attempts = 0
+                    const maxAttempts = 20
+                    const interval = setInterval(() => {
+                        if (tryScroll() || ++attempts >= maxAttempts) {
+                            clearInterval(interval)
+                            // Refresh ScrollTrigger after reaching target
+                            setTimeout(() => {
+                                ScrollTrigger.refresh()
+                                requestAnimationFrame(() => {
+                                    ScrollTrigger.refresh()
+                                })
+                            }, 300)
+                        }
+                    }, 50)
+                }, 300) // Wait 300ms after scroll to top before scrolling to section
+            } else {
+                // User is already scrolled down, go directly to target section
+                // No need to scroll-to-top-first since they've already seen the transitions
+                let attempts = 0
+                const maxAttempts = 20
+                const interval = setInterval(() => {
+                    if (tryScroll() || ++attempts >= maxAttempts) {
+                        clearInterval(interval)
+                        // Refresh ScrollTrigger after reaching target
+                        setTimeout(() => {
+                            ScrollTrigger.refresh()
+                            requestAnimationFrame(() => {
+                                ScrollTrigger.refresh()
+                            })
+                        }, 300)
+                    }
+                }, 50)
+            }
         }
 
         // initial check
@@ -79,16 +163,70 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             setTimeout(() => scrollToHash(window.location.hash), 50)
         }
 
+        // Intercept hash link clicks to prevent native scroll and use ScrollSmoother instead
+        const handleHashChange = (event: HashChangeEvent) => {
+            event.preventDefault()
+            const hash = event.newURL?.split('#')[1] || window.location.hash?.replace('#', '')
+            if (hash) {
+                // Use ScrollSmoother to scroll instead of native scroll
+                setTimeout(() => scrollToHash(`#${hash}`), 50)
+            }
+        }
+
+        // Intercept click events on anchor links with hash
+        const handleHashLinkClick = (event: MouseEvent) => {
+            const target = event.target as HTMLElement
+            const anchor = target.closest('a')
+
+            if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+                event.preventDefault()
+                event.stopPropagation()
+
+                // Set the URL hash - this will trigger handleHashChange which calls scrollToHash
+                const hash = anchor.hash
+                if (window.location.hash !== hash) {
+                    window.location.hash = hash
+                } else {
+                    // Hash already set, just scroll
+                    scrollToHash(hash)
+                }
+            }
+        }
+
+        // Listen for hash changes (before browser scrolls)
+        window.addEventListener('hashchange', handleHashChange)
+
+        // Listen for clicks on hash links
+        window.addEventListener('click', handleHashLinkClick, true) // Use capture phase
+
         // handle route changes
         const onRouteChangeComplete = (url: string) => {
             // Handle hash scrolling
             const hashIndex = url.indexOf('#')
             if (hashIndex !== -1) {
                 const hash = url.substring(hashIndex)
-                setTimeout(() => scrollToHash(hash), 100)
+                // Scroll to hash and then refresh ScrollTrigger after animation completes
+                setTimeout(() => {
+                    scrollToHash(hash)
+                    // Refresh ScrollTrigger AFTER hash scroll to ensure positions are correct
+                    setTimeout(() => {
+                        ScrollTrigger.refresh()
+                        // Force a second refresh to ensure all triggers are recalculated
+                        requestAnimationFrame(() => {
+                            ScrollTrigger.refresh()
+                        })
+                    }, 300)
+                }, 100)
             } else {
                 // Scroll to top for non-hash navigation
-                const smoother = smootherRef.current || (ScrollSmoother.get && ScrollSmoother.get())
+                let smoother = smootherRef.current
+                if (!smoother && typeof window !== 'undefined') {
+                    smoother = (window as any).scrollSmootherInstance
+                }
+                if (!smoother && ScrollSmoother.get) {
+                    smoother = ScrollSmoother.get() || null
+                }
+
                 if (smoother && typeof (smoother as any).scrollTo === 'function') {
                     try {
                         ;(smoother as any).scrollTo(0, false) // instant scroll to top
@@ -98,19 +236,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 } else {
                     window.scrollTo(0, 0)
                 }
+                // Refresh ScrollTrigger after route change to recalculate positions
+                setTimeout(() => {
+                    ScrollTrigger.refresh()
+                }, 50)
             }
-
-            // Refresh ScrollTrigger after route change to recalculate positions
-            setTimeout(() => {
-                ScrollTrigger.refresh()
-            }, 50)
         }
 
         router.events.on('routeChangeComplete', onRouteChangeComplete)
 
         return () => {
             router.events.off('routeChangeComplete', onRouteChangeComplete)
-            smootherRef.current?.kill && (smootherRef.current as any).kill()
+            window.removeEventListener('hashchange', handleHashChange)
+            window.removeEventListener('click', handleHashLinkClick, true)
+            // Properly kill ScrollSmoother instance
+            smootherRef.current?.kill()
+            if (typeof window !== 'undefined') {
+                delete (window as any).scrollSmootherInstance
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

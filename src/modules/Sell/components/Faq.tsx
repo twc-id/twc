@@ -26,7 +26,7 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
     return (
         <div className='border-grey-100 border-b py-3 xl:px-4'>
             <button
-                className='flex w-full items-center justify-between text-left'
+                className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
@@ -97,7 +97,7 @@ const Faq = () => {
     }, [setIsDarkSection])
 
     return (
-        <section ref={sectionRef} className='pt-4 xl:pt-[116px]'>
+        <section ref={sectionRef} className='pt-14 xl:pt-[116px]'>
             <Container>
                 <div className='flex flex-col justify-between gap-7 xl:flex-row'>
                     <h1
