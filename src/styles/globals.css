@@ -11,6 +11,10 @@
     body {
         overflow-x: hidden;
         max-width: 100vw;
+        overscroll-behavior-y: none;
+        /* iOS: Ensure full height including browser nav area */
+        min-height: 100dvh;
+        min-height: -webkit-fill-available;
     }
 
     body {
@@ -20,11 +24,29 @@
     /* ScrollSmoother styles */
     #smooth-wrapper {
         overflow: hidden;
+        /* iOS: Use fill-available for proper viewport height */
+        height: 100dvh;
+        height: -webkit-fill-available;
+        height: 100%;
+        /* Black background for iOS safe area */
+        background-color: #000;
     }
 
     #smooth-content {
         overflow: visible;
         width: 100%;
+        /* iOS: Add padding for safe area at bottom */
+        padding-bottom: env(safe-area-inset-bottom);
+        /* Black background to cover the safe area */
+        background-color: #000;
+    }
+
+    /* iOS: Ensure footer extends into safe area */
+    footer {
+        /* Extend background into safe area */
+        padding-bottom: env(safe-area-inset-bottom);
+        /* Black background continues into safe area */
+        background-clip: padding-box;
     }
 
     .layout {

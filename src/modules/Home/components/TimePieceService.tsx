@@ -9,7 +9,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { Trans, useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -30,6 +30,107 @@ const TimePieceService = () => {
     const buttonRef = useRef<HTMLButtonElement>(null)
 
     const { setIsDarkSection } = useTheme()
+
+    // IntersectionObserver as fallback for hash navigation (ScrollTrigger doesn't fire on direct jumps)
+    useEffect(() => {
+        if (!sectionRef.current) return
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    // When section is visible (any amount), set dark mode
+                    if (entry.isIntersecting) {
+                        setIsDarkSection(true)
+                        // Force elements visible in case ScrollTrigger didn't fire (hash navigation)
+                        gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
+                            opacity: 1,
+                            x: 0,
+                            y: 0
+                        })
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // Section is below viewport (scrolling up) - set light mode
+                        setIsDarkSection(false)
+                    }
+                })
+            },
+            {
+                threshold: [0, 0.1, 0.25, 0.5, 0.75],
+                rootMargin: '0px 0px -20% 0px' // Trigger when section enters viewport
+            }
+        )
+
+        observer.observe(sectionRef.current)
+
+        // Check immediately in case we're already on the section (hash navigation)
+        // Use requestAnimationFrame to ensure DOM is ready
+        const checkSection = () => {
+            if (!sectionRef.current) return
+            const rect = sectionRef.current.getBoundingClientRect()
+            // If section top is within viewport, set dark mode
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                setIsDarkSection(true)
+                // Force elements visible on mount for hash navigation
+                gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
+                    opacity: 1,
+                    x: 0,
+                    y: 0
+                })
+            }
+        }
+
+        // Check immediately and after a short delay
+        checkSection()
+        const timeout = setTimeout(checkSection, 150)
+        const raf = requestAnimationFrame(checkSection)
+
+        return () => {
+            observer.disconnect()
+            clearTimeout(timeout)
+            cancelAnimationFrame(raf)
+        }
+    }, [setIsDarkSection])
+
+    // Also check URL hash directly for #service links
+    useEffect(() => {
+        const checkHashAndSetDarkMode = () => {
+            if (typeof window !== 'undefined' && window.location.hash === '#service') {
+                // Force dark mode immediately
+                setIsDarkSection(true)
+
+                // Force elements visible immediately
+                gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
+                    opacity: 1,
+                    x: 0,
+                    y: 0
+                })
+            }
+        }
+
+        // Check on mount
+        checkHashAndSetDarkMode()
+
+        // Also listen for hash changes
+        const handleHashChange = () => {
+            checkHashAndSetDarkMode()
+        }
+
+        window.addEventListener('hashchange', handleHashChange)
+
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange)
+        }
+    }, [setIsDarkSection])
+
+    // Ensure mobile Swiper updates after mount to fix blank images
+    useEffect(() => {
+        if (swiperMobileRef.current) {
+            // Small delay to ensure DOM is ready
+            const timeout = setTimeout(() => {
+                swiperMobileRef.current?.update()
+            }, 100)
+            return () => clearTimeout(timeout)
+        }
+    }, [])
 
     const items = [
         {
@@ -54,13 +155,18 @@ const TimePieceService = () => {
 
     useGSAP(() => {
         // Track dark section state dengan ScrollTrigger
+        // Fire earlier to ensure smooth transition from SellReserve (light) to TimePieceService (dark)
         const darkModeTrigger = ScrollTrigger.create({
             id: 'timepiece-dark-mode',
             trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom top',
+            start: 'top 80%', // Trigger when section top reaches 80% of viewport (earlier on mobile)
+            end: 'bottom 20%', // Extended range to keep dark mode active through the section
             onEnter: () => {
                 setIsDarkSection(true)
+            },
+            onLeave: () => {
+                // Keep dark mode active - Journey/Review sections are also dark mode
+                // SocialMedia will handle switching back to light mode
             },
             onLeaveBack: () => {
                 setIsDarkSection(false)
@@ -69,6 +175,7 @@ const TimePieceService = () => {
                 setIsDarkSection(true)
             }
         })
+
         const mm = gsap.matchMedia()
 
         const timeline = gsap.timeline({
@@ -80,22 +187,18 @@ const TimePieceService = () => {
             }
         })
 
-        timeline.fromTo(titleRef.current, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
+        // Use from() instead of fromTo() so elements start visible
+        // This prevents blank screen on hash navigation (ScrollTrigger doesn't fire on direct jumps)
+        timeline.from(titleRef.current, { opacity: 0, x: -30, duration: 1, ease: 'power2.out' })
 
-        timeline.fromTo(
-            buttonRef.current,
-            { opacity: 0, x: 30 },
-            { opacity: 1, x: 0, duration: 1, ease: 'power2.out' },
-            '-=0.7'
-        )
+        timeline.from(buttonRef.current, { opacity: 0, x: 30, duration: 1, ease: 'power2.out' }, '-=0.7')
 
         mm.add('(min-width: 1280px)', () => {
-            timeline.fromTo(
+            timeline.from(
                 '.service-slide',
-                { opacity: 0, y: 30 },
                 {
-                    opacity: 1,
-                    y: 0,
+                    opacity: 0,
+                    y: 30,
                     duration: 0.8,
                     ease: 'power2.out',
                     stagger: 0.15,
@@ -114,15 +217,20 @@ const TimePieceService = () => {
         })
 
         mm.add('(max-width: 1279px)', () => {
-            timeline.fromTo(
+            timeline.from(
                 '.service-slide',
-                { opacity: 0, y: 30 },
                 {
-                    opacity: 1,
-                    y: 0,
+                    opacity: 0,
+                    y: 30,
                     duration: 0.8,
                     ease: 'power2.out',
-                    stagger: 0.15
+                    stagger: 0.15,
+                    onComplete: () => {
+                        // Refresh ScrollTrigger after mobile animation to ensure triggers are recalculated
+                        setTimeout(() => {
+                            ScrollTrigger.refresh()
+                        }, 100)
+                    }
                 },
                 '-=0.5'
             )
@@ -136,8 +244,8 @@ const TimePieceService = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-hidden py-16 xl:py-[160px]' id='service'>
-            <Container className='relative flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
+        <section ref={sectionRef} className='relative z-10 py-16 xl:py-[160px]' id='service'>
+            <Container className='relative z-10 flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
                         <h2
@@ -162,7 +270,7 @@ const TimePieceService = () => {
                 </div>
                 {/* desktop */}
                 <div
-                    className='relative z-[2] hidden w-full flex-1 xl:flex'
+                    className='relative hidden w-full flex-1 xl:flex'
                     style={{
                         clipPath: `inset(0px -${items.length * 100}% 0px 0px)`
                     }}
@@ -204,7 +312,7 @@ const TimePieceService = () => {
                     </div>
                 </div>
                 {/* mobile */}
-                <div className='relative z-[2] w-full flex-1 xl:hidden'>
+                <div className='relative w-full flex-1 xl:hidden'>
                     <div className='relative isolate w-full'>
                         <Swiper
                             modules={[Navigation, Pagination]}
@@ -217,8 +325,8 @@ const TimePieceService = () => {
                         >
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
-                                    <div className='flex  flex-col gap-6'>
-                                        <div className='relative w-[302px]'>
+                                    <div className='flex flex-col gap-6'>
+                                        <div className='relative h-[403px] w-[302px] overflow-hidden'>
                                             <Image src={service.image} alt={service.label} width={302} height={402} />
                                         </div>
                                         <div className='flex flex-col gap-2'>

@@ -66,9 +66,9 @@ const Footer = () => {
         }
     ]
     return (
-        <footer className='bg-grey-black text-grey-white relative z-20 '>
+        <footer className='bg-grey-black text-grey-white relative z-20 xl:pb-0'>
             <Container>
-                <div className='py-12'>
+                <div className='py-12 pb-6 xl:py-12'>
                     {/* Main Footer Content */}
                     <div className='hidden flex-row gap-12 xl:flex'>
                         {/* Logo */}
@@ -90,7 +90,7 @@ const Footer = () => {
                                     <li key={link.title}>
                                         <UnstyledLink
                                             href={link.href}
-                                            className='text-button-4-desktop text-grey-white'
+                                            className='!text-button-4-desktop text-grey-white'
                                             onClick={() => {
                                                 if (link.title === 'Book an Appointment') {
                                                     articlePath || productDetailPath
@@ -115,7 +115,7 @@ const Footer = () => {
                                     <li key={link.title}>
                                         <UnstyledLink
                                             href={link.href}
-                                            className='text-button-4-desktop text-grey-white'
+                                            className='!text-button-4-desktop text-grey-white'
                                             onClick={() => {
                                                 if (link.title === 'Instagram') {
                                                     articlePath || productDetailPath
@@ -140,7 +140,7 @@ const Footer = () => {
                                     <li key={link.title}>
                                         <UnstyledLink
                                             href={link.href}
-                                            className='text-button-4-desktop text-grey-white'
+                                            className='!text-button-4-desktop text-grey-white'
                                         >
                                             {link.title}
                                         </UnstyledLink>
@@ -156,7 +156,7 @@ const Footer = () => {
                                     <li key={link.title}>
                                         <UnstyledLink
                                             href={link.href}
-                                            className='text-button-4-desktop text-grey-white'
+                                            className='!text-button-4-desktop text-grey-white'
                                         >
                                             {link.title}
                                         </UnstyledLink>
@@ -180,7 +180,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -196,7 +196,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white'
                                                 onClick={() => {
                                                     articlePath || productDetailPath
                                                         ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
@@ -222,7 +222,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -238,7 +238,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -249,7 +249,7 @@ const Footer = () => {
                         </div>
                     </div>
                     {/* Footer Bottom */}
-                    <div className='mt-20 flex flex-col items-start justify-between border-t border-gray-700 pt-8 md:flex-row xl:hidden xl:items-center'>
+                    <div className='mt-12 flex flex-col items-start justify-between border-t border-gray-700 pt-6 md:mt-16 md:flex-row md:pt-8 xl:hidden xl:items-center'>
                         <p className='text-paragraph-10-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
                         <div className='mt-4 hidden gap-6 md:mt-0 xl:flex'>
                             <UnstyledLink href='/privacy' className='text-button-5-desktop text-grey-white '>
