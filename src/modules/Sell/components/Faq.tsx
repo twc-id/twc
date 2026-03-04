@@ -97,7 +97,7 @@ const Faq = () => {
     }, [setIsDarkSection])
 
     return (
-        <section ref={sectionRef} className='pt-4 xl:pt-[116px]'>
+        <section ref={sectionRef} className='pt-14 xl:pt-[116px]'>
             <Container>
                 <div className='flex flex-col justify-between gap-7 xl:flex-row'>
                     <h1

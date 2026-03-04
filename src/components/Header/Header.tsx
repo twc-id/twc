@@ -57,7 +57,7 @@ const menuData: MenuItem[] = [
             },
             {
                 label: 'Availability',
-                items: ['IN STOCK', 'OUT OF STOCK']
+                items: ['In Stock', 'Out of Stock']
             },
             {
                 label: 'Conditions',
@@ -441,6 +441,12 @@ const Headers = () => {
         const handleScroll = () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
+                    // Skip header hide/show logic when menu or search is open
+                    if (isMenuOpen || isSearchOpen) {
+                        ticking = false
+                        return
+                    }
+
                     // Get scroll position - works with both native scroll and ScrollSmoother
                     const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
                     const lastY = lastScrollYRef.current
@@ -496,8 +502,7 @@ const Headers = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isMenuOpen, isSearchOpen, isMobile, router.pathname])
 
     // Expose header visibility to other components via body dataset
     useEffect(() => {
@@ -524,15 +529,39 @@ const Headers = () => {
             // Lock scroll without changing position (prevents visual jump)
             document.body.style.overflow = 'hidden'
             document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px` // Prevent layout shift from scrollbar
+
+            // Pause ScrollSmoother to prevent scrolling when menu is open
+            if (typeof window !== 'undefined') {
+                const smoother = (window as any).scrollSmootherInstance
+                if (smoother && typeof smoother.paused === 'function') {
+                    smoother.paused(true)
+                }
+            }
         } else {
             // Restore scroll
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
+
+            // Resume ScrollSmoother
+            if (typeof window !== 'undefined') {
+                const smoother = (window as any).scrollSmootherInstance
+                if (smoother && typeof smoother.paused === 'function') {
+                    smoother.paused(false)
+                }
+            }
         }
 
         return () => {
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
+
+            // Resume ScrollSmoother on cleanup
+            if (typeof window !== 'undefined') {
+                const smoother = (window as any).scrollSmootherInstance
+                if (smoother && typeof smoother.paused === 'function') {
+                    smoother.paused(false)
+                }
+            }
         }
     }, [isMenuOpen, isSearchOpen])
 
@@ -549,6 +578,32 @@ const Headers = () => {
         document.addEventListener('keydown', handleEscape)
         return () => document.removeEventListener('keydown', handleEscape)
     }, [isMenuOpen, isSearchOpen])
+
+    // Close mobile menu when hash link is clicked
+    useEffect(() => {
+        const handleCloseMobileMenu = () => {
+            // Always close menu and restore body overflow when hash link is clicked
+            // This ensures proper cleanup regardless of current state
+            setIsMenuOpen(false)
+            setHoveredMenuItem(null)
+            setSelectedSubMenuItem(null)
+            // Immediately restore body overflow
+            document.body.style.overflow = ''
+            document.body.style.paddingRight = ''
+        }
+
+        window.addEventListener('closeMobileMenu', handleCloseMobileMenu)
+        return () => window.removeEventListener('closeMobileMenu', handleCloseMobileMenu)
+    }, [])
+
+    // Reset menu state when menu closes (to return to main menu on reopen)
+    useEffect(() => {
+        if (!isMenuOpen) {
+            // Reset to main menu state when menu closes
+            setHoveredMenuItem(null)
+            setSelectedSubMenuItem(null)
+        }
+    }, [isMenuOpen])
 
     // Theme switching on route changes
     useEffect(() => {
@@ -588,7 +643,7 @@ const Headers = () => {
         <>
             <div
                 className={classNames(
-                    'nav-header fixed left-0 right-0 top-0 z-[99] py-2.5 transition-transform duration-300 xl:py-3.5',
+                    'nav-header fixed left-0 right-0 top-0 z-[999] py-2.5 transition-transform duration-300 xl:py-3.5',
                     getNavbarBgClass(pageStyle, isScrolled, isMenuOpen, isSearchOpen)
                 )}
                 style={{
@@ -631,6 +686,13 @@ const Headers = () => {
                             className={classNames('ml-14 h-[52px] w-[54px] xl:ml-[68px]', {
                                 hidden: isSearchOpen
                             })}
+                            onClick={() => {
+                                if (isMenuOpen) {
+                                    setIsMenuOpen(false)
+                                    setHoveredMenuItem(null)
+                                    setSelectedSubMenuItem(null)
+                                }
+                            }}
                         >
                             <Icons
                                 icon={getLogoVariant(pageStyle, isScrolled, isMenuOpen, isSearchOpen, isVisible)}
@@ -683,14 +745,14 @@ const Headers = () => {
                                             leaveFrom='transform opacity-100 scale-100'
                                             leaveTo='transform opacity-0 scale-95'
                                         >
-                                            <MenuItems className='absolute right-0 z-10 mt-2  origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                                            <MenuItems className=' absolute right-0 z-10  mt-2 origin-top-right bg-white shadow-lg outline-none ring-1 ring-black ring-opacity-5'>
                                                 {languages.map((lang) => (
                                                     <MenuItem key={lang.code}>
                                                         {({ active }) => (
                                                             <button
                                                                 onClick={() => handleLanguageChange(lang.code)}
                                                                 className={classNames(
-                                                                    'flex w-full items-center justify-center gap-2 px-6 py-4 text-left transition-colors focus:outline-none',
+                                                                    ' flex w-full items-center justify-center gap-2 px-6 py-4 text-left outline-none transition-colors',
                                                                     {
                                                                         'bg-grey-100': active,
                                                                         'bg-grey-300':
@@ -759,8 +821,8 @@ const Headers = () => {
             </div>
             {/* Dropdown Menu */}
             {isMenuOpen && (
-                <div className='animate-fade-in fixed inset-0 top-0 z-[98] overflow-hidden bg-black pt-[80px]'>
-                    <Container className='h-full'>
+                <div className='animate-fade-in fixed inset-0 top-0 z-[998] overflow-hidden bg-black'>
+                    <Container className='h-full pt-[80px]'>
                         <div className='flex h-full w-full gap-4 pt-5 xl:pt-10'>
                             {/* Grid 1: Main Menu - Hidden on mobile when submenu is selected */}
                             <div
@@ -778,7 +840,7 @@ const Headers = () => {
                                         <UnstyledLink
                                             key={item.label}
                                             href={item.href}
-                                            className='text-grey-200 hover:text-grey-white w-full cursor-pointer text-left transition-colors focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            className='text-grey-200 hover:text-grey-white  w-full cursor-pointer text-left outline-none transition-colors '
                                             onClick={() => {
                                                 setIsMenuOpen(false)
                                                 setHoveredMenuItem(null)
@@ -795,7 +857,7 @@ const Headers = () => {
                                         <button
                                             key={item.label}
                                             type='button'
-                                            className='text-grey-200 hover:text-grey-white w-full cursor-pointer text-left transition-colors focus:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
+                                            className='text-grey-200 hover:text-grey-white  w-full cursor-pointer text-left outline-none transition-colors '
                                             onMouseEnter={() => {
                                                 if (window.innerWidth >= 1024) {
                                                     setHoveredMenuItem(item)
@@ -837,10 +899,7 @@ const Headers = () => {
                                 )}
                             >
                                 {hoveredMenuItem?.subMenu && (
-                                    <div
-                                        className='space-y
-                                    -8 xl:space-y-0'
-                                    >
+                                    <div className='space-y-8 xl:space-y-0'>
                                         {/* Breadcrumb - Mobile Only */}
                                         <div className='lg:hidden'>
                                             <Breadcrumb
@@ -934,7 +993,7 @@ const Headers = () => {
                                                     <button
                                                         key={subItem.label}
                                                         type='button'
-                                                        className='group flex w-full cursor-pointer flex-col gap-4 focus:outline-none'
+                                                        className=' group flex w-full cursor-pointer flex-col gap-4 outline-none'
                                                         onClick={() => setSelectedSubMenuItem(subItem)}
                                                     >
                                                         <div className='h-[218px] w-full overflow-hidden'>
@@ -958,7 +1017,7 @@ const Headers = () => {
                                         </div>
 
                                         {/* Desktop: AVAILABILITY & CONDITIONS Section - Side by Side */}
-                                        <div className='hidden grid-cols-3 lg:grid xl:gap-14'>
+                                        <div className='hidden grid-cols-3 lg:grid xl:gap-14 xl:pt-[72px]'>
                                             {/* AVAILABILITY */}
                                             {hoveredMenuItem.subMenu.find((item) => item.label === 'Availability') && (
                                                 <div className='animate-slide-in-left flex flex-row items-end gap-8'>
@@ -981,9 +1040,9 @@ const Headers = () => {
                                                                     <UnstyledLink
                                                                         key={item}
                                                                         href={
-                                                                            item === 'IN STOCK'
+                                                                            item === 'In Stock'
                                                                                 ? '/collections?availability=instock'
-                                                                                : item === 'OUT OF STOCK'
+                                                                                : item === 'Out of Stock'
                                                                                 ? '/collections?availability=outofstock'
                                                                                 : '#'
                                                                         }
@@ -1126,7 +1185,15 @@ const Headers = () => {
                                                     <UnstyledLink
                                                         key={item}
                                                         href={
-                                                            item === 'Brand New'
+                                                            // Availability items
+                                                            selectedSubMenuItem.label === 'Availability'
+                                                                ? item === 'In Stock'
+                                                                    ? '/collections?availability=instock'
+                                                                    : item === 'Out of Stock'
+                                                                    ? '/collections?availability=outofstock'
+                                                                    : '#'
+                                                                : // Conditions items
+                                                                item === 'Brand New'
                                                                 ? '/collections?condition=brand-new'
                                                                 : item === 'Pre-Owned'
                                                                 ? '/collections?condition=pre-owned-very-good'

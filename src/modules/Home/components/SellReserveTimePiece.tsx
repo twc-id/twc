@@ -84,11 +84,13 @@ const SellReserveTimePiece = () => {
         })
 
         // Create a ScrollTrigger that watches for SocialMedia section (it's outside this component)
-        // We'll use a blanket trigger that activates when scrolling past a certain point
+        // Find the SocialMedia section using its id
+        const socialMediaSection = document.getElementById('social-media-section')
+
         const socialMediaWatch = ScrollTrigger.create({
             id: 'socialmedia-light-mode',
-            trigger: document.body, // Use body as trigger since SocialMedia is outside
-            start: '4800px top', // Before SocialMedia section (~5000-5500px range)
+            trigger: socialMediaSection || wrapperRef.current, // Use SocialMedia if found, otherwise fallback
+            start: socialMediaSection ? 'top 75%' : 'bottom bottom+=100', // When SocialMedia top reaches 75% viewport
             onEnter: () => {
                 setIsDarkSection(false) // Switch to light mode for SocialMedia
             },

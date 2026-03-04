@@ -7,7 +7,7 @@ import Wrapper from '@modules/Collections/components/Wrapper'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const TAB_MAP = {
     watches: 0,
@@ -33,8 +33,12 @@ const Collections = () => {
 
     const router = useRouter()
     const setFilter = useCollectionsFilterStore.useSetFilter()
+    const resetFilters = useCollectionsFilterStore.useResetFilters()
 
     const filters = useCollectionsFilterStore.useFilters()
+
+    // Track if filters have been reset on mount
+    const hasResetFiltersRef = useRef(false)
 
     const categoryId = selectedTab === 0 ? 15 : 16
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
@@ -101,6 +105,15 @@ const Collections = () => {
         fetchPage(1, false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, selectedTab, router.isReady, isInitialized])
+
+    // Reset filters when component first mounts (when user navigates to collections page)
+    useEffect(() => {
+        if (!router.isReady || hasResetFiltersRef.current) return
+
+        resetFilters()
+        hasResetFiltersRef.current = true
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router.isReady])
 
     const handleLoadMore = async () => {
         const nextPage = page + 1

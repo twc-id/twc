@@ -159,7 +159,11 @@ const Instagram = () => {
     }
 
     return (
-        <section ref={sectionRef} className='bg-grey-white relative z-[12] pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]'>
+        <section
+            ref={sectionRef}
+            id='social-media-section'
+            className='bg-grey-white relative z-[12] pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]'
+        >
             <Container>
                 <div className='flex w-full flex-col items-center gap-16 xl:gap-10'>
                     {/* Header */}
