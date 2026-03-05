@@ -821,7 +821,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     </p>
                                 )}
 
-                                <div className='flex flex-row gap-1 pt-2 xl:pt-0'>
+                                <div className='flex flex-row flex-wrap gap-1 pt-2 xl:pt-0'>
                                     {product.tags.map((item: any) => (
                                         <div
                                             className='border-grey-500 flex items-center rounded-full border'
@@ -1080,7 +1080,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                           {product.name}
                                                       </h4>
 
-                                                      <div className='flex gap-px'>
+                                                      <div className='flex gap-0.5'>
                                                           <p
                                                               className='text-grey-200 text-paragraph-7-desktop uppercase'
                                                               dangerouslySetInnerHTML={{

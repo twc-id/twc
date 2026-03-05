@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Trans } from 'next-i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -32,19 +32,24 @@ const Hero = () => {
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
     const { assets } = useAssets()
     const router = useRouter()
-    const heroSlides = assets
-        ?.filter((asset) => asset.media_type === 'video')
-        .sort((a, b) => {
-            // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
-            const getSuffixNumber = (name: string) => {
-                const parts = name.split('_')
-                const lastPart = parts[parts.length - 1]
-                const num = parseInt(lastPart, 10)
-                return isNaN(num) ? 0 : num
-            }
-            return getSuffixNumber(a.name) - getSuffixNumber(b.name)
-        })
-    const lang = router.locale || 'en'
+    const lang = router.locale ?? router.defaultLocale ?? 'en'
+
+    // Ensure we have slides data before rendering
+    const heroSlides = useMemo(() => {
+        if (!assets) return []
+        return assets
+            .filter((asset) => asset.media_type === 'video')
+            .sort((a, b) => {
+                // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
+                const getSuffixNumber = (name: string) => {
+                    const parts = name.split('_')
+                    const lastPart = parts[parts.length - 1]
+                    const num = parseInt(lastPart, 10)
+                    return isNaN(num) ? 0 : num
+                }
+                return getSuffixNumber(a.name) - getSuffixNumber(b.name)
+            })
+    }, [assets])
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -183,7 +188,7 @@ const Hero = () => {
                                 ref={h3RefFirst}
                                 className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
                             >
-                                {heroSlides &&
+                                {heroSlides.length > 0 &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
                             </h3>
@@ -192,7 +197,7 @@ const Hero = () => {
                                 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:w-[700px]'
                             >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {heroSlides &&
+                                    {heroSlides.length > 0 &&
                                         heroSlides[activeIndex] &&
                                         heroSlides[activeIndex].video_banner?.[lang]?.title}
                                 </Trans>
@@ -201,32 +206,33 @@ const Hero = () => {
                                 ref={h3RefSecond}
                                 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
                             >
-                                {heroSlides &&
+                                {heroSlides.length > 0 &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
-                            {heroSlides?.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => swiperRef.current?.slideToLoop(index)}
-                                    className={classNames(
-                                        'bg-grey-500 relative h-[3px] w-8 overflow-hidden focus:outline-none',
-                                        {
-                                            'w-16': activeIndex === index
-                                        }
-                                    )}
-                                >
-                                    <div
-                                        key={`progress-${activeIndex}-${index}`}
-                                        className={classNames('bg-grey-white absolute left-0 top-0 h-full', {
-                                            'animate-progress': activeIndex === index,
-                                            'w-0': activeIndex !== index
-                                        })}
-                                    />
-                                </button>
-                            ))}
+                            {heroSlides.length > 0 &&
+                                heroSlides.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => swiperRef.current?.slideToLoop(index)}
+                                        className={classNames(
+                                            'bg-grey-500 relative h-[3px] w-8 overflow-hidden focus:outline-none',
+                                            {
+                                                'w-16': activeIndex === index
+                                            }
+                                        )}
+                                    >
+                                        <div
+                                            key={`progress-${activeIndex}-${index}`}
+                                            className={classNames('bg-grey-white absolute left-0 top-0 h-full', {
+                                                'animate-progress': activeIndex === index,
+                                                'w-0': activeIndex !== index
+                                            })}
+                                        />
+                                    </button>
+                                ))}
                         </div>
                     </div>
                 </Container>
@@ -246,59 +252,60 @@ const Hero = () => {
                 allowTouchMove={false}
                 className='h-full w-full [&_.swiper-slide]:!opacity-100'
             >
-                {heroSlides?.map((slide, idx) => (
-                    <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
-                        {/* fallback poster image until video is ready */}
-                        <Image
-                            src={idx % 2 === 0 ? '/images/home/hero-home.webp' : '/images/about-us/hero.webp'}
-                            alt='hero poster'
-                            className='absolute inset-0 h-full w-full object-cover'
-                            fill
-                        />
+                {heroSlides.length > 0 &&
+                    heroSlides.map((slide, idx) => (
+                        <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
+                            {/* fallback poster image until video is ready */}
+                            <Image
+                                src={idx % 2 === 0 ? '/images/home/hero-home.webp' : '/images/about-us/hero.webp'}
+                                alt='hero poster'
+                                className='absolute inset-0 h-full w-full object-cover'
+                                fill
+                            />
 
-                        <video
-                            ref={(el) => {
-                                videoRefs.current[idx] = el
-                            }}
-                            className='absolute inset-0 h-full w-full object-cover'
-                            muted
-                            playsInline
-                            preload='metadata'
-                            onLoadedData={() => {
-                                setVideoLoaded((s) => ({ ...s, [idx]: true }))
-                            }}
-                            onCanPlay={() => {
-                                setVideoReady((s) => ({ ...s, [idx]: true }))
-                            }}
-                            onWaiting={() => {
-                                setVideoReady((s) => ({ ...s, [idx]: false }))
-                            }}
-                            onPlaying={() => {
-                                setVideoReady((s) => ({ ...s, [idx]: true }))
-                            }}
-                            onError={(e) => {
-                                console.warn(`Video ${idx} error:`, e)
-                                setVideoReady((s) => ({ ...s, [idx]: false }))
-                            }}
-                            style={{
-                                opacity: videoReady[idx] || videoLoaded[idx] ? 1 : 0,
-                                transition: 'opacity 400ms ease'
-                            }}
-                        >
-                            {/* prefer webm when available, fallback to provided mp4 */}
-                            <source src={slide.media.url.replace(/\.mp4$/i, '.webm')} type='video/webm' />
-                            <source src={slide.media.url} type='video/mp4' />
-                        </video>
+                            <video
+                                ref={(el) => {
+                                    videoRefs.current[idx] = el
+                                }}
+                                className='absolute inset-0 h-full w-full object-cover'
+                                muted
+                                playsInline
+                                preload='metadata'
+                                onLoadedData={() => {
+                                    setVideoLoaded((s) => ({ ...s, [idx]: true }))
+                                }}
+                                onCanPlay={() => {
+                                    setVideoReady((s) => ({ ...s, [idx]: true }))
+                                }}
+                                onWaiting={() => {
+                                    setVideoReady((s) => ({ ...s, [idx]: false }))
+                                }}
+                                onPlaying={() => {
+                                    setVideoReady((s) => ({ ...s, [idx]: true }))
+                                }}
+                                onError={(e) => {
+                                    console.warn(`Video ${idx} error:`, e)
+                                    setVideoReady((s) => ({ ...s, [idx]: false }))
+                                }}
+                                style={{
+                                    opacity: videoReady[idx] || videoLoaded[idx] ? 1 : 0,
+                                    transition: 'opacity 400ms ease'
+                                }}
+                            >
+                                {/* prefer webm when available, fallback to provided mp4 */}
+                                <source src={slide.media.url.replace(/\.mp4$/i, '.webm')} type='video/webm' />
+                                <source src={slide.media.url} type='video/mp4' />
+                            </video>
 
-                        {/* gradient overlay to keep text readable */}
-                        <div
-                            className='absolute inset-0'
-                            style={{
-                                background: 'linear-gradient(180deg, rgba(1,1,1,0) 31.05%, #010101 97.39%)'
-                            }}
-                        />
-                    </SwiperSlide>
-                ))}
+                            {/* gradient overlay to keep text readable */}
+                            <div
+                                className='absolute inset-0'
+                                style={{
+                                    background: 'linear-gradient(180deg, rgba(1,1,1,0) 31.05%, #010101 97.39%)'
+                                }}
+                            />
+                        </SwiperSlide>
+                    ))}
             </Swiper>
 
             <style jsx>{`
