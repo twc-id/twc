@@ -201,7 +201,7 @@ const Hero = () => {
     }, [activeIndex, isMobile])
 
     return (
-        <section ref={sectionRef} className='bg-grey-black pt-[200px] xl:pt-[240px]'>
+        <section ref={sectionRef} className='bg-grey-black pt-[120px] xl:pt-[240px]'>
             <Container className='pb-14 xl:pb-[116px]'>
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white line-clamp-3 xl:w-[585px]'>
                     {t('hero.title')}

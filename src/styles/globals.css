@@ -73,6 +73,7 @@
 
     /* Apply transform to force GPU rendering */
     #smooth-content-home > * {
+        margin-top: -1px; /* Prevent potential 1px white line at top */
         transform: translateZ(0);
         -webkit-transform: translate3d(0, 0, 0);
         will-change: transform;
