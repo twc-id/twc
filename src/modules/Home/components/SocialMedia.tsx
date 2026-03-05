@@ -190,7 +190,7 @@ const Instagram = () => {
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}
-                    <div className='scrollbar-hide -mx-4 flex w-full flex-row gap-2 overflow-x-auto px-4 xl:mx-0 xl:w-full xl:justify-between xl:overflow-visible xl:px-0'>
+                    <div className='scrollbar-hide -mx-4 flex w-full flex-row gap-2 overflow-x-auto xl:mx-0 xl:w-full xl:justify-between xl:overflow-visible xl:px-0'>
                         {instagramPosts.map((post) => (
                             <div
                                 key={post.id}

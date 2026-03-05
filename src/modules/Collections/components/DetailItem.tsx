@@ -720,7 +720,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
                 <div ref={pinRef as any} className='relative w-full xl:w-auto'>
                     {/* left vertical indicators */}
-                    <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row items-center gap-3 xl:left-[-28px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
+                    <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row items-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
                             <button
                                 key={i}
@@ -735,7 +735,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                     <div
                         ref={scrollRef as any}
-                        className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
+                        className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:ml-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
                         style={{ maxHeight: 'calc(100vh - 160px)' }}
                     >
                         {product.images.length > 0 ? (
@@ -923,13 +923,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                               <div className='mx-auto max-w-screen-md '>
                                                   <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-5 py-4 shadow-lg'>
                                                       <div className='flex flex-col gap-1'>
-                                                          {product.price !== '' && (
-                                                              <p className='text-grey-white text-paragraph-3-mobile'>
+                                                          {product.price !== '' ? (
+                                                              <p className='text-grey-white text-subheading-5-desktop'>
                                                                   {formatRupiah(product.price)}
                                                               </p>
+                                                          ) : (
+                                                              <div className='flex flex-col gap-1.5'>
+                                                                  <h4 className='text-subheading-5-desktop text-grey-white capitalize'>
+                                                                      {product.name}
+                                                                  </h4>
+
+                                                                  <p
+                                                                      className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                                      dangerouslySetInnerHTML={{
+                                                                          __html: sanitizeHtml(
+                                                                              product.brands?.[0]?.name
+                                                                          )
+                                                                      }}
+                                                                  />
+                                                              </div>
                                                           )}
                                                           {priceHistory.length > 1 && (
-                                                              <div className='flex items-center gap-0.5'>
+                                                              <div className='text-paragraph-7-desktop flex items-center gap-0.5'>
                                                                   <Icons
                                                                       icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
                                                                       width={12}
@@ -941,7 +956,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       }
                                                                   />
                                                                   <span
-                                                                      className={classNames('text-paragraph-7-mobile', {
+                                                                      className={classNames({
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange
                                                                       })}
@@ -957,7 +972,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       %
                                                                   </span>
                                                                   <span
-                                                                      className={classNames('text-paragraph-7-mobile', {
+                                                                      className={classNames({
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange,
                                                                           'text-grey-500':
@@ -1075,8 +1090,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                       >
                                           <div className='max-w-screen'>
                                               <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-6 py-4 shadow-md'>
-                                                  <div className='flex flex-col gap-1'>
-                                                      <h4 className='text-subheading-4-desktop text-grey-white capitalize'>
+                                                  <div className='flex flex-col gap-1.5'>
+                                                      <h4 className='text-subheading-5-desktop text-grey-white capitalize'>
                                                           {product.name}
                                                       </h4>
 
@@ -1107,9 +1122,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                   </div>
 
                                                   <div className='flex items-center gap-8'>
-                                                      <div className='flex flex-col items-end'>
+                                                      <div className='flex flex-col items-end gap-1.5'>
                                                           {product.price !== '' && (
-                                                              <p className='text-paragraph-4-desktop  text-grey-white'>
+                                                              <p className='text-subheading-5-desktop text-grey-white'>
                                                                   {formatRupiah(product.price)}
                                                               </p>
                                                           )}

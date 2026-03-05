@@ -39,7 +39,7 @@ const Hero = () => {
     return (
         <section
             ref={sectionRef}
-            className='relative h-[848px] w-full xl:h-[960px]'
+            className='relative h-dvh w-full '
             style={{
                 backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('/images/collections/hero.webp')`,
                 backgroundSize: 'cover',
@@ -47,7 +47,7 @@ const Hero = () => {
                 backgroundRepeat: 'no-repeat'
             }}
         >
-            <div className='absolute inset-x-0 bottom-0 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
+            <div className='absolute inset-x-0 bottom-5 z-10 xl:bottom-[80px]'>
                 <Container>
                     <div className='flex w-full flex-col   gap-6  xl:gap-2'>
                         <h1

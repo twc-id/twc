@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Trans } from 'next-i18next'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -35,21 +35,18 @@ const Hero = () => {
     const lang = router.locale ?? router.defaultLocale ?? 'en'
 
     // Ensure we have slides data before rendering
-    const heroSlides = useMemo(() => {
-        if (!assets) return []
-        return assets
-            .filter((asset) => asset.media_type === 'video')
-            .sort((a, b) => {
-                // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
-                const getSuffixNumber = (name: string) => {
-                    const parts = name.split('_')
-                    const lastPart = parts[parts.length - 1]
-                    const num = parseInt(lastPart, 10)
-                    return isNaN(num) ? 0 : num
-                }
-                return getSuffixNumber(a.name) - getSuffixNumber(b.name)
-            })
-    }, [assets])
+    const heroSlides = assets
+        ?.filter((asset) => asset.media_type === 'video')
+        .sort((a, b) => {
+            // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
+            const getSuffixNumber = (name: string) => {
+                const parts = name.split('_')
+                const lastPart = parts[parts.length - 1]
+                const num = parseInt(lastPart, 10)
+                return isNaN(num) ? 0 : num
+            }
+            return getSuffixNumber(a.name) - getSuffixNumber(b.name)
+        })
 
     useGSAP(() => {
         const timeline = gsap.timeline({
@@ -188,7 +185,7 @@ const Hero = () => {
                                 ref={h3RefFirst}
                                 className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
                             >
-                                {heroSlides.length > 0 &&
+                                {heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
                             </h3>
@@ -197,7 +194,7 @@ const Hero = () => {
                                 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:w-[700px]'
                             >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {heroSlides.length > 0 &&
+                                    {heroSlides &&
                                         heroSlides[activeIndex] &&
                                         heroSlides[activeIndex].video_banner?.[lang]?.title}
                                 </Trans>
@@ -206,14 +203,14 @@ const Hero = () => {
                                 ref={h3RefSecond}
                                 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
                             >
-                                {heroSlides.length > 0 &&
+                                {heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
                             </h3>
                         </div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
-                            {heroSlides.length > 0 &&
-                                heroSlides.map((_, index) => (
+                            {heroSlides &&
+                                heroSlides?.map((_, index) => (
                                     <button
                                         key={index}
                                         onClick={() => swiperRef.current?.slideToLoop(index)}
@@ -243,6 +240,7 @@ const Hero = () => {
                     delay: 5000,
                     disableOnInteraction: false
                 }}
+                speed={1500}
                 slidesPerView={1}
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper
@@ -252,7 +250,7 @@ const Hero = () => {
                 allowTouchMove={false}
                 className='h-full w-full [&_.swiper-slide]:!opacity-100'
             >
-                {heroSlides.length > 0 &&
+                {heroSlides &&
                     heroSlides.map((slide, idx) => (
                         <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
                             {/* fallback poster image until video is ready */}

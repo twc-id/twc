@@ -280,7 +280,7 @@ const getLogoVariant = (
 }
 
 // Paths where navbar should not be sticky (stay at top only)
-const NON_STICKY_PATHS = ['/']
+const NON_STICKY_PATHS = ['']
 
 const Headers = () => {
     const { t } = useTranslation(['collection', 'home', 'common'])
@@ -605,22 +605,33 @@ const Headers = () => {
         }
     }, [isMenuOpen])
 
-    // Theme switching on route changes
+    // Theme switching on route changes - reset dark mode on any navigation
     useEffect(() => {
-        const handleRouteChangeComplete = () => {
-            setIsDarkSection(false) // Switch to light mode on any page navigation
+        // Reset dark mode BEFORE navigation starts (more reliable than after)
+        const handleRouteChangeStart = () => {
+            setIsDarkSection(false)
         }
 
+        // Also reset after navigation completes as backup
+        const handleRouteChangeComplete = () => {
+            // Use setTimeout to ensure this runs after page components are mounted
+            setTimeout(() => {
+                setIsDarkSection(false)
+            }, 0)
+        }
+
+        router.events.on('routeChangeStart', handleRouteChangeStart)
         router.events.on('routeChangeComplete', handleRouteChangeComplete)
 
         // Set initial state based on current route
         setIsDarkSection(false)
 
         return () => {
+            router.events.off('routeChangeStart', handleRouteChangeStart)
             router.events.off('routeChangeComplete', handleRouteChangeComplete)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.events])
+    }, []) // Empty deps - router.events is stable across renders
 
     const handleMenuItemKeyDown = (e: React.KeyboardEvent, item: MenuItem) => {
         if (e.key === 'Enter' || e.key === ' ') {
