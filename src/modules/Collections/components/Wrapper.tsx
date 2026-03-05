@@ -132,6 +132,35 @@ const Wrapper: React.FC<WrapperProps> = ({
             }
         })
 
+        // Mobile: Pin tabs and filter at top
+        mm.add('(max-width: 1279px)', () => {
+            // Pin the top section (tabs & filter)
+            pinTriggerRef.current = ScrollTrigger.create({
+                trigger: topRef.current,
+                start: 'top top',
+                end: () => `+=${document.documentElement.scrollHeight - window.innerHeight}`,
+                pin: true,
+                pinSpacing: false,
+                id: 'collections-wrapper-mobile-pin',
+                onEnterBack: () => {
+                    setIsPin(true)
+                },
+                onEnter: () => {
+                    setIsPin(true)
+                },
+                onLeaveBack: () => {
+                    setIsPin(false)
+                },
+                onLeave: () => {
+                    setIsPin(false)
+                }
+            })
+
+            return () => {
+                pinTriggerRef.current?.kill?.()
+            }
+        })
+
         // Cleanup matchMedia when component unmounts or deps change
         return () => {
             mm.revert()
@@ -151,11 +180,14 @@ const Wrapper: React.FC<WrapperProps> = ({
     }, [data, isMobile])
 
     return (
-        <Container className='relative flex flex-col gap-14 pt-14 xl:gap-10 xl:pt-20' ref={sectionRef}>
+        <Container className='relative flex flex-col gap-7 xl:gap-10 ' ref={sectionRef}>
             <div
-                className={classNames('bg-grey-white dark:bg-grey-black z-[100] flex justify-between xl:pb-10', {
-                    '!pb-0': isPin
-                })}
+                className={classNames(
+                    'bg-grey-white dark:bg-grey-black z-[100] flex justify-between pb-7 pt-14 xl:pb-10 xl:pt-20',
+                    {
+                        'xl:!pb-0': isPin
+                    }
+                )}
                 ref={topRef}
             >
                 <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>

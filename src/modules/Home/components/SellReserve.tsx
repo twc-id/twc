@@ -19,41 +19,9 @@ const SellReserve = () => {
     const sellRef = useRef<HTMLDivElement>(null)
     const reserveRef = useRef<HTMLDivElement>(null)
 
-    // IntersectionObserver as fallback for hash navigation (ScrollTrigger doesn't fire on direct jumps)
+    // Set initial light mode on mount for SellReserve section
     useEffect(() => {
-        if (!sectionRef.current) return
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    // Don't override if navigating to #service (TimePieceService section)
-                    if (typeof window !== 'undefined' && window.location.hash === '#service') {
-                        return
-                    }
-                    // When section is at least 25% visible, set light mode
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.25) {
-                        setIsDarkSection(false)
-                    }
-                })
-            },
-            {
-                threshold: [0, 0.25, 0.5, 0.75, 1],
-                rootMargin: '-10% 0px -10% 0px' // Trigger when section is near center of viewport
-            }
-        )
-
-        observer.observe(sectionRef.current)
-
-        // Also check immediately in case we're already on the section (hash navigation)
-        const rect = sectionRef.current.getBoundingClientRect()
-        // Don't set light mode if navigating to #service
-        if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && window.location.hash !== '#service') {
-            setIsDarkSection(false)
-        }
-
-        return () => {
-            observer.disconnect()
-        }
+        setIsDarkSection(false)
     }, [setIsDarkSection])
 
     useGSAP(() => {
@@ -61,16 +29,13 @@ const SellReserve = () => {
         const lightModeTrigger = ScrollTrigger.create({
             id: 'sell-reserve-light-mode',
             trigger: sectionRef.current,
-            start: 'top 80%', // Trigger when section top reaches 80% of viewport
-            end: 'bottom 30%', // Extended range to keep light mode active through most of section
+            start: 'top 60%', // Trigger earlier to ensure light mode
+            end: 'bottom 80%',
             onEnter: () => {
                 setIsDarkSection(false)
             },
             onEnterBack: () => {
                 setIsDarkSection(false)
-            },
-            onLeave: () => {
-                // When leaving SellReserve (scrolling down), TimePieceService will set dark mode
             }
         })
 
@@ -102,7 +67,7 @@ const SellReserve = () => {
     return (
         <section
             ref={sectionRef}
-            className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 pb-0 pt-16 xl:flex-row xl:px-5 xl:pt-[160px]'
+            className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 overflow-x-hidden px-4 pb-0 pt-16 xl:flex-row xl:px-5 xl:pt-[160px]'
         >
             <div
                 ref={sellRef}

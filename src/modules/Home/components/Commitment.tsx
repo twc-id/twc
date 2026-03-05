@@ -57,7 +57,7 @@ const Commitment = () => {
     }, [])
 
     return (
-        <section ref={sectionRef}>
+        <section ref={sectionRef} className='overflow-x-hidden'>
             <div className='bg-grey-black relative flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
                 <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
                     {t('commitment.title')}
@@ -67,7 +67,7 @@ const Commitment = () => {
                     {t('commitment.description')}
                 </h3>
             </div>
-            <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
+            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[300px] overflow-hidden xl:h-[560px]'>
                 <Image src='/images/home/commitment.webp' alt='commitment' fill className='object-cover' />
             </div>
         </section>

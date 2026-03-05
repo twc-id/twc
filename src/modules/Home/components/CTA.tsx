@@ -40,7 +40,7 @@ const CTA = () => {
         }
     }, [])
     return (
-        <section className='bg-grey-white pb-14 xl:pb-[116px]' ref={sectionRef}>
+        <section className='bg-grey-white overflow-x-hidden pb-14 xl:pb-[116px]' ref={sectionRef}>
             <Container>
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between'>
                     <div className='flex min-w-[380px] flex-col items-start gap-5 px-5 pt-8 xl:gap-6 xl:pl-20 xl:pr-0'>

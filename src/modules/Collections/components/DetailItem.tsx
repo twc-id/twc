@@ -90,6 +90,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const pinRef = useRef<HTMLDivElement | null>(null)
     const scrollRef = useRef<HTMLDivElement | null>(null)
     const priceRef = useRef<HTMLDivElement | null>(null)
+    const rightPinRef = useRef<HTMLDivElement | null>(null)
+    const rightScrollRef = useRef<HTMLDivElement | null>(null)
     const [activeImageIndex, setActiveImageIndex] = useState(0)
     const [imageModalOpen, setImageModalOpen] = useState(false)
     const [imageModalIndex, setImageModalIndex] = useState(0)
@@ -101,33 +103,48 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
-    // Keep only the left images column pinned. Right side will scroll with the page.
+    // Pin both left and right columns on desktop - each scrolls independently
     useGSAP(() => {
         const leftPinEl = pinRef.current
         const leftScrollEl = scrollRef.current
+        const rightPinEl = rightPinRef.current
+        const rightScrollEl = rightScrollRef.current
         // increase end buffer on desktop so the pin releases earlier
         // const endBuffer = typeof window !== 'undefined' && window.innerWidth >= 1280 ? 300 : 80
 
         let _leftWheelHandler: ((e: WheelEvent) => void) | null = null
         const roL = new ResizeObserver(() => ScrollTrigger.refresh())
+        const roR = new ResizeObserver(() => ScrollTrigger.refresh())
+
+        // Only create ScrollTrigger pins on desktop - mobile doesn't need pins
+        // and the pins interfere with touch events on mobile
+        const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1280
+
         if (leftPinEl && leftScrollEl) {
             const id = 'detail-left-pin'
-            ScrollTrigger.create({
-                id,
-                trigger: leftPinEl,
-                start: 'top top',
-                // end: () => `+=${Math.max(0, leftScrollEl.scrollHeight - leftScrollEl.clientHeight - endBuffer)}`,
-                end: 'bottom bottom',
-                pin: leftPinEl,
-                pinSpacing: false
-            })
+
+            if (isDesktop) {
+                ScrollTrigger.create({
+                    id,
+                    trigger: leftPinEl,
+                    start: 'top top',
+                    // end: () => `+=${Math.max(0, leftScrollEl.scrollHeight - leftScrollEl.clientHeight - endBuffer)}`,
+                    end: 'bottom bottom',
+                    pin: leftPinEl,
+                    pinSpacing: false
+                })
+            }
 
             roL.observe(leftScrollEl)
 
             // When left pin is not yet active, forward wheel events to the page only
             // when the inner container cannot scroll further in the wheel direction.
+            // Only apply on desktop - mobile uses touch events for carousel swipe
             const wheelHandler = (e: WheelEvent) => {
                 try {
+                    // Skip wheel handling on mobile - let touch events work naturally
+                    if (!isDesktop) return
+
                     const st = ScrollTrigger.getById(id)
 
                     // if ScrollTrigger exists and is active, let inner scrolling behave normally
@@ -168,11 +185,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             leftScrollEl.addEventListener('wheel', wheelHandler, { passive: false })
         }
 
+        // Pin right column (product info) on desktop
+        if (rightPinEl && rightScrollEl && isDesktop) {
+            const rightId = 'detail-right-pin'
+
+            ScrollTrigger.create({
+                id: rightId,
+                trigger: rightPinEl,
+                start: 'top top',
+                end: 'bottom bottom',
+                pin: rightPinEl,
+                pinSpacing: false
+            })
+
+            roR.observe(rightScrollEl)
+        }
+
         const onLoad = () => ScrollTrigger.refresh()
         window.addEventListener('load', onLoad)
 
         return () => {
             ScrollTrigger.getById('detail-left-pin')?.kill()
+            ScrollTrigger.getById('detail-right-pin')?.kill()
             // remove wheel handler if attached
             try {
                 if (leftScrollEl && _leftWheelHandler) leftScrollEl.removeEventListener('wheel', _leftWheelHandler)
@@ -181,6 +215,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             }
             try {
                 roL.disconnect()
+            } catch (e) {
+                // ignore
+            }
+            try {
+                roR.disconnect()
             } catch (e) {
                 // ignore
             }
@@ -735,438 +774,475 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
 
-                <div className='scrollbar-none flex w-full flex-col gap-12'>
-                    {!isMobile && (
-                        <Breadcrumb
-                            items={[
-                                {
-                                    title: 'Our Collections',
-                                    href: '/collections'
-                                },
-                                {
-                                    title: product?.name
-                                }
-                            ]}
-                            navigationClassName='xl:text-button-5-desktop text-button-5-mobile'
-                            lastItemClassName='!text-grey-black xl:text-button-5-desktop text-button-5-mobile'
-                        />
-                    )}
-                    <div className='flex flex-col gap-14 xl:gap-12'>
-                        <div className='flex flex-col gap-2'>
-                            <UnstyledLink
-                                href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}
-                                className='w-fit'
-                            >
-                                <h5
-                                    className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
-                                    dangerouslySetInnerHTML={{
-                                        __html: sanitizeHtml(product?.brands?.[0]?.name)
-                                    }}
-                                />
-                            </UnstyledLink>
+                <div ref={rightPinRef as any} className='scrollbar-none flex w-full xl:w-auto'>
+                    <div
+                        ref={rightScrollRef as any}
+                        className='scrollbar-none flex w-full flex-col gap-12 overflow-y-auto xl:max-h-[calc(100vh-160px)]'
+                    >
+                        {!isMobile && (
+                            <Breadcrumb
+                                items={[
+                                    {
+                                        title: 'Our Collections',
+                                        href: '/collections'
+                                    },
+                                    {
+                                        title: product?.name
+                                    }
+                                ]}
+                                navigationClassName='xl:text-button-5-desktop text-button-5-mobile'
+                                lastItemClassName='!text-grey-black xl:text-button-5-desktop text-button-5-mobile'
+                            />
+                        )}
+                        <div className='flex flex-col gap-14 xl:gap-12'>
+                            <div className='flex flex-col gap-2'>
+                                <UnstyledLink
+                                    href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}
+                                    className='w-fit'
+                                >
+                                    <h5
+                                        className='xl:text-subheading-5-desktop text-subheading-5-mobile text-accent-price-dark uppercase'
+                                        dangerouslySetInnerHTML={{
+                                            __html: sanitizeHtml(product?.brands?.[0]?.name)
+                                        }}
+                                    />
+                                </UnstyledLink>
 
-                            <h1 className='xl:text-paragraph-1-desktop text-paragraph-1-mobile text-grey-black'>
-                                {product.name}
-                            </h1>
+                                <h1 className='xl:text-paragraph-1-desktop text-paragraph-1-mobile text-grey-black'>
+                                    {product.name}
+                                </h1>
 
-                            {product.meta_data.find((meta: any) => meta.key === 'reference') && isWatch && (
-                                <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
-                                    Ref.{' '}
-                                    <span className=''>
-                                        {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
-                                    </span>
-                                </p>
-                            )}
-
-                            <div className='flex flex-row gap-1 pt-2 xl:pt-0'>
-                                {product.tags.map((item: any) => (
-                                    <div
-                                        className='border-grey-500 flex items-center rounded-full border'
-                                        key={item.name}
-                                    >
-                                        <span className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
-                                            {item.name}
+                                {product.meta_data.find((meta: any) => meta.key === 'reference') && isWatch && (
+                                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
+                                        Ref.{' '}
+                                        <span className=''>
+                                            {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
                                         </span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div ref={priceRef as any} className='hidden flex-col gap-2 pt-6 xl:flex xl:gap-3'>
-                                {product.price !== '' && (
-                                    <p className='xl:text-paragraph-3-desktop text-paragraph-3-mobile text-grey-black'>
-                                        {formatRupiah(product.price)}
                                     </p>
                                 )}
 
-                                {priceHistory.length > 1 && (
-                                    <div className='flex flex-row items-center gap-1 *:!leading-none'>
-                                        <Icons
-                                            icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
-                                            width={12}
-                                            height={12}
-                                            className={
-                                                isPositiveChange
-                                                    ? 'text-success-500'
-                                                    : 'text-error-500 rotate-180 transform'
-                                            }
-                                        />
-                                        <span
-                                            className={classNames(
-                                                'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
-                                                {
-                                                    'text-green-600': isPositiveChange,
-                                                    'text-red-600': !isPositiveChange
-                                                }
-                                            )}
+                                <div className='flex flex-row gap-1 pt-2 xl:pt-0'>
+                                    {product.tags.map((item: any) => (
+                                        <div
+                                            className='border-grey-500 flex items-center rounded-full border'
+                                            key={item.name}
                                         >
-                                            {isPositiveChange ? '+' : ''}
-                                            {(
-                                                ((priceHistory[priceHistory.length - 1].price_change -
-                                                    priceHistory[0].price_change) /
-                                                    priceHistory[0].price) *
-                                                100
-                                            ).toFixed(2)}
-                                            %
-                                        </span>
-                                        <span
-                                            className={classNames(
-                                                'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
-                                                {
-                                                    'text-green-600': isPositiveChange,
-                                                    'text-red-600': !isPositiveChange,
-                                                    'text-grey-500':
-                                                        priceHistory[priceHistory.length - 1].price_change ===
-                                                        priceHistory[0].price_change
-                                                }
-                                            )}
-                                        >
-                                            ({formatRupiah(priceHistory[priceHistory.length - 1].price_change)})
-                                        </span>
-                                    </div>
-                                )}
-                                {product.purchasable ? (
-                                    <a
-                                        href={getWhatsAppLinkFromTemplate(
-                                            'detailProduct',
-                                            product.name,
-                                            typeof window !== 'undefined'
-                                                ? window.location.href
-                                                : `/collections/${product.slug}`
-                                        )}
-                                        target='_blank'
-                                        rel='noopener noreferrer'
-                                        onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
-                                    >
-                                        <Button variant='secondaryInverse' block>
-                                            {t('common:reserve_this', {
-                                                item: isWatch ? t('common:watch') : t('common:accesoris')
-                                            })}
-                                        </Button>
-                                    </a>
-                                ) : (
-                                    <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                        <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
-                                            {t('common:sold')}
+                                            <span className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
+                                                {item.name}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div ref={priceRef as any} className='hidden flex-col gap-2 pt-6 xl:flex xl:gap-3'>
+                                    {product.price !== '' && (
+                                        <p className='xl:text-paragraph-3-desktop text-paragraph-3-mobile text-grey-black'>
+                                            {formatRupiah(product.price)}
                                         </p>
-                                    </button>
-                                )}
-                            </div>
-                        </div>
+                                    )}
 
-                        {isMobile && (
-                            <div className='fixed bottom-0 left-0 right-0 z-50 xl:hidden'>
-                                <div className='mx-auto max-w-screen-md '>
-                                    <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-5 py-4 shadow-lg'>
-                                        <div className='flex flex-col gap-1'>
-                                            {product.price !== '' && (
-                                                <p className='text-grey-white text-paragraph-3-mobile'>
-                                                    {formatRupiah(product.price)}
-                                                </p>
-                                            )}
-                                            {priceHistory.length > 1 && (
-                                                <div className='flex items-center gap-0.5'>
-                                                    <Icons
-                                                        icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
-                                                        width={12}
-                                                        height={12}
-                                                        className={
-                                                            isPositiveChange
-                                                                ? 'text-success-500'
-                                                                : 'text-error-500 rotate-180 transform'
-                                                        }
-                                                    />
-                                                    <span
-                                                        className={classNames('text-paragraph-7-mobile', {
-                                                            'text-green-600': isPositiveChange,
-                                                            'text-red-600': !isPositiveChange
-                                                        })}
-                                                    >
-                                                        {isPositiveChange ? '+' : ''}
-                                                        {(
-                                                            ((priceHistory[priceHistory.length - 1].price_change -
-                                                                priceHistory[0].price_change) /
-                                                                priceHistory[0].price) *
-                                                            100
-                                                        ).toFixed(2)}
-                                                        %
-                                                    </span>
-                                                    <span
-                                                        className={classNames('text-paragraph-7-mobile', {
-                                                            'text-green-600': isPositiveChange,
-                                                            'text-red-600': !isPositiveChange,
-                                                            'text-grey-500':
-                                                                priceHistory[priceHistory.length - 1].price_change ===
-                                                                priceHistory[0].price_change
-                                                        })}
-                                                    >
-                                                        (
-                                                        {formatRupiah(
-                                                            priceHistory[priceHistory.length - 1].price_change
-                                                        )}
-                                                        )
-                                                    </span>
-                                                </div>
-                                            )}
+                                    {priceHistory.length > 1 && (
+                                        <div className='flex flex-row items-center gap-1 *:!leading-none'>
+                                            <Icons
+                                                icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
+                                                width={12}
+                                                height={12}
+                                                className={
+                                                    isPositiveChange
+                                                        ? 'text-success-500'
+                                                        : 'text-error-500 rotate-180 transform'
+                                                }
+                                            />
+                                            <span
+                                                className={classNames(
+                                                    'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
+                                                    {
+                                                        'text-green-600': isPositiveChange,
+                                                        'text-red-600': !isPositiveChange
+                                                    }
+                                                )}
+                                            >
+                                                {isPositiveChange ? '+' : ''}
+                                                {(
+                                                    ((priceHistory[priceHistory.length - 1].price_change -
+                                                        priceHistory[0].price_change) /
+                                                        priceHistory[0].price) *
+                                                    100
+                                                ).toFixed(2)}
+                                                %
+                                            </span>
+                                            <span
+                                                className={classNames(
+                                                    'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
+                                                    {
+                                                        'text-green-600': isPositiveChange,
+                                                        'text-red-600': !isPositiveChange,
+                                                        'text-grey-500':
+                                                            priceHistory[priceHistory.length - 1].price_change ===
+                                                            priceHistory[0].price_change
+                                                    }
+                                                )}
+                                            >
+                                                ({formatRupiah(priceHistory[priceHistory.length - 1].price_change)})
+                                            </span>
                                         </div>
-
-                                        <div className='ml-4 flex shrink-0 items-center'>
-                                            {product.purchasable ? (
-                                                <a
-                                                    href={getWhatsAppLinkFromTemplate(
-                                                        'detailProduct',
-                                                        product.name,
-                                                        typeof window !== 'undefined'
-                                                            ? window.location.href
-                                                            : `/collections/${product.slug}`
-                                                    )}
-                                                    target='_blank'
-                                                    rel='noopener noreferrer'
-                                                    onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
-                                                >
-                                                    <Button variant='secondaryInverse'>
-                                                        {' '}
-                                                        {t('common:reserve', {
-                                                            item: isWatch ? t('common:watch') : t('common:item')
-                                                        })}
-                                                    </Button>
-                                                </a>
-                                            ) : (
-                                                <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
-                                                        {t('common:sold')}
-                                                    </p>
-                                                </button>
+                                    )}
+                                    {product.purchasable ? (
+                                        <a
+                                            href={getWhatsAppLinkFromTemplate(
+                                                'detailProduct',
+                                                product.name,
+                                                typeof window !== 'undefined'
+                                                    ? window.location.href
+                                                    : `/collections/${product.slug}`
                                             )}
-                                        </div>
-                                    </div>
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                        >
+                                            <Button variant='secondaryInverse' block>
+                                                {t('common:reserve_this', {
+                                                    item: isWatch ? t('common:watch') : t('common:accesoris')
+                                                })}
+                                            </Button>
+                                        </a>
+                                    ) : (
+                                        <button className='bg-grey-50 w-fit px-4 py-2' disabled>
+                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                {t('common:sold')}
+                                            </p>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                        )}
 
-                        {/* Mobile: sticky top bar (below header) with back button + product name */}
-                        {isMobile && (
-                            <div
-                                aria-hidden={!showTopSticky}
-                                role='status'
-                                style={{
-                                    position: 'fixed',
-                                    left: 0,
-                                    right: 0,
-                                    top: showTopSticky && isHeaderVisible ? headerHeight : 0,
-                                    zIndex: 49,
-                                    transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
-                                    transition: 'transform 180ms ease, top 300ms ease',
-                                    pointerEvents: 'auto'
-                                }}
-                            >
-                                <div className='max-w-screen mx-auto'>
-                                    <div className='bg-grey-black flex items-center gap-4 px-4 py-5 shadow-md'>
-                                        <Icons
-                                            icon='ArrowLeft'
-                                            onClick={() => router.back()}
-                                            className='text-grey-white'
-                                            width={16}
-                                            height={16}
-                                        />
-                                        <div className='flex flex-col truncate'>
-                                            <h5 className='text-subheading-5-mobile text-grey-white truncate'>
-                                                {product.name}
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Desktop sticky header rendered into document.body to avoid ScrollSmoother transforms */}
-                        {typeof window !== 'undefined' && !isMobile
-                            ? (createPortal(
-                                  <div
-                                      aria-hidden={!showTopSticky}
-                                      role='status'
-                                      style={{
-                                          position: 'fixed',
-                                          left: 0,
-                                          right: 0,
-                                          top: showTopSticky && isHeaderVisible ? headerHeight : 0,
-                                          zIndex: 49,
-                                          transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
-                                          transition: 'transform 180ms ease, top 300ms ease',
-                                          pointerEvents: 'auto'
-                                      }}
-                                  >
-                                      <div className='max-w-screen'>
-                                          <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-6 py-4 shadow-md'>
-                                              <div className='flex flex-col gap-1'>
-                                                  <h4 className='text-subheading-4-desktop text-grey-white capitalize'>
-                                                      {product.name}
-                                                  </h4>
-                                                  <p
-                                                      className='text-grey-200 text-paragraph-7-desktop uppercase'
-                                                      dangerouslySetInnerHTML={{
-                                                          __html: sanitizeHtml(product.brands?.[0]?.name)
-                                                      }}
-                                                  />
-                                              </div>
-
-                                              <div className='flex items-center gap-8'>
-                                                  <div className='flex flex-col items-end'>
-                                                      {product.price !== '' && (
-                                                          <p className='text-paragraph-3-desktop  text-grey-white'>
-                                                              {formatRupiah(product.price)}
-                                                          </p>
-                                                      )}
-                                                      {priceHistory.length > 1 && (
-                                                          <div className='flex items-center gap-0.5'>
-                                                              <Icons
-                                                                  icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
-                                                                  width={12}
-                                                                  height={12}
-                                                                  className={
-                                                                      isPositiveChange
-                                                                          ? 'text-success-500'
-                                                                          : 'text-error-500 rotate-180 transform'
-                                                                  }
-                                                              />
-                                                              <span
-                                                                  className={classNames(
-                                                                      'text-paragraph-7-desktop !leading-none',
-                                                                      {
+                            {/* Mobile bottom fixed bar - render via portal to avoid overflow container issues */}
+                            {
+                                (isMobile
+                                    ? createPortal(
+                                          <div className='fixed bottom-0 left-0 right-0 z-50 xl:hidden'>
+                                              <div className='mx-auto max-w-screen-md '>
+                                                  <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-5 py-4 shadow-lg'>
+                                                      <div className='flex flex-col gap-1'>
+                                                          {product.price !== '' && (
+                                                              <p className='text-grey-white text-paragraph-3-mobile'>
+                                                                  {formatRupiah(product.price)}
+                                                              </p>
+                                                          )}
+                                                          {priceHistory.length > 1 && (
+                                                              <div className='flex items-center gap-0.5'>
+                                                                  <Icons
+                                                                      icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
+                                                                      width={12}
+                                                                      height={12}
+                                                                      className={
+                                                                          isPositiveChange
+                                                                              ? 'text-success-500'
+                                                                              : 'text-error-500 rotate-180 transform'
+                                                                      }
+                                                                  />
+                                                                  <span
+                                                                      className={classNames('text-paragraph-7-mobile', {
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange
-                                                                      }
-                                                                  )}
-                                                              >
-                                                                  {isPositiveChange ? '+' : ''}
-                                                                  {(
-                                                                      ((priceHistory[priceHistory.length - 1]
-                                                                          .price_change -
-                                                                          priceHistory[0].price_change) /
-                                                                          priceHistory[0].price) *
-                                                                      100
-                                                                  ).toFixed(2)}
-                                                                  %
-                                                              </span>
-                                                              <span
-                                                                  className={classNames(
-                                                                      'text-paragraph-7-desktop !leading-none',
-                                                                      {
+                                                                      })}
+                                                                  >
+                                                                      {isPositiveChange ? '+' : ''}
+                                                                      {(
+                                                                          ((priceHistory[priceHistory.length - 1]
+                                                                              .price_change -
+                                                                              priceHistory[0].price_change) /
+                                                                              priceHistory[0].price) *
+                                                                          100
+                                                                      ).toFixed(2)}
+                                                                      %
+                                                                  </span>
+                                                                  <span
+                                                                      className={classNames('text-paragraph-7-mobile', {
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange,
                                                                           'text-grey-500':
                                                                               priceHistory[priceHistory.length - 1]
                                                                                   .price_change ===
                                                                               priceHistory[0].price_change
-                                                                      }
+                                                                      })}
+                                                                  >
+                                                                      (
+                                                                      {formatRupiah(
+                                                                          priceHistory[priceHistory.length - 1]
+                                                                              .price_change
+                                                                      )}
+                                                                      )
+                                                                  </span>
+                                                              </div>
+                                                          )}
+                                                      </div>
+
+                                                      <div className='ml-4 flex shrink-0 items-center'>
+                                                          {product.purchasable ? (
+                                                              <a
+                                                                  href={getWhatsAppLinkFromTemplate(
+                                                                      'detailProduct',
+                                                                      product.name,
+                                                                      typeof window !== 'undefined'
+                                                                          ? window.location.href
+                                                                          : `/collections/${product.slug}`
                                                                   )}
+                                                                  target='_blank'
+                                                                  rel='noopener noreferrer'
+                                                                  onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
                                                               >
-                                                                  (
-                                                                  {formatRupiah(
-                                                                      priceHistory[priceHistory.length - 1].price_change
-                                                                  )}
-                                                                  )
-                                                              </span>
-                                                          </div>
-                                                      )}
+                                                                  <Button variant='secondaryInverse'>
+                                                                      {' '}
+                                                                      {t('common:reserve', {
+                                                                          item: isWatch
+                                                                              ? t('common:watch')
+                                                                              : t('common:item')
+                                                                      })}
+                                                                  </Button>
+                                                              </a>
+                                                          ) : (
+                                                              <button className='bg-grey-50 w-fit px-4 py-2' disabled>
+                                                                  <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                                      {t('common:sold')}
+                                                                  </p>
+                                                              </button>
+                                                          )}
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>,
+                                          document.body
+                                      )
+                                    : null) as unknown as React.ReactNode
+                            }
+
+                            {/* Mobile: sticky top bar (below header) with back button + product name - render via portal */}
+                            {
+                                (isMobile
+                                    ? createPortal(
+                                          <div
+                                              aria-hidden={!showTopSticky}
+                                              role='status'
+                                              style={{
+                                                  position: 'fixed',
+                                                  left: 0,
+                                                  right: 0,
+                                                  top: showTopSticky && isHeaderVisible ? headerHeight : 0,
+                                                  zIndex: 49,
+                                                  transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
+                                                  transition: 'transform 180ms ease, top 300ms ease',
+                                                  pointerEvents: 'auto'
+                                              }}
+                                          >
+                                              <div className='max-w-screen mx-auto'>
+                                                  <div className='bg-grey-black flex items-center gap-4 px-4 py-5 shadow-md'>
+                                                      <Icons
+                                                          icon='ArrowLeft'
+                                                          onClick={() => router.back()}
+                                                          className='text-grey-white'
+                                                          width={16}
+                                                          height={16}
+                                                      />
+                                                      <div className='flex flex-col truncate'>
+                                                          <h5 className='text-subheading-5-mobile text-grey-white truncate'>
+                                                              {product.name}
+                                                          </h5>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>,
+                                          document.body
+                                      )
+                                    : null) as unknown as React.ReactNode
+                            }
+
+                            {/* Desktop sticky header rendered into document.body to avoid ScrollSmoother transforms */}
+                            {typeof window !== 'undefined' && !isMobile
+                                ? (createPortal(
+                                      <div
+                                          aria-hidden={!showTopSticky}
+                                          role='status'
+                                          style={{
+                                              position: 'fixed',
+                                              left: 0,
+                                              right: 0,
+                                              top: showTopSticky && isHeaderVisible ? headerHeight : 0,
+                                              zIndex: 49,
+                                              transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
+                                              transition: 'transform 180ms ease, top 300ms ease',
+                                              pointerEvents: 'auto'
+                                          }}
+                                      >
+                                          <div className='max-w-screen'>
+                                              <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-6 py-4 shadow-md'>
+                                                  <div className='flex flex-col gap-1'>
+                                                      <h4 className='text-subheading-4-desktop text-grey-white capitalize'>
+                                                          {product.name}
+                                                      </h4>
+
+                                                      <div className='flex gap-px'>
+                                                          <p
+                                                              className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                              dangerouslySetInnerHTML={{
+                                                                  __html: sanitizeHtml(product.brands?.[0]?.name)
+                                                              }}
+                                                          />
+                                                          {product.meta_data.find(
+                                                              (meta: any) => meta.key === 'reference'
+                                                          ) &&
+                                                              isWatch && (
+                                                                  <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
+                                                                      •{' '}
+                                                                      <span className=''>
+                                                                          {
+                                                                              product.meta_data.find(
+                                                                                  (meta: any) =>
+                                                                                      meta.key === 'reference'
+                                                                              )?.value
+                                                                          }
+                                                                      </span>
+                                                                  </p>
+                                                              )}
+                                                      </div>
                                                   </div>
 
-                                                  <div>
-                                                      {product.purchasable ? (
-                                                          <a
-                                                              href={getWhatsAppLinkFromTemplate(
-                                                                  'detailProduct',
-                                                                  product.name,
-                                                                  typeof window !== 'undefined'
-                                                                      ? window.location.href
-                                                                      : `/collections/${product.slug}`
-                                                              )}
-                                                              target='_blank'
-                                                              rel='noopener noreferrer'
-                                                              onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
-                                                          >
-                                                              <Button variant='secondaryInverse'>
-                                                                  {t('common:reserve_this', {
-                                                                      item: isWatch
-                                                                          ? t('common:watch')
-                                                                          : t('common:accesoris')
-                                                                  })}
-                                                              </Button>
-                                                          </a>
-                                                      ) : (
-                                                          <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                                              <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
-                                                                  {t('common:sold')}
+                                                  <div className='flex items-center gap-8'>
+                                                      <div className='flex flex-col items-end'>
+                                                          {product.price !== '' && (
+                                                              <p className='text-paragraph-4-desktop  text-grey-white'>
+                                                                  {formatRupiah(product.price)}
                                                               </p>
-                                                          </button>
-                                                      )}
+                                                          )}
+                                                          {priceHistory.length > 1 && (
+                                                              <div className='flex items-center gap-0.5'>
+                                                                  <Icons
+                                                                      icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
+                                                                      width={12}
+                                                                      height={12}
+                                                                      className={
+                                                                          isPositiveChange
+                                                                              ? 'text-success-500'
+                                                                              : 'text-error-500 rotate-180 transform'
+                                                                      }
+                                                                  />
+                                                                  <span
+                                                                      className={classNames(
+                                                                          'text-paragraph-7-desktop !leading-none',
+                                                                          {
+                                                                              'text-green-600': isPositiveChange,
+                                                                              'text-red-600': !isPositiveChange
+                                                                          }
+                                                                      )}
+                                                                  >
+                                                                      {isPositiveChange ? '+' : ''}
+                                                                      {(
+                                                                          ((priceHistory[priceHistory.length - 1]
+                                                                              .price_change -
+                                                                              priceHistory[0].price_change) /
+                                                                              priceHistory[0].price) *
+                                                                          100
+                                                                      ).toFixed(2)}
+                                                                      %
+                                                                  </span>
+                                                                  <span
+                                                                      className={classNames(
+                                                                          'text-paragraph-7-desktop !leading-none',
+                                                                          {
+                                                                              'text-green-600': isPositiveChange,
+                                                                              'text-red-600': !isPositiveChange,
+                                                                              'text-grey-500':
+                                                                                  priceHistory[priceHistory.length - 1]
+                                                                                      .price_change ===
+                                                                                  priceHistory[0].price_change
+                                                                          }
+                                                                      )}
+                                                                  >
+                                                                      (
+                                                                      {formatRupiah(
+                                                                          priceHistory[priceHistory.length - 1]
+                                                                              .price_change
+                                                                      )}
+                                                                      )
+                                                                  </span>
+                                                              </div>
+                                                          )}
+                                                      </div>
+
+                                                      <div>
+                                                          {product.purchasable ? (
+                                                              <a
+                                                                  href={getWhatsAppLinkFromTemplate(
+                                                                      'detailProduct',
+                                                                      product.name,
+                                                                      typeof window !== 'undefined'
+                                                                          ? window.location.href
+                                                                          : `/collections/${product.slug}`
+                                                                  )}
+                                                                  target='_blank'
+                                                                  rel='noopener noreferrer'
+                                                                  onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                                              >
+                                                                  <Button variant='secondaryInverse'>
+                                                                      Reserve This Watch
+                                                                  </Button>
+                                                              </a>
+                                                          ) : (
+                                                              <button className='bg-grey-50 w-fit px-4 py-2' disabled>
+                                                                  <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                                      {t('common:sold')}
+                                                                  </p>
+                                                              </button>
+                                                          )}
+                                                      </div>
                                                   </div>
                                               </div>
                                           </div>
-                                      </div>
-                                  </div>,
-                                  document.body
-                              ) as unknown as React.ReactNode)
-                            : null}
-                        <div className='flex flex-col gap-6'>
-                            {dataCollapse.map((item) => (
-                                <Collapse
-                                    key={item.title}
-                                    title={item.title}
-                                    isOpen={openCollapse === item.title}
-                                    onToggle={() =>
-                                        setOpenCollapse((curr) => (curr === item.title ? null : item.title))
-                                    }
-                                >
-                                    <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
-                                        {typeof item.content === 'string' ? (
-                                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }} />
-                                        ) : (
-                                            item.content
-                                        )}
-                                    </div>
-                                </Collapse>
-                            ))}
-                            {isWatch && (
-                                <Collapse
-                                    key='Performance'
-                                    title='Performance'
-                                    isOpen={openCollapse === 'Performance'}
-                                    onToggle={() =>
-                                        setOpenCollapse((curr) => (curr === 'Performance' ? null : 'Performance'))
-                                    }
-                                >
-                                    <div className='py-4'>
-                                        <PriceChart productPrice={productPrice} />
-                                    </div>
-                                </Collapse>
-                            )}
-                        </div>
-                        <div className='flex w-full flex-col gap-2 rounded-lg bg-[#F7F7F7] p-5'>
-                            <span className='text-grey-black xl:text-subheading-5-desktop text-subheading-5-mobile'>
-                                100% Authenticity Guaranteed
-                            </span>
-                            <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
-                                Carefully curated and verified for autheniticity
-                            </span>
+                                      </div>,
+                                      document.body
+                                  ) as unknown as React.ReactNode)
+                                : null}
+                            <div className='flex flex-col gap-6'>
+                                {dataCollapse.map((item) => (
+                                    <Collapse
+                                        key={item.title}
+                                        title={item.title}
+                                        isOpen={openCollapse === item.title}
+                                        onToggle={() =>
+                                            setOpenCollapse((curr) => (curr === item.title ? null : item.title))
+                                        }
+                                    >
+                                        <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
+                                            {typeof item.content === 'string' ? (
+                                                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }} />
+                                            ) : (
+                                                item.content
+                                            )}
+                                        </div>
+                                    </Collapse>
+                                ))}
+                                {isWatch && (
+                                    <Collapse
+                                        key='Performance'
+                                        title='Performance'
+                                        isOpen={openCollapse === 'Performance'}
+                                        onToggle={() =>
+                                            setOpenCollapse((curr) => (curr === 'Performance' ? null : 'Performance'))
+                                        }
+                                    >
+                                        <div className='py-4'>
+                                            <PriceChart productPrice={productPrice} />
+                                        </div>
+                                    </Collapse>
+                                )}
+                            </div>
+                            <div className='flex w-full flex-col gap-2 rounded-lg bg-[#F7F7F7] p-5'>
+                                <span className='text-grey-black xl:text-subheading-5-desktop text-subheading-5-mobile'>
+                                    100% Authenticity Guaranteed
+                                </span>
+                                <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
+                                    Carefully curated and verified for autheniticity
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1178,7 +1254,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     title='Watch Condition'
                     withClose
                     closePosition='right'
-                    fullscreen={isMobile}
+                    wrapperClassName='mx-4'
                 >
                     <div className='flex flex-col gap-4'>
                         <h6

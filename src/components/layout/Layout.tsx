@@ -31,13 +31,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     //#endregion  //*======== Store ===========
 
     React.useEffect(() => {
+        // Detect mobile viewport (max-width: 1279px)
+        const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1279px)').matches
+
         const smoother = ScrollSmoother.create({
             wrapper: smoothWrapperRef.current,
             content: smoothContentRef.current,
-            smooth: 1.2,
+            smooth: 2,
             effects: false,
-            smoothTouch: 1, // Enable smooth touch with value 1 to prevent pin flickering
-            normalizeScroll: true // Fix pin flickering on mobile
+            // Mobile: use smoothTouch and normalizeScroll to prevent pin flickering
+            // Desktop: keep false to preserve ScrollTrigger pin functionality
+            smoothTouch: isMobile ? 1 : false,
+            normalizeScroll: false
         })
 
         // Store in ref AND make globally accessible via window for debugging

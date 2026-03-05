@@ -31,93 +31,10 @@ const TimePieceService = () => {
 
     const { setIsDarkSection } = useTheme()
 
-    // IntersectionObserver as fallback for hash navigation (ScrollTrigger doesn't fire on direct jumps)
+    // Set dark mode on mount if URL has #service hash
     useEffect(() => {
-        if (!sectionRef.current) return
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    // When section is visible (any amount), set dark mode
-                    if (entry.isIntersecting) {
-                        setIsDarkSection(true)
-                        // Force elements visible in case ScrollTrigger didn't fire (hash navigation)
-                        gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
-                            opacity: 1,
-                            x: 0,
-                            y: 0
-                        })
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Section is below viewport (scrolling up) - set light mode
-                        setIsDarkSection(false)
-                    }
-                })
-            },
-            {
-                threshold: [0, 0.1, 0.25, 0.5, 0.75],
-                rootMargin: '0px 0px -20% 0px' // Trigger when section enters viewport
-            }
-        )
-
-        observer.observe(sectionRef.current)
-
-        // Check immediately in case we're already on the section (hash navigation)
-        // Use requestAnimationFrame to ensure DOM is ready
-        const checkSection = () => {
-            if (!sectionRef.current) return
-            const rect = sectionRef.current.getBoundingClientRect()
-            // If section top is within viewport, set dark mode
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-                setIsDarkSection(true)
-                // Force elements visible on mount for hash navigation
-                gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
-                    opacity: 1,
-                    x: 0,
-                    y: 0
-                })
-            }
-        }
-
-        // Check immediately and after a short delay
-        checkSection()
-        const timeout = setTimeout(checkSection, 150)
-        const raf = requestAnimationFrame(checkSection)
-
-        return () => {
-            observer.disconnect()
-            clearTimeout(timeout)
-            cancelAnimationFrame(raf)
-        }
-    }, [setIsDarkSection])
-
-    // Also check URL hash directly for #service links
-    useEffect(() => {
-        const checkHashAndSetDarkMode = () => {
-            if (typeof window !== 'undefined' && window.location.hash === '#service') {
-                // Force dark mode immediately
-                setIsDarkSection(true)
-
-                // Force elements visible immediately
-                gsap.set(['.service-slide', titleRef.current, buttonRef.current].filter(Boolean), {
-                    opacity: 1,
-                    x: 0,
-                    y: 0
-                })
-            }
-        }
-
-        // Check on mount
-        checkHashAndSetDarkMode()
-
-        // Also listen for hash changes
-        const handleHashChange = () => {
-            checkHashAndSetDarkMode()
-        }
-
-        window.addEventListener('hashchange', handleHashChange)
-
-        return () => {
-            window.removeEventListener('hashchange', handleHashChange)
+        if (typeof window !== 'undefined' && window.location.hash === '#service') {
+            setIsDarkSection(true)
         }
     }, [setIsDarkSection])
 
@@ -155,21 +72,14 @@ const TimePieceService = () => {
 
     useGSAP(() => {
         // Track dark section state dengan ScrollTrigger
-        // Fire earlier to ensure smooth transition from SellReserve (light) to TimePieceService (dark)
+        // Fire when section is more visible to ensure smooth transition from SellReserve (light) to TimePieceService (dark)
         const darkModeTrigger = ScrollTrigger.create({
             id: 'timepiece-dark-mode',
             trigger: sectionRef.current,
-            start: 'top 80%', // Trigger when section top reaches 80% of viewport (earlier on mobile)
-            end: 'bottom 20%', // Extended range to keep dark mode active through the section
+            start: 'top 50%', // Trigger when section is more visible
+            end: 'bottom 50%',
             onEnter: () => {
                 setIsDarkSection(true)
-            },
-            onLeave: () => {
-                // Keep dark mode active - Journey/Review sections are also dark mode
-                // SocialMedia will handle switching back to light mode
-            },
-            onLeaveBack: () => {
-                setIsDarkSection(false)
             },
             onEnterBack: () => {
                 setIsDarkSection(true)
@@ -244,7 +154,7 @@ const TimePieceService = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='relative z-10 py-16 xl:py-[160px]' id='service'>
+        <section ref={sectionRef} className='relative z-10 overflow-x-hidden py-16 xl:py-[160px]' id='service'>
             <Container className='relative z-10 flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>

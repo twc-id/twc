@@ -174,7 +174,7 @@ const Hero = () => {
     }, [activeIndex, isVisible])
 
     return (
-        <section ref={sectionRef} className='relative h-[848px] w-full xl:h-[960px]'>
+        <section ref={sectionRef} className='bg-grey-black relative h-screen w-full overflow-hidden'>
             <div className='absolute inset-x-0 bottom-10 z-10 xl:bottom-[121px]'>
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
