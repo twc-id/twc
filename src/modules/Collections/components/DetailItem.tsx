@@ -923,13 +923,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                               <div className='mx-auto max-w-screen-md '>
                                                   <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-5 py-4 shadow-lg'>
                                                       <div className='flex flex-col gap-1'>
-                                                          {product.price !== '' && (
-                                                              <p className='text-grey-white text-paragraph-3-mobile'>
+                                                          {product.price !== '' ? (
+                                                              <p className='text-grey-white text-subheading-5-desktop'>
                                                                   {formatRupiah(product.price)}
                                                               </p>
+                                                          ) : (
+                                                              <div className='flex flex-col gap-1.5'>
+                                                                  <h4 className='text-subheading-5-desktop text-grey-white capitalize'>
+                                                                      {product.name}
+                                                                  </h4>
+
+                                                                  <p
+                                                                      className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                                      dangerouslySetInnerHTML={{
+                                                                          __html: sanitizeHtml(
+                                                                              product.brands?.[0]?.name
+                                                                          )
+                                                                      }}
+                                                                  />
+                                                              </div>
                                                           )}
                                                           {priceHistory.length > 1 && (
-                                                              <div className='flex items-center gap-0.5'>
+                                                              <div className='text-paragraph-7-desktop flex items-center gap-0.5'>
                                                                   <Icons
                                                                       icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
                                                                       width={12}
@@ -941,7 +956,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       }
                                                                   />
                                                                   <span
-                                                                      className={classNames('text-paragraph-7-mobile', {
+                                                                      className={classNames({
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange
                                                                       })}
@@ -957,7 +972,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       %
                                                                   </span>
                                                                   <span
-                                                                      className={classNames('text-paragraph-7-mobile', {
+                                                                      className={classNames({
                                                                           'text-green-600': isPositiveChange,
                                                                           'text-red-600': !isPositiveChange,
                                                                           'text-grey-500':
@@ -1003,7 +1018,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                           ) : (
                                                               <button className='bg-grey-50 w-fit px-4 py-2' disabled>
                                                                   <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
-                                                                      {product.name}
+                                                                      {t('common:sold')}
                                                                   </p>
                                                               </button>
                                                           )}
