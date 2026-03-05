@@ -107,10 +107,62 @@ const Collections = () => {
     }, [filters, selectedTab, router.isReady, isInitialized])
 
     // Reset filters when component first mounts (when user navigates to collections page)
+    // But preserve filters from URL query parameters
     useEffect(() => {
         if (!router.isReady || hasResetFiltersRef.current) return
 
-        resetFilters()
+        // Check if there are filter-related query parameters
+        const hasFilterParams =
+            router.query.product_brand ||
+            router.query.availability ||
+            router.query.condition ||
+            router.query.gender ||
+            router.query.min_price ||
+            router.query.max_price ||
+            router.query.sortby
+
+        if (hasFilterParams) {
+            // Set filters from URL query parameters instead of resetting
+            if (router.query.product_brand) {
+                const brandVal = Array.isArray(router.query.product_brand)
+                    ? router.query.product_brand
+                    : [router.query.product_brand]
+                setFilter('brands', brandVal)
+            }
+            if (router.query.availability) {
+                const availVal = Array.isArray(router.query.availability)
+                    ? router.query.availability
+                    : [router.query.availability]
+                setFilter('availability', availVal)
+            }
+            if (router.query.condition) {
+                const condVal = Array.isArray(router.query.condition)
+                    ? router.query.condition
+                    : [router.query.condition]
+                setFilter('condition', condVal)
+            }
+            if (router.query.gender) {
+                const genderVal = Array.isArray(router.query.gender) ? router.query.gender : [router.query.gender]
+                setFilter('gender', genderVal)
+            }
+            if (router.query.min_price || router.query.max_price) {
+                setFilter('priceRange', {
+                    min: router.query.min_price ? String(router.query.min_price) : undefined,
+                    max: router.query.max_price ? String(router.query.max_price) : undefined
+                })
+            }
+            if (router.query.sortby) {
+                const sortVal = router.query.sortby as string
+                // Validate sortBy value
+                if (['default', 'price-asc', 'price-desc', 'year-asc', 'year-desc'].includes(sortVal)) {
+                    setFilter('sortBy', sortVal as 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc')
+                }
+            }
+        } else {
+            // No filter params in URL, reset filters
+            resetFilters()
+        }
+
         hasResetFiltersRef.current = true
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.isReady])

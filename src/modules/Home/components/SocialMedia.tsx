@@ -190,11 +190,11 @@ const Instagram = () => {
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}
-                    <div className='scrollbar-hide -mx-4 flex w-[calc(100%+32px)] flex-row gap-2 overflow-x-auto px-4 xl:mx-0 xl:w-full xl:justify-between xl:overflow-visible xl:px-0'>
+                    <div className='scrollbar-hide -mx-4 flex w-full flex-row gap-2 overflow-x-auto px-4 xl:mx-0 xl:w-full xl:justify-between xl:overflow-visible xl:px-0'>
                         {instagramPosts.map((post) => (
                             <div
                                 key={post.id}
-                                className='instagram-post-item relative h-[419px] w-[314px] flex-shrink-0 overflow-hidden rounded-lg'
+                                className='instagram-post-item relative h-[419px] w-[314px] flex-shrink-0 overflow-hidden'
                             >
                                 {/* Instagram Embed - akan di-replace oleh script Instagram */}
                                 <blockquote
@@ -219,8 +219,7 @@ const Instagram = () => {
                                             backgroundColor: '#f4f4f4',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '8px'
+                                            justifyContent: 'center'
                                         }}
                                         className='h-[419px] w-[314px]'
                                     >

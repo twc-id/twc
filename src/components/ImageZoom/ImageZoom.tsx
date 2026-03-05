@@ -49,7 +49,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
             closePosition='right'
             fullscreen
             title=''
-            dialogClassName='!z-[100]'
+            dialogClassName='!z-[9999]' // ensure modal is above all other elements, especially ScrollSmoother layers
             wrapperClassName='!px-2 !py-0'
         >
             <div
@@ -112,7 +112,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                                         wrapperRef.current.zoomIn()
                                                     }
                                                 }}
-                                                className='flex h-full max-h-screen min-h-[calc(100vh-140px)] w-full items-center justify-center xl:[min-height:auto]'
+                                                className='flex h-full max-h-screen min-h-[calc(95dvh-140px)] w-full items-center justify-center xl:[min-height:auto]'
                                             >
                                                 <Image
                                                     src={current?.src || ''}
@@ -126,7 +126,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                         </TransformComponent>
                                     </div>
 
-                                    <div className='bg-dropdown-menu-overlay absolute bottom-[20%] left-1/2 flex w-fit -translate-x-1/2 transform items-center justify-center gap-6 rounded-full xl:bottom-14'>
+                                    <div className='bg-dropdown-menu-overlay absolute bottom-[25%] left-1/2 flex w-fit -translate-x-1/2 transform items-center justify-center gap-6 rounded-full xl:bottom-14'>
                                         <button
                                             onClick={() => zoomOut()}
                                             className=' text-grey-white  py-2 pl-4 focus:outline-none'

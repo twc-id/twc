@@ -34,6 +34,7 @@ const Highlight = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
     const tabsRef = useRef<HTMLDivElement>(null)
+    const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const tabs = [
@@ -74,12 +75,15 @@ const Highlight = () => {
     }, [tab])
 
     useGSAP(() => {
+        // Only animate once on initial load
+        if (hasAnimatedRef.current) return
+
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: sectionRef.current,
                 start: 'top 80%',
                 id: 'highlight-animation',
-                toggleActions: 'play none none none'
+                toggleActions: 'restart none none reset'
             }
         })
 
@@ -108,11 +112,13 @@ const Highlight = () => {
                 },
                 '-=0.5'
             )
+
+            // Mark as animated after first successful animation
+            hasAnimatedRef.current = true
         }
 
         return () => {
             timeline.scrollTrigger?.kill()
-            timeline.kill()
         }
     }, [data, isLoading])
 

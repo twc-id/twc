@@ -155,7 +155,7 @@ const Review = () => {
     }
 
     return (
-        <section className='bg-grey-black relative z-[12] py-14 xl:py-[116px]' ref={sectionRef}>
+        <section className='bg-grey-black relative z-[12] overflow-x-hidden py-14 xl:py-[116px]' ref={sectionRef}>
             <Container className='flex flex-col gap-10 xl:gap-20'>
                 <div className='flex flex-row items-center justify-between'>
                     <h1 className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
@@ -370,14 +370,14 @@ const Review = () => {
                 </div>
                 <div className='flex flex-row gap-4 xl:hidden'>
                     <Button
-                        className='!h-8 !w-8'
+                        className='!h-8 !w-8 !p-0'
                         onClick={() => swiperMobileRef.current?.slidePrev()}
                         variant='secondary'
                     >
                         <Icons icon='ChevronLeft' width={20} height={20} />
                     </Button>
                     <Button
-                        className='!h-8 !w-8'
+                        className='!h-8 !w-8 !p-0'
                         onClick={() => swiperMobileRef.current?.slideNext()}
                         variant='secondary'
                     >
