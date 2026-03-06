@@ -4,7 +4,7 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
-import Modal from '@components/Modal'
+import { ModalV2 } from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -1262,7 +1262,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
                 {/* Condition Modal */}
-                <Modal
+                <ModalV2
                     open={conditionModalOpen}
                     onClose={() => setConditionModalOpen(false)}
                     closeBackdrop
@@ -1282,7 +1282,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             {conditionModalContent?.description}
                         </p>
                     </div>
-                </Modal>
+                </ModalV2>
             </Container>
             {/* Image zoom modal */}
             <ImageZoom

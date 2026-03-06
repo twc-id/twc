@@ -94,3 +94,31 @@ export const handleRouteChangeGSAP = {
         refreshScrollTrigger(100)
     }
 }
+
+/**
+ * Get ScrollSmoother instance from global window object
+ */
+export const getScrollSmoother = () => {
+    if (typeof window === 'undefined') return null
+    return (window as any).scrollSmootherInstance || null
+}
+
+/**
+ * Pause ScrollSmoother (useful for modals/overlays)
+ */
+export const pauseScrollSmoother = () => {
+    const smoother = getScrollSmoother()
+    if (smoother && typeof smoother.paused === 'function') {
+        smoother.paused(true)
+    }
+}
+
+/**
+ * Resume ScrollSmoother (useful for modals/overlays)
+ */
+export const resumeScrollSmoother = () => {
+    const smoother = getScrollSmoother()
+    if (smoother && typeof smoother.paused === 'function') {
+        smoother.paused(false)
+    }
+}
