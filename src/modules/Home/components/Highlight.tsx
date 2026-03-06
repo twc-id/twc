@@ -2,6 +2,7 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import { ModalV2 } from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -23,6 +24,9 @@ import 'swiper/css/navigation'
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
+    ScrollTrigger.config({
+        ignoreMobileResize: true
+    })
 }
 
 const Highlight = () => {
@@ -36,6 +40,7 @@ const Highlight = () => {
     const tabsRef = useRef<HTMLDivElement>(null)
     const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const [open, setOpen] = useState(false)
 
     const tabs = [
         {
@@ -132,6 +137,15 @@ const Highlight = () => {
             swiperRef.current?.slideTo(0)
         })
     }, [data])
+
+    // Modal handlers - ScrollSmoother handling is now in Modal component
+    const openModal = () => {
+        setOpen(true)
+    }
+
+    const closeModal = () => {
+        setOpen(false)
+    }
 
     // determine slides per view for current viewport and derive loop/group behavior
     const slidesPerViewCurrent = isMobile ? 2 : 4
@@ -352,9 +366,20 @@ const Highlight = () => {
                                 {t('highlight.view_more')}
                             </Button>
                         </UnstyledLink>
+                        <Button
+                            variant='primary'
+                            className='hover:!border-grey-black/50 hover:text-grey-black/50'
+                            onClick={openModal}
+                        >
+                            Open
+                        </Button>
                     </div>
                 </div>
             </Container>
+
+            <ModalV2 open={open} onClose={closeModal} title='Modal Title'>
+                asdas
+            </ModalV2>
         </section>
     )
 }

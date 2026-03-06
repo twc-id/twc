@@ -4,7 +4,7 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
-import Modal from '@components/Modal'
+import { ModalV2 } from '@components/Modal'
 import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -720,7 +720,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
                 <div ref={pinRef as any} className='relative w-full xl:w-auto'>
                     {/* left vertical indicators */}
-                    <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row items-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
+                    <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
                             <button
                                 key={i}
@@ -1262,7 +1262,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
                 {/* Condition Modal */}
-                <Modal
+                <ModalV2
                     open={conditionModalOpen}
                     onClose={() => setConditionModalOpen(false)}
                     closeBackdrop
@@ -1282,7 +1282,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             {conditionModalContent?.description}
                         </p>
                     </div>
-                </Modal>
+                </ModalV2>
             </Container>
             {/* Image zoom modal */}
             <ImageZoom
