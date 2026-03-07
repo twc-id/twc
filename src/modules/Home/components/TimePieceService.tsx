@@ -155,7 +155,7 @@ const TimePieceService = () => {
 
     return (
         <section ref={sectionRef} className='relative z-10 overflow-x-hidden py-16 xl:py-[160px]' id='service'>
-            <Container className='relative z-10 flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
+            <Container className='relative z-10 flex flex-col justify-between gap-14 xl:flex-row xl:items-center xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
                         <h2
@@ -166,7 +166,7 @@ const TimePieceService = () => {
                                 {t('timepiece.title')}
                             </Trans>
                         </h2>
-                        <div className='hidden xl:block'>
+                        <div className='w-fit'>
                             <a
                                 href={getWhatsAppLinkFromTemplate('timepieceService')}
                                 target='_blank'
