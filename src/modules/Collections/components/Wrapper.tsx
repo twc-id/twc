@@ -290,7 +290,7 @@ const Wrapper: React.FC<WrapperProps> = ({
             <Container className='relative flex flex-col gap-7 xl:gap-10 ' ref={sectionRef}>
                 <div
                     className={classNames(
-                        'bg-grey-white dark:bg-grey-black z-[100] flex justify-between pb-7 pt-14 xl:pb-10 xl:pt-20',
+                        'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
                         {
                             'xl:!pb-0': isPin
                         }
