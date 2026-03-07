@@ -1041,7 +1041,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                   <div className='bg-grey-black flex items-center gap-4 px-4 py-5 shadow-md'>
                                                       <Icons
                                                           icon='ArrowLeft'
-                                                          onClick={() => router.back()}
+                                                          onClick={() => router.push('/collections')}
                                                           className='text-grey-white'
                                                           width={16}
                                                           height={16}
