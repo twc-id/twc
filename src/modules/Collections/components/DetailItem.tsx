@@ -5,7 +5,9 @@ import Icons from '@components/Icon'
 import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { ModalV2 } from '@components/Modal'
+import Skeleton from '@components/Skeleton'
 import { useGSAP } from '@gsap/react'
+import { useProductCondition } from '@hooks/useProductCondition'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
@@ -18,7 +20,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
 import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
@@ -446,59 +448,50 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         title: string
         description: React.ReactNode
     } | null>(null)
+    const [selectedConditionName, setSelectedConditionName] = useState<string>('')
 
-    const getConditionContent = (val: string) => {
-        const v = String(val || '').toLowerCase()
-
-        const descriptions: Record<string, { title: string; description: string }> = {
-            'brand new': {
-                title: t('condition.brand_new.title'),
-                description: t('condition.brand_new.description')
-            },
-            unworn: {
-                title: t('condition.unworn.title'),
-                description: t('condition.unworn.description')
-            },
-            'like new': {
-                title: t('condition.like_new.title'),
-                description: t('condition.like_new.description')
-            },
-            'very mint': {
-                title: t('condition.very_mint.title'),
-                description: t('condition.very_mint.description')
-            },
-            mint: {
-                title: t('condition.mint.title'),
-                description: t('condition.mint.description')
-            },
-            good: {
-                title: t('condition.good.title'),
-                description: t('condition.good.description')
-            }
+    // Query condition data using React Query
+    const { data: conditionData, isLoading: isLoadingCondition } = useProductCondition(
+        selectedConditionName,
+        product?.id,
+        {
+            enabled: !!selectedConditionName
         }
+    )
 
-        let matched = ''
-        for (const k of Object.keys(descriptions)) {
-            if (v.includes(k)) {
-                matched = k
-                break
-            }
-        }
+    const { i18n } = useTranslation()
+    const locale = i18n?.language || 'en'
+    const isEnglish = locale === 'en'
 
-        if (!matched) return null
+    // Get condition value from product meta_data (basic-info-condition)
+    const productConditionValue = useMemo(() => {
+        const conditionMeta = product?.meta_data?.find((m: any) => String(m.key) === 'basic-info-condition')
+        return conditionMeta?.value || ''
+    }, [product?.meta_data])
 
-        const entry = descriptions[matched]
-        if (!entry) return null
+    // Handle condition modal open - use value from meta_data directly
+    const handleConditionClick = async () => {
+        if (!productConditionValue) return
 
-        return { title: entry.title, description: entry.description }
+        setSelectedConditionName(productConditionValue)
+        setConditionModalOpen(true)
     }
+
+    // Update modal content when data is loaded
+    useEffect(() => {
+        if (conditionData && conditionModalOpen) {
+            setConditionModalContent({
+                title: isEnglish ? conditionData.name : conditionData.name_id,
+                description: isEnglish ? conditionData.description_en : conditionData.description_id
+            })
+        }
+    }, [conditionData, conditionModalOpen, isEnglish])
 
     const basicHtml = (() => {
         if (!basicItems || basicItems.length === 0) return 'No basic info available.'
 
         const parts = basicItems.map((item: any, idx: number) => {
             const label = String(item.label)
-
             const underline = /condition|brand/.test(label.toLowerCase())
             const underlineClass = underline ? ' underline' : ''
 
@@ -518,7 +511,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             }
 
             if (label === 'condition' && item.value) {
-                const displayLabel = isNewFlag === true ? 'Brand New / Unworn' : String(item.value)
+                const displayLabel = isNewFlag === true ? 'Brand New' : String(item.value)
 
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
@@ -527,12 +520,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         </p>
                         <button
                             type='button'
-                            onClick={() => {
-                                const c = getConditionContent(displayLabel)
-                                if (!c) return
-                                setConditionModalContent({ title: displayLabel, description: c.description })
-                                setConditionModalOpen(true)
-                            }}
+                            onClick={() => handleConditionClick()}
                             className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black text-left capitalize !mb-0${underlineClass} focus:outline-none`}
                         >
                             {displayLabel}
@@ -1228,7 +1216,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     >
                                         <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
                                             {typeof item.content === 'string' ? (
-                                                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }} />
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: sanitizeHtml(item.content)
+                                                    }}
+                                                />
                                             ) : (
                                                 item.content
                                             )}
@@ -1272,19 +1264,32 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     wrapperClassName='mx-4'
                 >
                     <div className='flex flex-col gap-4'>
-                        <h6
-                            className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black
-                        '
-                        >
-                            {conditionModalContent?.title}
-                        </h6>
-                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
-                            {conditionModalContent?.description}
-                        </p>
+                        {isLoadingCondition ? (
+                            <>
+                                <Skeleton className='h-6 w-40' />
+                                <Skeleton className='h-4 w-full' />
+                                <Skeleton className='h-4 w-3/4' />
+                                <Skeleton className='h-4 w-1/2' />
+                            </>
+                        ) : (
+                            <>
+                                <h6
+                                    className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black
+                                '
+                                >
+                                    {conditionModalContent?.title}
+                                </h6>
+                                <p
+                                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'
+                                    dangerouslySetInnerHTML={{
+                                        __html: sanitizeHtml(String(conditionModalContent?.description || ''))
+                                    }}
+                                />
+                            </>
+                        )}
                     </div>
                 </ModalV2>
             </Container>
-            {/* Image zoom modal */}
             <ImageZoom
                 images={product.images}
                 open={imageModalOpen}
