@@ -74,15 +74,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 if (smoother && typeof (smoother as any).scrollTo === 'function') {
                     try {
-                        // Use getBoundingClientRect for accurate position relative to viewport
-                        const rect = el.getBoundingClientRect()
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-                        const offsetTop = rect.top + scrollTop
-                        // Scroll to the position using ScrollSmoother
-                        ;(smoother as any).scrollTo(offsetTop, true)
+                        // Use ScrollSmoother's built-in scrollTo with element selector
+                        // This is more reliable than manual offset calculation
+                        ;(smoother as any).scrollTo(`#${targetId}`, true)
                         return true
                     } catch {
-                        // fallback to native scroll
+                        // Fallback to manual calculation
+                        try {
+                            // Calculate position by walking up the DOM tree
+                            let offsetTop = 0
+                            let currentEl: HTMLElement | null = el
+                            while (currentEl && currentEl !== document.body) {
+                                offsetTop += currentEl.offsetTop
+                                currentEl = currentEl.offsetParent as HTMLElement
+                            }
+                            ;(smoother as any).scrollTo(offsetTop, true)
+                            return true
+                        } catch {
+                            // fallback to native scroll
+                        }
                     }
                 }
 
@@ -183,9 +193,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             const target = event.target as HTMLElement
             const anchor = target.closest('a')
 
-            if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+            // Handle hash links to the same page OR to the home page root (/#hash)
+            // This ensures footer links like /#service work properly from any page
+            const isRootHashLink = anchor && anchor.pathname === '/' && anchor.hash
+            const isSamePageHashLink = anchor && anchor.hash && anchor.pathname === window.location.pathname
+
+            if (isRootHashLink || isSamePageHashLink) {
                 event.preventDefault()
                 event.stopPropagation()
+
+                // If it's a root hash link from a different page, navigate to home first
+                if (isRootHashLink && window.location.pathname !== '/') {
+                    const hash = anchor.hash
+                    // Navigate to home page with hash - onRouteChangeComplete will handle the scroll
+                    router.push(`/${hash}`, undefined, { scroll: false })
+                    return
+                }
 
                 // Set the URL hash - this will trigger handleHashChange which calls scrollToHash
                 const hash = anchor.hash

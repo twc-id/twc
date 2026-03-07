@@ -46,7 +46,7 @@ const Hero = () => {
     return (
         <section
             ref={sectionRef}
-            className='relative h-dvh w-full'
+            className='relative h-[80dvh] w-full'
             style={{
                 backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('/images/sell/hero.webp')`,
                 backgroundSize: 'cover',

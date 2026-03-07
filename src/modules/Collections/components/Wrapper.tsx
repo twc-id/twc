@@ -11,6 +11,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 
 interface WrapperProps {
@@ -57,6 +58,11 @@ const Wrapper: React.FC<WrapperProps> = ({
     // Mobile filter modal state
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
     const { filters, setFilter } = useCollectionsFilterStore()
+
+    // Sticky top bar state for mobile
+    const [showTopSticky, setShowTopSticky] = useState(false)
+    const [headerHeight, setHeaderHeight] = useState<number>(0)
+    const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
 
     const handleApplyFilters = (tempFilters: any) => {
         // Apply all temp filters to the store
@@ -132,40 +138,74 @@ const Wrapper: React.FC<WrapperProps> = ({
             }
         })
 
-        // Mobile: Pin tabs and filter at top
-        mm.add('(max-width: 1279px)', () => {
-            // Pin the top section (tabs & filter)
-            pinTriggerRef.current = ScrollTrigger.create({
-                trigger: topRef.current,
-                start: 'top top',
-                end: () => `+=${document.documentElement.scrollHeight - window.innerHeight}`,
-                pin: true,
-                pinSpacing: false,
-                id: 'collections-wrapper-mobile-pin',
-                onEnterBack: () => {
-                    setIsPin(true)
-                },
-                onEnter: () => {
-                    setIsPin(true)
-                },
-                onLeaveBack: () => {
-                    setIsPin(false)
-                },
-                onLeave: () => {
-                    setIsPin(false)
-                }
-            })
-
-            return () => {
-                pinTriggerRef.current?.kill?.()
-            }
-        })
+        // Note: Mobile pin is removed - using portal sticky top bar instead
 
         // Cleanup matchMedia when component unmounts or deps change
         return () => {
             mm.revert()
         }
     }, [])
+
+    // measure header height so we can position the portal below it
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const measure = () => {
+            const hdr = document.querySelector('.nav-header') as HTMLElement | null
+            const h = hdr ? Math.ceil(hdr.getBoundingClientRect().height) : 0
+            setHeaderHeight(h)
+        }
+
+        measure()
+        window.addEventListener('resize', measure)
+        return () => window.removeEventListener('resize', measure)
+    }, [])
+
+    // Listen for header visibility changes (Header sets `data-header-visible` on body)
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined
+
+        const body = document.body
+        const update = () => setIsHeaderVisible(body.dataset.headerVisible !== 'false')
+
+        // initial
+        update()
+
+        const mo = new MutationObserver(() => update())
+        mo.observe(body, { attributes: true, attributeFilter: ['data-header-visible'] })
+
+        return () => mo.disconnect()
+    }, [])
+
+    // observe topRef visibility to show sticky header when it's out of view (mobile only)
+    useEffect(() => {
+        const el = topRef.current
+        if (!el || typeof window === 'undefined' || !isMobile) return
+
+        const rootMarginTop = headerHeight ? `-${headerHeight + 8}px` : '-80px'
+
+        const options: IntersectionObserverInit = {
+            root: null,
+            threshold: [0, 0.1, 0.5, 1],
+            rootMargin: `${rootMarginTop} 0px 0px 0px`
+        }
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                setShowTopSticky(!entry.isIntersecting)
+            })
+        }, options)
+
+        io.observe(el)
+
+        return () => {
+            try {
+                io.unobserve(el)
+            } catch (e) {
+                // ignore
+            }
+            io.disconnect()
+        }
+    }, [isMobile, headerHeight])
 
     // Refresh ScrollTrigger when data changes (e.g., "Show More" is clicked)
     useEffect(() => {
@@ -180,109 +220,177 @@ const Wrapper: React.FC<WrapperProps> = ({
     }, [data, isMobile])
 
     return (
-        <Container className='relative flex flex-col gap-7 xl:gap-10 ' ref={sectionRef}>
-            <div
-                className={classNames(
-                    'bg-grey-white dark:bg-grey-black z-[100] flex justify-between pb-7 pt-14 xl:pb-10 xl:pt-20',
-                    {
-                        'xl:!pb-0': isPin
-                    }
-                )}
-                ref={topRef}
-            >
-                <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
-                    Our Collections
-                </h2>
-                {/* Tabs */}
+        <>
+            {/* Mobile: sticky top bar (below header) with tabs + filter button - render via portal */}
+            {isMobile && showTopSticky
+                ? (createPortal(
+                      <div
+                          aria-hidden={!showTopSticky}
+                          className='mx-auto my-0 box-border w-[90%] min-w-full max-w-[1400px] px-3 py-0 xl:min-w-[1210px]'
+                          style={{
+                              position: 'fixed',
+                              left: 0,
+                              right: 0,
+                              top: showTopSticky && isHeaderVisible ? headerHeight : 0,
+                              zIndex: 49,
+                              transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
+                              transition: 'transform 180ms ease, top 300ms ease',
+                              pointerEvents: 'auto'
+                          }}
+                      >
+                          <div className='max-w-screen mx-auto'>
+                              <div
+                                  className={classNames(
+                                      'bg-grey-white dark:bg-grey-black  z-[100] flex justify-between pb-4 pt-7 shadow-sm   '
+                                  )}
+                              >
+                                  <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
+                                      Our Collections
+                                  </h2>
+                                  {/* Tabs */}
+                                  <div
+                                      className={classNames('border-grey-black flex flex-row border', {
+                                          'w-full': selectedTab !== 0
+                                      })}
+                                  >
+                                      {tabs.map((item, idx) => (
+                                          <button
+                                              key={`${item}-${idx}`}
+                                              onClick={() => onTabChange?.(idx)}
+                                              className={classNames(
+                                                  '!text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
+                                                  {
+                                                      'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
+                                                      'bg-grey-white text-grey-black hover:bg-grey-100':
+                                                          idx !== (selectedTab ?? 0),
+                                                      'w-full': selectedTab !== 0
+                                                  }
+                                              )}
+                                          >
+                                              {item}
+                                          </button>
+                                      ))}
+                                  </div>
+                                  <Button
+                                      variant='secondaryInverse'
+                                      className={classNames('!p-3', {
+                                          hidden: selectedTab !== 0
+                                      })}
+                                      onClick={() => setIsFilterModalOpen(true)}
+                                  >
+                                      <Icons icon='Filter' width={16} height={16} className='text-grey-black' />
+                                  </Button>
+                              </div>
+                          </div>
+                      </div>,
+                      document.body
+                  ) as unknown as React.ReactNode)
+                : null}
+
+            <Container className='relative flex flex-col gap-7 xl:gap-10 ' ref={sectionRef}>
                 <div
-                    className={classNames('border-grey-black flex flex-row border xl:w-auto xl:justify-end', {
-                        'w-full': selectedTab !== 0
-                    })}
-                >
-                    {tabs.map((item, idx) => (
-                        <button
-                            key={`${item}-${idx}`}
-                            onClick={() => onTabChange?.(idx)}
-                            className={classNames(
-                                'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
-                                {
-                                    'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
-                                    'bg-grey-white text-grey-black hover:bg-grey-100': idx !== (selectedTab ?? 0),
-                                    'w-full': selectedTab !== 0 && isMobile
-                                }
-                            )}
-                        >
-                            {item}
-                        </button>
-                    ))}
-                </div>
-                <Button
-                    variant='secondaryInverse'
-                    className={classNames('!p-3 xl:hidden', {
-                        hidden: selectedTab !== 0
-                    })}
-                    onClick={() => setIsFilterModalOpen(true)}
-                >
-                    <Icons
-                        icon='Filter'
-                        width={16}
-                        height={16}
-                        className='text-grey-black
-                    '
-                    />
-                </Button>
-            </div>
-
-            {(() => {
-                const showSidebar = selectedTab === 0
-                return (
-                    <>
-                        <div className='flex flex-row xl:gap-10'>
-                            {showSidebar && (
-                                <Sidebar products={data} brandOptions={brandOptions} brandLoading={brandLoading} />
-                            )}
-                            <div className={showSidebar ? 'flex-1' : 'w-full'}>
-                                <Content
-                                    products={data}
-                                    isLoading={isLoading}
-                                    onLoadMore={onLoadMore}
-                                    hasMore={hasMore}
-                                    isLoadingMore={isLoadingMore}
-                                    total={total}
-                                    contentRef={contentRef}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Mobile Filter Modal */}
-                        {showSidebar && (
-                            <MobileFilterModal
-                                open={isFilterModalOpen}
-                                onClose={() => setIsFilterModalOpen(false)}
-                                onApply={handleApplyFilters}
-                                initialFilters={filters}
-                                brandOptions={brandOptions}
-                                brandLoading={brandLoading}
-                            />
-                        )}
-                    </>
-                )
-            })()}
-            {hasMore && (
-                <div className='mt-6 flex flex-col items-center gap-5'>
-                    {typeof total === 'number' && (
-                        <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile text-center'>
-                            {data?.length ?? 0}/{total}
-                        </span>
+                    className={classNames(
+                        'bg-grey-white dark:bg-grey-black z-[100] flex justify-between pb-7 pt-14 xl:pb-10 xl:pt-20',
+                        {
+                            'xl:!pb-0': isPin
+                        }
                     )}
-                    <div className='flex w-full justify-center'>
-                        <Button variant='secondaryInverse' disabled={isLoadingMore} onClick={onLoadMore}>
-                            {isLoadingMore ? t('common:loading') : t('common:show_more')}
-                        </Button>
+                    ref={topRef}
+                >
+                    <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
+                        Our Collections
+                    </h2>
+                    {/* Tabs */}
+                    <div
+                        className={classNames('border-grey-black flex flex-row border xl:w-auto xl:justify-end', {
+                            'w-full': selectedTab !== 0
+                        })}
+                    >
+                        {tabs.map((item, idx) => (
+                            <button
+                                key={`${item}-${idx}`}
+                                onClick={() => onTabChange?.(idx)}
+                                className={classNames(
+                                    'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
+                                    {
+                                        'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
+                                        'bg-grey-white text-grey-black hover:bg-grey-100': idx !== (selectedTab ?? 0),
+                                        'w-full': selectedTab !== 0 && isMobile
+                                    }
+                                )}
+                            >
+                                {item}
+                            </button>
+                        ))}
                     </div>
+                    <Button
+                        variant='secondaryInverse'
+                        className={classNames('!p-3 xl:hidden', {
+                            hidden: selectedTab !== 0
+                        })}
+                        onClick={() => setIsFilterModalOpen(true)}
+                    >
+                        <Icons
+                            icon='Filter'
+                            width={16}
+                            height={16}
+                            className='text-grey-black
+                    '
+                        />
+                    </Button>
                 </div>
-            )}
-        </Container>
+
+                {(() => {
+                    const showSidebar = selectedTab === 0
+                    return (
+                        <>
+                            <div className='flex flex-row xl:gap-10'>
+                                {showSidebar && (
+                                    <Sidebar products={data} brandOptions={brandOptions} brandLoading={brandLoading} />
+                                )}
+                                <div className={showSidebar ? 'flex-1' : 'w-full'}>
+                                    <Content
+                                        products={data}
+                                        isLoading={isLoading}
+                                        onLoadMore={onLoadMore}
+                                        hasMore={hasMore}
+                                        isLoadingMore={isLoadingMore}
+                                        total={total}
+                                        contentRef={contentRef}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Mobile Filter Modal */}
+                            {showSidebar && (
+                                <MobileFilterModal
+                                    open={isFilterModalOpen}
+                                    onClose={() => setIsFilterModalOpen(false)}
+                                    onApply={handleApplyFilters}
+                                    initialFilters={filters}
+                                    brandOptions={brandOptions}
+                                    brandLoading={brandLoading}
+                                />
+                            )}
+                        </>
+                    )
+                })()}
+                {hasMore && (
+                    <div className='mt-6 flex flex-col items-center gap-5'>
+                        {typeof total === 'number' && (
+                            <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile text-center'>
+                                {data?.length ?? 0}/{total}
+                            </span>
+                        )}
+                        <div className='flex w-full justify-center'>
+                            <Button variant='secondaryInverse' disabled={isLoadingMore} onClick={onLoadMore}>
+                                {isLoadingMore ? t('common:loading') : t('common:show_more')}
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </Container>
+        </>
     )
 }
 
