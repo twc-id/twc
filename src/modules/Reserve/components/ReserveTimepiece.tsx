@@ -166,14 +166,14 @@ const ReserveTimepiece = () => {
                         {/* Custom Navigation Buttons */}
                         <Button
                             variant='secondaryInverse'
-                            className='swiper-button-prev-custom absolute left-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 xl:flex'
+                            className='swiper-button-prev-custom absolute left-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 !p-0 xl:flex'
                         >
                             <Icons icon='ChevronLeft' />
                         </Button>
 
                         <Button
                             variant='secondaryInverse'
-                            className='swiper-button-next-custom absolute right-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 xl:flex'
+                            className='swiper-button-next-custom absolute right-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 !p-0 xl:flex'
                         >
                             <Icons icon='ChevronLeft' className='rotate-180' />
                         </Button>
