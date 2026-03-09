@@ -54,7 +54,7 @@ const Hero = () => {
                             className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 xl:line-clamp-3'
                             ref={h1Ref}
                         >
-                            <Trans i18nKey='sell:hero.title' components={{ br: <br className='' /> }}>
+                            <Trans i18nKey='collection:hero.title' components={{ br: <br className='' /> }}>
                                 {t('hero.title')}
                             </Trans>
                         </h1>
