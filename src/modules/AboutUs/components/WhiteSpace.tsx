@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const WhiteSpace = () => {
+const WhiteSpace = ({ image }: { image?: string }) => {
     const { t } = useTranslation('about')
     const sectionRef = useRef<HTMLElement>(null)
     const textRef = useRef<HTMLParagraphElement>(null)
@@ -64,7 +64,7 @@ const WhiteSpace = () => {
             </Container>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
                 <Image
-                    src='/images/about-us/white-space.webp'
+                    src={image || '/images/about-us/white-space.webp'}
                     alt='The Watch Collections'
                     fill
                     className='object-cover'
