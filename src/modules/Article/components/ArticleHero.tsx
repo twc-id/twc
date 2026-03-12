@@ -56,9 +56,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                 className='transition-transform duration-300 group-hover:scale-105'
                             />
                         </div>
-                        <h2 className='xl:text-paragraph-1-desktop text-paragraph-1-mobile'>
-                            {article.title.rendered}
-                        </h2>
+                        <h3 className='xl:text-button-1-desktop text-button-1-mobile'>{article.title.rendered}</h3>
                         <div className='flex items-center gap-2 '>
                             {/* Tags */}
                             {category.length > 0 && (
