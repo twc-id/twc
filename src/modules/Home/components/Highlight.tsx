@@ -322,7 +322,7 @@ const Highlight = () => {
                                   </SwiperSlide>
                               ))}
                     </Swiper>
-                    <div className='flex flex-row justify-between pt-12'>
+                    <div className='flex flex-row justify-between pb-px pt-12'>
                         {!hasFewSlides && data && data.length > 0 ? (
                             <div className='flex items-center gap-4'>
                                 <button

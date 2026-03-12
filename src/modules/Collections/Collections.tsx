@@ -1,4 +1,5 @@
 import Seo from '@components/Seo'
+import { useAssets } from '@hooks/useAsset'
 import { buildProductFiltersQuery, useProductBrands } from '@hooks/useProduct'
 import { WooCommerce } from '@lib/api'
 import CTA from '@modules/Collections/components/CTA'
@@ -20,6 +21,7 @@ const DEFAULT_TAB: TabKey = 'watches'
 
 const Collections = () => {
     const { t } = useTranslation(['collection'])
+    const { assets } = useAssets()
 
     const [data, setData] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -39,6 +41,9 @@ const Collections = () => {
 
     // Track if filters have been reset on mount
     const hasResetFiltersRef = useRef(false)
+
+    const heroBanner = assets?.find((asset) => asset.name === 'our-collection-1')?.media?.url
+    const ctaImage = assets?.find((asset) => asset.name === 'our-collection-2')?.media?.url
 
     const categoryId = selectedTab === 0 ? 15 : 16
     const tabLabels = [t('home:highlight.tabs.watches'), t('home:highlight.tabs.accessories')]
@@ -254,7 +259,7 @@ const Collections = () => {
     return (
         <>
             <Seo title={title} />
-            <Hero />
+            <Hero image={heroBanner} />
             <Wrapper
                 data={data}
                 isLoading={isLoading}
@@ -268,7 +273,7 @@ const Collections = () => {
                 brandOptions={brandOptions}
                 brandLoading={isLoadingBrands}
             />
-            <CTA />
+            <CTA image={ctaImage} />
         </>
     )
 }

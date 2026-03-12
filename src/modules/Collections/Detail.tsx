@@ -1,4 +1,5 @@
 import Seo from '@components/Seo'
+import { useAssets } from '@hooks/useAsset'
 import { useProductPrice } from '@hooks/useProduct'
 import CTADetail from '@modules/Collections/components/CTADetail'
 import DetailItem from '@modules/Collections/components/DetailItem'
@@ -13,6 +14,8 @@ interface PageProps {
 const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
     // Use the product price hook instead of manual fetching
     const { data: productPrice } = useProductPrice(product?.id)
+    const { assets } = useAssets()
+    const imageCta = assets?.find((asset) => asset.name === 'product-detail-1')?.media?.url
 
     const title = `${product?.brands?.[0]?.name} - ${product?.name}`
     const titleCapitalized = title
@@ -26,7 +29,7 @@ const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
             <Seo title={titleCapitalized} description={titleCapitalized} />
             <DetailItem product={product} priceHistory={priceHistory} productPrice={productPrice} />
             <Suggestion products={product} />
-            <CTADetail />
+            <CTADetail image={imageCta} />
         </>
     )
 }

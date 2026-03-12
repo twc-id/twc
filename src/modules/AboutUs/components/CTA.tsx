@@ -45,7 +45,7 @@ const CTA = ({ image }: { image?: string }) => {
         <section className='bg-grey-white pb-14 xl:pb-[116px]' ref={sectionRef}>
             <Container>
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
-                    <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:min-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
+                    <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:max-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
                         <h2
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
                             ref={headingref}
