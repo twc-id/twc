@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const ImagePin = () => {
+const ImagePin = ({ image }: { image?: string }) => {
     const sectionRef = useRef<HTMLElement>(null)
     const imageContainerRef = useRef<HTMLDivElement>(null)
 
@@ -51,7 +51,8 @@ const ImagePin = () => {
         <section ref={sectionRef} className='h-[300px] xl:h-[560px]'>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
                 <Image
-                    src='/images/reserve/reserve-pin-2.webp'
+                    priority
+                    src={image || ''}
                     alt='The Watch Collections'
                     fill
                     className='object-cover'
