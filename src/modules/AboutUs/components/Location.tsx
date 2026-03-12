@@ -89,7 +89,7 @@ const Location = () => {
                     <div className='w-full' ref={mapRef}>
                         <iframe
                             src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.2537141670164!2d106.78613268380873!3d-6.096489678135313!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6a1d86895b6c51%3A0x1783317c43ba9423!2sTWC%20-%20The%20Watch%20Collections!5e0!3m2!1sid!2sid!4v1765118418097!5m2!1sid!2sid'
-                            style={{ border: 0 }}
+                            style={{ border: 0, filter: 'grayscale(100%)' }}
                             allowFullScreen={false}
                             className='h-[233px] w-full xl:h-[366px]'
                             loading='lazy'
