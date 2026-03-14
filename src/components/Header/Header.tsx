@@ -8,6 +8,7 @@ import { IconsProps } from '@components/Icon/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useTheme } from '@contexts/ThemeContext'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
+import { useAssets } from '@hooks/useAsset'
 import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -34,13 +35,6 @@ interface MenuItem {
     label: string
     subMenu?: SubMenuItem[]
     href?: string
-}
-
-const subMenuImages: Record<string, string> = {
-    BRAND: '/images/navbar/brands.webp',
-    AVAILABILITY: '/images/navbar/availability.webp',
-    CONDITIONS: '/images/navbar/condition.webp',
-    ACCESSORIES: '/images/navbar/accessories.webp'
 }
 
 const languages = [
@@ -307,11 +301,24 @@ const Headers = () => {
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const { setIsDarkSection } = useTheme()
+    const { assets } = useAssets()
+    const brandImage = assets?.find((asset) => asset.name === 'header-1')?.media.url
+    const availabitlyImage = assets?.find((asset) => asset.name === 'header-2')?.media.url
+    const conditionImage = assets?.find((asset) => asset.name === 'header-3')?.media.url
+    const accessoriesImage = assets?.find((asset) => asset.name === 'header-4')?.media.url
+    const ctaImage = assets?.find((asset) => asset.name === 'header-5')?.media.url
 
     // Use ref to track scroll position to avoid stale closure issues
     const lastScrollYRef = useRef(0)
     const isVisibleRef = useRef(true)
     const scrollPositionRef = useRef(0)
+
+    const subMenuImages: Record<string, string> = {
+        BRAND: brandImage || '',
+        AVAILABILITY: availabitlyImage || '',
+        CONDITIONS: conditionImage || '',
+        ACCESSORIES: accessoriesImage || ''
+    }
 
     const handleBreadcrumbNavigate = (index: number) => {
         // index 0 -> Home, index 1 -> Our Collections
@@ -905,7 +912,7 @@ const Headers = () => {
                             <div
                                 className={classNames(
                                     'scrollbar-none flex-1 overflow-y-auto pb-10',
-                                    'lg:pr-4',
+
                                     'max-lg:w-full',
                                     {
                                         'max-lg:hidden':
@@ -938,7 +945,7 @@ const Headers = () => {
                                                             alt='Brands'
                                                             width={960}
                                                             height={301}
-                                                            className='w-full object-cover '
+                                                            className='h-[301px] w-full object-cover'
                                                         />
                                                     </div>
                                                     {/* Title and Items */}
@@ -1033,10 +1040,10 @@ const Headers = () => {
                                         </div>
 
                                         {/* Desktop: AVAILABILITY & CONDITIONS Section - Side by Side */}
-                                        <div className='hidden grid-cols-3 lg:grid xl:gap-14 xl:pt-[72px]'>
+                                        <div className='hidden grid-cols-3 justify-between lg:flex xl:pt-[72px]'>
                                             {/* AVAILABILITY */}
                                             {hoveredMenuItem.subMenu.find((item) => item.label === 'Availability') && (
-                                                <div className='animate-slide-in-left flex flex-row items-end gap-8'>
+                                                <div className='animate-slide-in-left flex w-fit flex-row items-end gap-6'>
                                                     <div className='relative h-[107px] w-[160px] overflow-hidden'>
                                                         <Image
                                                             src={subMenuImages.AVAILABILITY}
@@ -1079,7 +1086,7 @@ const Headers = () => {
 
                                             {/* CONDITIONS */}
                                             {hoveredMenuItem.subMenu.find((item) => item.label === 'Conditions') && (
-                                                <div className='animate-slide-in-left flex flex-row items-end gap-8'>
+                                                <div className='animate-slide-in-left flex w-fit flex-row items-end gap-6'>
                                                     <div className='relative h-[107px] w-[160px] overflow-hidden'>
                                                         <Image
                                                             src={subMenuImages.CONDITIONS}
@@ -1122,7 +1129,7 @@ const Headers = () => {
                                             )}
                                             {/* ACCESSORIES */}
                                             {hoveredMenuItem.subMenu.find((item) => item.label === 'Accessories') && (
-                                                <div className='animate-slide-in-left flex flex-row items-end gap-8'>
+                                                <div className='animate-slide-in-left flex w-fit flex-row items-end gap-6'>
                                                     <div className='h-[107px] w-[160px] overflow-hidden'>
                                                         <Image
                                                             src={subMenuImages.ACCESSORIES}
@@ -1131,19 +1138,17 @@ const Headers = () => {
                                                             height={107}
                                                         />
                                                     </div>
-                                                    <div>
-                                                        <div className='space-y-2'>
-                                                            <UnstyledLink
-                                                                href='/collections?tab=accessories'
-                                                                className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
-                                                                onClick={() => {
-                                                                    setIsMenuOpen(false)
-                                                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
-                                                                }}
-                                                            >
-                                                                See All Accessories
-                                                            </UnstyledLink>
-                                                        </div>
+                                                    <div className='w-[75px]'>
+                                                        <UnstyledLink
+                                                            href='/collections?tab=accessories'
+                                                            className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
+                                                            onClick={() => {
+                                                                setIsMenuOpen(false)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                            }}
+                                                        >
+                                                            See All Accessories
+                                                        </UnstyledLink>
                                                     </div>
                                                 </div>
                                             )}
@@ -1398,7 +1403,7 @@ const Headers = () => {
                                                 <div className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile text-center'>
                                                     {t('common:header.empty_search')}
                                                 </div>
-                                                <CTA />
+                                                <CTA image={ctaImage} />
                                             </div>
                                         ) : null}
                                     </div>

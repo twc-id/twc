@@ -83,15 +83,7 @@ const CTA = ({ image }: { image?: string }) => {
                             }}
                         />
                     </div>
-                    <div
-                        style={{
-                            background: `linear-gradient(270deg, rgba(1, 1, 1, 0) 58.4%, #010101 100%), 
-linear-gradient(180deg, rgba(1, 1, 1, 0) 59.44%, #010101 99.87%), 
-linear-gradient(0deg, rgba(1, 1, 1, 0) 56.25%, #010101 91.3%), 
-linear-gradient(90deg, rgba(1, 1, 1, 0) 66.6%, #010101 99.98%)`
-                        }}
-                        className='block h-[466px] w-auto xl:hidden'
-                    >
+                    <div className='relative block h-[466px] w-auto xl:hidden'>
                         <Image
                             src={image || '/images/about-us/cta.webp'}
                             alt='Article CTA'
@@ -100,6 +92,16 @@ linear-gradient(90deg, rgba(1, 1, 1, 0) 66.6%, #010101 99.98%)`
                             sizes='100vw'
                             className='h-full w-auto'
                             style={{ objectFit: 'cover' }}
+                        />
+
+                        <div
+                            className='absolute inset-0'
+                            style={{
+                                background: `linear-gradient(270deg, rgba(1, 1, 1, 0) 58.4%, #010101 100%),
+linear-gradient(180deg, rgba(1, 1, 1, 0) 59.44%, #010101 99.87%),
+linear-gradient(0deg, rgba(1, 1, 1, 0) 56.25%, #010101 91.3%),
+linear-gradient(90deg, rgba(1, 1, 1, 0) 66.6%, #010101 99.98%)`
+                            }}
                         />
                     </div>
                 </div>
