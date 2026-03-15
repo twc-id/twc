@@ -19,6 +19,8 @@ const About = () => {
     const serviceImage = assets?.find((asset) => asset.name === 'about-us-3')?.media?.url
     const cta = assets?.find((asset) => asset.name === 'about-us-4')?.media?.url
 
+    const showTemukanKami = process.env.NEXT_PUBLIC_SHOW_TEMUKAN_KAMI === 'true'
+
     return (
         <>
             <Seo title={t('title')} />
@@ -26,8 +28,8 @@ const About = () => {
             <WhiteSpace image={whiteSpaceImage} />
             <Journey image={journeyImage} />
             <Service image={serviceImage} />
-            <Location />
-            <CTA image={cta} />
+            {showTemukanKami && <Location />}
+            <CTA image={cta} showTemukanKami={showTemukanKami} />
         </>
     )
 }

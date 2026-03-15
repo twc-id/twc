@@ -2,6 +2,7 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
@@ -14,7 +15,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const CTA = ({ image }: { image?: string }) => {
+const CTA = ({ image, showTemukanKami }: { image?: string; showTemukanKami: boolean }) => {
     const { t } = useTranslation('about')
     const sectionRef = useRef<HTMLDivElement>(null)
     const headingref = useRef<HTMLHeadingElement>(null)
@@ -42,7 +43,12 @@ const CTA = ({ image }: { image?: string }) => {
         }
     }, [])
     return (
-        <section className='bg-grey-white pb-14 xl:pb-[116px]' ref={sectionRef}>
+        <section
+            className={classNames('bg-grey-white pb-14 xl:pb-[116px]', {
+                'pt-16 xl:pt-[160px]': !showTemukanKami
+            })}
+            ref={sectionRef}
+        >
             <Container>
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
                     <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:max-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>

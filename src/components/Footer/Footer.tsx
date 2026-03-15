@@ -16,6 +16,7 @@ const Footer = () => {
     const articlePath = router.pathname.startsWith('/articles/')
     const productDetailPath = router.pathname.startsWith('/collections/')
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+    const showStoreLocation = process.env.NEXT_PUBLIC_SHOW_STORE_LOCATION === 'true'
 
     const items = [
         {
@@ -43,10 +44,14 @@ const Footer = () => {
                     title: 'Instagram',
                     href: 'https://instagram.com/thewatchcollections'
                 },
-                {
-                    title: 'Store Location',
-                    href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
-                }
+                ...(showStoreLocation
+                    ? [
+                          {
+                              title: 'Store Location',
+                              href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
+                          }
+                      ]
+                    : [])
             ]
         },
 

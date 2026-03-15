@@ -25,6 +25,9 @@ const Home = () => {
     const service2Image = assets?.find((asset) => asset.name === 'home-service-7')?.media?.url
     const service3Image = assets?.find((asset) => asset.name === 'home-service-8')?.media?.url
 
+    const showTestimonial = process.env.NEXT_PUBLIC_SHOW_TESTIMONIAL === 'true'
+    const showNewInInstagram = process.env.NEXT_PUBLIC_SHOW_NEW_IN_INSTAGRAM === 'true'
+
     return (
         <>
             <Seo />
@@ -34,9 +37,10 @@ const Home = () => {
             <SellReserve sell={sellImage} reserve={reviewImage} />
             <TimePieceService service1={service1Image} service2={service2Image} service3={service3Image} />
             <Journey image={journeyImage} />
-            <Review />
-            <SocialMedia />
-            <CTA image={ctaImage} />
+            {showTestimonial && <Review />}
+            {showNewInInstagram && <SocialMedia />}
+
+            <CTA image={ctaImage} showNewInInstagram={showNewInInstagram} />
         </>
     )
 }
