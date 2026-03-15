@@ -491,7 +491,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
         const parts = basicItems.map((item: any, idx: number) => {
             const label = String(item.label)
-            const underline = /condition|brand/.test(label.toLowerCase())
+            const underline = /status|brand|model|reference|condition/.test(label.toLowerCase())
             const underlineClass = underline ? ' underline' : ''
 
             if (label === 'brand' && item.value) {
