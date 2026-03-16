@@ -145,15 +145,7 @@ export const buildProductFiltersQuery = (filters: ProductFilters) => {
         useMetaEndpoint = true
     }
 
-    // Condition mapping
-    const preOwnedMap: Record<string, string> = {
-        'pre-owned-unworn': 'Unworn',
-        'pre-owned-like-new': 'Like New',
-        'pre-owned-very-mint': 'Very Mint',
-        'pre-owned-mint': 'Mint',
-        'pre-owned-good': 'Good'
-    }
-
+    // Condition
     if (filters.condition && filters.condition.length > 0) {
         if (filters.condition.includes('brand-new')) {
             metaArr.push({ key: 'is_new', value: '1' })
@@ -165,15 +157,8 @@ export const buildProductFiltersQuery = (filters: ProductFilters) => {
             useMetaEndpoint = true
         }
 
-        const selectedPreOwned = filters.condition.filter((c: string) => c.startsWith('pre-owned-'))
-        if (selectedPreOwned.length > 0) {
+        if (filters.condition.includes('pre-owned')) {
             metaArr.push({ key: 'basic-info-status', value: 'Pre-Owned' })
-            selectedPreOwned.forEach((id: string) => {
-                const condValue = preOwnedMap[id]
-                if (condValue) {
-                    metaArr.push({ key: 'basic-info-condition', value: condValue })
-                }
-            })
             useMetaEndpoint = true
         }
     }
