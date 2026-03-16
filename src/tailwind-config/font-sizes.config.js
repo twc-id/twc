@@ -48,11 +48,11 @@ const fontSize = {
     ],
     'heading-2-desktop': [
         '52px',
-        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-3-desktop': [
         '36px',
-        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
     ],
 
     // Mobile
@@ -66,15 +66,15 @@ const fontSize = {
     ],
     'heading-1-3-mobile': [
         '36px',
-        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-2-mobile': [
         '28px',
-        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-3-mobile': [
         '24px',
-        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
     ],
 
     // ==============================
