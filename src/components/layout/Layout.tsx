@@ -15,6 +15,24 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 }
 
+// Helper to detect low-end devices
+const isLowEndDevice = () => {
+    if (typeof window === 'undefined') return false
+    const hardwareConcurrency = navigator.hardwareConcurrency || 2
+    const memory = (navigator as any).deviceMemory || 4
+    // Reduce/disable animations on devices with <=4 CPU cores or <=4GB RAM
+    return hardwareConcurrency <= 4 || memory <= 4
+}
+
+// Debounced ScrollTrigger refresh
+let refreshTimeout: NodeJS.Timeout | null = null
+const debouncedScrollTriggerRefresh = (delay: number = 150) => {
+    if (refreshTimeout) clearTimeout(refreshTimeout)
+    refreshTimeout = setTimeout(() => {
+        ScrollTrigger.refresh()
+    }, delay)
+}
+
 interface LayoutProps extends React.PropsWithChildren<object> {}
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -33,16 +51,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     React.useEffect(() => {
         // Detect mobile viewport (max-width: 1279px)
         const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1279px)').matches
+        const isLowEnd = isLowEndDevice()
 
+        // Disable ScrollSmoother on low-end devices for better performance
+        // Use reduced smooth value (0.5 instead of 2) for low-end devices
         const smoother = ScrollSmoother.create({
             wrapper: smoothWrapperRef.current,
             content: smoothContentRef.current,
-            smooth: 2,
-            effects: false,
+            smooth: isLowEnd ? false : 2, // Disable smooth on low-end devices
+            effects: isLowEnd ? false : false, // Keep effects disabled for performance
             // Mobile: use smoothTouch and normalizeScroll to prevent pin flickering
             // Desktop: keep false to preserve ScrollTrigger pin functionality
-            smoothTouch: isMobile ? 1 : false,
-            normalizeScroll: false
+            smoothTouch: isMobile ? 0.5 : false, // Reduced from 1 to 0.5 for better mobile performance
+            normalizeScroll: false // Enable normalizeScroll only on mobile
         })
 
         // Store in ref AND make globally accessible via window for debugging
@@ -132,7 +153,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 // Refresh ScrollTrigger after scrolling to top
                 setTimeout(() => {
-                    ScrollTrigger.refresh()
+                    debouncedScrollTriggerRefresh(100)
                 }, 50)
 
                 // Then scroll to target section (with animation)
@@ -145,11 +166,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             clearInterval(interval)
                             // Refresh ScrollTrigger after reaching target
                             setTimeout(() => {
-                                ScrollTrigger.refresh()
-                                requestAnimationFrame(() => {
-                                    ScrollTrigger.refresh()
-                                })
-                            }, 300)
+                                debouncedScrollTriggerRefresh(100)
+                            }, 200) // Reduced from 300ms to 200ms
                         }
                     }, 50)
                 }, 300) // Wait 300ms after scroll to top before scrolling to section
@@ -163,11 +181,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         clearInterval(interval)
                         // Refresh ScrollTrigger after reaching target
                         setTimeout(() => {
-                            ScrollTrigger.refresh()
-                            requestAnimationFrame(() => {
-                                ScrollTrigger.refresh()
-                            })
-                        }, 300)
+                            debouncedScrollTriggerRefresh(100)
+                        }, 200) // Reduced from 300ms to 200ms
                     }
                 }, 50)
             }
@@ -238,12 +253,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     scrollToHash(hash)
                     // Refresh ScrollTrigger AFTER hash scroll to ensure positions are correct
                     setTimeout(() => {
-                        ScrollTrigger.refresh()
-                        // Force a second refresh to ensure all triggers are recalculated
-                        requestAnimationFrame(() => {
-                            ScrollTrigger.refresh()
-                        })
-                    }, 300)
+                        debouncedScrollTriggerRefresh(100)
+                    }, 200) // Reduced from 300ms to 200ms
                 }, 100)
             } else {
                 // Scroll to top for non-hash navigation
@@ -266,7 +277,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 }
                 // Refresh ScrollTrigger after route change to recalculate positions
                 setTimeout(() => {
-                    ScrollTrigger.refresh()
+                    debouncedScrollTriggerRefresh(50)
                 }, 50)
             }
         }
@@ -282,6 +293,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             if (typeof window !== 'undefined') {
                 delete (window as any).scrollSmootherInstance
             }
+            // Clear refresh timeout
+            if (refreshTimeout) clearTimeout(refreshTimeout)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -298,8 +311,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     '!mt-0': isIgnored
                 })}
             >
-                <div ref={smoothWrapperRef} id='smooth-wrapper-home'>
-                    <div ref={smoothContentRef} id='smooth-content-home'>
+                <div
+                    ref={smoothWrapperRef}
+                    id='smooth-wrapper-home'
+                    style={{ willChange: 'auto' }} // Override GSAP's willChange to prevent performance issues
+                >
+                    <div
+                        ref={smoothContentRef}
+                        id='smooth-content-home'
+                        style={{ willChange: 'auto' }} // Override GSAP's willChange to prevent performance issues
+                    >
                         {children}
                         <Footer />
                     </div>

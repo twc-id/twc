@@ -5,11 +5,27 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
  * Utility functions for GSAP cleanup and management
  */
 
+// Global debounced refresh to prevent excessive ScrollTrigger.refresh() calls
+let refreshTimeout: NodeJS.Timeout | null = null
+const debouncedRefresh = (delay: number = 150) => {
+    if (refreshTimeout) clearTimeout(refreshTimeout)
+    refreshTimeout = setTimeout(() => {
+        ScrollTrigger.refresh()
+        refreshTimeout = null
+    }, delay)
+}
+
 /**
  * Cleanup GSAP animations with specific context or selector
  */
 export const cleanupGSAP = (selector?: string | Element | null) => {
     if (typeof window === 'undefined') return
+
+    // Clear any pending refresh timeout
+    if (refreshTimeout) {
+        clearTimeout(refreshTimeout)
+        refreshTimeout = null
+    }
 
     if (selector) {
         // Kill specific tweens
@@ -33,14 +49,11 @@ export const cleanupGSAP = (selector?: string | Element | null) => {
 }
 
 /**
- * Refresh ScrollTrigger after DOM changes
+ * Refresh ScrollTrigger after DOM changes (debounced for performance)
  */
-export const refreshScrollTrigger = (delay: number = 300) => {
+export const refreshScrollTrigger = (delay: number = 150) => {
     if (typeof window === 'undefined') return
-
-    setTimeout(() => {
-        ScrollTrigger.refresh()
-    }, delay)
+    debouncedRefresh(delay)
 }
 
 /**
@@ -81,17 +94,17 @@ export const killScrollTriggerById = (id: string) => {
 }
 
 /**
- * Global route change handler for GSAP
+ * Global route change handler for GSAP (with reduced delays for performance)
  */
 export const handleRouteChangeGSAP = {
     start: () => {
         cleanupGSAP()
     },
     complete: () => {
-        refreshScrollTrigger(100)
+        refreshScrollTrigger(50) // Reduced from 100ms to 50ms
     },
     error: () => {
-        refreshScrollTrigger(100)
+        refreshScrollTrigger(50) // Reduced from 100ms to 50ms
     }
 }
 

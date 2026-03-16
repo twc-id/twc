@@ -29,6 +29,25 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
+// Helper to detect low-end devices
+const isLowEndDevice = () => {
+    if (typeof window === 'undefined') return false
+    const hardwareConcurrency = navigator.hardwareConcurrency || 2
+    const memory = (navigator as any).deviceMemory || 4
+    // Reduce animations on devices with <=4 CPU cores or <=4GB RAM
+    return hardwareConcurrency <= 4 || memory <= 4
+}
+
+// Throttle ScrollTrigger refresh for low-end devices
+let refreshTimeout: NodeJS.Timeout | null = null
+const debouncedRefresh = () => {
+    if (refreshTimeout) clearTimeout(refreshTimeout)
+    const delay = isLowEndDevice() ? 200 : 100
+    refreshTimeout = setTimeout(() => {
+        ScrollTrigger.refresh()
+    }, delay)
+}
+
 interface PageProps {
     product?: any
     priceHistory: any[]
@@ -115,8 +134,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         // const endBuffer = typeof window !== 'undefined' && window.innerWidth >= 1280 ? 300 : 80
 
         let _leftWheelHandler: ((e: WheelEvent) => void) | null = null
-        const roL = new ResizeObserver(() => ScrollTrigger.refresh())
-        const roR = new ResizeObserver(() => ScrollTrigger.refresh())
+        const roL = new ResizeObserver(debouncedRefresh)
+        const roR = new ResizeObserver(debouncedRefresh)
 
         // Only create ScrollTrigger pins on desktop - mobile doesn't need pins
         // and the pins interfere with touch events on mobile
@@ -226,6 +245,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 // ignore
             }
             window.removeEventListener('load', onLoad)
+            if (refreshTimeout) clearTimeout(refreshTimeout)
             ScrollTrigger.refresh()
         }
     }, [product?.images?.length, product?.id, priceHistory?.length])
@@ -299,37 +319,45 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         const scrollEl = scrollRef.current
         if (!scrollEl) return
 
+        let ticking = false
+
         const onScroll = () => {
-            const children = Array.from(scrollEl.children) as HTMLElement[]
-            if (children.length === 0) return
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const children = Array.from(scrollEl.children) as HTMLElement[]
+                    if (children.length === 0) return
 
-            const isHorizontal = scrollEl.scrollWidth > scrollEl.clientWidth
+                    const isHorizontal = scrollEl.scrollWidth > scrollEl.clientWidth
 
-            if (isHorizontal) {
-                const containerPos = scrollEl.scrollLeft
-                let closest = 0
-                let minDist = Infinity
-                children.forEach((c, i) => {
-                    const dist = Math.abs(c.offsetLeft - containerPos)
-                    if (dist < minDist) {
-                        minDist = dist
-                        closest = i
+                    if (isHorizontal) {
+                        const containerPos = scrollEl.scrollLeft
+                        let closest = 0
+                        let minDist = Infinity
+                        children.forEach((c, i) => {
+                            const dist = Math.abs(c.offsetLeft - containerPos)
+                            if (dist < minDist) {
+                                minDist = dist
+                                closest = i
+                            }
+                        })
+                        setActiveImageIndex((idx) => (idx === closest ? idx : closest))
+                    } else {
+                        // vertical behavior
+                        const containerTop = scrollEl.scrollTop
+                        let closest = 0
+                        let minDist = Infinity
+                        children.forEach((c, i) => {
+                            const dist = Math.abs(c.offsetTop - containerTop)
+                            if (dist < minDist) {
+                                minDist = dist
+                                closest = i
+                            }
+                        })
+                        setActiveImageIndex((idx) => (idx === closest ? idx : closest))
                     }
+                    ticking = false
                 })
-                setActiveImageIndex((idx) => (idx === closest ? idx : closest))
-            } else {
-                // vertical behavior
-                const containerTop = scrollEl.scrollTop
-                let closest = 0
-                let minDist = Infinity
-                children.forEach((c, i) => {
-                    const dist = Math.abs(c.offsetTop - containerTop)
-                    if (dist < minDist) {
-                        minDist = dist
-                        closest = i
-                    }
-                })
-                setActiveImageIndex((idx) => (idx === closest ? idx : closest))
+                ticking = true
             }
         }
 
@@ -424,8 +452,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             value: getMetaValue(item.key)
         }))
         .filter((item) => item.value !== '')
-
-    console.log(caseItems)
 
     const breceletItems = breceletValue.map((meta: any) => ({
         label: meta.key.replace('bracelet-', '').replace(/-/g, ' '),
@@ -705,7 +731,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             `}</style>
             <Container className='flex flex-col gap-14 pt-[230px] xl:flex-row xl:gap-20 xl:pt-[100px]'>
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
-                <div ref={pinRef as any} className='relative w-full xl:w-auto'>
+                <div ref={pinRef as any} className='relative w-full xl:w-auto' style={{ willChange: 'transform' }}>
                     {/* left vertical indicators */}
                     <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
@@ -723,7 +749,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     <div
                         ref={scrollRef as any}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:ml-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
-                        style={{ maxHeight: 'calc(100vh - 160px)' }}
+                        style={{ maxHeight: 'calc(100vh - 160px)', willChange: 'scroll-position' }}
                     >
                         {product.images.length > 0 ? (
                             product.images.map((img: any, index: number) => (
@@ -761,10 +787,15 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
 
-                <div ref={rightPinRef as any} className='scrollbar-none flex w-full xl:w-auto'>
+                <div
+                    ref={rightPinRef as any}
+                    className='scrollbar-none flex w-full xl:w-auto'
+                    style={{ willChange: 'transform' }}
+                >
                     <div
                         ref={rightScrollRef as any}
                         className='scrollbar-none flex w-full flex-col gap-12 overflow-y-auto xl:max-h-[calc(100vh-160px)]'
+                        style={{ willChange: 'scroll-position' }}
                     >
                         {!isMobile && (
                             <Breadcrumb
