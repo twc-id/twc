@@ -14,7 +14,16 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Consign = () => {
+interface ConsignProps {
+    images?: {
+        step1?: string
+        step2?: string
+        step3?: string
+        step4?: string
+    }
+}
+
+const Consign = ({ images }: ConsignProps) => {
     const { t } = useTranslation('sell')
     const sectionRef = useRef<HTMLElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
@@ -26,22 +35,22 @@ const Consign = () => {
         {
             title: t('consign.steps.1.title'),
             description: t('consign.steps.1.description'),
-            image: '/images/sell/consign-1.webp'
+            image: images?.step1 || '/images/sell/consign-1.webp'
         },
         {
             title: t('consign.steps.2.title'),
             description: t('consign.steps.2.description'),
-            image: '/images/sell/consign-2.webp'
+            image: images?.step2 || '/images/sell/consign-2.webp'
         },
         {
             title: t('consign.steps.3.title'),
             description: t('consign.steps.3.description'),
-            image: '/images/sell/consign-3.webp'
+            image: images?.step3 || '/images/sell/consign-3.webp'
         },
         {
             title: t('consign.steps.4.title'),
             description: t('consign.steps.4.description'),
-            image: '/images/sell/consign-4.webp'
+            image: images?.step4 || '/images/sell/consign-4.webp'
         }
     ]
 

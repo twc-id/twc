@@ -14,7 +14,17 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const HowToReserve = () => {
+const HowToReserve = ({
+    reserveImage1,
+    reserveImage2,
+    reserveImage3,
+    reserveImage4
+}: {
+    reserveImage1?: string
+    reserveImage2?: string
+    reserveImage3?: string
+    reserveImage4?: string
+}) => {
     const { t } = useTranslation('reserve')
     const sectionRef = useRef<HTMLElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
@@ -26,22 +36,22 @@ const HowToReserve = () => {
         {
             title: t('how_to_reserve.steps.1.title'),
             description: t('how_to_reserve.steps.1.description'),
-            image: '/images/reserve/step-1.webp'
+            image: reserveImage1
         },
         {
             title: t('how_to_reserve.steps.2.title'),
             description: t('how_to_reserve.steps.2.description'),
-            image: '/images/reserve/step-2.webp'
+            image: reserveImage2
         },
         {
             title: t('how_to_reserve.steps.3.title'),
             description: t('how_to_reserve.steps.3.description'),
-            image: '/images/reserve/step-3.webp'
+            image: reserveImage3
         },
         {
             title: t('how_to_reserve.steps.4.title'),
             description: t('how_to_reserve.steps.4.description'),
-            image: '/images/reserve/step-4.webp'
+            image: reserveImage4
         }
     ]
 
@@ -133,12 +143,13 @@ const HowToReserve = () => {
                                 </div>
                                 <div className='h-[384px] w-[288px] xl:h-[402px] xl:w-[302px]'>
                                     <Image
-                                        src={item.image}
+                                        src={item.image || ''}
                                         alt={item.title}
                                         width={302}
                                         height={402}
                                         className='h-full w-full object-cover'
                                         unoptimized
+                                        priority
                                     />
                                 </div>
                                 <div className='flex max-w-[280px] flex-col gap-1 xl:max-w-[302px]'>

@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Service = () => {
+const Service = ({ image }: { image?: string }) => {
     const { t } = useTranslation('about')
     const sectionRef = useRef<HTMLElement>(null)
     const rightRef = useRef<HTMLDivElement>(null)
@@ -78,7 +78,7 @@ const Service = () => {
                     </div>
                     <div className='relative overflow-hidden xl:h-[511px] xl:w-[736px]' ref={rightRef}>
                         <Image
-                            src='/images/about-us/service.webp'
+                            src={image || '/images/about-us/service.webp'}
                             alt='The Watch Collections Services'
                             width={736}
                             height={511}

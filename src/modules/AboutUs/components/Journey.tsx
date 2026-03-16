@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Journey = () => {
+const Journey = ({ image }: { image?: string }) => {
     const { t } = useTranslation('about')
     const sectionRef = useRef<HTMLElement>(null)
     const leftRef = useRef<HTMLDivElement>(null)
@@ -57,7 +57,7 @@ const Journey = () => {
                 <div className='flex flex-col items-end gap-14 xl:flex-row xl:gap-[133px]'>
                     <div className='relative h-[456px] w-full overflow-hidden xl:h-[960px] xl:w-[736px]' ref={leftRef}>
                         <Image
-                            src='/images/about-us/journey.webp'
+                            src={image || '/images/about-us/journey.webp'}
                             alt='Our Journey'
                             width={736}
                             height={960}

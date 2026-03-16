@@ -1,4 +1,5 @@
 import Seo from '@components/Seo'
+import { useAssets } from '@hooks/useAsset'
 import CTA from '@modules/AboutUs/components/CTA'
 import Hero from '@modules/AboutUs/components/Hero'
 import Journey from '@modules/AboutUs/components/Journey'
@@ -10,16 +11,25 @@ import React from 'react'
 
 const About = () => {
     const { t } = useTranslation('about')
+    const { assets } = useAssets()
+    console.log('Assets:', assets) // Log the assets to verify the data structure
+    const heroBanner = assets?.find((asset) => asset.name === 'about-us-hero')?.media?.url
+    const whiteSpaceImage = assets?.find((asset) => asset.name === 'about-us-1')?.media?.url
+    const journeyImage = assets?.find((asset) => asset.name === 'about-us-2')?.media?.url
+    const serviceImage = assets?.find((asset) => asset.name === 'about-us-3')?.media?.url
+    const cta = assets?.find((asset) => asset.name === 'about-us-4')?.media?.url
+
+    const showTemukanKami = process.env.NEXT_PUBLIC_SHOW_TEMUKAN_KAMI === 'true'
 
     return (
         <>
             <Seo title={t('title')} />
-            <Hero />
-            <WhiteSpace />
-            <Journey />
-            <Service />
-            <Location />
-            <CTA />
+            <Hero image={heroBanner} />
+            <WhiteSpace image={whiteSpaceImage} />
+            <Journey image={journeyImage} />
+            <Service image={serviceImage} />
+            {showTemukanKami && <Location />}
+            <CTA image={cta} showTemukanKami={showTemukanKami} />
         </>
     )
 }

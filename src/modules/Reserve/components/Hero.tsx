@@ -11,7 +11,17 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Hero = () => {
+const Hero = ({
+    heroImage1,
+    heroImage2,
+    heroImage3,
+    imagePin
+}: {
+    heroImage1?: string
+    heroImage2?: string
+    heroImage3?: string
+    imagePin?: string
+}) => {
     const { t } = useTranslation('reserve')
     const [activeIndex, setActiveIndex] = useState(0)
     // const [viewportHeight, setViewportHeight] = useState(800) // fallback height
@@ -41,17 +51,17 @@ const Hero = () => {
     const items = [
         {
             id: 1,
-            image: '/images/reserve/carousel-1.webp',
+            image: heroImage1,
             label: t('hero.items.1.title')
         },
         {
             id: 2,
-            image: '/images/reserve/carousel-2.webp',
+            image: heroImage2,
             label: t('hero.items.2.title')
         },
         {
             id: 3,
-            image: '/images/reserve/carousel-3.webp',
+            image: heroImage3,
             label: t('hero.items.3.title')
         }
     ]
@@ -220,11 +230,12 @@ const Hero = () => {
                                 }`}
                             >
                                 <Image
-                                    src={item.image}
+                                    src={item.image || ''}
                                     alt='Reserve Hero Image'
                                     width={400}
                                     height={400}
                                     className='h-full w-full object-cover'
+                                    priority
                                     unoptimized
                                 />
                             </div>
@@ -248,7 +259,7 @@ const Hero = () => {
                                     onClick={() => setActiveIndex(index)}
                                 >
                                     <Image
-                                        src={item.image}
+                                        src={item.image || ''}
                                         alt={item.label}
                                         width={172}
                                         height={172}
@@ -285,7 +296,7 @@ const Hero = () => {
                                 }`}
                             >
                                 <Image
-                                    src={item.image}
+                                    src={item.image || ''}
                                     alt='Reserve Hero Image'
                                     width={749}
                                     height={940}
@@ -315,7 +326,7 @@ const Hero = () => {
                                     className='absolute cursor-pointer xl:h-[387px] xl:w-[387px]'
                                 >
                                     <Image
-                                        src={item.image}
+                                        src={item.image || ''}
                                         alt={item.label}
                                         width={387}
                                         height={387}
@@ -350,13 +361,7 @@ const Hero = () => {
                 </div>
             </Container>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
-                <Image
-                    src='/images/reserve/reserve-pin.webp'
-                    alt='The Watch Collections'
-                    fill
-                    className='object-cover'
-                    unoptimized
-                />
+                <Image src={imagePin || ''} alt='The Watch Collections' fill className='object-cover' unoptimized />
             </div>
         </section>
     )

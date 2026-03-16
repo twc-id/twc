@@ -21,7 +21,15 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const TimePieceService = () => {
+const TimePieceService = ({
+    service1,
+    service2,
+    service3
+}: {
+    service1?: string
+    service2?: string
+    service3?: string
+}) => {
     const { t } = useTranslation('home')
     const swiperDesktopRef = useRef<SwiperType>()
     const swiperMobileRef = useRef<SwiperType>()
@@ -52,19 +60,19 @@ const TimePieceService = () => {
     const items = [
         {
             id: 1,
-            image: '/images/home/service-cleaning.webp',
+            image: service1,
             label: t('timepiece.items.1.label'),
             description: t('timepiece.items.1.description')
         },
         {
             id: 2,
-            image: '/images/home/service-polishing.webp',
+            image: service2,
             label: t('timepiece.items.2.label'),
             description: t('timepiece.items.2.description')
         },
         {
             id: 3,
-            image: '/images/home/service-battery.webp',
+            image: service3,
             label: t('timepiece.items.3.label'),
             description: t('timepiece.items.3.description')
         }
@@ -203,7 +211,12 @@ const TimePieceService = () => {
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
                                     <div className='flex  flex-col gap-6'>
                                         <div className='relative h-[403px] w-[302px] overflow-hidden'>
-                                            <Image src={service.image} alt={service.label} width={302} height={402} />
+                                            <Image
+                                                src={service.image || ''}
+                                                alt={service.label}
+                                                width={302}
+                                                height={402}
+                                            />
                                         </div>
                                         <div className='flex flex-col gap-2'>
                                             <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>
@@ -237,7 +250,12 @@ const TimePieceService = () => {
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
                                     <div className='flex flex-col gap-6'>
                                         <div className='relative h-[403px] w-[302px] overflow-hidden'>
-                                            <Image src={service.image} alt={service.label} width={302} height={402} />
+                                            <Image
+                                                src={service.image || ''}
+                                                alt={service.label}
+                                                width={302}
+                                                height={402}
+                                            />
                                         </div>
                                         <div className='flex flex-col gap-2'>
                                             <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>

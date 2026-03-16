@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Commitment = () => {
+const Commitment = ({ image }: { image?: string }) => {
     const { t } = useTranslation('home')
     const titleRef = useRef<HTMLHeadingElement>(null)
     const descRef = useRef<HTMLHeadingElement>(null)
@@ -67,8 +67,13 @@ const Commitment = () => {
                     {t('commitment.description')}
                 </h3>
             </div>
-            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[300px] overflow-hidden xl:h-[560px]'>
-                <Image src='/images/home/commitment.webp' alt='commitment' fill className='object-cover' />
+            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[290px] overflow-hidden xl:h-[560px]'>
+                <Image
+                    src={image || '/images/home/commitment.webp'}
+                    alt='commitment'
+                    fill
+                    className='h-[290px] object-cover object-bottom xl:h-[560px]'
+                />
             </div>
         </section>
     )

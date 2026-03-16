@@ -16,6 +16,7 @@ const Footer = () => {
     const articlePath = router.pathname.startsWith('/articles/')
     const productDetailPath = router.pathname.startsWith('/collections/')
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+    const showStoreLocation = process.env.NEXT_PUBLIC_SHOW_STORE_LOCATION === 'true'
 
     const items = [
         {
@@ -43,10 +44,14 @@ const Footer = () => {
                     title: 'Instagram',
                     href: 'https://instagram.com/thewatchcollections'
                 },
-                {
-                    title: 'Store Location',
-                    href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
-                }
+                ...(showStoreLocation
+                    ? [
+                          {
+                              title: 'Store Location',
+                              href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
+                          }
+                      ]
+                    : [])
             ]
         },
 
@@ -70,10 +75,10 @@ const Footer = () => {
             <Container>
                 <div className='py-12 pb-6 xl:py-12'>
                     {/* Main Footer Content */}
-                    <div className='hidden flex-row gap-12 xl:flex'>
+                    <div className='hidden flex-row justify-between  xl:flex'>
                         {/* Logo */}
                         {!isMobile && (
-                            <div className='mr-[240px] flex max-w-[208px] flex-col justify-between'>
+                            <div className='flex flex-col justify-between'>
                                 <Link href='/' className='!w-fit'>
                                     <Icons icon='LogoFullWhite' width={142} height={64} className='hidden xl:block' />
                                 </Link>
@@ -82,87 +87,89 @@ const Footer = () => {
                                 </p>
                             </div>
                         )}
-                        {/* Our Services */}
-                        <div className='w-[186px]'>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Our Services</h3>
-                            <ul className='space-y-4'>
-                                {items[0].links.map((link) => (
-                                    <li key={link.title}>
-                                        <UnstyledLink
-                                            href={link.href}
-                                            className='!text-button-4-desktop text-grey-white'
-                                            onClick={() => {
-                                                if (link.title === 'Book an Appointment') {
-                                                    articlePath || productDetailPath
-                                                        ? trackEvent(GA_EVENTS.CONTACT_WA, {
-                                                              'Page title': pageTitle
-                                                          })
-                                                        : trackEvent(GA_EVENTS.CONTACT_WA)
-                                                }
-                                            }}
-                                        >
-                                            {link.title}
-                                        </UnstyledLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        {/* Reach Us */}
-                        <div className='w-[186px]'>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Reach Us</h3>
-                            <ul className='space-y-4'>
-                                {items[1].links.map((link) => (
-                                    <li key={link.title}>
-                                        <UnstyledLink
-                                            href={link.href}
-                                            className='!text-button-4-desktop text-grey-white'
-                                            onClick={() => {
-                                                if (link.title === 'Instagram') {
-                                                    articlePath || productDetailPath
-                                                        ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
-                                                              'Page title': pageTitle
-                                                          })
-                                                        : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
-                                                }
-                                            }}
-                                        >
-                                            {link.title}
-                                        </UnstyledLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        {/* Collections */}
-                        <div className='w-[186px]'>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Collections</h3>
-                            <ul className='space-y-4'>
-                                {items[2].links.map((link) => (
-                                    <li key={link.title}>
-                                        <UnstyledLink
-                                            href={link.href}
-                                            className='!text-button-4-desktop text-grey-white'
-                                        >
-                                            {link.title}
-                                        </UnstyledLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        {/* Security */}
-                        <div className='w-[186px]'>
-                            <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Security</h3>
-                            <ul className='space-y-4'>
-                                {items[3].links.map((link) => (
-                                    <li key={link.title}>
-                                        <UnstyledLink
-                                            href={link.href}
-                                            className='!text-button-4-desktop text-grey-white'
-                                        >
-                                            {link.title}
-                                        </UnstyledLink>
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className='flex-row gap-12 xl:flex'>
+                            {/* Our Services */}
+                            <div className='w-[186px]'>
+                                <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Our Services</h3>
+                                <ul className='space-y-4'>
+                                    {items[0].links.map((link) => (
+                                        <li key={link.title}>
+                                            <UnstyledLink
+                                                href={link.href}
+                                                className='!text-button-4-desktop text-grey-white'
+                                                onClick={() => {
+                                                    if (link.title === 'Book an Appointment') {
+                                                        articlePath || productDetailPath
+                                                            ? trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                  'Page title': pageTitle
+                                                              })
+                                                            : trackEvent(GA_EVENTS.CONTACT_WA)
+                                                    }
+                                                }}
+                                            >
+                                                {link.title}
+                                            </UnstyledLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            {/* Reach Us */}
+                            <div className='w-[186px]'>
+                                <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Reach Us</h3>
+                                <ul className='space-y-4'>
+                                    {items[1].links.map((link) => (
+                                        <li key={link.title}>
+                                            <UnstyledLink
+                                                href={link.href}
+                                                className='!text-button-4-desktop text-grey-white'
+                                                onClick={() => {
+                                                    if (link.title === 'Instagram') {
+                                                        articlePath || productDetailPath
+                                                            ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                                                  'Page title': pageTitle
+                                                              })
+                                                            : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
+                                                    }
+                                                }}
+                                            >
+                                                {link.title}
+                                            </UnstyledLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            {/* Collections */}
+                            <div className='w-[186px]'>
+                                <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Collections</h3>
+                                <ul className='space-y-4'>
+                                    {items[2].links.map((link) => (
+                                        <li key={link.title}>
+                                            <UnstyledLink
+                                                href={link.href}
+                                                className='!text-button-4-desktop text-grey-white'
+                                            >
+                                                {link.title}
+                                            </UnstyledLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            {/* Security */}
+                            <div className='w-[186px]'>
+                                <h3 className='text-subheading-7-desktop text-grey-200 mb-4 uppercase'>Security</h3>
+                                <ul className='space-y-4'>
+                                    {items[3].links.map((link) => (
+                                        <li key={link.title}>
+                                            <UnstyledLink
+                                                href={link.href}
+                                                className='!text-button-4-desktop text-grey-white'
+                                            >
+                                                {link.title}
+                                            </UnstyledLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
 

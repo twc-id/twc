@@ -235,7 +235,7 @@ const Highlight = () => {
                               Array.from({ length: Math.max(4, slidesPerViewCurrent) }).map((_, idx) => (
                                   <SwiperSlide key={`skeleton-${idx}`}>
                                       <div className='flex w-full flex-col gap-1 xl:gap-12'>
-                                          <div className='bg-grey-100 aspect-[344/417] w-full animate-pulse xl:h-[417px]' />
+                                          <div className='bg-grey-100 aspect-[344/318] w-full animate-pulse xl:h-[318px]' />
                                           <div className='flex flex-col gap-1 text-center'>
                                               <div className='bg-grey-100 mx-auto h-3 w-24 animate-pulse rounded' />
                                               <div className='bg-grey-100 mx-auto mt-2 h-4 w-40 animate-pulse rounded' />
@@ -257,8 +257,8 @@ const Highlight = () => {
                                               }
                                           }}
                                       >
-                                          <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
-                                              <div className='aspect-[344/417] w-full overflow-hidden xl:h-[417px]'>
+                                          <div className='relative flex w-full flex-col gap-1 xl:gap-8'>
+                                              <div className=' w-full overflow-hidden xl:h-full'>
                                                   <Image
                                                       src={
                                                           product.images[0]?.src ||
@@ -266,7 +266,7 @@ const Highlight = () => {
                                                       }
                                                       alt={product.name}
                                                       width={344}
-                                                      height={417}
+                                                      height={318}
                                                       className='object-cover'
                                                   />
                                               </div>
@@ -322,7 +322,7 @@ const Highlight = () => {
                                   </SwiperSlide>
                               ))}
                     </Swiper>
-                    <div className='flex flex-row justify-between pt-12'>
+                    <div className='flex flex-row justify-between pb-px pt-12'>
                         {!hasFewSlides && data && data.length > 0 ? (
                             <div className='flex items-center gap-4'>
                                 <button

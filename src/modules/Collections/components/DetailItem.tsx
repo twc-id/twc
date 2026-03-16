@@ -29,6 +29,25 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
+// Helper to detect low-end devices
+const isLowEndDevice = () => {
+    if (typeof window === 'undefined') return false
+    const hardwareConcurrency = navigator.hardwareConcurrency || 2
+    const memory = (navigator as any).deviceMemory || 4
+    // Reduce animations on devices with <=4 CPU cores or <=4GB RAM
+    return hardwareConcurrency <= 4 || memory <= 4
+}
+
+// Throttle ScrollTrigger refresh for low-end devices
+let refreshTimeout: NodeJS.Timeout | null = null
+const debouncedRefresh = () => {
+    if (refreshTimeout) clearTimeout(refreshTimeout)
+    const delay = isLowEndDevice() ? 200 : 100
+    refreshTimeout = setTimeout(() => {
+        ScrollTrigger.refresh()
+    }, delay)
+}
+
 interface PageProps {
     product?: any
     priceHistory: any[]
@@ -115,8 +134,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         // const endBuffer = typeof window !== 'undefined' && window.innerWidth >= 1280 ? 300 : 80
 
         let _leftWheelHandler: ((e: WheelEvent) => void) | null = null
-        const roL = new ResizeObserver(() => ScrollTrigger.refresh())
-        const roR = new ResizeObserver(() => ScrollTrigger.refresh())
+        const roL = new ResizeObserver(debouncedRefresh)
+        const roR = new ResizeObserver(debouncedRefresh)
 
         // Only create ScrollTrigger pins on desktop - mobile doesn't need pins
         // and the pins interfere with touch events on mobile
@@ -226,6 +245,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 // ignore
             }
             window.removeEventListener('load', onLoad)
+            if (refreshTimeout) clearTimeout(refreshTimeout)
             ScrollTrigger.refresh()
         }
     }, [product?.images?.length, product?.id, priceHistory?.length])
@@ -299,37 +319,45 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         const scrollEl = scrollRef.current
         if (!scrollEl) return
 
+        let ticking = false
+
         const onScroll = () => {
-            const children = Array.from(scrollEl.children) as HTMLElement[]
-            if (children.length === 0) return
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const children = Array.from(scrollEl.children) as HTMLElement[]
+                    if (children.length === 0) return
 
-            const isHorizontal = scrollEl.scrollWidth > scrollEl.clientWidth
+                    const isHorizontal = scrollEl.scrollWidth > scrollEl.clientWidth
 
-            if (isHorizontal) {
-                const containerPos = scrollEl.scrollLeft
-                let closest = 0
-                let minDist = Infinity
-                children.forEach((c, i) => {
-                    const dist = Math.abs(c.offsetLeft - containerPos)
-                    if (dist < minDist) {
-                        minDist = dist
-                        closest = i
+                    if (isHorizontal) {
+                        const containerPos = scrollEl.scrollLeft
+                        let closest = 0
+                        let minDist = Infinity
+                        children.forEach((c, i) => {
+                            const dist = Math.abs(c.offsetLeft - containerPos)
+                            if (dist < minDist) {
+                                minDist = dist
+                                closest = i
+                            }
+                        })
+                        setActiveImageIndex((idx) => (idx === closest ? idx : closest))
+                    } else {
+                        // vertical behavior
+                        const containerTop = scrollEl.scrollTop
+                        let closest = 0
+                        let minDist = Infinity
+                        children.forEach((c, i) => {
+                            const dist = Math.abs(c.offsetTop - containerTop)
+                            if (dist < minDist) {
+                                minDist = dist
+                                closest = i
+                            }
+                        })
+                        setActiveImageIndex((idx) => (idx === closest ? idx : closest))
                     }
+                    ticking = false
                 })
-                setActiveImageIndex((idx) => (idx === closest ? idx : closest))
-            } else {
-                // vertical behavior
-                const containerTop = scrollEl.scrollTop
-                let closest = 0
-                let minDist = Infinity
-                children.forEach((c, i) => {
-                    const dist = Math.abs(c.offsetTop - containerTop)
-                    if (dist < minDist) {
-                        minDist = dist
-                        closest = i
-                    }
-                })
-                setActiveImageIndex((idx) => (idx === closest ? idx : closest))
+                ticking = true
             }
         }
 
@@ -356,38 +384,74 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
     const isWatch = product?.categories?.some((category: any) => category.name === 'Watches')
 
-    // build basic info HTML and inject Brand at index 1
-    const basicMetas = product?.meta_data?.filter((meta: any) => meta.key.startsWith('basic-info-')) || []
-
-    const caliberValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('caliber-')) || []
-
-    const caseValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('case-')) || []
-
-    const breceletValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('bracelet-')) || []
-
-    const brandValue = product?.brands?.[0]?.name ?? ''
-    const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
-    const accessoriesDetailsValue =
-        product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-details')) || []
-
-    const basicItems = basicMetas.map((meta: any) => ({
-        label: meta.key.replace('basic-info-', '').replace(/-/g, ' '),
-        value: meta.value
-    }))
-
     // Read is_new once from product meta_data (0 = false, 1 = true)
     const isNewMeta = (product?.meta_data || []).find((m: any) => String(m.key) === 'is_new')
     const isNewFlag = typeof isNewMeta !== 'undefined' ? Number(isNewMeta.value) === 1 : undefined
+
+    // Helper function to get meta value by key
+    const getMetaValue = (key: string) => product?.meta_data?.find((m: any) => String(m.key) === key)?.value || ''
+
+    // Define the desired order for Basic Info
+    const basicInfoOrder: Array<{ label: string; key?: string; valueFn?: () => string }> = [
+        { label: 'Listing code', valueFn: () => getMetaValue('basic-info-listing-code') },
+        { label: 'Brand', valueFn: () => product?.brands?.[0]?.name || '' },
+        { label: 'Model', key: 'basic-info-model' },
+        { label: 'Reference number', valueFn: () => getMetaValue('reference') },
+        { label: 'Case material', key: 'basic-info-case-material' },
+        { label: 'Year of product', valueFn: () => getMetaValue('basic-info-year-production') },
+        { label: 'Gender', key: 'basic-info-gender' },
+        { label: 'Bracelet material', key: 'basic-info-bracelet-material' },
+        { label: 'condition', key: 'basic-info-condition' },
+        { label: 'Status', key: 'basic-info-status' },
+        { label: 'scope of delivery', key: 'basic-info-scope-of-delivery' }
+    ]
+
+    // Build basicItems in the defined order, only including items with values
+    const basicItems = basicInfoOrder
+        .map((item) => ({
+            label: item.label,
+            value: item.valueFn ? item.valueFn() : item.key ? getMetaValue(item.key) : ''
+        }))
+        .filter((item) => item.value !== '')
+
+    // If product has explicit `is_new` flag, override the condition value
+    if (isNewFlag === true) {
+        const conditionIdx = basicItems.findIndex((i) => i.label === 'condition')
+        if (conditionIdx > -1) {
+            basicItems[conditionIdx].value = 'Brand New / Unworn'
+        }
+    }
+
+    // Other meta groups
+    const caliberValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('caliber-')) || []
+    const breceletValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('bracelet-')) || []
+    const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
+    const accessoriesDetailsValue =
+        product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-details')) || []
 
     const caliberItems = caliberValue.map((meta: any) => ({
         label: meta.key.replace('caliber-', '').replace(/-/g, ' '),
         value: meta.value
     }))
 
-    const caseItems = caseValue.map((meta: any) => ({
-        label: meta.key.replace('case-', '').replace(/-/g, ' '),
-        value: meta.value
-    }))
+    // Define the desired order for Case
+    const caseOrder: Array<{ label: string; key: string }> = [
+        { label: 'Case material', key: 'case-material' },
+        { label: 'Case diameter', key: 'case-diameter' },
+        { label: 'Dial', key: 'case-dial' },
+        { label: 'Dial numerals', key: 'case-dial-numerals' },
+        { label: 'Bezel material', key: 'case-bezel-material' },
+        { label: 'Crystal', key: 'case-crystal' },
+        { label: 'water resistance', key: 'case-water-resistance' }
+    ]
+
+    // Build caseItems in the defined order, only including items with values
+    const caseItems = caseOrder
+        .map((item) => ({
+            label: item.label,
+            value: getMetaValue(item.key)
+        }))
+        .filter((item) => item.value !== '')
 
     const breceletItems = breceletValue.map((meta: any) => ({
         label: meta.key.replace('bracelet-', '').replace(/-/g, ' '),
@@ -403,45 +467,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         label: meta.key.replace('accessories-details', '').replace(/-/g, ' '),
         value: meta.value
     }))
-
-    basicItems.splice(1, 0, { label: 'brand', value: brandValue })
-
-    // If product has explicit `is_new` flag, ensure Basic Info contains a condition entry
-    // representing Brand New / Unworn so it appears in the Basic Info section.
-    if (isNewFlag === true) {
-        const existingConditionIdx = basicItems.findIndex((i: any) => String(i.label).toLowerCase() === 'condition')
-        if (existingConditionIdx > -1) {
-            basicItems[existingConditionIdx].value = 'Brand New / Unworn'
-        } else {
-            const insertAt = Math.min(2, basicItems.length)
-            basicItems.splice(insertAt, 0, { label: 'condition', value: 'Brand New / Unworn' })
-        }
-    }
-
-    // merge status and condition into a single `condition` entry formatted as `status (condition)`
-    try {
-        const statusIdx = basicItems.findIndex((i: any) => String(i.label).toLowerCase() === 'status')
-        const conditionIdx = basicItems.findIndex((i: any) => String(i.label).toLowerCase() === 'condition')
-
-        if (statusIdx !== -1 || conditionIdx !== -1) {
-            const statusVal = statusIdx !== -1 ? basicItems[statusIdx].value : ''
-            const conditionVal = conditionIdx !== -1 ? basicItems[conditionIdx].value : ''
-            const combined = statusVal && conditionVal ? `${statusVal} (${conditionVal})` : statusVal || conditionVal
-
-            // remove original entries (remove higher index first)
-            const toRemove = [statusIdx, conditionIdx].filter((i) => i > -1).sort((a, b) => b - a)
-            toRemove.forEach((i) => basicItems.splice(i, 1))
-
-            const insertAt = Math.max(
-                0,
-                Math.min(statusIdx > -1 ? statusIdx : conditionIdx > -1 ? conditionIdx : 1, basicItems.length)
-            )
-            basicItems.splice(insertAt, 0, { label: 'condition', value: combined })
-        }
-    } catch (e) {
-        // swallow any unexpected errors to avoid breaking static generation
-        console.warn('Failed to merge status/condition', e)
-    }
 
     const [conditionModalOpen, setConditionModalOpen] = useState(false)
     const [conditionModalContent, setConditionModalContent] = useState<{
@@ -492,13 +517,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
         const parts = basicItems.map((item: any, idx: number) => {
             const label = String(item.label)
-            const underline = /condition|brand/.test(label.toLowerCase())
+            const underline = /status|brand|model|reference|condition/.test(label.toLowerCase())
             const underlineClass = underline ? ' underline' : ''
 
             if (label === 'brand' && item.value) {
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
-                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>
                             {label}
                         </p>
                         <p
@@ -569,7 +594,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
                     <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
@@ -706,7 +731,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             `}</style>
             <Container className='flex flex-col gap-14 pt-[230px] xl:flex-row xl:gap-20 xl:pt-[100px]'>
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
-                <div ref={pinRef as any} className='relative w-full xl:w-auto'>
+                <div ref={pinRef as any} className='relative w-full xl:w-auto' style={{ willChange: 'transform' }}>
                     {/* left vertical indicators */}
                     <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
@@ -724,7 +749,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     <div
                         ref={scrollRef as any}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:ml-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
-                        style={{ maxHeight: 'calc(100vh - 160px)' }}
+                        style={{ maxHeight: 'calc(100vh - 160px)', willChange: 'scroll-position' }}
                     >
                         {product.images.length > 0 ? (
                             product.images.map((img: any, index: number) => (
@@ -762,10 +787,15 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
 
-                <div ref={rightPinRef as any} className='scrollbar-none flex w-full xl:w-auto'>
+                <div
+                    ref={rightPinRef as any}
+                    className='scrollbar-none flex w-full xl:w-auto'
+                    style={{ willChange: 'transform' }}
+                >
                     <div
                         ref={rightScrollRef as any}
                         className='scrollbar-none flex w-full flex-col gap-12 overflow-y-auto xl:max-h-[calc(100vh-160px)]'
+                        style={{ willChange: 'scroll-position' }}
                     >
                         {!isMobile && (
                             <Breadcrumb
@@ -889,7 +919,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         >
                                             <Button variant='secondaryInverse' block>
                                                 {t('common:reserve_this', {
-                                                    item: isWatch ? t('common:watch') : t('common:accesoris')
+                                                    item: isWatch ? 'watch' : 'accesoris'
                                                 })}
                                             </Button>
                                         </a>
@@ -1227,7 +1257,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         </div>
                                     </Collapse>
                                 ))}
-                                {isWatch && (
+                                {isWatch && priceHistory && priceHistory.length > 0 && (
                                     <Collapse
                                         key='Performance'
                                         title='Performance'

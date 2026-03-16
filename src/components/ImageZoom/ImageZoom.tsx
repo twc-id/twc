@@ -16,14 +16,14 @@ interface Props {
 const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClose }) => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const [index, setIndex] = useState<number>(initialIndex || 0)
-    const [scale, setScale] = useState<number>(1)
+    const [scale, setScale] = useState<number>(0.9)
     const wrapperRef = useRef<ReactZoomPanPinchRef | null>(null)
 
     useEffect(() => {
         setIndex(initialIndex)
         // reset transform when initialIndex changes
         if (wrapperRef.current) wrapperRef.current.resetTransform()
-        setScale(1)
+        setScale(0.9)
     }, [initialIndex, open])
 
     const current = images[index]
@@ -31,7 +31,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
     const handleThumbClick = (i: number) => {
         setIndex(i)
         if (wrapperRef.current) wrapperRef.current.resetTransform()
-        setScale(1)
+        setScale(0.9)
     }
 
     const handleClose = () => {
@@ -92,6 +92,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                             doubleClick={{ disabled: true }}
                             pinch={{ disabled: isMobile }}
                             wheel={{ disabled: isMobile }}
+                            initialScale={0.9}
                             minScale={0.5}
                             maxScale={4}
                             onTransformed={(ref, state) => {

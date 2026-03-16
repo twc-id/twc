@@ -3,6 +3,7 @@ import Container from '@components/Container'
 import Seo from '@components/Seo'
 import Tabs, { Tab } from '@components/Tabs'
 import { ArticleTag, useArticles } from '@hooks/useArticle'
+import { useAssets } from '@hooks/useAsset'
 import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import ArticleHero from '@modules/Article/components/ArticleHero'
 import { useTranslation } from 'next-i18next'
@@ -21,6 +22,9 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
     const { t } = useTranslation('articles')
     const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+
+    const { assets } = useAssets()
+    const ctaImage = assets?.find((asset) => asset.name === 'article-1')?.media.url
 
     // Fetch articles based on selected tag
     const { data: filteredArticles, isLoading } = useArticles(
@@ -96,7 +100,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                         <ArticleHero initialArticles={heroArticles} page={page} isLoading={isLoading} />
                     )}
                     <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
-                    <ArticleCTA />
+                    <ArticleCTA image={ctaImage} />
                 </div>
                 <BackToTop />
             </Container>

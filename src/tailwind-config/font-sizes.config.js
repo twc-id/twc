@@ -35,11 +35,11 @@ const fontSize = {
 
     // Desktop
     'heading-1-desktop': [
-        '88px',
+        '80px',
         { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-1-2-desktop': [
-        '80px',
+        '72px',
         { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-1-3-desktop': [
@@ -61,7 +61,7 @@ const fontSize = {
         { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-1-2-mobile': [
-        '48px',
+        '40px',
         { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'heading-1-3-mobile': [

@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Journey = () => {
+const Journey = ({ image }: { image?: string }) => {
     const { t } = useTranslation('home')
     const sectionRef = useRef<HTMLElement>(null)
     const rightRef = useRef<HTMLDivElement>(null)
@@ -176,8 +176,14 @@ const Journey = () => {
                     </div>
                 </div>
             </Container>
-            <div ref={imageContainerRef} className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
-                <Image src='/images/home/journey-hero.webp' alt='journey' fill className='object-cover' unoptimized />
+            <div ref={imageContainerRef} className='relative z-[11] h-[290px] w-full xl:h-[560px]'>
+                <Image
+                    src={image || ''}
+                    alt='journey'
+                    fill
+                    className='h-[560px] object-cover object-bottom'
+                    unoptimized
+                />
             </div>
         </section>
     )

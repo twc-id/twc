@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const SellReserve = () => {
+const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => {
     const { t } = useTranslation(['home'])
     const { setIsDarkSection } = useTheme()
 
@@ -72,8 +72,7 @@ const SellReserve = () => {
             <div
                 ref={sellRef}
                 style={{
-                    backgroundImage:
-                        "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/sell.webp')",
+                    backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${sell})`,
                     backgroundSize: '100% auto',
                     backgroundPositionY: 'top'
                 }}
@@ -89,8 +88,7 @@ const SellReserve = () => {
             <div
                 ref={reserveRef}
                 style={{
-                    backgroundImage:
-                        "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/reserve.webp')",
+                    backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${reserve})`,
                     backgroundSize: '100% auto',
                     backgroundPositionY: 'top'
                     // backgroundRepeat: 'no-repeat'

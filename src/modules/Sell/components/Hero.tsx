@@ -9,7 +9,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const Hero = () => {
+const Hero = ({ image }: { image?: string }) => {
     const { t } = useTranslation('sell')
     const sectionRef = useRef<HTMLElement>(null)
     const h1Ref = useRef<HTMLHeadingElement>(null)
@@ -48,7 +48,7 @@ const Hero = () => {
             ref={sectionRef}
             className='relative h-[80dvh] w-full'
             style={{
-                backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('/images/sell/hero.webp')`,
+                backgroundImage: `radial-gradient(97.37% 97.37% at 77.39% 40.5%, rgba(1, 1, 1, 0) 0%, #010101 100%), url('${image}')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'

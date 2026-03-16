@@ -124,7 +124,7 @@ const ReserveTimepiece = () => {
                                                         }`}
                                                     >
                                                         <div className='flex flex-col items-center gap-2.5'>
-                                                            <div className='relative h-[473px] w-[300px] overflow-hidden'>
+                                                            <div className='relative h-[327px] w-[300px] overflow-hidden'>
                                                                 <Image
                                                                     src={
                                                                         product.images?.[0]?.src ||

@@ -106,11 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
             id: 'new-old-stock',
             name: 'New Old Stock'
         },
-        { id: 'pre-owned-unworn', name: 'Pre-Owned (Unworn)' },
-        { id: 'pre-owned-like-new', name: 'Pre-Owned (Like New)' },
-        { id: 'pre-owned-very-mint', name: 'Pre-Owned (Very Mint)' },
-        { id: 'pre-owned-mint', name: 'Pre-Owned (Mint)' },
-        { id: 'pre-owned-good', name: 'Pre-Owned (Good)' }
+        { id: 'pre-owned', name: 'Pre-Owned' }
     ]
 
     const genderOptions = [

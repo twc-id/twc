@@ -2,6 +2,7 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import gsap from 'gsap'
@@ -14,7 +15,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const CTA = () => {
+const CTA = ({ image, showTemukanKami }: { image?: string; showTemukanKami: boolean }) => {
     const { t } = useTranslation('about')
     const sectionRef = useRef<HTMLDivElement>(null)
     const headingref = useRef<HTMLHeadingElement>(null)
@@ -42,10 +43,15 @@ const CTA = () => {
         }
     }, [])
     return (
-        <section className='bg-grey-white pb-14 xl:pb-[116px]' ref={sectionRef}>
+        <section
+            className={classNames('bg-grey-white pb-14 xl:pb-[116px]', {
+                'pt-16 xl:pt-[160px]': !showTemukanKami
+            })}
+            ref={sectionRef}
+        >
             <Container>
-                <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-between'>
-                    <div className='flex w-full flex-col items-start gap-5 px-5 pt-8 xl:min-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
+                <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
+                    <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:max-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
                         <h2
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
                             ref={headingref}
@@ -67,37 +73,41 @@ const CTA = () => {
                         </UnstyledLink>
                     </div>
 
-                    <div
-                        style={{
-                            background: 'linear-gradient(270deg, rgba(1, 1, 1, 0) 52.44%, #010101 100%)'
-                        }}
-                        className='hidden h-[595px] w-full xl:block'
-                    >
+                    <div className='hidden h-[595px] w-auto xl:block'>
                         <Image
-                            src='/images/about-us/cta.webp'
+                            src={image || '/images/about-us/cta.webp'}
                             alt='Article CTA'
                             width={0}
                             height={0}
                             sizes='100vw'
-                            className='h-full w-full'
+                            className='h-full w-auto'
+                        />
+                        <div
+                            className='absolute inset-0'
+                            style={{
+                                background: 'linear-gradient(270deg, rgba(1, 1, 1, 0) 20%, #010101 100%)'
+                            }}
                         />
                     </div>
-                    <div
-                        style={{
-                            background: `linear-gradient(270deg, rgba(1, 1, 1, 0) 58.4%, #010101 100%), 
-linear-gradient(180deg, rgba(1, 1, 1, 0) 59.44%, #010101 99.87%), 
-linear-gradient(0deg, rgba(1, 1, 1, 0) 56.25%, #010101 91.3%), 
-linear-gradient(90deg, rgba(1, 1, 1, 0) 66.6%, #010101 99.98%)`
-                        }}
-                        className='block h-full w-full xl:hidden'
-                    >
+                    <div className='relative block h-[466px] w-auto xl:hidden'>
                         <Image
-                            src='/images/about-us/cta.webp'
+                            src={image || '/images/about-us/cta.webp'}
                             alt='Article CTA'
                             width={0}
                             height={0}
                             sizes='100vw'
-                            className='h-full w-full'
+                            className='h-full w-auto'
+                            style={{ objectFit: 'cover' }}
+                        />
+
+                        <div
+                            className='absolute inset-0'
+                            style={{
+                                background: `linear-gradient(270deg, rgba(1, 1, 1, 0) 58.4%, #010101 100%),
+linear-gradient(180deg, rgba(1, 1, 1, 0) 59.44%, #010101 99.87%),
+linear-gradient(0deg, rgba(1, 1, 1, 0) 56.25%, #010101 91.3%),
+linear-gradient(90deg, rgba(1, 1, 1, 0) 66.6%, #010101 99.98%)`
+                            }}
                         />
                     </div>
                 </div>
