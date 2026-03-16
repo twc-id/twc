@@ -12,7 +12,7 @@ import React from 'react'
 const About = () => {
     const { t } = useTranslation('about')
     const { assets } = useAssets()
-    console.log('Assets:', assets) // Log the assets to verify the data structure
+
     const heroBanner = assets?.find((asset) => asset.name === 'about-us-hero')?.media?.url
     const whiteSpaceImage = assets?.find((asset) => asset.name === 'about-us-1')?.media?.url
     const journeyImage = assets?.find((asset) => asset.name === 'about-us-2')?.media?.url
