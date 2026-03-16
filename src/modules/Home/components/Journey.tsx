@@ -144,7 +144,7 @@ const Journey = ({ image }: { image?: string }) => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-x-hidden'>
+        <section ref={sectionRef}>
             <Container className='pb-16 xl:pb-[116px]'>
                 <div className='flex w-full flex-col gap-4 xl:flex-row xl:justify-between'>
                     <div className='flex flex-shrink-0 flex-col gap-4'>

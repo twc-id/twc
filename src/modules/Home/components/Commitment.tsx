@@ -57,7 +57,7 @@ const Commitment = ({ image }: { image?: string }) => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-x-hidden'>
+        <section ref={sectionRef}>
             <div className='bg-grey-black relative  flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
                 <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
                     {t('commitment.title')}

@@ -16,14 +16,14 @@ interface Props {
 const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClose }) => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const [index, setIndex] = useState<number>(initialIndex || 0)
-    const [scale, setScale] = useState<number>(0.9)
+    const [scale, setScale] = useState<number>(1)
     const wrapperRef = useRef<ReactZoomPanPinchRef | null>(null)
 
     useEffect(() => {
         setIndex(initialIndex)
         // reset transform when initialIndex changes
         if (wrapperRef.current) wrapperRef.current.resetTransform()
-        setScale(0.9)
+        setScale(1)
     }, [initialIndex, open])
 
     const current = images[index]
@@ -31,7 +31,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
     const handleThumbClick = (i: number) => {
         setIndex(i)
         if (wrapperRef.current) wrapperRef.current.resetTransform()
-        setScale(0.9)
+        setScale(1)
     }
 
     const handleClose = () => {
@@ -92,9 +92,9 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                             doubleClick={{ disabled: true }}
                             pinch={{ disabled: isMobile }}
                             wheel={{ disabled: isMobile }}
-                            initialScale={0.9}
-                            minScale={0.5}
-                            maxScale={4}
+                            initialScale={isMobile ? 1 : 0.5}
+                            minScale={isMobile ? 1 : 0.5}
+                            maxScale={isMobile ? 2 : 1}
                             onTransformed={(ref, state) => {
                                 setScale(state.scale)
                             }}
@@ -134,7 +134,9 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                         >
                                             −
                                         </button>
-                                        <div className=' text-grey-white py-2'>{Math.round((scale || 1) * 100)}%</div>
+                                        <div className=' text-grey-white py-2'>
+                                            {Math.round(((scale || 1) / (isMobile ? 1 : 0.5)) * 100)}%
+                                        </div>
                                         <button
                                             onClick={() => zoomIn()}
                                             className=' text-grey-white py-2 pr-4 focus:outline-none'

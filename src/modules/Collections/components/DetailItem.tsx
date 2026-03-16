@@ -401,9 +401,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         { label: 'Year of product', valueFn: () => getMetaValue('basic-info-year-production') },
         { label: 'Gender', key: 'basic-info-gender' },
         { label: 'Bracelet material', key: 'basic-info-bracelet-material' },
-        { label: 'condition', key: 'basic-info-condition' },
+        { label: 'Condition', key: 'basic-info-condition' },
         { label: 'Status', key: 'basic-info-status' },
-        { label: 'scope of delivery', key: 'basic-info-scope-of-delivery' }
+        { label: 'Scope of delivery', key: 'basic-info-scope-of-delivery' }
     ]
 
     // Build basicItems in the defined order, only including items with values
@@ -540,7 +540,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
-                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>
                             {label}
                         </p>
                         <button
@@ -556,9 +556,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
             return (
                 <div key={idx} className='flex flex-col gap-2'>
-                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 capitalize'>
-                        {label}
-                    </p>
+                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>{label}</p>
                     <p
                         className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
                     >
@@ -578,8 +576,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -594,8 +592,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -610,8 +608,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -626,8 +624,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='capitalize xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
