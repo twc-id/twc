@@ -62,11 +62,11 @@ const Hero = ({ image }: { image?: string }) => {
                 transform: 'translate(0px, 0px) !important'
             }}
         >
-            <div className='absolute inset-x-0 bottom-6 z-10 pb-5 xl:bottom-[121px] xl:pb-20'>
+            <div className='absolute inset-x-0 bottom-6 z-10 xl:bottom-16'>
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-6 xl:flex-row xl:items-end xl:gap-4'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 xl:line-clamp-2
+                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 xl:w-[700px]
                             '
                             ref={h1Ref}
                         >
