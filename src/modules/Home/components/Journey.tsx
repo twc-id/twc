@@ -176,8 +176,14 @@ const Journey = ({ image }: { image?: string }) => {
                     </div>
                 </div>
             </Container>
-            <div ref={imageContainerRef} className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
-                <Image src={image || ''} alt='journey' fill className='object-cover' unoptimized />
+            <div ref={imageContainerRef} className='relative z-[11] h-[290px] w-full xl:h-[560px]'>
+                <Image
+                    src={image || ''}
+                    alt='journey'
+                    fill
+                    className='h-[560px] object-cover object-bottom'
+                    unoptimized
+                />
             </div>
         </section>
     )
