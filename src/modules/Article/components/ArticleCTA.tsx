@@ -53,7 +53,7 @@ const ArticleCTA = ({ image }: { image?: string }) => {
                                 size='md'
                                 placeholder={t('cta.placeholder')}
                                 className='!border-grey-200 w-[200px] !rounded-none bg-transparent '
-                                inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 text-grey-200 !px-0 focus:placeholder:!text-transparent'
+                                inputClassName='text-left xl:text-button-3-desktop text-button-3-mobile placeholder:text-gray-200 focus:!caret-grey-200 text-grey-200 !px-0 focus:placeholder:!text-transparent'
                                 autoComplete='email'
                                 disabled={loading}
                             />
