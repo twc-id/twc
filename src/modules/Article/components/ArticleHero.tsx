@@ -64,14 +64,14 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                     {category.slice(0, 1).map((categories: any) => (
                                         <span
                                             key={categories.id}
-                                            className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
+                                            className='border-grey-500 xl:text-paragraph-10-desktop text-paragraph-10-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
                                             dangerouslySetInnerHTML={{ __html: sanitizeHtml(categories.name) }}
                                         />
                                     ))}
                                 </div>
                             )}
 
-                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none text-gray-500'>
+                            <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile !leading-none text-gray-500'>
                                 {formatDate(article.date, 'MMM, YYYY')} | {estimateReadingTime} min read
                             </span>
                         </div>

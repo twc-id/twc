@@ -523,11 +523,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             if (label === 'brand' && item.value) {
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
-                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>
+                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0 '>
                             {label}
                         </p>
                         <p
-                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
+                            className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black capitalize !mb-0${underlineClass}`}
                         >
                             <a href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}>{item.value}</a>
                         </p>
@@ -540,13 +540,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
-                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>
+                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0 '>
                             {label}
                         </p>
                         <button
                             type='button'
                             onClick={() => handleConditionClick()}
-                            className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black text-left capitalize !mb-0${underlineClass} focus:outline-none`}
+                            className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black text-left capitalize !mb-0${underlineClass} focus:outline-none`}
                         >
                             {displayLabel}
                         </button>
@@ -556,9 +556,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
             return (
                 <div key={idx} className='flex flex-col gap-2'>
-                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0 '>{label}</p>
+                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0 '>{label}</p>
                     <p
-                        className={`xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black capitalize !mb-0${underlineClass}`}
+                        className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black capitalize !mb-0${underlineClass}`}
                     >
                         {item.value}
                     </p>
@@ -576,8 +576,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -592,8 +592,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -608,8 +608,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -624,8 +624,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 !mb-0'>${label}</p>
-                    <p class='first-letter:uppercase lowercase xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0'>${item.value}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0'>${label}</p>
+                    <p class='first-letter:uppercase lowercase xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black !mb-0'>${item.value}</p>
                 </div>
             `
         })
@@ -642,7 +642,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     return (
                         <div key={idx} className='flex flex-col gap-2'>
                             <p
-                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black !mb-0 capitalize'
+                                className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black !mb-0 capitalize'
                                 dangerouslySetInnerHTML={{
                                     __html: sanitizeHtml(item.value)
                                 }}
@@ -829,7 +829,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 </h1>
 
                                 {product.meta_data.find((meta: any) => meta.key === 'reference') && isWatch && (
-                                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
+                                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200'>
                                         Ref.{' '}
                                         <span className=''>
                                             {product.meta_data.find((meta: any) => meta.key === 'reference')?.value}
@@ -843,7 +843,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             className='border-grey-500 flex items-center rounded-full border'
                                             key={item.name}
                                         >
-                                            <span className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
+                                            <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
                                                 {item.name}
                                             </span>
                                         </div>
@@ -870,7 +870,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             />
                                             <span
                                                 className={classNames(
-                                                    'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
+                                                    'xl:!text-paragraph-8-desktop !text-paragraph-8-mobile',
                                                     {
                                                         'text-green-600': isPositiveChange,
                                                         'text-red-600': !isPositiveChange
@@ -888,7 +888,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             </span>
                                             <span
                                                 className={classNames(
-                                                    'xl:!text-paragraph-7-desktop !text-paragraph-7-mobile',
+                                                    'xl:!text-paragraph-8-desktop !text-paragraph-8-mobile',
                                                     {
                                                         'text-green-600': isPositiveChange,
                                                         'text-red-600': !isPositiveChange,
@@ -923,7 +923,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         </a>
                                     ) : (
                                         <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                            <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
                                                 {t('common:sold')}
                                             </p>
                                         </button>
@@ -950,7 +950,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   </h4>
 
                                                                   <p
-                                                                      className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                                      className='text-grey-200 text-paragraph-8-desktop uppercase'
                                                                       dangerouslySetInnerHTML={{
                                                                           __html: sanitizeHtml(
                                                                               product.brands?.[0]?.name
@@ -960,7 +960,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               </div>
                                                           )}
                                                           {priceHistory.length > 1 && (
-                                                              <div className='text-paragraph-7-desktop flex items-center gap-0.5'>
+                                                              <div className='text-paragraph-8-desktop flex items-center gap-0.5'>
                                                                   <Icons
                                                                       icon={isPositiveChange ? 'ArrowUp' : 'ArrowUp'}
                                                                       width={12}
@@ -1033,7 +1033,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               </a>
                                                           ) : (
                                                               <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                                                  <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                                  <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
                                                                       {t('common:sold')}
                                                                   </p>
                                                               </button>
@@ -1113,7 +1113,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                                                       <div className='flex gap-0.5'>
                                                           <p
-                                                              className='text-grey-200 text-paragraph-7-desktop uppercase'
+                                                              className='text-grey-200 text-paragraph-8-desktop uppercase'
                                                               dangerouslySetInnerHTML={{
                                                                   __html: sanitizeHtml(product.brands?.[0]?.name)
                                                               }}
@@ -1122,7 +1122,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               (meta: any) => meta.key === 'reference'
                                                           ) &&
                                                               isWatch && (
-                                                                  <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
+                                                                  <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200'>
                                                                       •{' '}
                                                                       <span className=''>
                                                                           {
@@ -1158,7 +1158,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   />
                                                                   <span
                                                                       className={classNames(
-                                                                          'text-paragraph-7-desktop !leading-none',
+                                                                          'text-paragraph-8-desktop !leading-none',
                                                                           {
                                                                               'text-green-600': isPositiveChange,
                                                                               'text-red-600': !isPositiveChange
@@ -1177,7 +1177,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   </span>
                                                                   <span
                                                                       className={classNames(
-                                                                          'text-paragraph-7-desktop !leading-none',
+                                                                          'text-paragraph-8-desktop !leading-none',
                                                                           {
                                                                               'text-green-600': isPositiveChange,
                                                                               'text-red-600': !isPositiveChange,
@@ -1219,7 +1219,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               </a>
                                                           ) : (
                                                               <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                                                  <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-grey-200 uppercase'>
+                                                                  <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
                                                                       {t('common:sold')}
                                                                   </p>
                                                               </button>
@@ -1242,7 +1242,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             setOpenCollapse((curr) => (curr === item.title ? null : item.title))
                                         }
                                     >
-                                        <div className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 meta'>
+                                        <div className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500 meta'>
                                             {typeof item.content === 'string' ? (
                                                 <div
                                                     dangerouslySetInnerHTML={{
@@ -1274,7 +1274,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 <span className='text-grey-black xl:text-subheading-5-desktop text-subheading-5-mobile'>
                                     100% Authenticity Guaranteed
                                 </span>
-                                <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
+                                <span className='text-grey-200 xl:text-paragraph-8-desktop text-paragraph-8-mobile'>
                                     Carefully curated and verified for autheniticity
                                 </span>
                             </div>
@@ -1308,7 +1308,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     {conditionModalContent?.title}
                                 </h6>
                                 <p
-                                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'
+                                    className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'
                                     dangerouslySetInnerHTML={{
                                         __html: sanitizeHtml(String(conditionModalContent?.description || ''))
                                     }}

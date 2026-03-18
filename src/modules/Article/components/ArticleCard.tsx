@@ -52,18 +52,18 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, titleClassName, meta
                                 .map((categories: any) => (
                                     <span
                                         key={categories.id}
-                                        className='border-grey-500 xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
+                                        className='border-grey-500 xl:text-paragraph-10-desktop text-paragraph-10-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(categories.name) }}
                                     />
                                 ))}
 
                         <div className='flex flex-row gap-2'>
-                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile  text-gray-500'>
+                            <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile  text-gray-500'>
                                 {formatDate(article.date, 'MMM, YYYY')}
                             </span>
 
                             <div className='bg-grey-500 mb-1 h-[13px] w-[1px]' />
-                            <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile  text-gray-500'>
+                            <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile  text-gray-500'>
                                 {estimateReadingTime} min read
                             </span>
                         </div>

@@ -35,7 +35,7 @@ const Collapse = ({ title, defaultExpanded, children, showCount, count }: Collap
                 <h4 className='text-subheading-4-mobile text-grey-black dark:text-grey-white flex items-center gap-2'>
                     {title.toUpperCase()}
                     {showCount && count !== undefined && count > 0 && (
-                        <span className='text-paragraph-7-mobile text-grey-400'>({count})</span>
+                        <span className='text-paragraph-8-mobile text-grey-400'>({count})</span>
                     )}
                 </h4>
 
@@ -276,7 +276,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                         setTempFilter(key, newValues)
                                     }}
                                     checked={tempFilters[key].includes(option.id)}
-                                    textClassName='text-paragraph-7-mobile'
+                                    textClassName='text-paragraph-8-mobile'
                                     size='sm'
                                 >
                                     <div
@@ -303,7 +303,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             setTempFilter(key, newValues)
                                         }}
                                         checked={tempFilters[key].includes(option.id)}
-                                        textClassName='text-paragraph-7-mobile'
+                                        textClassName='text-paragraph-8-mobile'
                                         size='sm'
                                     >
                                         <div
@@ -392,7 +392,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                         buttonSize='sm'
                                     />
                                     <span
-                                        className='text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
+                                        className='text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
                                         onClick={() =>
                                             setTempFilter('priceRange', {
                                                 min: opt.min,
@@ -433,7 +433,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                 buttonSize='sm'
                             />
                             <span
-                                className='text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
+                                className='text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
                                 onClick={() => setTempFilter('sortBy', option?.id)}
                             >
                                 {option?.name}

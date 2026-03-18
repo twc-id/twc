@@ -110,7 +110,7 @@ const Faq = () => {
                     <div className='flex w-full flex-col gap-5 xl:max-w-[602px] xl:gap-6' ref={faqRef}>
                         {items.map((item, index) => (
                             <Collapse key={item.question} title={item.question} defaultExpanded={index === 0}>
-                                <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
+                                <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
                                     {item.answer}
                                 </span>
                             </Collapse>

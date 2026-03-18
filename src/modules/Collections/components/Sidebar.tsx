@@ -277,7 +277,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 trackEvent(GA_EVENTS.FILTER_SELECTED)
                             }}
                             checked={filters[key].includes(option.id)}
-                            textClassName='xl:text-paragraph-7-desktop text-paragraph-7-mobile !leading-none'
+                            textClassName='xl:text-paragraph-8-desktop text-paragraph-8-mobile !leading-none'
                             size='sm'
                         >
                             <div
@@ -364,7 +364,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                         buttonSize='sm'
                                     />
                                     <span
-                                        className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
+                                        className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
                                         onClick={() => {
                                             setFilter('priceRange', {
                                                 min: opt.min,
@@ -409,7 +409,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 buttonSize='sm'
                             />
                             <span
-                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-black dark:text-grey-white cursor-pointer'
+                                className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
                                 onClick={() => {
                                     setFilter('sortBy', option?.id)
                                     trackEvent(GA_EVENTS.FILTER_SELECTED)

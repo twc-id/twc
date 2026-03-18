@@ -171,7 +171,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                                     <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile dark:text-grey-white text-grey-black'>
                                         {item.title}
                                     </h4>
-                                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile dark:text-grey-200 text-grey-500'>
+                                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
                                         {item.description}
                                     </p>
                                 </div>

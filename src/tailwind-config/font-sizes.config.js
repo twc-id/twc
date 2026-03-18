@@ -172,7 +172,7 @@ const fontSize = {
         { lineHeight: '130%', letterSpacing: '-0.02em', fontWeight: 400, fontFamily: 'Inter' }
     ],
     'paragraph-5-desktop': [
-        '16x',
+        '16px',
         { lineHeight: '130%', letterSpacing: '-0.02em', fontWeight: 600, fontFamily: 'Overpass' }
     ],
     'paragraph-6-desktop': [

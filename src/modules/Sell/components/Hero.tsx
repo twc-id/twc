@@ -58,7 +58,7 @@ const Hero = ({ image }: { image?: string }) => {
                 <Container>
                     <div className='flex w-full flex-col justify-end gap-6 xl:items-end xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 xl:line-clamp-2 xl:w-[700px] xl:text-right'
+                            className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-grey-white line-clamp-3 xl:line-clamp-2 xl:w-[700px] xl:text-right'
                             ref={h1Ref}
                         >
                             <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>
@@ -66,7 +66,7 @@ const Hero = ({ image }: { image?: string }) => {
                             </Trans>
                         </h1>
                         <p
-                            className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile'
+                            className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile'
                             ref={paragraphRef}
                         >
                             {t('hero.description')}
