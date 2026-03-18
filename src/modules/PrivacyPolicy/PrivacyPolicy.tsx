@@ -42,7 +42,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
             <Container className='flex flex-col gap-20 py-[200px] xl:py-40'>
                 <div className='flex flex-col gap-4'>
                     <h1 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-black'>{title}</h1>
-                    <span className='xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                    <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
                         <Trans i18nKey='privacy.updated' components={{ strong: <strong /> }}>
                             {t('privacy.updated', { time: formatDate(pages?.modified_gmt, 'D MMMM YYYY') })}
                         </Trans>

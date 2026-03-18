@@ -160,12 +160,12 @@ const Journey = ({ image }: { image?: string }) => {
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile w-[400px]'>
                             <Trans i18nKey='journey.desc_1' components={{ br: <br /> }}>
                                 {t('journey.desc_1')}
                             </Trans>
                         </span>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile w-[400px]'>
                             <Trans i18nKey='journey.desc_2' components={{ br: <br /> }}>
                                 {t('journey.desc_2')}
                             </Trans>

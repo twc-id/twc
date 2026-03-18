@@ -272,7 +272,7 @@ const Highlight = () => {
                                               </div>
                                               {!product.purchasable && (
                                                   <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
-                                                      <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
+                                                      <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
                                                           Pre-order
                                                       </span>
                                                   </div>
@@ -280,7 +280,7 @@ const Highlight = () => {
 
                                               <div className='flex flex-col gap-1 text-center'>
                                                   <p
-                                                      className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 truncate px-2 uppercase'
+                                                      className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-200 truncate px-2 uppercase'
                                                       dangerouslySetInnerHTML={{
                                                           __html: sanitizeHtml(`
                                                                 ${product.brands?.[0]?.name || ''}
@@ -303,7 +303,7 @@ const Highlight = () => {
                                                   <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
                                                       {product.name}
                                                   </h3>
-                                                  <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500 truncate px-2'>
+                                                  <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
                                                       {product?.meta_data?.key?.startsWith('pre-owned-') &&
                                                           t('highlight.pre_owned', {
                                                               year: product.meta_data.find((meta: any) =>
@@ -312,7 +312,7 @@ const Highlight = () => {
                                                           })}
                                                   </p>
                                                   {product.purchasable && (
-                                                      <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark truncate px-2'>
+                                                      <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark truncate px-2'>
                                                           {formatRupiah(product.price)}
                                                       </p>
                                                   )}

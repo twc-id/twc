@@ -378,7 +378,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                 {hasMore && (
                     <div className='mt-6 flex flex-col items-center gap-5'>
                         {typeof total === 'number' && (
-                            <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile text-center'>
+                            <span className='text-grey-500 xl:text-paragraph-7-desktop text-paragraph-7-mobile text-center'>
                                 {data?.length ?? 0}/{total}
                             </span>
                         )}

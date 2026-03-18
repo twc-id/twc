@@ -39,7 +39,7 @@ const ArticleCTA = ({ image }: { image?: string }) => {
             <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
                 <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:max-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
                     <h2 className='text-heading-2-desktop text-grey-white'>{t('cta.title')}</h2>
-                    <p className='text-paragraph-6-desktop text-grey-100'>{t('cta.description')}</p>
+                    <p className='text-paragraph-7-desktop text-grey-100'>{t('cta.description')}</p>
 
                     <Form form={form} onFinish={handleSubscribe} className='flex w-full flex-row items-center gap-2'>
                         <Field

@@ -307,21 +307,21 @@ const PriceChart: React.FC<Props> = ({ productPrice }) => {
                                         }
                                     />
                                     <span
-                                        className={`xl:text-paragraph-9-desktop text-paragraph-9-mobile ${
+                                        className={`xl:text-paragraph-10-desktop text-paragraph-10-mobile ${
                                             positive ? 'text-success-500' : 'text-error-500'
                                         }`}
                                     >
                                         {(positive && pctValue !== '--' ? '+' : '') + pctValue}%
                                     </span>
                                     <span
-                                        className={`xl:text-paragraph-9-desktop text-paragraph-9-mobile ${
+                                        className={`xl:text-paragraph-10-desktop text-paragraph-10-mobile ${
                                             positive ? 'text-success-500' : 'text-error-500'
                                         }`}
                                     >
                                         ({diffNumber != null ? formatRupiah(diffNumber) : '-'})
                                     </span>
                                 </div>
-                                <div className='text-grey-500 xl:text-paragraph-11-desktop text-paragraph-11-mobile mt-3'>
+                                <div className='text-grey-500 xl:text-paragraph-12-desktop text-paragraph-12-mobile mt-3'>
                                     {d ? format(d, 'MMM d, yyyy') : ''}
                                 </div>
                             </div>
@@ -380,7 +380,7 @@ const PriceChart: React.FC<Props> = ({ productPrice }) => {
                         key={k}
                         onClick={() => fetchPeriod(k)}
                         disabled={loadingPeriod}
-                        className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-md border px-4 py-2 !leading-none focus:outline-none ${
+                        className={`xl:text-paragraph-9-desktop text-paragraph-9-mobile rounded-md border px-4 py-2 !leading-none focus:outline-none ${
                             k === selectedPeriod ? 'bg-black text-white' : 'bg-white text-gray-500'
                         }`}
                     >

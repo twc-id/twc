@@ -56,7 +56,7 @@ const WhiteSpace = ({ image }: { image?: string }) => {
         <section ref={sectionRef}>
             <Container className='py-16 xl:py-[160px]'>
                 <p
-                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-700 xl:w-[520px]'
+                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-700 xl:w-[520px]'
                     ref={textRef}
                 >
                     {t('white_space.description')}

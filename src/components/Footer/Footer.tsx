@@ -85,7 +85,7 @@ const Footer = () => {
                                 <Link href='/' className='!w-fit'>
                                     <Icons icon='LogoFullWhite' width={142} height={64} className='hidden xl:block' />
                                 </Link>
-                                <p className='text-paragraph-10-desktop text-grey-white'>
+                                <p className='text-paragraph-11-desktop text-grey-white'>
                                     © 2014 THE WATCH COLLECTIONS
                                 </p>
                             </div>
@@ -260,7 +260,7 @@ const Footer = () => {
                     </div>
                     {/* Footer Bottom */}
                     <div className='mt-12 flex flex-col items-start justify-between border-t border-gray-700 pt-6 md:mt-16 md:flex-row md:pt-8 xl:hidden xl:items-center'>
-                        <p className='text-paragraph-10-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
+                        <p className='text-paragraph-11-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
                         <div className='mt-4 hidden gap-6 md:mt-0 xl:flex'>
                             <UnstyledLink href='/privacy' className='text-button-5-desktop text-grey-white '>
                                 Privacy Policy

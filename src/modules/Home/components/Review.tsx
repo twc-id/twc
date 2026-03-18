@@ -227,7 +227,7 @@ const Review = () => {
                                                 </div>
 
                                                 <div className='flex flex-col gap-1'>
-                                                    <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
+                                                    <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
                                                         {product.brands?.[0].name} •{' '}
                                                         {
                                                             product.meta_data.find(
@@ -240,7 +240,7 @@ const Review = () => {
                                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.name) }}
                                                     />
                                                     {product?.meta_data?.key?.startsWith('pre-owned-') && (
-                                                        <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                        <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
                                                             {t('highlight.pre_owned', {
                                                                 year: product.meta_data.find((meta: any) =>
                                                                     meta.key.startsWith('pre-owned-')
@@ -263,7 +263,7 @@ const Review = () => {
                                             <p className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-100'>
                                                 {reviewText}
                                             </p>
-                                            <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
+                                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
                                                 {review?.name}. {review?.position} {review?.company}
                                             </p>
                                         </div>
@@ -320,7 +320,7 @@ const Review = () => {
                                                     />
                                                 </div>
                                                 <div className='flex flex-col gap-0.5'>
-                                                    <p className='text-paragraph-10-mobile text-grey-500'>
+                                                    <p className='text-paragraph-11-mobile text-grey-500'>
                                                         {product.brands?.[0].name} •{' '}
                                                         {
                                                             product.meta_data.find(
@@ -332,12 +332,12 @@ const Review = () => {
                                                         className='text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.name) }}
                                                     />
-                                                    {/* <p className='text-paragraph-11-mobile text-grey-500'>
+                                                    {/* <p className='text-paragraph-12-mobile text-grey-500'>
                                                         {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}
                                                     </p> */}
 
                                                     {product?.meta_data?.key?.startsWith('pre-owned-') && (
-                                                        <p className='text-paragraph-11-mobile text-grey-500'>
+                                                        <p className='text-paragraph-12-mobile text-grey-500'>
                                                             {t('highlight.pre_owned', {
                                                                 year: product.meta_data.find((meta: any) =>
                                                                     meta.key.startsWith('pre-owned-')
@@ -358,7 +358,7 @@ const Review = () => {
                                         {/* Content */}
                                         <div className='flex flex-col gap-8 xl:gap-4'>
                                             <p className='text-paragraph-3-mobile text-grey-white'>{reviewText}</p>
-                                            <p className='text-paragraph-6-mobile text-grey-200'>
+                                            <p className='text-paragraph-7-mobile text-grey-200'>
                                                 {review?.name}. {review?.position} {review?.company}
                                             </p>
                                         </div>

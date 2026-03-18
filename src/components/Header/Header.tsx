@@ -950,7 +950,7 @@ const Headers = () => {
                                                     </div>
                                                     {/* Title and Items */}
                                                     <div>
-                                                        <h3 className='text-paragraph-7-desktop mb-4  text-gray-500'>
+                                                        <h3 className='text-paragraph-8-desktop mb-4  text-gray-500'>
                                                             By Brands
                                                         </h3>
                                                         <div className='grid grid-flow-col grid-rows-4 gap-x-[100px] gap-y-2'>
@@ -1005,7 +1005,7 @@ const Headers = () => {
                                                                     className='h-auto min-h-[218px] w-full object-cover transition-transform group-active:scale-105'
                                                                 />
                                                             </div>
-                                                            <h3 className='text-paragraph-7-mobile text-grey-200 text-left'>
+                                                            <h3 className='text-paragraph-8-mobile text-grey-200 text-left'>
                                                                 See All Accessories
                                                             </h3>
                                                         </UnstyledLink>
@@ -1029,7 +1029,7 @@ const Headers = () => {
                                                                 className='h-auto min-h-[218px] w-full object-cover transition-transform group-active:scale-105'
                                                             />
                                                         </div>
-                                                        <h3 className='text-paragraph-7-mobile text-grey-200 text-left'>
+                                                        <h3 className='text-paragraph-8-mobile text-grey-200 text-left'>
                                                             By{' '}
                                                             {subItem.label.charAt(0) +
                                                                 subItem.label.slice(1).toLowerCase()}
@@ -1053,7 +1053,7 @@ const Headers = () => {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className='text-paragraph-7-desktop mb-3  text-gray-500'>
+                                                        <h3 className='text-paragraph-8-desktop mb-3  text-gray-500'>
                                                             By Availability
                                                         </h3>
                                                         <div className='space-y-2'>
@@ -1096,7 +1096,7 @@ const Headers = () => {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <h3 className='text-paragraph-7-desktop mb-3  text-gray-500'>
+                                                        <h3 className='text-paragraph-8-desktop mb-3  text-gray-500'>
                                                             By Condition
                                                         </h3>
                                                         <div className='space-y-2'>
@@ -1281,12 +1281,12 @@ const Headers = () => {
                                 </Form>
 
                                 <div className='flex flex-col gap-6'>
-                                    <h4 className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'>
+                                    <h4 className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
                                         {searchQuery ? t('common:search_result') : t('common:suggestion')}
                                     </h4>
                                     {/* Typo correction message */}
                                     {correctedQuery && searchQuery && (
-                                        <p className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile text-center'>
+                                        <p className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile text-center'>
                                             We couldn't find a match for "
                                             <span className='font-semibold'>{searchQuery}</span>", but we show results
                                             of "<span className='font-semibold'>{correctedQuery}</span>" below
@@ -1340,14 +1340,14 @@ const Headers = () => {
                                                             </div>
                                                             {!product.purchasable && (
                                                                 <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
-                                                                    <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
+                                                                    <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
                                                                         Pre-order
                                                                     </span>
                                                                 </div>
                                                             )}
                                                             <div className='flex flex-col gap-1 text-center'>
                                                                 <p
-                                                                    className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                                                    className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-200 uppercase'
                                                                     dangerouslySetInnerHTML={{
                                                                         __html: sanitizeHtml(`
                                                                         ${product?.brands?.[0]?.name || ''}
@@ -1374,7 +1374,7 @@ const Headers = () => {
                                                                     }}
                                                                 />
 
-                                                                <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                                                <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
                                                                     {product?.meta_data?.find(
                                                                         (meta: any) =>
                                                                             meta.key === 'basic-info-year-purchase'
@@ -1389,7 +1389,7 @@ const Headers = () => {
                                                                 </p>
 
                                                                 {product.purchasable && (
-                                                                    <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                                                    <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
                                                                         {formatRupiah(product.price)}
                                                                     </p>
                                                                 )}
@@ -1400,7 +1400,7 @@ const Headers = () => {
                                             </div>
                                         ) : searchQuery ? (
                                             <div className='flex flex-col gap-6'>
-                                                <div className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile text-center'>
+                                                <div className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile text-center'>
                                                     {t('common:header.empty_search')}
                                                 </div>
                                                 <CTA image={ctaImage} />

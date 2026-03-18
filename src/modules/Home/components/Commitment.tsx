@@ -63,7 +63,7 @@ const Commitment = ({ image }: { image?: string }) => {
                     {t('commitment.title')}
                 </h1>
                 <Icons icon='Diamond' className='text-grey-100' />
-                <h3 ref={descRef} className='text-paragraph-6-mobile text-grey-100 xl:text-paragraph-6-desktop'>
+                <h3 ref={descRef} className='text-paragraph-7-mobile text-grey-100 xl:text-paragraph-7-desktop'>
                     {t('commitment.description')}
                 </h3>
             </div>

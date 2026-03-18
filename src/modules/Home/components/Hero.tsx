@@ -183,7 +183,7 @@ const Hero = () => {
                         <div className='flex flex-col justify-end gap-2'>
                             <h3
                                 ref={h3RefFirst}
-                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
+                                className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white uppercase'
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&
@@ -201,7 +201,7 @@ const Hero = () => {
                             </h1>
                             <h3
                                 ref={h3RefSecond}
-                                className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
+                                className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&

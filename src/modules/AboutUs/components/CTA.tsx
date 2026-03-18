@@ -61,7 +61,7 @@ const CTA = ({ image, showTemukanKami }: { image?: string; showTemukanKami: bool
                             </Trans>
                         </h2>
                         <p
-                            className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-100'
+                            className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-100'
                             ref={paragraphRef}
                         >
                             {t('cta.description')}

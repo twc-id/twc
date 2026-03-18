@@ -71,7 +71,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
             <Container className='pt-[72px] xl:pt-20'>
                 <div className='flex min-h-screen flex-col gap-8 pb-12 pt-8 xl:gap-10 xl:pb-[116px]'>
                     <h1
-                        className='xl:text-heading-1-desktop text-heading-1-mobile text-[100px] leading-[90%]
+                        className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-[100px] leading-[90%]
                     '
                     >
                         {t('the_watch_journal')}

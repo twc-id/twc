@@ -69,10 +69,10 @@ const Journey = ({ image }: { image?: string }) => {
                         <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black'>
                             {t('journey.title')}
                         </h2>
-                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 max-w-[411px]'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 max-w-[411px]'>
                             {t('journey.description')}
                         </p>
-                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 max-w-[411px]'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 max-w-[411px]'>
                             {t('journey.description_2')}
                         </p>
                     </div>
