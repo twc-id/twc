@@ -16,9 +16,11 @@ interface CollapseProps {
     title: string
     defaultExpanded?: boolean
     children: React.ReactNode
+    showCount?: boolean
+    count?: number | string
 }
 
-const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
+const Collapse = ({ title, defaultExpanded, children, showCount, count }: CollapseProps) => {
     const [isExpanded, setIsExpanded] = useState(defaultExpanded || false)
     const { getToggleProps, getCollapseProps } = useCollapse({ isExpanded })
 
@@ -30,8 +32,13 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
             >
-                <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile text-grey-black dark:text-grey-white uppercase'>
+                <h4 className='xl:text-button-4-desktop text-subheading-4-mobile text-grey-black dark:text-grey-white flex items-center gap-0.5 font-medium uppercase'>
                     {title}
+                    {showCount &&
+                        count !== undefined &&
+                        (count === 'ALL' || (typeof count === 'number' && count > 0)) && (
+                            <span className='text-button-4-mobile text-grey-200 font-medium'>({count})</span>
+                        )}
                 </h4>
 
                 <Icons
@@ -135,6 +142,22 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                   .filter(
                       (brand: any, index: number, self: any[]) => self.findIndex((b) => b.id === brand.id) === index
                   )
+
+    // Helper function to get total options for each filter key
+    const getTotalOptions = (key: 'brands' | 'availability' | 'condition' | 'gender') => {
+        if (key === 'brands') return brands.length
+        if (key === 'availability') return availabilityOptions.length
+        if (key === 'condition') return conditionOptions.length
+        if (key === 'gender') return genderOptions.length
+        return 0
+    }
+
+    // Helper function to get count display (number or "ALL")
+    const getCountDisplay = (key: 'brands' | 'availability' | 'condition' | 'gender'): number | string => {
+        const selectedCount = filters[key].length
+        const totalCount = getTotalOptions(key)
+        return selectedCount === totalCount ? 'ALL' : selectedCount
+    }
 
     const [localMin, setLocalMin] = useState<string>(filters.priceRange.min ?? '')
     const [localMax, setLocalMax] = useState<string>(filters.priceRange.max ?? '')
@@ -261,7 +284,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
             else if (key === 'gender') options = genderOptions
 
             return (
-                <div className='flex flex-col gap-4'>
+                <div className='mt-4 flex flex-col gap-4'>
                     {options?.map((option) => (
                         <Checklist
                             key={option.id}
@@ -290,7 +313,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-200 text-left font-semibold uppercase hover:opacity-70 focus:outline-none'
+                            className='xl:text-body-2-desktop text-body-2-mobile text-grey-black mt-4 text-left font-semibold uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -394,7 +417,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
 
         if (type === 'radio') {
             return (
-                <div className='flex flex-col gap-4'>
+                <div className='mt-4 flex flex-col gap-4'>
                     {sortByOptions.map((option) => (
                         <div className='flex flex-row gap-2' key={option.id}>
                             <RadioButton
@@ -437,7 +460,25 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
     return (
         <div className='scrollbar-none hidden w-full flex-col gap-5 xl:sticky xl:top-0 xl:flex xl:max-h-[calc(100dvh-130px)] xl:max-w-[270px] xl:gap-6 xl:overflow-y-auto'>
             {metaData.map((item) => (
-                <Collapse key={item.key} title={item.label} defaultExpanded={item.key === 'brands'}>
+                <Collapse
+                    key={item.key}
+                    title={item.label}
+                    defaultExpanded={item.key === 'brands'}
+                    showCount={
+                        item.key === 'brands' ||
+                        item.key === 'availability' ||
+                        item.key === 'condition' ||
+                        item.key === 'gender'
+                    }
+                    count={
+                        item.key === 'brands' ||
+                        item.key === 'availability' ||
+                        item.key === 'condition' ||
+                        item.key === 'gender'
+                            ? getCountDisplay(item.key)
+                            : undefined
+                    }
+                >
                     {item.key === 'brands' && brandLoading ? (
                         <div className='flex flex-col gap-3 px-2 py-1'>
                             {[...Array(6)].map((_, i) => (

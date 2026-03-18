@@ -17,7 +17,7 @@ interface CollapseProps {
     defaultExpanded?: boolean
     children: React.ReactNode
     showCount?: boolean
-    count?: number
+    count?: number | string
 }
 
 const Collapse = ({ title, defaultExpanded, children, showCount, count }: CollapseProps) => {
@@ -32,11 +32,13 @@ const Collapse = ({ title, defaultExpanded, children, showCount, count }: Collap
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
             >
-                <h4 className='text-subheading-4-mobile text-grey-black dark:text-grey-white flex items-center gap-2'>
+                <h4 className='text-button-4-mobile text-grey-black dark:text-grey-white flex items-center gap-0.5 font-medium'>
                     {title.toUpperCase()}
-                    {showCount && count !== undefined && count > 0 && (
-                        <span className='text-paragraph-8-mobile text-grey-400'>({count})</span>
-                    )}
+                    {showCount &&
+                        count !== undefined &&
+                        (count === 'ALL' || (typeof count === 'number' && count > 0)) && (
+                            <span className='text-button-4-mobile text-grey-200 font-medium'>({count})</span>
+                        )}
                 </h4>
 
                 <Icons
@@ -200,6 +202,22 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
         setLocalMax('')
     }
 
+    // Helper function to get total options for each filter key
+    const getTotalOptions = (key: 'brands' | 'availability' | 'condition' | 'gender') => {
+        if (key === 'brands') return brandOptions.length
+        if (key === 'availability') return availabilityOptions.length
+        if (key === 'condition') return conditionOptions.length
+        if (key === 'gender') return genderOptions.length
+        return 0
+    }
+
+    // Helper function to get count display (number or "ALL")
+    const getCountDisplay = (key: 'brands' | 'availability' | 'condition' | 'gender'): number | string => {
+        const selectedCount = tempFilters[key].length
+        const totalCount = getTotalOptions(key)
+        return selectedCount === totalCount ? 'ALL' : selectedCount
+    }
+
     const hasActiveFilter = (key: (typeof metaData)[0]['key']) => {
         if (key === 'brands' || key === 'availability' || key === 'condition' || key === 'gender') {
             return tempFilters[key].length > 0
@@ -254,7 +272,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
             const rightColumn = isDoubleColumn ? options.slice(midPoint) : []
 
             return (
-                <div className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-6'>
                     <div
                         className={classNames('flex gap-4', {
                             'flex-row': isDoubleColumn,
@@ -319,7 +337,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
+                            className='text-body-2-mobile text-grey-black text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -410,7 +428,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
+                            className='text-body-2-mobile text-grey-black text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -443,7 +461,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                     {hasActive && (
                         <button
                             onClick={() => resetIndividualFilter(key)}
-                            className='text-body-2-mobile text-grey-200 text-left font-normal uppercase hover:opacity-70 focus:outline-none'
+                            className='text-body-2-mobile text-grey-black text-left font-normal uppercase hover:opacity-70 focus:outline-none'
                         >
                             RESET
                         </button>
@@ -514,7 +532,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                                 item.key === 'availability' ||
                                                 item.key === 'condition' ||
                                                 item.key === 'gender'
-                                                    ? tempFilters[item.key].length
+                                                    ? getCountDisplay(item.key)
                                                     : undefined
                                             }
                                         >
