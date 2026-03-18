@@ -727,11 +727,11 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     }
                 }
             `}</style>
-            <Container className='flex flex-col gap-14 pt-[230px] xl:flex-row xl:gap-20 xl:pt-[100px]'>
+            <Container className='flex flex-col gap-14 pt-[130px] xl:flex-row xl:items-center xl:gap-20 xl:pt-[100px]'>
                 {/* Images column: independently scrollable and GSAP-pinned until images end */}
                 <div ref={pinRef as any} className='relative w-full xl:w-auto' style={{ willChange: 'transform' }}>
                     {/* left vertical indicators */}
-                    <div className='absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
+                    <div className='absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
                             <button
                                 key={i}
@@ -747,13 +747,13 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     <div
                         ref={scrollRef as any}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:ml-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
-                        style={{ maxHeight: 'calc(100vh - 160px)', willChange: 'scroll-position' }}
+                        style={{ maxHeight: 'calc(100vh - 240px)', willChange: 'scroll-position' }}
                     >
                         {product.images.length > 0 ? (
                             product.images.map((img: any, index: number) => (
                                 <div
                                     key={index}
-                                    className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'
+                                    className='relative h-[390px] w-[390px] min-w-full flex-shrink-0 snap-center xl:h-[602px] xl:w-[602px] xl:min-w-[500px] xl:snap-start'
                                     onClick={() => {
                                         setImageModalIndex(index)
                                         setImageModalOpen(true)
@@ -772,7 +772,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 </div>
                             ))
                         ) : (
-                            <div className='relative h-[420px] w-full min-w-full flex-shrink-0 snap-center xl:h-[calc(100vh-160px)] xl:w-[500px] xl:min-w-[500px] xl:snap-start'>
+                            <div className='relative h-[390px] w-[390px] min-w-full flex-shrink-0 snap-center xl:h-[602px] xl:w-[602px] xl:min-w-[500px] xl:snap-start'>
                                 <Image
                                     src='https://placehold.co/600x802/png?text=TWC'
                                     alt={product?.name}

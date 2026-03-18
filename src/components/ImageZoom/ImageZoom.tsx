@@ -65,12 +65,12 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                         <button
                             key={i}
                             onClick={() => handleThumbClick(i)}
-                            className={classNames('w-[92px] transition-opacity focus:outline-none', {
+                            className={classNames('h-[92px] w-[92px] transition-opacity focus:outline-none', {
                                 'opacity-100': i === index,
                                 'opacity-50': i !== index
                             })}
                         >
-                            <div className='h-[110px] w-[92px]'>
+                            <div className='h-[92px] w-[92px]'>
                                 <Image
                                     src={img.src}
                                     alt={img.alt || `thumb-${i}`}
@@ -175,7 +175,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                         'opacity-50': i !== index
                                     })}
                                 >
-                                    <div className='h-[110px] w-[92px] '>
+                                    <div className='h-[92px] w-[92px] '>
                                         <Image
                                             src={img.src}
                                             alt={img.alt || `thumb-${i}`}
