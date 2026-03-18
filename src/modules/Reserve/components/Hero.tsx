@@ -371,7 +371,7 @@ const Hero = ({
             <div
                 ref={imageContainerRef}
                 className={classNames('relative z-0 h-[300px] xl:h-[560px]', {
-                    'mt-14 xl:mt-[116px]': !showWatchTextSection
+                    'mt-16 xl:mt-[160px]': !showWatchTextSection
                 })}
             >
                 <Image src={imagePin || ''} alt='The Watch Collections' fill className='object-cover' unoptimized />
