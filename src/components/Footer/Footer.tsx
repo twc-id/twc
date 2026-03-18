@@ -190,7 +190,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -206,7 +206,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                                 onClick={() => {
                                                     articlePath || productDetailPath
                                                         ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
@@ -232,7 +232,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -248,7 +248,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
