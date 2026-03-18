@@ -36,33 +36,33 @@ const fontSize = {
     // Desktop
     'heading-1-desktop': [
         '80px',
-        { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
+        { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-1-2-desktop': [
         '72px',
-        { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
+        { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-1-3-desktop': [
-        '64px',
-        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 500, fontFamily: 'Inter' }
+        '56px',
+        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-2-desktop': [
-        '52px',
-        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
+        '49px',
+        { lineHeight: '110%', letterSpacing: '-0.04em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-3-desktop': [
-        '36px',
-        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 400, fontFamily: 'Inter' }
+        '32px',
+        { lineHeight: '130%', letterSpacing: '-0.04em', fontWeight: 300, fontFamily: 'Inter' }
     ],
 
     // Mobile
     'heading-1-mobile': [
-        '48px',
-        { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
+        '56px',
+        { lineHeight: '110%', letterSpacing: '-0.05em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-1-2-mobile': [
-        '40px',
-        { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 400, fontFamily: 'Inter' }
+        '48px',
+        { lineHeight: '100%', letterSpacing: '-0.05em', fontWeight: 300, fontFamily: 'Inter' }
     ],
     'heading-1-3-mobile': [
         '36px',
