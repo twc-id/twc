@@ -191,7 +191,7 @@ const Hero = () => {
                             </h3>
                             <h1
                                 ref={h1Ref}
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:w-[700px]'
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
                             >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
                                     {heroSlides &&
