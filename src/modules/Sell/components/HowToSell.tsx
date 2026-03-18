@@ -126,7 +126,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
 
     return (
         <section className='relative' ref={sectionRef}>
-            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116ppx]'>
+            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
                     <div
                         className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'
