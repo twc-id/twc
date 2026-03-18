@@ -1,6 +1,7 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import { useComponentVisibility } from '@hooks/useComponentVisibility'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
@@ -12,11 +13,13 @@ import { useMediaQuery } from 'react-responsive'
 const Footer = () => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const router = useRouter()
+    const { data: visibility } = useComponentVisibility()
 
     const articlePath = router.pathname.startsWith('/articles/')
     const productDetailPath = router.pathname.startsWith('/collections/')
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
-    const showStoreLocation = process.env.NEXT_PUBLIC_SHOW_STORE_LOCATION === 'true'
+    const showStoreLocation = visibility?.footer_store_location ?? false
+    console.log(visibility)
 
     const items = [
         {
