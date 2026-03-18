@@ -113,7 +113,7 @@ const Consign = ({ images }: ConsignProps) => {
 
     return (
         <section className='bg-grey-black relative z-10' ref={sectionRef}>
-            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116ppx]'>
+            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
                     <div
                         className='flex w-full flex-col items-start justify-between gap-5 xl:flex-row xl:items-center'
