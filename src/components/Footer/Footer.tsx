@@ -96,7 +96,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
                                                     if (link.title === 'Book an Appointment') {
                                                         articlePath || productDetailPath
@@ -121,7 +121,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
                                                     if (link.title === 'Instagram') {
                                                         articlePath || productDetailPath
@@ -146,7 +146,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -162,7 +162,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>

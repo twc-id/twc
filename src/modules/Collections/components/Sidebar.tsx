@@ -30,7 +30,7 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
                     onClick: () => setIsExpanded(!isExpanded)
                 })}
             >
-                <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile text-grey-black dark:text-grey-white'>
+                <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile text-grey-black dark:text-grey-white uppercase'>
                     {title}
                 </h4>
 
