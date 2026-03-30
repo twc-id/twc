@@ -120,7 +120,7 @@ const HowToReserve = ({
                             {t('how_to_reserve.title')}
                         </h1>
                         <a
-                            href={getWhatsAppLinkFromTemplate('howToPreOrder')}
+                            href={getWhatsAppLinkFromTemplate('howToReserve')}
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
