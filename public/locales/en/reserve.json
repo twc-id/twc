@@ -1,10 +1,9 @@
 {
     "title": "The Watch Collection - Reserve Your Spot",
     "hero": {
-        "title": "Couldn’t find the watch you’re looking for?",
+        "title": "Couldn\u2019t find the watch you\u2019re looking for?",
         "subtitle": "We can source more for you",
-        "description": "Pre-order your desired watch, and we will secure it exclusively for you",
-
+        "description": "Reserve your desired watch, and we will secure it exclusively for you",
         "items": {
             "1": {
                 "title": "Classic Luxury"
@@ -18,11 +17,11 @@
         }
     },
     "reserve_time_pieces": {
-        "title": "Pre-Order Your Timepieces",
-        "description": " Discover More Pre-Order Watches"
+        "title": "Reserve Your Timepieces",
+        "description": " Discover More Reserve Watches"
     },
     "how_to_reserve": {
-        "title": "How to Pre-Order at The Watch Collections?",
+        "title": "How to Reserve at The Watch Collections?",
         "steps": {
             "1": {
                 "title": "Choose your Timepiece",
@@ -43,8 +42,8 @@
         }
     },
     "cta": {
-        "title": "Pre-Order Your Watch Now",
-        "description": "Explore and choose from the world’s luxury timepieces",
-        "button": "Pre-Order Now"
+        "title": "Reserve Your Watch Now",
+        "description": "Explore and choose from the world\u2019s luxury timepieces",
+        "button": "Reserve Now"
     }
 }
