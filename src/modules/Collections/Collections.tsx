@@ -9,6 +9,7 @@ import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 const TAB_MAP = {
     watches: 0,
@@ -34,6 +35,7 @@ const Collections = () => {
     const [isInitialized, setIsInitialized] = useState(false)
 
     const router = useRouter()
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
     const setFilter = useCollectionsFilterStore.useSetFilter()
     const resetFilters = useCollectionsFilterStore.useResetFilters()
 
@@ -59,7 +61,7 @@ const Collections = () => {
             if (append) setIsLoadingMore(true)
             else setIsLoading(true)
 
-            const perPage = 10
+            const perPage = isMobile ? 6 : 9
             const baseParams: string[] = [`page=${pageToFetch}`, `per_page=${perPage}`, `category=${categoryId}`]
 
             // Build filter queries using shared function from useProduct.ts

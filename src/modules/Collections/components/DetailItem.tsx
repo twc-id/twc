@@ -391,18 +391,18 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     // Helper function to get meta value by key
     const getMetaValue = (key: string) => product?.meta_data?.find((m: any) => String(m.key) === key)?.value || ''
 
-    // Define the desired order for Basic Info
+    // Define the desired order for Basic Info (odd left, even right)
     const basicInfoOrder: Array<{ label: string; key?: string; valueFn?: () => string }> = [
-        { label: 'Listing code', valueFn: () => getMetaValue('basic-info-listing-code') },
         { label: 'Brand', valueFn: () => product?.brands?.[0]?.name || '' },
+        { label: 'Listing code', valueFn: () => getMetaValue('basic-info-listing-code') },
         { label: 'Model', key: 'basic-info-model' },
         { label: 'Reference number', valueFn: () => getMetaValue('reference') },
         { label: 'Case material', key: 'basic-info-case-material' },
-        { label: 'Year of product', valueFn: () => getMetaValue('basic-info-year-production') },
-        { label: 'Gender', key: 'basic-info-gender' },
         { label: 'Bracelet material', key: 'basic-info-bracelet-material' },
-        { label: 'Condition', key: 'basic-info-condition' },
+        { label: 'Product year', valueFn: () => getMetaValue('basic-info-year-production') },
+        { label: 'Gender', key: 'basic-info-gender' },
         { label: 'Status', key: 'basic-info-status' },
+        { label: 'Condition', key: 'basic-info-condition' },
         { label: 'Scope of delivery', key: 'basic-info-scope-of-delivery' }
     ]
 
@@ -416,23 +416,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
     // If product has explicit `is_new` flag, override the condition value
     if (isNewFlag === true) {
-        const conditionIdx = basicItems.findIndex((i) => i.label === 'condition')
+        const conditionIdx = basicItems.findIndex((i) => i.label.toLowerCase() === 'condition')
         if (conditionIdx > -1) {
             basicItems[conditionIdx].value = 'Brand New / Unworn'
         }
     }
 
-    // Other meta groups
-    const caliberValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('caliber-')) || []
-    const breceletValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('bracelet-')) || []
-    const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
-    const accessoriesDetailsValue =
-        product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-details')) || []
+    // Define the desired order for Caliber
+    const caliberOrder: Array<{ label: string; key: string }> = [
+        { label: 'Movement', key: 'caliber-movement' },
+        { label: 'Caliber/Movement', key: 'caliber-caliber-movement' },
+        { label: 'Base Caliber', key: 'caliber-base-caliber' },
+        { label: 'Power Reserve', key: 'caliber-power-reserve' },
+        { label: 'Number of Jewels', key: 'caliber-number-of-jewels' }
+    ]
 
-    const caliberItems = caliberValue.map((meta: any) => ({
-        label: meta.key.replace('caliber-', '').replace(/-/g, ' '),
-        value: meta.value
-    }))
+    // Build caliberItems in the defined order, only including items with values
+    const caliberItems = caliberOrder
+        .map((item) => ({
+            label: item.label,
+            value: getMetaValue(item.key)
+        }))
+        .filter((item) => item.value !== '')
 
     // Define the desired order for Case
     const caseOrder: Array<{ label: string; key: string }> = [
@@ -442,7 +447,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         { label: 'Dial numerals', key: 'case-dial-numerals' },
         { label: 'Bezel material', key: 'case-bezel-material' },
         { label: 'Crystal', key: 'case-crystal' },
-        { label: 'water resistance', key: 'case-water-resistance' }
+        { label: 'Water resistance', key: 'case-water-resistance' }
     ]
 
     // Build caseItems in the defined order, only including items with values
@@ -453,10 +458,26 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         }))
         .filter((item) => item.value !== '')
 
-    const breceletItems = breceletValue.map((meta: any) => ({
-        label: meta.key.replace('bracelet-', '').replace(/-/g, ' '),
-        value: meta.value
-    }))
+    // Define the desired order for Bracelet/Strap
+    const braceletOrder: Array<{ label: string; key: string }> = [
+        { label: 'Material', key: 'bracelet-material' },
+        { label: 'Color', key: 'bracelet-color' },
+        { label: 'Clasp system', key: 'bracelet-clasp' },
+        { label: 'Clasp material', key: 'bracelet-clasp-material' }
+    ]
+
+    // Build braceletItems in the defined order, only including items with values
+    const braceletItems = braceletOrder
+        .map((item) => ({
+            label: item.label,
+            value: getMetaValue(item.key)
+        }))
+        .filter((item) => item.value !== '')
+
+    // Get accessories items from meta_data
+    const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
+    const accessoriesDetailsValue =
+        product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-details')) || []
 
     const accessoriesItems = accessoriesValue.map((meta: any) => ({
         label: meta.key.replace('accessories-type', '').replace(/-/g, ' '),
@@ -601,10 +622,10 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         return `<div class='grid grid-rows-2 grid-cols-2 justify-between gap-y-6'>${parts.join('')}</div>`
     })()
 
-    const breceletHtml = (() => {
-        if (!breceletItems || breceletItems.length === 0) return 'No bracelet info available.'
+    const braceletHtml = (() => {
+        if (!braceletItems || braceletItems.length === 0) return 'No bracelet info available.'
 
-        const parts = breceletItems.map((item: any) => {
+        const parts = braceletItems.map((item: any) => {
             const label = String(item.label)
             return `
                 <div class='flex flex-col gap-2'>
@@ -676,7 +697,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             },
             {
                 title: 'Bracelet/strap',
-                content: breceletHtml
+                content: braceletHtml
             }
         ]
     } else {

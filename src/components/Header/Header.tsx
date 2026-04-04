@@ -1341,7 +1341,7 @@ const Headers = () => {
                                                             {!product.purchasable && (
                                                                 <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
                                                                     <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
-                                                                        Pre-order
+                                                                        Reservable
                                                                     </span>
                                                                 </div>
                                                             )}

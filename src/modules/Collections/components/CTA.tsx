@@ -97,7 +97,7 @@ const CTA = ({ image }: { image?: string }) => {
                             height={0}
                             sizes='100vw'
                             className='h-full w-full'
-                            style={{ objectFit: 'contain' }}
+                            style={{ objectFit: 'cover' }}
                         />
                         <div
                             className='absolute inset-0'
