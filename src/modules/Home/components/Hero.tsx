@@ -30,7 +30,7 @@ const Hero = () => {
     const [isVisible, setIsVisible] = useState(true)
     const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
-    const { assets } = useAssets()
+    const { assets, isLoading } = useAssets()
     const router = useRouter()
     const lang = router.locale ?? router.defaultLocale ?? 'en'
 
@@ -185,25 +185,29 @@ const Hero = () => {
                                 ref={h3RefFirst}
                                 className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white uppercase'
                             >
-                                {heroSlides &&
+                                {!isLoading &&
+                                    heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
                             </h3>
-                            <h1
-                                ref={h1Ref}
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
-                            >
-                                <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {heroSlides &&
-                                        heroSlides[activeIndex] &&
-                                        heroSlides[activeIndex].video_banner?.[lang]?.title}
-                                </Trans>
-                            </h1>
+                            {!isLoading && (
+                                <h1
+                                    ref={h1Ref}
+                                    className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
+                                >
+                                    <Trans i18nKey='hero.title' components={{ br: <br /> }}>
+                                        {heroSlides &&
+                                            heroSlides[activeIndex] &&
+                                            heroSlides[activeIndex].video_banner?.[lang]?.title}
+                                    </Trans>
+                                </h1>
+                            )}
                             <h3
                                 ref={h3RefSecond}
                                 className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'
                             >
-                                {heroSlides &&
+                                {!isLoading &&
+                                    heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
                             </h3>
