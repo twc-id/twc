@@ -184,30 +184,29 @@ const Hero = () => {
                             <h3
                                 ref={h3RefFirst}
                                 className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white uppercase'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                {!isLoading &&
-                                    heroSlides &&
+                                {heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
                             </h3>
-                            {!isLoading && (
-                                <h1
-                                    ref={h1Ref}
-                                    className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
-                                >
-                                    <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                        {heroSlides &&
-                                            heroSlides[activeIndex] &&
-                                            heroSlides[activeIndex].video_banner?.[lang]?.title}
-                                    </Trans>
-                                </h1>
-                            )}
+                            <h1
+                                ref={h1Ref}
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
+                            >
+                                <Trans i18nKey='hero.title' components={{ br: <br /> }}>
+                                    {heroSlides &&
+                                        heroSlides[activeIndex] &&
+                                        heroSlides[activeIndex].video_banner?.[lang]?.title}
+                                </Trans>
+                            </h1>
                             <h3
                                 ref={h3RefSecond}
                                 className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                {!isLoading &&
-                                    heroSlides &&
+                                {heroSlides &&
                                     heroSlides[activeIndex] &&
                                     heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
                             </h3>
