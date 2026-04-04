@@ -10,7 +10,7 @@ import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 
@@ -54,6 +54,10 @@ const Wrapper: React.FC<WrapperProps> = ({
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const pinTriggerRef = useRef<any>(null)
+
+    // Cache contentScrollHeight so end function and onUpdate always use the same value.
+    // This prevents jump on refresh because the ratio CH/end stays constant.
+    const contentHeightCache = useRef(0)
 
     // Mobile filter modal state
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
@@ -108,27 +112,34 @@ const Wrapper: React.FC<WrapperProps> = ({
                 onLeave: () => {
                     setIsPin(false)
                 },
+                markers: true,
+                pin: true,
+                preventOverlaps: true,
+                scrub: true,
                 end: () => {
                     const contentEl: any = contentRef.current
+
                     if (!contentEl) return '+=100%'
-                    // Calculate the scrollable height of content
-                    const contentScrollHeight = contentEl.scrollHeight - contentEl.clientHeight
-                    return `+=${contentScrollHeight + window.innerHeight}`
+                    const ch = contentEl.scrollHeight - contentEl.clientHeight
+                    // Update cache — onUpdate uses this same value, so scrollTop stays consistent on refresh
+                    contentHeightCache.current = ch
+                    // Use a reasonable default while content is still loading (ch ≈ 0)
+                    if (ch <= 0) return '+=800'
+                    return `+=${ch}`
                 },
-                pin: true,
-                pinSpacing: true,
-                id: 'collections-wrapper-top-pin',
+
+                // // pinSpacing: true,
+                // id: 'collections-wrapper-top-pin',
                 onUpdate: (self) => {
                     const contentEl: any = contentRef.current
                     if (!contentEl) return
 
-                    // Calculate how much we should scroll the content
-                    const contentScrollHeight = contentEl.scrollHeight - contentEl.clientHeight
-                    const scrollAmount = self.progress * contentScrollHeight
-
-                    // Apply scroll to content
-                    contentEl.scrollTop = scrollAmount
+                    // Use cached value — same as what end function evaluated
+                    const ch = contentHeightCache.current || contentEl.scrollHeight - contentEl.clientHeight
+                    const scrollAmount = self.progress * ch
+                    contentEl.scrollTop = self.progress === 1 ? ch : scrollAmount
                 }
+                // anticipatePin: 1
             })
 
             return () => {
@@ -207,17 +218,26 @@ const Wrapper: React.FC<WrapperProps> = ({
         }
     }, [isMobile, headerHeight])
 
-    // Refresh ScrollTrigger when data changes (e.g., "Show More" is clicked)
+    // Refresh ScrollTrigger when data changes — cache keeps end and onUpdate in sync
     useEffect(() => {
         if (!isMobile && data && data.length > 0) {
-            // Wait for DOM to update, then refresh ScrollTrigger
             const timeout = setTimeout(() => {
                 ScrollTrigger.refresh()
             }, 100)
-
             return () => clearTimeout(timeout)
         }
     }, [data, isMobile])
+
+    // When Show More starts loading, skeletons render → scrollHeight increases.
+    // Refresh immediately so cache picks up the new height BEFORE real products arrive.
+    // When real products replace skeletons, scrollHeight stays similar → no jump.
+    useLayoutEffect(() => {
+        if (isMobile || !isLoadingMore) return
+        const raf = requestAnimationFrame(() => {
+            ScrollTrigger.refresh()
+        })
+        return () => cancelAnimationFrame(raf)
+    }, [isLoadingMore, isMobile])
 
     return (
         <>
@@ -287,7 +307,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                   ) as unknown as React.ReactNode)
                 : null}
 
-            <Container className='relative flex flex-col gap-7 xl:gap-10 ' ref={sectionRef}>
+            <Container className='relative flex flex-col gap-7 xl:gap-10 xl:pb-11' ref={sectionRef}>
                 <div
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
@@ -375,8 +395,9 @@ const Wrapper: React.FC<WrapperProps> = ({
                         </>
                     )
                 })()}
+
                 {hasMore && (
-                    <div className='mt-6 flex flex-col items-center gap-5'>
+                    <div className=' flex flex-col items-center gap-5'>
                         {typeof total === 'number' && (
                             <span className='text-grey-500 xl:text-paragraph-7-desktop text-paragraph-7-mobile text-center'>
                                 {data?.length ?? 0}/{total}
