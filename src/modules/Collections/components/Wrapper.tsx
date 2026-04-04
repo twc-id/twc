@@ -112,7 +112,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                 onLeave: () => {
                     setIsPin(false)
                 },
-                markers: true,
+                markers: false,
                 pin: true,
                 preventOverlaps: true,
                 scrub: true,
