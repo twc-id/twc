@@ -19,7 +19,7 @@ interface ArticleProps {
 }
 
 const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 1 }) => {
-    const { t } = useTranslation('articles')
+    const { t, i18n } = useTranslation('articles')
     const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
@@ -32,7 +32,8 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
             tags: selectedTagId || undefined,
             page,
             per_page: 12,
-            _embed: true
+            _embed: true,
+            lang: i18n.language
         },
         {
             enabled: selectedTagId !== null
@@ -99,7 +100,9 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                     {selectedTagId === null && !isMobile && (
                         <ArticleHero initialArticles={heroArticles} page={page} isLoading={isLoading} />
                     )}
-                    <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
+                    {remainingArticles.data.length > 0 && (
+                        <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
+                    )}
                     <ArticleCTA image={ctaImage} />
                 </div>
                 <BackToTop />
