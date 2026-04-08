@@ -768,7 +768,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     <div
                         ref={scrollRef as any}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row gap-6 overflow-x-auto scroll-smooth px-4 xl:ml-4 xl:snap-y xl:flex-col xl:overflow-y-auto xl:px-0'
-                        style={{ maxHeight: 'calc(100vh - 240px)', willChange: 'scroll-position' }}
+                        style={{ maxHeight: 'calc(100vh - 300px)', willChange: 'scroll-position' }}
                     >
                         {product.images.length > 0 ? (
                             product.images.map((img: any, index: number) => (

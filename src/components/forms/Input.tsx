@@ -201,7 +201,7 @@ const MaskedStyledInput = IMaskMixin(({ inputRef, ...props }) => {
             ref={inputRef as React.Ref<HTMLInputElement>}
             className={classNames(
                 inputId,
-                'text-grey-200 hover:border-outline-color-teal focus:!caret-grey-700 dark:focus:!caret-grey-700 placeholder:!text-grey-200 placeholder:dark:!text-grey-200 h-[-webkit-fill-available] w-full flex-1 border-none bg-[transparent] !outline-none !ring-transparent',
+                'text-grey-200 hover:border-outline-color-teal focus:!caret-grey-700 dark:focus:!caret-grey-700 placeholder:!text-grey-200 placeholder:dark:!text-grey-200 w-full flex-1 border-none bg-[transparent] !outline-none !ring-transparent',
                 {
                     'cursor-not-allowed': props.disabled
                 },
