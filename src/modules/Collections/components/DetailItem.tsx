@@ -859,16 +859,19 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                 )}
 
                                 <div className='flex flex-row flex-wrap gap-1 pt-2 xl:pt-0'>
-                                    {product.tags.map((item: any) => (
-                                        <div
-                                            className='border-grey-500 flex items-center rounded-full border'
-                                            key={item.name}
-                                        >
-                                            <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
-                                                {item.name}
-                                            </span>
-                                        </div>
-                                    ))}
+                                    {['basic-info-scope-of-delivery', 'basic-info-status', 'basic-info-year-production']
+                                        .map((key) => product?.meta_data?.find((m: any) => m.key === key))
+                                        .filter((m: any) => m && m.value && m.value !== '-')
+                                        .map((item: any) => (
+                                            <div
+                                                className='border-grey-500 flex items-center rounded-full border'
+                                                key={item.key}
+                                            >
+                                                <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
+                                                    {item.value}
+                                                </span>
+                                            </div>
+                                        ))}
                                 </div>
                                 <div ref={priceRef as any} className='hidden flex-col gap-2 pt-6 xl:flex xl:gap-3'>
                                     {product.price !== '' && (
