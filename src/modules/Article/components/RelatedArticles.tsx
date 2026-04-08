@@ -3,6 +3,7 @@ import Container from '@components/Container'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { ArticlesResponse } from '@hooks/useArticle'
 import ArticleCard from '@modules/Article/components/ArticleCard'
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 
 interface RelatedArticlesProps {
@@ -10,15 +11,16 @@ interface RelatedArticlesProps {
 }
 
 const RelatedArticles: React.FC<RelatedArticlesProps> = ({ article }) => {
+    const { t } = useTranslation(['articles', 'common'])
     return (
         <div className='bg-grey-black py-14 xl:py-[116px]'>
             <Container className='flex flex-col gap-14 xl:gap-20 '>
                 <div className='flex flex-row items-center justify-between'>
                     <h2 className='text-grey-white xl:text-heading-2-desktop text-heading-2-mobile'>
-                        Continue Reading
+                        {t('articles:continue_reading')}
                     </h2>
                     <UnstyledLink href='/articles'>
-                        <Button>See More</Button>
+                        <Button>{t('common:see_more')}</Button>
                     </UnstyledLink>
                 </div>
                 <div className='flex flex-row items-center'>

@@ -1,10 +1,8 @@
-import { API_WP_URL } from '@constant/env'
 import { defaultLanguage } from '@constant/i18n'
 import { Article as ArticleType, articleKeys } from '@hooks/useArticle'
 import ArticleDetail from '@modules/Article/ArticleDetailPage'
 import blogFetchApi from '@pages/api/blogApi'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -52,16 +50,18 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     }
 
     try {
-        // Fetch article by slug via custom endpoint with Polylang language support
-        const response = await axios.get(`${API_WP_URL}../../custom/v1/post`, {
+        // Fetch article by slug with language support
+        const response = await blogFetchApi<ArticleType[]>({
+            url: '/posts',
+            method: 'GET',
             params: {
                 slug,
-                lang: locale || defaultLanguage,
-                _embed: true
+                _embed: true,
+                lang: locale || defaultLanguage
             }
         })
 
-        article = response.data
+        article = response.data[0]
 
         if (!article) {
             return {

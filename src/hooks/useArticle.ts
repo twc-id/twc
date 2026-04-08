@@ -160,7 +160,7 @@ export const useArticles = (
     options?: Omit<UseQueryOptions<ArticlesResponse, AxiosError>, 'queryKey' | 'queryFn'>
 ) => {
     const config: AxiosRequestConfig = {
-        url: '../../custom/v1/posts',
+        url: '/posts',
         method: 'GET',
         params: {
             per_page: 10,

@@ -167,6 +167,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                             left: 50%;
 
                             height: auto;
+                            width: 70%;
                         }
                     }
 

@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     try {
         // Prefetch articles (custom endpoint with Polylang support)
         const articlesData = await blogFetchApi({
-            url: '../../custom/v1/posts',
+            url: '/posts',
             method: 'GET',
             params: {
                 page,
@@ -34,7 +34,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
             url: '/tags',
             method: 'GET',
             params: {
-                per_page: 100
+                per_page: 100,
+                lang: locale || defaultLanguage
             }
         })
 
