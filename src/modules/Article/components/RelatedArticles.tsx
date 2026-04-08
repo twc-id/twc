@@ -12,6 +12,7 @@ interface RelatedArticlesProps {
 
 const RelatedArticles: React.FC<RelatedArticlesProps> = ({ article }) => {
     const { t } = useTranslation(['articles', 'common'])
+    const articleSlice = article?.data.slice(0, 3) || []
     return (
         <div className='bg-grey-black py-14 xl:py-[116px]'>
             <Container className='flex flex-col gap-14 xl:gap-20 '>
@@ -25,7 +26,7 @@ const RelatedArticles: React.FC<RelatedArticlesProps> = ({ article }) => {
                 </div>
                 <div className='flex flex-row items-center'>
                     <div className='grid w-full grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-10'>
-                        {article?.data?.map((item) => (
+                        {articleSlice?.map((item) => (
                             <UnstyledLink key={item.id} href={`/articles/${item.slug}`}>
                                 <ArticleCard
                                     article={item}
