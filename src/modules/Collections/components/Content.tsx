@@ -46,7 +46,7 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, c
         >
             <If condition={products && products.length > 0}>
                 <Then>
-                    <div className='grid grid-cols-2 grid-rows-2 gap-x-2 gap-y-8 xl:grid-cols-3 xl:grid-rows-3'>
+                    <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3'>
                         {products.map((item: any) => (
                             <UnstyledLink
                                 href={`/collections/${item.slug}`}
@@ -60,7 +60,7 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, c
                                 }}
                             >
                                 <div
-                                    className='relative flex flex-col items-center gap-1 overflow-hidden xl:gap-3'
+                                    className='relative flex flex-col items-center gap-1 overflow-hidden pb-6 xl:gap-3 xl:pb-8'
                                     key={item.name}
                                 >
                                     <div className='relative h-[168px] w-[168px] overflow-hidden xl:h-[318px] xl:w-[318px]'>
