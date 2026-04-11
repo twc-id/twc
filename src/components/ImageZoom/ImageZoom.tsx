@@ -65,12 +65,12 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                         <button
                             key={i}
                             onClick={() => handleThumbClick(i)}
-                            className={classNames('w-[92px] transition-opacity focus:outline-none', {
+                            className={classNames('h-[92px] w-[92px] transition-opacity focus:outline-none', {
                                 'opacity-100': i === index,
                                 'opacity-50': i !== index
                             })}
                         >
-                            <div className='h-[110px] w-[92px]'>
+                            <div className='h-[92px] w-[92px]'>
                                 <Image
                                     src={img.src}
                                     alt={img.alt || `thumb-${i}`}
@@ -86,21 +86,22 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
 
                 {/* Main viewport */}
                 <div className='relative flex h-full w-full flex-col items-center justify-start'>
-                    <div className='h-full w-full'>
+                    <div className='h-full w-full '>
                         <TransformWrapper
                             ref={wrapperRef as any}
                             doubleClick={{ disabled: true }}
                             pinch={{ disabled: isMobile }}
                             wheel={{ disabled: isMobile }}
-                            minScale={0.5}
-                            maxScale={4}
-                            onTransformed={(ref, state) => {
+                            initialScale={1}
+                            minScale={1}
+                            maxScale={2}
+                            onTransformed={(_, state) => {
                                 setScale(state.scale)
                             }}
                         >
-                            {({ zoomIn, zoomOut }) => (
+                            {() => (
                                 <>
-                                    <div className='flex w-full items-center justify-center'>
+                                    <div className='flex w-full items-center justify-center xl:h-full'>
                                         <TransformComponent
                                             contentClass='!w-full !h-full'
                                             wrapperClass='!w-full !h-full'
@@ -109,10 +110,10 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                                 style={{ cursor: scale > 1 ? 'grab' : 'zoom-in' }}
                                                 onClick={() => {
                                                     if (scale <= 1 && wrapperRef.current) {
-                                                        wrapperRef.current.zoomIn()
+                                                        wrapperRef.current.centerView(2)
                                                     }
                                                 }}
-                                                className='flex h-full max-h-screen min-h-[calc(95dvh-140px)] w-full items-center justify-center xl:[min-height:auto]'
+                                                className='flex h-full max-h-screen min-h-[calc(95dvh-140px)] w-full items-center justify-center xl:min-h-full'
                                             >
                                                 <Image
                                                     src={current?.src || ''}
@@ -120,7 +121,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                                     width={0}
                                                     height={0}
                                                     sizes='100vw'
-                                                    className='h-full w-auto object-contain'
+                                                    className='h-full w-auto object-contain xl:h-[745px]'
                                                 />
                                             </div>
                                         </TransformComponent>
@@ -128,15 +129,33 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
 
                                     <div className='bg-dropdown-menu-overlay absolute bottom-[25%] left-1/2 flex w-fit -translate-x-1/2 transform items-center justify-center gap-6 rounded-full xl:bottom-14'>
                                         <button
-                                            onClick={() => zoomOut()}
-                                            className=' text-grey-white  py-2 pl-4 focus:outline-none'
+                                            onClick={() => {
+                                                if (wrapperRef.current) {
+                                                    wrapperRef.current.centerView(1)
+                                                }
+                                            }}
+                                            disabled={scale <= 1}
+                                            className={classNames(
+                                                'py-2 pl-4 focus:outline-none',
+                                                scale <= 1 ? 'text-grey-white/30 cursor-not-allowed' : 'text-grey-white'
+                                            )}
                                         >
                                             −
                                         </button>
-                                        <div className=' text-grey-white py-2'>{Math.round((scale || 1) * 100)}%</div>
+                                        <div className=' text-grey-white py-2'>
+                                            {Math.round(((scale || 1) / 1) * 100)}%
+                                        </div>
                                         <button
-                                            onClick={() => zoomIn()}
-                                            className=' text-grey-white py-2 pr-4 focus:outline-none'
+                                            onClick={() => {
+                                                if (wrapperRef.current) {
+                                                    wrapperRef.current.centerView(2)
+                                                }
+                                            }}
+                                            disabled={scale >= 2}
+                                            className={classNames(
+                                                'py-2 pr-4 focus:outline-none',
+                                                scale >= 2 ? 'text-grey-white/30 cursor-not-allowed' : 'text-grey-white'
+                                            )}
                                         >
                                             +
                                         </button>
@@ -156,7 +175,7 @@ const ImageZoom: React.FC<Props> = ({ images = [], open, initialIndex = 0, onClo
                                         'opacity-50': i !== index
                                     })}
                                 >
-                                    <div className='h-[110px] w-[92px] '>
+                                    <div className='h-[92px] w-[92px] '>
                                         <Image
                                             src={img.src}
                                             alt={img.alt || `thumb-${i}`}

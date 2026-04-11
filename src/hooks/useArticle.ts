@@ -134,6 +134,7 @@ export interface ArticleParams {
     exclude?: number | string
     _fields?: string
     _embed?: boolean
+    lang?: string
 }
 
 // Query keys factory
@@ -152,7 +153,7 @@ export const articleKeys = {
 // Hooks
 
 /**
- * Fetch list of articles with pagination and filters
+ * Fetch list of articles with pagination and filters (custom endpoint with Polylang support)
  */
 export const useArticles = (
     params: ArticleParams = {},
@@ -162,8 +163,8 @@ export const useArticles = (
         url: '/posts',
         method: 'GET',
         params: {
-            _embed: true,
             per_page: 10,
+            _embed: true,
             ...params
         }
     }
@@ -183,13 +184,15 @@ export const useArticles = (
  */
 export const useArticle = (
     id: number,
+    params?: { lang?: string },
     options?: Omit<UseQueryOptions<Article, AxiosError>, 'queryKey' | 'queryFn'>
 ) => {
     const config: AxiosRequestConfig = {
         url: `/posts/${id}`,
         method: 'GET',
         params: {
-            _embed: true
+            _embed: true,
+            ...params
         }
     }
 

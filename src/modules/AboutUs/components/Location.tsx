@@ -44,7 +44,7 @@ const Location = () => {
                         </h2>
                         <div className=' flex flex-row gap-2'>
                             <Icons icon='Pin' width={24} height={24} />
-                            <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'>
+                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
                                 Jl. Pantai Mutiara Regatta Blok TG1 B-C, Pluit, Kecamatan Penjaringan, Jakarta Utara,
                                 Daerah Khusus Ibukota Jakarta 14450
                             </p>
@@ -56,7 +56,7 @@ const Location = () => {
                                     href='mailto:support@thewatchcollections.com'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
+                                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'
                                 >
                                     support@thewatchcollections.com
                                 </a>
@@ -67,7 +67,7 @@ const Location = () => {
                                     href={getWhatsAppLinkFromTemplate('aboutUs')}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
+                                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'
                                 >
                                     +62 812 1396 688
                                 </a>
@@ -78,7 +78,7 @@ const Location = () => {
                                     href='https://instagram.com/thewatchcollections'
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'
+                                    className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'
                                 >
                                     @thewatchcollections
                                 </a>
@@ -103,7 +103,7 @@ const Location = () => {
                                 href='mailto:support@thewatchcollections.com'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-paragraph-6-desktop text-grey-500'
+                                className='text-paragraph-7-desktop text-grey-500'
                             >
                                 support@thewatchcollections.com
                             </a>
@@ -114,7 +114,7 @@ const Location = () => {
                                 href={getWhatsAppLinkFromTemplate('aboutUs')}
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-paragraph-6-desktop text-grey-500'
+                                className='text-paragraph-7-desktop text-grey-500'
                             >
                                 +62 812 1396 688
                             </a>
@@ -125,7 +125,7 @@ const Location = () => {
                                 href='https://instagram.com/thewatchcollections'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-paragraph-6-desktop text-grey-500'
+                                className='text-paragraph-7-desktop text-grey-500'
                             >
                                 @thewatchcollections
                             </a>

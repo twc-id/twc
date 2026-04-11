@@ -86,15 +86,15 @@ const Suggestion = ({ products }: SuggestionProps) => {
 
                                     {!p.purchasable && (
                                         <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
-                                            <span className='text-grey-white xl:text-paragraph-11-desktop text-paragraph-11-mobile !leading-none'>
-                                                Pre-order
+                                            <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
+                                                Reservable
                                             </span>
                                         </div>
                                     )}
 
                                     <div className='flex flex-col gap-1 text-center'>
                                         <p
-                                            className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 uppercase'
+                                            className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-200 uppercase'
                                             dangerouslySetInnerHTML={{
                                                 __html: sanitizeHtml(`
                                                 ${p.brands?.[0]?.name || ''}
@@ -112,7 +112,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                         <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
                                             {p.name}
                                         </h3>
-                                        <p className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-500'>
+                                        <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
                                             {p?.meta_data?.key?.startsWith('pre-owned-') &&
                                                 t('home:highlight.pre_owned', {
                                                     year: p.meta_data.find((meta: any) =>
@@ -121,7 +121,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                                 })}
                                         </p>
                                         {p.purchasable && (
-                                            <p className='xl:text-paragraph-4-desktop text-paragraph-4-mobile text-accent-price-dark'>
+                                            <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
                                                 {/* IDR {parseInt(p.price).toLocaleString('id-ID')} */}
                                                 {formatRupiah(p.price)}
                                             </p>

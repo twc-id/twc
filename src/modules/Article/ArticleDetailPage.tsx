@@ -1,9 +1,11 @@
 import Container from '@components/Container'
 import Seo from '@components/Seo'
 import { Article as ArticleType, useRelatedArticles } from '@hooks/useArticle'
+import { useAssets } from '@hooks/useAsset'
 import { WooCommerce } from '@lib/api'
 import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import RelatedArticles from '@modules/Article/components/RelatedArticles'
+import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import { When } from 'react-if'
 import { useMediaQuery } from 'react-responsive'
@@ -15,13 +17,18 @@ interface ArticleDetailPageProps {
 }
 
 const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
+    const { i18n } = useTranslation()
     const { data: relatedArticles } = useRelatedArticles(
         article.id,
-        article._embedded?.['wp:term']?.[0]?.map((term) => term.id) || []
+        article._embedded?.['wp:term']?.[0]?.map((term) => term.id) || [],
+        { lang: i18n.language }
     )
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const { assets } = useAssets()
+    const ctaImage = assets?.find((asset) => asset.name === 'article-1')?.media.url
+
     const fetchDefaultSuggestions = async () => {
         try {
             setIsLoading(true)
@@ -48,7 +55,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
                 <RelatedArticles article={relatedArticles} />
             </When>
             <Container className='pb-14 xl:pb-[116px]'>
-                <ArticleCTA />
+                <ArticleCTA image={ctaImage} />
             </Container>
         </>
     )

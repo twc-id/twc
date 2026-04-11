@@ -6,7 +6,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
     try {
         // Fetch first 50 articles to generate paths
         const response = await blogFetchApi<ArticleType[]>({
@@ -18,9 +18,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
             }
         })
 
-        const paths = response.data.map((article) => ({
-            params: { slug: article.slug }
-        }))
+        const paths = response.data.flatMap((article) =>
+            (locales || []).map((locale) => ({
+                params: { slug: article.slug },
+                locale
+            }))
+        )
 
         return {
             paths,
@@ -47,13 +50,14 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     }
 
     try {
-        // Fetch article by slug
+        // Fetch article by slug with language support
         const response = await blogFetchApi<ArticleType[]>({
             url: '/posts',
             method: 'GET',
             params: {
                 slug,
-                _embed: true
+                _embed: true,
+                lang: locale || defaultLanguage
             }
         })
 

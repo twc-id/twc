@@ -1,6 +1,7 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import { useComponentVisibility } from '@hooks/useComponentVisibility'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
@@ -12,10 +13,13 @@ import { useMediaQuery } from 'react-responsive'
 const Footer = () => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const router = useRouter()
+    const { data: visibility } = useComponentVisibility()
 
     const articlePath = router.pathname.startsWith('/articles/')
     const productDetailPath = router.pathname.startsWith('/collections/')
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+    const showStoreLocation = visibility?.footer_store_location ?? false
+    console.log(visibility)
 
     const items = [
         {
@@ -43,10 +47,14 @@ const Footer = () => {
                     title: 'Instagram',
                     href: 'https://instagram.com/thewatchcollections'
                 },
-                {
-                    title: 'Store Location',
-                    href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
-                }
+                ...(showStoreLocation
+                    ? [
+                          {
+                              title: 'Store Location',
+                              href: 'https://www.google.com/maps/place/TWC+-+The+Watch+Collections/data=!4m2!3m1!1s0x0:0x1783317c43ba9423?sa=X&ved=1t:2428&ictx=111'
+                          }
+                      ]
+                    : [])
             ]
         },
 
@@ -77,7 +85,7 @@ const Footer = () => {
                                 <Link href='/' className='!w-fit'>
                                     <Icons icon='LogoFullWhite' width={142} height={64} className='hidden xl:block' />
                                 </Link>
-                                <p className='text-paragraph-10-desktop text-grey-white'>
+                                <p className='text-paragraph-11-desktop text-grey-white'>
                                     © 2014 THE WATCH COLLECTIONS
                                 </p>
                             </div>
@@ -91,7 +99,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
                                                     if (link.title === 'Book an Appointment') {
                                                         articlePath || productDetailPath
@@ -116,7 +124,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
                                                     if (link.title === 'Instagram') {
                                                         articlePath || productDetailPath
@@ -141,7 +149,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -157,7 +165,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-desktop text-grey-white'
+                                                className='!text-button-4-desktop text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -182,7 +190,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -198,7 +206,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                                 onClick={() => {
                                                     articlePath || productDetailPath
                                                         ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
@@ -224,7 +232,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -240,7 +248,7 @@ const Footer = () => {
                                         <li key={link.title}>
                                             <UnstyledLink
                                                 href={link.href}
-                                                className='!text-button-4-mobile text-grey-white'
+                                                className='!text-button-4-mobile text-grey-white uppercase'
                                             >
                                                 {link.title}
                                             </UnstyledLink>
@@ -252,7 +260,7 @@ const Footer = () => {
                     </div>
                     {/* Footer Bottom */}
                     <div className='mt-12 flex flex-col items-start justify-between border-t border-gray-700 pt-6 md:mt-16 md:flex-row md:pt-8 xl:hidden xl:items-center'>
-                        <p className='text-paragraph-10-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
+                        <p className='text-paragraph-11-desktop text-grey-white'>© 2014 THE WATCH COLLECTIONS</p>
                         <div className='mt-4 hidden gap-6 md:mt-0 xl:flex'>
                             <UnstyledLink href='/privacy' className='text-button-5-desktop text-grey-white '>
                                 Privacy Policy

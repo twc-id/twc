@@ -96,7 +96,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                     >
                         <Container className='flex !w-[60%] flex-col items-center gap-4'>
                             <h1
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white relative z-10 text-center'
+                                className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-grey-white relative z-10 text-center'
                                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.title.rendered) }}
                             />
                             {/* Categories */}
@@ -106,19 +106,19 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                                         {categories.map((category) => (
                                             <span
                                                 key={category.id}
-                                                className='border-grey-white xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
+                                                className='border-grey-white xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-white rounded-full border-[0.5px] px-4 py-1.5 !leading-none'
                                                 dangerouslySetInnerHTML={{
                                                     __html: sanitizeHtml(category.name)
                                                 }}
                                             />
                                         ))}
                                     </div>
-                                    <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
+                                    <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white '>
                                         {formatDate(article.date, 'MMM, YYYY')}
                                     </span>
                                     <div className='bg-grey-white mb-1 h-[13px] w-[1px]' />
 
-                                    <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white '>
+                                    <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white '>
                                         {article.reading_time?.minutes} min read
                                     </span>
                                 </div>
@@ -167,6 +167,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                             left: 50%;
 
                             height: auto;
+                            width: 70%;
                         }
                     }
 

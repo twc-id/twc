@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import Seo from '@components/Seo'
 import { useAssets } from '@hooks/useAsset'
+import { useComponentVisibility } from '@hooks/useComponentVisibility'
 import React from 'react'
 
 import Commitment from './components/Commitment'
@@ -15,6 +16,8 @@ import TimePieceService from './components/TimePieceService'
 
 const Home = () => {
     const { assets } = useAssets()
+    const { data: visibility } = useComponentVisibility()
+
     const commitmentImage = assets?.find((asset) => asset.name === 'home-1')?.media?.url
     const journeyImage = assets?.find((asset) => asset.name === 'home-2')?.media?.url
     const ctaImage = assets?.find((asset) => asset.name === 'home-3')?.media?.url
@@ -25,6 +28,9 @@ const Home = () => {
     const service2Image = assets?.find((asset) => asset.name === 'home-service-7')?.media?.url
     const service3Image = assets?.find((asset) => asset.name === 'home-service-8')?.media?.url
 
+    const showTestimonial = visibility?.homepage_testimonial ?? false
+    const showNewInInstagram = visibility?.homepage_new_in_instagram ?? false
+
     return (
         <>
             <Seo />
@@ -34,9 +40,10 @@ const Home = () => {
             <SellReserve sell={sellImage} reserve={reviewImage} />
             <TimePieceService service1={service1Image} service2={service2Image} service3={service3Image} />
             <Journey image={journeyImage} />
-            <Review />
-            <SocialMedia />
-            <CTA image={ctaImage} />
+            {showTestimonial && <Review />}
+            {showNewInInstagram && <SocialMedia />}
+
+            <CTA image={ctaImage} showNewInInstagram={showNewInInstagram} />
         </>
     )
 }

@@ -1,5 +1,6 @@
 import Seo from '@components/Seo'
 import { useAssets } from '@hooks/useAsset'
+import { useComponentVisibility } from '@hooks/useComponentVisibility'
 import CTA from '@modules/Reserve/components/CTA'
 import Hero from '@modules/Reserve/components/Hero'
 import HowToReserve from '@modules/Reserve/components/HowToReserve'
@@ -11,6 +12,8 @@ import React from 'react'
 const Reserve = () => {
     const { t } = useTranslation('reserve')
     const { assets } = useAssets()
+    const { data: visibility } = useComponentVisibility()
+
     const heroImage1 = assets?.find((asset) => asset.name === 'reserve-1')?.media?.url
     const heroImage2 = assets?.find((asset) => asset.name === 'reserve-2')?.media?.url
     const heroImage3 = assets?.find((asset) => asset.name === 'reserve-3')?.media?.url
@@ -22,10 +25,18 @@ const Reserve = () => {
     const reserveImage4 = assets?.find((asset) => asset.name === 'reserve-10')?.media?.url
     const ctaImage = assets?.find((asset) => asset.name === 'reserve-11')?.media?.url
 
+    const showWatchTextSection = visibility?.reserve_watch_text_section ?? false
+
     return (
         <div className='bg-grey-black'>
             <Seo title={t('title')} />
-            <Hero heroImage1={heroImage1} heroImage2={heroImage2} heroImage3={heroImage3} imagePin={reserveImagePin} />
+            <Hero
+                heroImage1={heroImage1}
+                heroImage2={heroImage2}
+                heroImage3={heroImage3}
+                imagePin={reserveImagePin}
+                showWatchTextSection={showWatchTextSection}
+            />
             <ReserveTimepiece />
             <ImagePin image={imagePin} />
             <HowToReserve

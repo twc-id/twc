@@ -21,6 +21,8 @@ export const WhatsAppTemplates = {
     // 📦 Reserve Page
     howToPreOrder:
         'Hello TWC Team, I would like to know more about the pre-order process at The Watch Collections. Thank you.',
+    howToReserve:
+        'Hello TWC Team, I would like to know more about the reserve process at The Watch Collections. Thank you.',
     reserveMain:
         "Hello TWC Team, I'm interested in reserving a watch and would like more information. Could you please assist me?",
 

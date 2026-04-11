@@ -32,7 +32,7 @@ const ReserveTimepiece = () => {
     const getData = async () => {
         setIsLoading(true)
         try {
-            const response = await WooCommerce.get(`products?tag=54&category=15,16&per_page=10`)
+            const response = await WooCommerce.get(`products?tag=54&category=15&per_page=10`)
 
             setData(response.data)
         } catch (error) {
@@ -124,7 +124,7 @@ const ReserveTimepiece = () => {
                                                         }`}
                                                     >
                                                         <div className='flex flex-col items-center gap-2.5'>
-                                                            <div className='relative h-[473px] w-[300px] overflow-hidden'>
+                                                            <div className='relative h-[327px] w-[300px] overflow-hidden'>
                                                                 <Image
                                                                     src={
                                                                         product.images?.[0]?.src ||

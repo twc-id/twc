@@ -51,7 +51,7 @@ const Hero = ({ image }: { image?: string }) => {
                 <Container>
                     <div className='flex w-full flex-col   gap-6  xl:gap-2'>
                         <h1
-                            className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 xl:line-clamp-3'
+                            className='xl:text-heading-1-3-desktop text-heading-1-3-mobile text-grey-white line-clamp-4 xl:line-clamp-3'
                             ref={h1Ref}
                         >
                             <Trans i18nKey='collection:hero.title' components={{ br: <br className='' /> }}>
@@ -59,7 +59,7 @@ const Hero = ({ image }: { image?: string }) => {
                             </Trans>
                         </h1>
                         <p
-                            className='text-grey-200 xl:text-paragraph-5-desktop text-paragraph-5-mobile line-clamp-2 xl:w-[514px]'
+                            className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile line-clamp-2 xl:w-[514px]'
                             ref={paragraphRef}
                         >
                             {t('hero.description')}

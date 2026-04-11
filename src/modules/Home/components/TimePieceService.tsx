@@ -222,7 +222,7 @@ const TimePieceService = ({
                                             <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
+                                            <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile dark:text-grey-200 text-grey-500'>
                                                 <Trans i18nKey={`timepiece.items.${service.id}.description`}>
                                                     {service.description}
                                                 </Trans>
@@ -261,7 +261,7 @@ const TimePieceService = ({
                                             <h3 className='xl:text-subheading-2-desktop text-subheading-2-mobile dark:text-grey-white text-grey-black'>
                                                 {service.label}
                                             </h3>
-                                            <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
+                                            <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile dark:text-grey-200 text-grey-500'>
                                                 {service.description}
                                             </p>
                                         </div>

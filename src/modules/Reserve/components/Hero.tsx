@@ -1,5 +1,6 @@
 import Container from '@components/Container'
 import { useGSAP } from '@gsap/react'
+import classNames from '@lib/classnames'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -15,12 +16,14 @@ const Hero = ({
     heroImage1,
     heroImage2,
     heroImage3,
-    imagePin
+    imagePin,
+    showWatchTextSection
 }: {
     heroImage1?: string
     heroImage2?: string
     heroImage3?: string
     imagePin?: string
+    showWatchTextSection?: boolean
 }) => {
     const { t } = useTranslation('reserve')
     const [activeIndex, setActiveIndex] = useState(0)
@@ -353,14 +356,24 @@ const Hero = ({
                 </div>
             )}
             {/* Description */}
-            <Container>
-                <div className='flex flex-row justify-end pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]' ref={descriptionRef}>
-                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 line-clamp-2 text-left xl:w-[400px]'>
-                        {t('hero.description')}
-                    </p>
-                </div>
-            </Container>
-            <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
+            {showWatchTextSection && (
+                <Container>
+                    <div
+                        className='flex flex-row justify-end pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]'
+                        ref={descriptionRef}
+                    >
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 line-clamp-2 text-left xl:w-[400px]'>
+                            {t('hero.description')}
+                        </p>
+                    </div>
+                </Container>
+            )}
+            <div
+                ref={imageContainerRef}
+                className={classNames('relative z-0 h-[300px] xl:h-[560px]', {
+                    'mt-16 xl:mt-[160px]': !showWatchTextSection
+                })}
+            >
                 <Image src={imagePin || ''} alt='The Watch Collections' fill className='object-cover' unoptimized />
             </div>
         </section>

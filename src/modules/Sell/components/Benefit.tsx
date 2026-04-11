@@ -60,7 +60,7 @@ const Benefit = () => {
                                 <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile text-grey-black dark:text-grey-white'>
                                     {item.title}
                                 </h4>
-                                <span className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500 dark:text-grey-200'>
+                                <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500 dark:text-grey-200'>
                                     {item.description}
                                 </span>
                             </div>

@@ -70,7 +70,7 @@ const Service = ({ image }: { image?: string }) => {
                         <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white'>
                             {t('service.title')}
                         </h2>
-                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200 max-w-2xl'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200 max-w-2xl'>
                             <Trans i18nKey='service.description' components={{ br: <br className='mb-2' /> }}>
                                 {t('service.description')}
                             </Trans>
@@ -88,12 +88,12 @@ const Service = ({ image }: { image?: string }) => {
                 </div>
                 <div className='flex flex-col gap-8 text-center xl:max-w-[720px] xl:gap-10'>
                     <h3
-                        className='xl:text-paragraph-3-desktop text-paragraph-3-mobile text-grey-black dark:text-grey-white line-clamp-[7] xl:line-clamp-3'
+                        className='xl:text-paragraph-2-desktop text-paragraph-2-mobile text-grey-black dark:text-grey-white line-clamp-[7] xl:line-clamp-3'
                         ref={quoteRef}
                     >
                         {t('service.quote')}
                     </h3>
-                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200' ref={founderRef}>
+                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200' ref={founderRef}>
                         {t('service.founder')}
                     </p>
                 </div>

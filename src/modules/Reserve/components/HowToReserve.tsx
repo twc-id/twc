@@ -110,7 +110,7 @@ const HowToReserve = ({
 
     return (
         <section className='bg-grey-black relative' ref={sectionRef}>
-            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116ppx]'>
+            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
                     <div
                         className='flex w-full flex-col items-start justify-between gap-5 xl:flex-row xl:items-center'
@@ -120,7 +120,7 @@ const HowToReserve = ({
                             {t('how_to_reserve.title')}
                         </h1>
                         <a
-                            href={getWhatsAppLinkFromTemplate('howToPreOrder')}
+                            href={getWhatsAppLinkFromTemplate('howToReserve')}
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
@@ -156,7 +156,7 @@ const HowToReserve = ({
                                     <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile text-grey-white'>
                                         {item.title}
                                     </h4>
-                                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
+                                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'>
                                         {item.description}
                                     </p>
                                 </div>

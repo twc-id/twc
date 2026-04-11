@@ -15,7 +15,16 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
 }
 
-const HowToSell = () => {
+interface HowToSellProps {
+    images?: {
+        step1?: string
+        step2?: string
+        step3?: string
+        step4?: string
+        pin?: string
+    }
+}
+const HowToSell = ({ images }: HowToSellProps) => {
     const { t } = useTranslation('sell')
     const sectionRef = useRef<HTMLElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
@@ -28,22 +37,22 @@ const HowToSell = () => {
         {
             title: t('how_to_sell.steps.1.title'),
             description: t('how_to_sell.steps.1.description'),
-            image: '/images/sell/step-1.webp'
+            image: images?.step1 || '/images/sell/step-1.webp'
         },
         {
             title: t('how_to_sell.steps.2.title'),
             description: t('how_to_sell.steps.2.description'),
-            image: '/images/sell/step-2.webp'
+            image: images?.step2 || '/images/sell/step-2.webp'
         },
         {
             title: t('how_to_sell.steps.3.title'),
             description: t('how_to_sell.steps.3.description'),
-            image: '/images/sell/step-3.webp'
+            image: images?.step3 || '/images/sell/step-3.webp'
         },
         {
             title: t('how_to_sell.steps.4.title'),
             description: t('how_to_sell.steps.4.description'),
-            image: '/images/sell/step-4.webp'
+            image: images?.step4 || '/images/sell/step-4.webp'
         }
     ]
 
@@ -117,7 +126,7 @@ const HowToSell = () => {
 
     return (
         <section className='relative' ref={sectionRef}>
-            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116ppx]'>
+            <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
                     <div
                         className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'
@@ -162,7 +171,7 @@ const HowToSell = () => {
                                     <h4 className='xl:text-subheading-4-desktop text-subheading-4-mobile dark:text-grey-white text-grey-black'>
                                         {item.title}
                                     </h4>
-                                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile dark:text-grey-200 text-grey-500'>
+                                    <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile dark:text-grey-200 text-grey-500'>
                                         {item.description}
                                     </p>
                                 </div>
@@ -183,13 +192,7 @@ const HowToSell = () => {
                 </div>
             </Container>
             <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
-                <Image
-                    src='/images/sell/sell-pin.webp'
-                    alt='The Watch Collections'
-                    fill
-                    className='object-cover'
-                    unoptimized
-                />
+                <Image src={images?.pin || ''} alt='The Watch Collections' fill className='object-cover' unoptimized />
             </div>
         </section>
     )

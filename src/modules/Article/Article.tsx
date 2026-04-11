@@ -3,10 +3,12 @@ import Container from '@components/Container'
 import Seo from '@components/Seo'
 import Tabs, { Tab } from '@components/Tabs'
 import { ArticleTag, useArticles } from '@hooks/useArticle'
+import { useAssets } from '@hooks/useAsset'
 import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import ArticleHero from '@modules/Article/components/ArticleHero'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import ArticleList from './components/ArticleList'
@@ -18,9 +20,49 @@ interface ArticleProps {
 }
 
 const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 1 }) => {
-    const { t } = useTranslation('articles')
-    const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
+    const { t, i18n } = useTranslation('articles')
+    const router = useRouter()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const isReady = router.isReady
+
+    const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
+
+    // Restore selected tag from URL query param after hydration
+    useEffect(() => {
+        if (!isReady || !articleTags) return
+        const queryTag = router.query.tag as string | undefined
+        if (!queryTag) return
+
+        // Direct match by slug
+        const directMatch = articleTags.find((tag) => tag.slug === queryTag)
+        if (directMatch) {
+            setSelectedTagId(directMatch.id)
+            return
+        }
+        // Match by slug without -en suffix (Polylang pattern)
+        const baseSlug = queryTag.replace(/-en$/, '')
+        const slugMatch = articleTags.find((tag) => tag.slug === baseSlug || tag.slug === `${baseSlug}-en`)
+        if (slugMatch) {
+            setSelectedTagId(slugMatch.id)
+        }
+    }, [isReady, articleTags]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Sync URL query param when selected tag changes
+    const currentTagSlug = articleTags?.find((tag) => tag.id === selectedTagId)?.slug
+    useEffect(() => {
+        if (selectedTagId === null) {
+            if (router.query.tag) {
+                router.replace({ pathname: router.pathname, query: {} }, undefined, { scroll: false })
+            }
+        } else if (router.query.tag !== currentTagSlug) {
+            router.replace({ pathname: router.pathname, query: { ...router.query, tag: currentTagSlug } }, undefined, {
+                scroll: false
+            })
+        }
+    }, [selectedTagId, currentTagSlug, router.query.tag]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    const { assets } = useAssets()
+    const ctaImage = assets?.find((asset) => asset.name === 'article-1')?.media.url
 
     // Fetch articles based on selected tag
     const { data: filteredArticles, isLoading } = useArticles(
@@ -28,7 +70,8 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
             tags: selectedTagId || undefined,
             page,
             per_page: 12,
-            _embed: true
+            _embed: true,
+            lang: i18n.language
         },
         {
             enabled: selectedTagId !== null
@@ -67,7 +110,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
             <Container className='pt-[72px] xl:pt-20'>
                 <div className='flex min-h-screen flex-col gap-8 pb-12 pt-8 xl:gap-10 xl:pb-[116px]'>
                     <h1
-                        className='xl:text-heading-1-desktop text-heading-1-mobile text-[100px] leading-[90%]
+                        className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-[100px] leading-[90%]
                     '
                     >
                         {t('the_watch_journal')}
@@ -95,8 +138,10 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                     {selectedTagId === null && !isMobile && (
                         <ArticleHero initialArticles={heroArticles} page={page} isLoading={isLoading} />
                     )}
-                    <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
-                    <ArticleCTA />
+                    {(remainingArticles.data.length > 0 || selectedTagId !== null) && (
+                        <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
+                    )}
+                    <ArticleCTA image={ctaImage} />
                 </div>
                 <BackToTop />
             </Container>

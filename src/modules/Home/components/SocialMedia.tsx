@@ -174,7 +174,7 @@ const Instagram = () => {
                         >
                             {t('social_media.title')}
                         </h2>
-                        <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-500'>
+                        <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
                             @thewatchcollections
                         </p>
                         <a
@@ -269,7 +269,7 @@ const Instagram = () => {
                                             className='text-grey-900 hover:text-grey-500'
                                         />
 
-                                        <span className='text-grey-500 xl:text-paragraph-6-desktop text-paragraph-6-mobile'>
+                                        <span className='text-grey-500 xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
                                             {item.handle}
                                         </span>
                                     </a>

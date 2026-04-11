@@ -57,18 +57,23 @@ const Commitment = ({ image }: { image?: string }) => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-x-hidden'>
+        <section ref={sectionRef}>
             <div className='bg-grey-black relative  flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
                 <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
                     {t('commitment.title')}
                 </h1>
                 <Icons icon='Diamond' className='text-grey-100' />
-                <h3 ref={descRef} className='text-paragraph-6-mobile text-grey-100 xl:text-paragraph-6-desktop'>
+                <h3 ref={descRef} className='text-paragraph-7-mobile text-grey-100 xl:text-paragraph-7-desktop'>
                     {t('commitment.description')}
                 </h3>
             </div>
-            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[300px] overflow-hidden xl:h-[560px]'>
-                <Image src={image || '/images/home/commitment.webp'} alt='commitment' fill className='object-cover' />
+            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[290px] overflow-hidden xl:h-[560px]'>
+                <Image
+                    src={image || '/images/home/commitment.webp'}
+                    alt='commitment'
+                    fill
+                    className='h-[290px] object-cover object-bottom xl:h-[560px]'
+                />
             </div>
         </section>
     )

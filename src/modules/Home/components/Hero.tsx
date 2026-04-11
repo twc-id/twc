@@ -30,7 +30,7 @@ const Hero = () => {
     const [isVisible, setIsVisible] = useState(true)
     const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
-    const { assets } = useAssets()
+    const { assets, isLoading } = useAssets()
     const router = useRouter()
     const lang = router.locale ?? router.defaultLocale ?? 'en'
 
@@ -183,7 +183,8 @@ const Hero = () => {
                         <div className='flex flex-col justify-end gap-2'>
                             <h3
                                 ref={h3RefFirst}
-                                className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-white uppercase'
+                                className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white uppercase'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&
@@ -191,7 +192,8 @@ const Hero = () => {
                             </h3>
                             <h1
                                 ref={h1Ref}
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-3 w-[320px] xl:w-[700px]'
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
                                 <Trans i18nKey='hero.title' components={{ br: <br /> }}>
                                     {heroSlides &&
@@ -201,7 +203,8 @@ const Hero = () => {
                             </h1>
                             <h3
                                 ref={h3RefSecond}
-                                className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200'
+                                className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'
+                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
                                 {heroSlides &&
                                     heroSlides[activeIndex] &&

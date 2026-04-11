@@ -55,7 +55,7 @@ const CTA = ({ image }: { image?: string }) => {
                             </Trans>
                         </h2>
                         <p
-                            className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-100'
+                            className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-100'
                             ref={paragraphRef}
                         >
                             {t('cta.description')}
@@ -97,7 +97,7 @@ const CTA = ({ image }: { image?: string }) => {
                             height={0}
                             sizes='100vw'
                             className='h-full w-full'
-                            style={{ objectFit: 'contain' }}
+                            style={{ objectFit: 'cover' }}
                         />
                         <div
                             className='absolute inset-0'

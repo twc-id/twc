@@ -144,7 +144,7 @@ const Journey = ({ image }: { image?: string }) => {
     }, [])
 
     return (
-        <section ref={sectionRef} className='overflow-x-hidden'>
+        <section ref={sectionRef}>
             <Container className='pb-16 xl:pb-[116px]'>
                 <div className='flex w-full flex-col gap-4 xl:flex-row xl:justify-between'>
                     <div className='flex flex-shrink-0 flex-col gap-4'>
@@ -160,12 +160,12 @@ const Journey = ({ image }: { image?: string }) => {
                         </div>
                     </div>
                     <div className='flex  flex-col gap-6 xl:flex-row' ref={rightRef}>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile w-[400px]'>
                             <Trans i18nKey='journey.desc_1' components={{ br: <br /> }}>
                                 {t('journey.desc_1')}
                             </Trans>
                         </span>
-                        <span className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile w-[400px]'>
+                        <span className='text-grey-200 xl:text-paragraph-7-desktop text-paragraph-7-mobile w-[400px]'>
                             <Trans i18nKey='journey.desc_2' components={{ br: <br /> }}>
                                 {t('journey.desc_2')}
                             </Trans>
@@ -176,8 +176,14 @@ const Journey = ({ image }: { image?: string }) => {
                     </div>
                 </div>
             </Container>
-            <div ref={imageContainerRef} className='relative z-[11] h-[300px] w-full xl:h-[560px]'>
-                <Image src={image || ''} alt='journey' fill className='object-cover' unoptimized />
+            <div ref={imageContainerRef} className='relative z-[11] h-[290px] w-full xl:h-[560px]'>
+                <Image
+                    src={image || ''}
+                    alt='journey'
+                    fill
+                    className='h-[560px] object-cover object-bottom'
+                    unoptimized
+                />
             </div>
         </section>
     )
