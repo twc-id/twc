@@ -19,7 +19,6 @@ const Footer = () => {
     const productDetailPath = router.pathname.startsWith('/collections/')
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
     const showStoreLocation = visibility?.footer_store_location ?? false
-    console.log(visibility)
 
     const items = [
         {
