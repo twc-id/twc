@@ -27,7 +27,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, titleClassName, meta
                             src={featuredImage}
                             alt={article.title.rendered}
                             fill
-                            className=' transition-transform duration-300 group-hover:scale-105'
+                            className='object-cover transition-transform duration-300 group-hover:scale-105'
                         />
                     </div>
                 )}

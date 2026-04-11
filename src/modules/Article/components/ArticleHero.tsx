@@ -53,7 +53,7 @@ const ArticleHero: React.FC<ArticleHeroProps> = ({ initialArticles, isLoading: e
                                 // width={isFirstArticle ? 776 : 471}
                                 // height={isFirstArticle ? 554 : 337}
                                 fill
-                                className='transition-transform duration-300 group-hover:scale-105'
+                                className='object-cover transition-transform duration-300 group-hover:scale-105'
                             />
                         </div>
                         <h3 className='xl:text-button-1-desktop text-button-1-mobile'>{article.title.rendered}</h3>
