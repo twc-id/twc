@@ -265,6 +265,17 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                         margin-block-end: 1em;
                         padding-inline-start: 40px;
                     }
+                    ,
+                    table {
+                        border-collapse: collapse;
+                    }
+
+                    th,
+                    td {
+                        border: 1px solid grey;
+                        margin: 0;
+                        padding: 12px;
+                    }
                 }
             `}</style>
         </>
