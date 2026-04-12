@@ -110,7 +110,6 @@ const ReserveTimepiece = () => {
                                                 <UnstyledLink
                                                     href={`/collections/${product.slug}`}
                                                     onClick={() => {
-                                                        console.log('isWatch', isWatch, product)
                                                         if (isWatch) {
                                                             trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
                                                         } else {

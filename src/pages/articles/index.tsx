@@ -9,7 +9,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
     const queryClient = new QueryClient()
     const page = 1
-    const per_page = 12
+    const per_page = 11
     let initialArticles = {
         data: [],
         totalPages: 0,
