@@ -2,7 +2,7 @@ import BackToTop from '@components/BackToTop'
 import Container from '@components/Container'
 import Seo from '@components/Seo'
 import Tabs, { Tab } from '@components/Tabs'
-import { ArticleTag, useArticles } from '@hooks/useArticle'
+import { type Article, ArticleTag, useArticles } from '@hooks/useArticle'
 import { useAssets } from '@hooks/useAsset'
 import ArticleCTA from '@modules/Article/components/ArticleCTA'
 import ArticleHero from '@modules/Article/components/ArticleHero'
@@ -26,6 +26,16 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
     const isReady = router.isReady
 
     const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
+
+    // Pagination state for "Show More"
+    const [pagesRequested, setPagesRequested] = useState(1)
+    const [extraArticles, setExtraArticles] = useState<Article[]>([])
+
+    // Reset pagination when tag changes
+    useEffect(() => {
+        setPagesRequested(1)
+        setExtraArticles([])
+    }, [selectedTagId])
 
     // Restore selected tag from URL query param after hydration
     useEffect(() => {
@@ -64,12 +74,14 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
     const { assets } = useAssets()
     const ctaImage = assets?.find((asset) => asset.name === 'article-1')?.media.url
 
+    const perPage = 11
+
     // Fetch articles based on selected tag
     const { data: filteredArticles, isLoading } = useArticles(
         {
             tags: selectedTagId || undefined,
             page,
-            per_page: 12,
+            per_page: perPage,
             _embed: true,
             lang: i18n.language
         },
@@ -80,6 +92,35 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
 
     const displayArticles = selectedTagId === null ? initialArticles : filteredArticles
 
+    // Fetch additional pages for "Show More"
+    const totalPages = displayArticles?.totalPages || 0
+    const nextPageToFetch = (page || 1) + pagesRequested - 1
+
+    const { data: nextPageData, isFetching: isLoadingMore } = useArticles(
+        {
+            tags: selectedTagId || undefined,
+            page: nextPageToFetch,
+            per_page: perPage,
+            _embed: true,
+            lang: i18n.language
+        },
+        {
+            enabled: pagesRequested > 1 && nextPageToFetch <= totalPages
+        }
+    )
+
+    // Accumulate articles from additional pages (deduplicated by ID)
+    useEffect(() => {
+        if (pagesRequested > 1 && nextPageData?.data) {
+            setExtraArticles((prev) => {
+                const existingIds = new Set(prev.map((a) => a.id))
+                const newArticles = nextPageData.data.filter((a: Article) => !existingIds.has(a.id))
+                if (newArticles.length === 0) return prev
+                return [...prev, ...newArticles]
+            })
+        }
+    }, [nextPageData, pagesRequested]) // eslint-disable-line react-hooks/exhaustive-deps
+
     // Hero articles: hanya untuk tab "All" dan desktop
     const heroArticles = selectedTagId === null && !isMobile ? displayArticles?.data?.slice(0, 2) : []
 
@@ -87,8 +128,13 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
     // - Jika tab "All" dan desktop: sisanya setelah 2 artikel pertama
     // - Jika tab lain atau mobile: semua artikel (tidak di-slice)
     const remainingArticles = {
-        data: selectedTagId === null && !isMobile ? displayArticles?.data?.slice(2) || [] : displayArticles?.data || [],
-        totalPages: displayArticles?.totalPages || 0,
+        data: [
+            ...(selectedTagId === null && !isMobile
+                ? displayArticles?.data?.slice(2) || []
+                : displayArticles?.data || []),
+            ...extraArticles
+        ],
+        totalPages,
         totalPosts:
             selectedTagId === null && !isMobile
                 ? Math.max((displayArticles?.totalPosts || 0) - 2, 0)
@@ -107,7 +153,7 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                           })
                 }
             />
-            <Container className='pt-[72px] xl:pt-20'>
+            <Container className='relative pt-[72px] xl:pt-20'>
                 <div className='flex min-h-screen flex-col gap-8 pb-12 pt-8 xl:gap-10 xl:pb-[116px]'>
                     <h1
                         className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-[100px] leading-[90%]
@@ -139,12 +185,19 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                         <ArticleHero initialArticles={heroArticles} page={page} isLoading={isLoading} />
                     )}
                     {(remainingArticles.data.length > 0 || selectedTagId !== null) && (
-                        <ArticleList initialArticles={remainingArticles} page={page} isLoading={isLoading} />
+                        <ArticleList
+                            initialArticles={remainingArticles}
+                            page={pagesRequested}
+                            isLoading={isLoading}
+                            hasMore={pagesRequested < totalPages}
+                            isLoadingMore={isLoadingMore}
+                            onLoadMore={() => setPagesRequested((prev) => prev + 1)}
+                        />
                     )}
                     <ArticleCTA image={ctaImage} />
                 </div>
-                <BackToTop />
             </Container>
+            <BackToTop />
         </>
     )
 }
