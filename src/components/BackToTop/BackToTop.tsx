@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 import Icons from '../Icon'
 
-const BackToTop: React.FC = () => {
+const BackToTop = (): JSX.Element | null => {
     const [isVisible, setIsVisible] = useState(false)
     const [mounted, setMounted] = useState(false)
 
@@ -45,7 +45,7 @@ const BackToTop: React.FC = () => {
             <Icons icon='ArrowLeft' className='h-5 w-5 rotate-90 text-gray-600' />
         </button>,
         document.body
-    )
+    ) as unknown as JSX.Element
 }
 
 export default BackToTop
