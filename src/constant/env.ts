@@ -13,4 +13,4 @@ export const CONSUMER_SECRET = process.env.NEXT_PUBLIC_CONSUMER_SECRET
 
 export const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 export const COOKIE_PREFIX = process.env.NEXT_PUBLIC_COOKIE_PREFIX
-export const APP_VERSION = '2.0.35'
+export const APP_VERSION = '2.0.36'

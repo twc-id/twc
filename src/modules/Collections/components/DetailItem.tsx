@@ -78,7 +78,7 @@ const Collapse = ({ title, defaultExpanded, children, isOpen, onToggle }: Collap
     }
 
     return (
-        <div className='border-grey-100 border-b pb-2'>
+        <div className='border-grey-100 border-b pb-6'>
             <button
                 className='flex w-full items-center justify-between text-left focus:outline-none'
                 {...getToggleProps({ onClick: handleClick })}
@@ -474,6 +474,34 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         }))
         .filter((item) => item.value !== '')
 
+    // Parse watch-functions from meta_data
+    // Supports both formats:
+    //   legacy: ["World Time", "Chronograph"]
+    //   enriched: [{ name: "Chronograph", icon: "https://...", category: "Time Related" }]
+    interface WatchFunction {
+        name: string
+        icon?: string
+        category?: string
+    }
+    const watchFunctionsMeta = product?.meta_data?.find((m: any) => String(m.key) === 'watch-functions')
+    const watchFunctions: WatchFunction[] = (() => {
+        if (!watchFunctionsMeta?.value) return []
+        try {
+            const raw = watchFunctionsMeta.value
+            const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw
+            if (!Array.isArray(parsed)) return []
+            return parsed
+                .filter(Boolean)
+                .map((item: any) =>
+                    typeof item === 'string'
+                        ? { name: item }
+                        : { name: item.name, icon: item.icon, category: item.category }
+                )
+        } catch {
+            return []
+        }
+    })()
+
     // Get accessories items from meta_data
     const accessoriesValue = product?.meta_data?.filter((meta: any) => meta.key.startsWith('accessories-type')) || []
     const accessoriesDetailsValue =
@@ -638,6 +666,34 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         return `<div class='grid grid-rows-2 grid-cols-2 justify-between gap-y-6'>${parts.join('')}</div>`
     })()
 
+    const hasIcons = watchFunctions.some((fn) => !!fn.icon)
+    const functionsContent =
+        watchFunctions.length > 0 ? (
+            <div className='flex flex-wrap gap-4'>
+                {watchFunctions.map((fn, idx) =>
+                    hasIcons ? (
+                        <div key={idx} className='bg-grey-50 flex flex-col items-center gap-2 rounded-[4px] border p-3'>
+                            {fn.icon && (
+                                <div className='relative h-6 w-6 flex-shrink-0'>
+                                    <Image src={fn.icon} alt={fn.name} layout='fill' objectFit='contain' />
+                                </div>
+                            )}
+                            <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black text-center'>
+                                {fn.name}
+                            </span>
+                        </div>
+                    ) : (
+                        <span
+                            key={idx}
+                            className='bg-grey-50 xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-[4px] border px-3 py-2 text-black'
+                        >
+                            {fn.name}
+                        </span>
+                    )
+                )}
+            </div>
+        ) : null
+
     const accessoriesHtml = (() => {
         if (!accessoriesItems || accessoriesItems.length === 0) return 'No accessories info available.'
 
@@ -698,7 +754,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             {
                 title: 'Bracelet/strap',
                 content: braceletHtml
-            }
+            },
+            ...(watchFunctions.length > 0 ? [{ title: 'Functions', content: functionsContent }] : [])
         ]
     } else {
         dataCollapse = [
