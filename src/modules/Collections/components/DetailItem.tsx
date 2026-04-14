@@ -672,23 +672,27 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             <div className='flex flex-wrap gap-4'>
                 {watchFunctions.map((fn, idx) =>
                     hasIcons ? (
-                        <div key={idx} className='bg-grey-50 flex flex-col items-center gap-2 rounded-[4px] border p-3'>
+                        <div key={idx} className='bg-grey-50 flex items-center gap-2 rounded-[4px] border px-3 py-2'>
                             {fn.icon && (
-                                <div className='relative h-6 w-6 flex-shrink-0'>
-                                    <Image src={fn.icon} alt={fn.name} layout='fill' objectFit='contain' />
+                                <div className='relative h-[18px] w-[18px] flex-shrink-0 -translate-y-[1px]'>
+                                    <Image
+                                        src={fn.icon}
+                                        alt={fn.name}
+                                        layout='fill'
+                                        objectFit='contain'
+                                        className='brightness-0'
+                                    />
                                 </div>
                             )}
-                            <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black text-center'>
-                                {fn.name}
-                            </span>
+                            <p className='text-grey-black !mb-0 leading-none'>{fn.name}</p>
                         </div>
                     ) : (
-                        <span
+                        <p
                             key={idx}
-                            className='bg-grey-50 xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-[4px] border px-3 py-2 text-black'
+                            className='bg-grey-50 xl:text-paragraph-8-desktop text-paragraph-8-mobile rounded-[4px] border px-3 py-2 !leading-none text-black'
                         >
                             {fn.name}
-                        </span>
+                        </p>
                     )
                 )}
             </div>
@@ -924,7 +928,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                 className='border-grey-500 flex items-center rounded-full border'
                                                 key={item.key}
                                             >
-                                                <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 px-3 py-[5px] capitalize xl:!leading-none'>
+                                                <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 !mb-0 px-3 py-[5px] capitalize xl:!leading-none'>
                                                     {item.value}
                                                 </span>
                                             </div>
