@@ -37,11 +37,23 @@ Router.events.on('routeChangeComplete', () => {
     nProgress.done()
 })
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+type AppPropsWithLayout = AppProps & {
+    Component: AppProps['Component'] & { noLayout?: boolean }
+}
+
+const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     const [queryClient] = useState(() => new QueryClient())
 
     // Initialize Google Analytics tracking
     useGATracking()
+
+    if (Component.noLayout) {
+        return (
+            <ThemeProvider>
+                <Component {...pageProps} />
+            </ThemeProvider>
+        )
+    }
 
     return (
         <QueryClientProvider client={queryClient}>
