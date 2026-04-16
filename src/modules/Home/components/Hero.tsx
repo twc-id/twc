@@ -195,11 +195,11 @@ const Hero = () => {
                                 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
                                 style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {heroSlides &&
-                                        heroSlides[activeIndex] &&
-                                        heroSlides[activeIndex].video_banner?.[lang]?.title}
-                                </Trans>
+                                {heroSlides?.[activeIndex]?.video_banner?.[lang]?.title && (
+                                    <Trans i18nKey='hero.title' components={{ br: <br /> }}>
+                                        {heroSlides[activeIndex].video_banner?.[lang]?.title}
+                                    </Trans>
+                                )}
                             </h1>
                             <h3
                                 ref={h3RefSecond}
