@@ -58,8 +58,15 @@ const Collections = () => {
 
     const fetchPage = async (pageToFetch: number, append = false) => {
         try {
-            if (append) setIsLoadingMore(true)
-            else setIsLoading(true)
+            if (append) {
+                setIsLoadingMore(true)
+                // Yield one animation frame so React can render the skeleton and
+                // the browser can paint it before the API call starts.
+                // flushSync is avoided here — it breaks on subsequent clicks in Safari.
+                await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+            } else {
+                setIsLoading(true)
+            }
 
             const perPage = isMobile ? 6 : 9
             const baseParams: string[] = [`page=${pageToFetch}`, `per_page=${perPage}`, `category=${categoryId}`]

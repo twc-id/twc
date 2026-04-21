@@ -458,7 +458,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
     }
 
     return (
-        <div className='scrollbar-none hidden w-full flex-col gap-5 xl:sticky xl:top-0 xl:flex xl:max-h-[calc(100dvh-130px)] xl:max-w-[270px] xl:gap-6 xl:overflow-y-auto'>
+        <div className='scrollbar-none hidden w-full flex-col gap-5 xl:flex xl:max-h-[calc(100dvh-130px)] xl:max-w-[270px] xl:gap-6 xl:overflow-y-auto'>
             {metaData.map((item) => (
                 <Collapse
                     key={item.key}
