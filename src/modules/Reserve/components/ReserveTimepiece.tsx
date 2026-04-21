@@ -3,13 +3,10 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
-import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { sanitizeHtml } from '@utils/html'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
@@ -18,10 +15,6 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const ReserveTimepiece = () => {
     const { t } = useTranslation('reserve')
@@ -44,23 +37,6 @@ const ReserveTimepiece = () => {
 
     useEffect(() => {
         getData()
-    }, [])
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            id: 'reserve-timepiece-trigger'
-        })
-
-        return () => {
-            // Cleanup ScrollTrigger
-            const trigger = ScrollTrigger.getById('reserve-timepiece-trigger')
-            if (trigger) trigger.kill()
-        }
     }, [])
 
     return (

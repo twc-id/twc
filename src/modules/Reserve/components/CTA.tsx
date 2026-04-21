@@ -1,65 +1,41 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
-import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { Trans, useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
+import React from 'react'
 
 const CTA = ({ image }: { image?: string }) => {
     const { t } = useTranslation('reserve')
-    const sectionRef = useRef<HTMLDivElement>(null)
-    const headingref = useRef<HTMLHeadingElement>(null)
-    const paragraphRef = useRef<HTMLParagraphElement>(null)
 
-    useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                id: 'reserve-cta-animation',
-                toggleActions: 'restart none none reset'
-            }
-        })
-
-        timeline.fromTo(
-            [headingref.current, paragraphRef.current],
-            { opacity: 0, x: -20 },
-            { opacity: 1, x: 0, duration: 1, ease: 'power2.out', stagger: 0.3 }
-        )
-
-        return () => {
-            timeline.scrollTrigger?.kill()
-        }
-    }, [])
     return (
-        <section className='bg-grey-white py-14 xl:py-[116px]' ref={sectionRef}>
+        <section className='bg-grey-white py-14 xl:py-[116px]'>
             <Container>
                 <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
                     <div className='absolute left-0 z-10 flex w-auto flex-col items-start gap-5 px-5 pt-8 xl:max-w-[380px] xl:gap-6 xl:pl-20 xl:pr-0'>
-                        <h2
+                        <motion.h2
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
-                            ref={headingref}
                         >
                             <Trans i18nKey='cta.title' components={{ br: <br /> }}>
                                 {t('cta.title')}
                             </Trans>
-                        </h2>
-                        <p
+                        </motion.h2>
+                        <motion.p
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                             className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-100'
-                            ref={paragraphRef}
                         >
                             {t('cta.description')}
-                        </p>
+                        </motion.p>
                         <a
                             href={getWhatsAppLinkFromTemplate('reserveMain')}
                             target='_blank'
