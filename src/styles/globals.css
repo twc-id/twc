@@ -9,7 +9,7 @@
 @layer base {
     html,
     body {
-        overflow-x: hidden;
+        overflow-x: clip;
         max-width: 100vw;
         overscroll-behavior-y: none;
         /* iOS: Ensure full height including browser nav area */
@@ -21,75 +21,11 @@
         @apply dark:bg-grey-black bg-white transition-colors duration-300;
     }
 
-    /* ScrollSmoother styles */
-    #smooth-wrapper {
-        overflow: hidden;
-        /* iOS: Use fill-available for proper viewport height */
-        height: 100dvh;
-        height: -webkit-fill-available;
-        height: 100%;
-        /* Black background for iOS safe area */
-        background-color: #000;
-    }
-
-    #smooth-content {
-        overflow: visible;
-        width: 100%;
-        /* iOS: Add padding for safe area at bottom */
-        padding-bottom: env(safe-area-inset-bottom);
-        /* Black background to cover the safe area */
-        background-color: #000;
-    }
-
     /* iOS: Ensure footer extends into safe area */
     footer {
-        /* Extend background into safe area */
         padding-bottom: env(safe-area-inset-bottom);
-        /* Black background continues into safe area */
         background-clip: padding-box;
     }
-
-    /* ScrollSmoother: Fix white lines between sections */
-    /* Primary fix: will-change on smooth-content wrapper itself */
-    #smooth-content-home {
-        transform: translateZ(0);
-        -webkit-transform: translate3d(0, 0, 0);
-        will-change: transform;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-    }
-
-    /* Ensure sections with different backgrounds don't show gaps */
-    section[class*='bg-'],
-    [class*='bg-'] section {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* ScrollSmoother: Fix sub-pixel white lines between sections on home page */
-    /* #smooth-content-home {
-        background-color: #000;
-    } */
-
-    /* Apply transform to force GPU rendering */
-    #smooth-content-home > * {
-        margin-top: -1px; /* Prevent potential 1px white line at top */
-        transform: translateZ(0);
-        -webkit-transform: translate3d(0, 0, 0);
-        will-change: transform;
-    }
-
-    /* Ensure all direct children of smooth-content-home have black background */
-    /* #smooth-content-home > section,
-    #smooth-content-home > div {
-        background-color: #000;
-    } */
-
-    /* Also ensure parent wrappers have proper background */
-    /* #smooth-wrapper,
-    #smooth-content {
-        background-color: #000 !important;
-    } */
 
     .layout {
         /* 1100px */

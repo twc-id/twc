@@ -13,6 +13,7 @@ import React from 'react'
 const Sell = () => {
     const { t } = useTranslation('sell')
     const { assets } = useAssets()
+
     const heroImage = assets?.find((asset) => asset.name === 'sell-1')?.media.url
     const howToSellImage1 = assets?.find((asset) => asset.name === 'sell-2')?.media.url
     const howToSellImage2 = assets?.find((asset) => asset.name === 'sell-3')?.media.url

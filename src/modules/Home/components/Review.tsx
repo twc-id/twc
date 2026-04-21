@@ -1,12 +1,10 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
-import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
@@ -16,10 +14,6 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
-
 const Review = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any[]>([])
@@ -27,10 +21,7 @@ const Review = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const swiperDesktopRef = useRef<SwiperType>()
     const swiperMobileRef = useRef<SwiperType>()
-    const contentDesktopRef = useRef<HTMLDivElement>(null)
-    const contentMobileRef = useRef<HTMLDivElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
-    const hasAnimatedRef = useRef(false)
 
     const getData = async () => {
         try {
@@ -76,39 +67,6 @@ const Review = () => {
     useEffect(() => {
         getData()
     }, [])
-
-    useGSAP(() => {
-        if (!contentDesktopRef.current || !contentMobileRef.current || !sectionRef.current) return
-        if (hasAnimatedRef.current || !data.length) return
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                toggleActions: 'play none none reset',
-                id: 'review-animation'
-            }
-        })
-
-        timeline.fromTo(
-            [contentDesktopRef.current, contentMobileRef.current],
-            { opacity: 0, y: 60 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power2.out',
-                onComplete: () => {
-                    hasAnimatedRef.current = true
-                }
-            }
-        )
-
-        return () => {
-            timeline.scrollTrigger?.kill()
-            timeline.kill()
-        }
-    }, [data])
 
     if (isLoading) {
         // Render skeleton placeholders for desktop and mobile while loading
@@ -182,7 +140,13 @@ const Review = () => {
                 </div>
 
                 {/* Desktop Swiper */}
-                <div className='hidden xl:block' ref={contentDesktopRef}>
+                <motion.div
+                    initial={{ opacity: 0, y: 60 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    className='hidden xl:block'
+                >
                     <Swiper
                         modules={[Navigation]}
                         loop
@@ -272,10 +236,16 @@ const Review = () => {
                             )
                         })}
                     </Swiper>
-                </div>
+                </motion.div>
 
                 {/* Mobile Swiper */}
-                <div className='xl:hidden' ref={contentMobileRef}>
+                <motion.div
+                    initial={{ opacity: 0, y: 60 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    className='xl:hidden'
+                >
                     <Swiper
                         modules={[Navigation]}
                         spaceBetween={16}
@@ -367,7 +337,7 @@ const Review = () => {
                             )
                         })}
                     </Swiper>
-                </div>
+                </motion.div>
                 <div className='flex flex-row gap-4 xl:hidden'>
                     <Button
                         className='!h-8 !w-8 !p-0'

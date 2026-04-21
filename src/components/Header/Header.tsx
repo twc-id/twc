@@ -454,7 +454,7 @@ const Headers = () => {
                         return
                     }
 
-                    // Get scroll position - works with both native scroll and ScrollSmoother
+                    // Get scroll position
                     const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
                     const lastY = lastScrollYRef.current
                     const scrollDirection = currentScrollY > lastY ? 'down' : 'up'
@@ -536,39 +536,15 @@ const Headers = () => {
             // Lock scroll without changing position (prevents visual jump)
             document.body.style.overflow = 'hidden'
             document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px` // Prevent layout shift from scrollbar
-
-            // Pause ScrollSmoother to prevent scrolling when menu is open
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(true)
-                }
-            }
         } else {
             // Restore scroll
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
-
-            // Resume ScrollSmoother
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(false)
-                }
-            }
         }
 
         return () => {
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
-
-            // Resume ScrollSmoother on cleanup
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(false)
-                }
-            }
         }
     }, [isMenuOpen, isSearchOpen])
 
@@ -923,8 +899,8 @@ const Headers = () => {
                             >
                                 {hoveredMenuItem?.subMenu && (
                                     <div className='space-y-8 xl:space-y-0'>
-                                        {/* Breadcrumb - Mobile Only */}
-                                        <div className='lg:hidden'>
+                                        {/* Breadcrumb + See all Watches - Mobile Only */}
+                                        <div className='flex items-center justify-between lg:hidden'>
                                             <Breadcrumb
                                                 items={[{ title: 'Home', href: '/' }, { title: hoveredMenuItem.label }]}
                                                 breakpoint='Mobile'
@@ -932,6 +908,17 @@ const Headers = () => {
                                                 navigationClassName='text-button-5-mobile capitalize'
                                                 lastItemClassName='text-button-5-mobile capitalize'
                                             />
+                                            <UnstyledLink
+                                                href='/collections'
+                                                className='text-button-4-mobile hover:text-grey-white text-grey-200 flex items-center gap-1'
+                                                onClick={() => {
+                                                    setIsMenuOpen(false)
+                                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                }}
+                                            >
+                                                See all Watches
+                                                <Icons icon='ChevronRight' width={12} height={12} />
+                                            </UnstyledLink>
                                         </div>
 
                                         {/* Desktop: BRAND Section - Full Width Image + Items Below */}
@@ -947,6 +934,17 @@ const Headers = () => {
                                                             height={301}
                                                             className='h-[301px] w-full object-cover'
                                                         />
+                                                        <UnstyledLink
+                                                            href='/collections'
+                                                            className='text-button-4-desktop text-grey-200 hover:text-grey-100 absolute bottom-6 left-6 flex items-center gap-2 transition-colors'
+                                                            onClick={() => {
+                                                                setIsMenuOpen(false)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                            }}
+                                                        >
+                                                            See all Watches
+                                                            <Icons icon='ChevronRight' width={14} height={14} />
+                                                        </UnstyledLink>
                                                     </div>
                                                     {/* Title and Items */}
                                                     <div>

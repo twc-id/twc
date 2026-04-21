@@ -1,7 +1,7 @@
+import Button from '@components/buttons/Button'
 import UnstyledLink from '@components/links/UnstyledLink'
 import Loader from '@components/Loader'
 import Skeleton from '@components/Skeleton'
-import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
@@ -15,15 +15,13 @@ import { useMediaQuery } from 'react-responsive'
 interface ContentProps {
     products: any
     isLoading?: boolean
+    isLoadingMore?: boolean
     onLoadMore?: () => void
     hasMore?: boolean
-    isLoadingMore?: boolean
     total?: number | null
-    contentRef?: React.RefObject<HTMLDivElement>
-    isPinned?: boolean
 }
 
-const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, contentRef }) => {
+const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, onLoadMore, hasMore, total }) => {
     const { t } = useTranslation(['collection', 'home', 'common'])
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
@@ -37,16 +35,10 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, c
 
     const isWatch = products?.[0]?.categories?.some((category: any) => category.name === 'Watches')
     return (
-        <div
-            ref={contentRef}
-            className={classNames('scrollbar-none relative h-full xl:max-h-screen xl:overflow-hidden', {
-                // 'xl:max-h-[calc(100dvh-110px)]': !isPinned,
-                // 'xl:max-h-[calc(100dvh-200px)]': isPinned
-            })}
-        >
+        <div className='relative h-full'>
             <If condition={products && products.length > 0}>
                 <Then>
-                    <div className='grid grid-cols-2 grid-rows-2 gap-2 xl:grid-cols-3 xl:grid-rows-3'>
+                    <div className='grid grid-cols-2 gap-2 xl:grid-cols-3'>
                         {products.map((item: any) => (
                             <UnstyledLink
                                 href={`/collections/${item.slug}`}
@@ -138,12 +130,24 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, c
                             ))}
                         </div>
                     )}
+                    {/* Show More inside scrollable area — pin stays active during load more */}
+                    {hasMore && !isLoadingMore && (
+                        <div className='flex flex-col items-center gap-5 py-7 xl:py-10'>
+                            {typeof total === 'number' && (
+                                <span className='text-grey-500 xl:text-paragraph-7-desktop text-paragraph-7-mobile text-center'>
+                                    {products?.length ?? 0}/{total}
+                                </span>
+                            )}
+                            <div className='flex w-full justify-center'>
+                                <Button variant='secondaryInverse' onClick={onLoadMore}>
+                                    {t('common:show_more')}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </Then>
                 <Else>
-                    <p
-                        className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200
-                '
-                    >
+                    <p className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'>
                         {t('common:no_product')}
                     </p>
                 </Else>

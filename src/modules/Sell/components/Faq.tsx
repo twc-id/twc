@@ -1,17 +1,11 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { useTheme } from '@contexts/ThemeContext'
-import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion, useInView } from 'motion/react'
 import { useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 interface CollapseProps {
     title: string
@@ -54,60 +48,37 @@ const Collapse = ({ title, defaultExpanded, children }: CollapseProps) => {
 const Faq = () => {
     const { t } = useTranslation('sell')
     const sectionRef = useRef<HTMLElement>(null)
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    const faqRef = useRef<HTMLDivElement>(null)
     const { setIsDarkSection } = useTheme()
 
+    const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+
+    useEffect(() => {
+        if (isInView) setIsDarkSection(false)
+    }, [isInView, setIsDarkSection])
+
     const items = Object.values(t('faq.items', { returnObjects: true })) as { question: string; answer: string }[]
-
-    useGSAP(() => {
-        if (!sectionRef.current) return
-
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom center',
-            onEnter: () => setIsDarkSection(false),
-            onLeave: () => setIsDarkSection(false),
-            onEnterBack: () => setIsDarkSection(false)
-            // onLeaveBack: () => setIsDarkSection(true)
-        })
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'restart none none reset'
-            }
-        })
-
-        timeline.fromTo(titleRef.current, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            faqRef.current,
-            { opacity: 0, x: 30 },
-            { opacity: 1, x: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5' // overlap with previous animation
-        )
-
-        return () => {
-            ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-        }
-    }, [setIsDarkSection])
 
     return (
         <section ref={sectionRef} className='pt-14 xl:pt-[116px]'>
             <Container>
                 <div className='flex flex-col justify-between gap-7 xl:flex-row'>
-                    <h1
+                    <motion.h1
+                        initial={{ opacity: 0, x: -30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white line-clamp-2 max-w-[300px] xl:line-clamp-3'
-                        ref={titleRef}
                     >
                         {t('faq.title')}
-                    </h1>
+                    </motion.h1>
 
-                    <div className='flex w-full flex-col gap-5 xl:max-w-[602px] xl:gap-6' ref={faqRef}>
+                    <motion.div
+                        initial={{ opacity: 0, x: 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
+                        className='flex w-full flex-col gap-5 xl:max-w-[602px] xl:gap-6'
+                    >
                         {items.map((item, index) => (
                             <Collapse key={item.question} title={item.question} defaultExpanded={index === 0}>
                                 <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
@@ -115,7 +86,7 @@ const Faq = () => {
                                 </span>
                             </Collapse>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </Container>
         </section>

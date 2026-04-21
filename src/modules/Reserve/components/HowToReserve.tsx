@@ -1,18 +1,12 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
-import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useRef, useState } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const HowToReserve = ({
     reserveImage1,
@@ -26,8 +20,6 @@ const HowToReserve = ({
     reserveImage4?: string
 }) => {
     const { t } = useTranslation('reserve')
-    const sectionRef = useRef<HTMLElement>(null)
-    const topRef = useRef<HTMLDivElement>(null)
 
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
@@ -79,42 +71,16 @@ const HowToReserve = ({
         })
     }
 
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom top'
-        })
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                toggleActions: 'restart none none reset'
-            }
-        })
-
-        timeline.fromTo(topRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            '.step-items',
-            { opacity: 0, y: 50 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.2 }
-        )
-
-        // Cleanup
-        return () => {
-            timeline.scrollTrigger?.kill()
-        }
-    }, [])
-
     return (
-        <section className='bg-grey-black relative' ref={sectionRef}>
+        <section className='bg-grey-black relative z-10'>
             <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='flex w-full flex-col items-start justify-between gap-5 xl:flex-row xl:items-center'
-                        ref={topRef}
                     >
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white  xl:max-w-[574px]'>
                             {t('how_to_reserve.title')}
@@ -127,8 +93,12 @@ const HowToReserve = ({
                         >
                             <Button className='h-full w-fit'>{t('cta.button')}</Button>
                         </a>
-                    </div>
-                    <div
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.2 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
@@ -136,7 +106,7 @@ const HowToReserve = ({
                         {items.map((item, index) => (
                             <div
                                 key={index}
-                                className='step-items flex min-w-[280px] snap-center flex-col items-start gap-4 xl:min-w-0 xl:snap-align-none xl:gap-6'
+                                className='flex min-w-[280px] snap-center flex-col items-start gap-4 xl:min-w-0 xl:snap-align-none xl:gap-6'
                             >
                                 <div className='border-grey-white text-grey-white flex h-8 w-8 items-center justify-center rounded-full border py-1.5'>
                                     {index + 1}
@@ -162,7 +132,7 @@ const HowToReserve = ({
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </motion.div>
                     <div className='flex flex-row items-center gap-2 xl:hidden'>
                         {items.map((_, index) => (
                             <button

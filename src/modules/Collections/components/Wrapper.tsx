@@ -1,16 +1,14 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
-import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import Content from '@modules/Collections/components/Content'
 import MobileFilterModal from '@modules/Collections/components/MobileFilterModal'
 import Sidebar from '@modules/Collections/components/Sidebar'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 
@@ -28,10 +26,6 @@ interface WrapperProps {
     brandLoading?: boolean
 }
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
-
 const Wrapper: React.FC<WrapperProps> = ({
     data,
     isLoading,
@@ -45,31 +39,22 @@ const Wrapper: React.FC<WrapperProps> = ({
     brandOptions,
     brandLoading
 }) => {
-    const { t } = useTranslation(['collection'])
+    useTranslation(['collection'])
     const sectionRef = useRef<HTMLDivElement>(null)
-    const contentRef = useRef<HTMLDivElement>(null)
     const topRef = useRef<HTMLDivElement>(null)
-    const [isPin, setIsPin] = useState(false)
 
     const isMobile = useMediaQuery({ maxWidth: 1279 })
-
-    const pinTriggerRef = useRef<any>(null)
-
-    // Cache contentScrollHeight so end function and onUpdate always use the same value.
-    // This prevents jump on refresh because the ratio CH/end stays constant.
-    const contentHeightCache = useRef(0)
 
     // Mobile filter modal state
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
     const { filters, setFilter } = useCollectionsFilterStore()
 
-    // Sticky top bar state for mobile
+    // Sticky top bar state (used for both mobile portal and desktop fixed)
     const [showTopSticky, setShowTopSticky] = useState(false)
     const [headerHeight, setHeaderHeight] = useState<number>(0)
     const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
 
     const handleApplyFilters = (tempFilters: any) => {
-        // Apply all temp filters to the store
         const keys = ['brands', 'availability', 'condition', 'gender', 'priceRange', 'sortBy'] as const
         keys.forEach((key) => {
             if (key in tempFilters) {
@@ -77,85 +62,6 @@ const Wrapper: React.FC<WrapperProps> = ({
             }
         })
     }
-
-    useGSAP(() => {
-        // Use GSAP matchMedia for different viewport animations
-        const mm = gsap.matchMedia()
-
-        // Desktop: Existing animations
-        mm.add('(min-width: 1280px)', () => {
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    id: 'collections-wrapper-animation',
-                    toggleActions: 'restart none none reset'
-                }
-            })
-
-            timeline.fromTo(topRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
-
-            // Pin the entire section and scroll-jack the content
-            pinTriggerRef.current = ScrollTrigger.create({
-                trigger: sectionRef.current,
-                start: '60px top',
-                onEnterBack: () => {
-                    setIsPin(true)
-                },
-                onEnter: () => {
-                    setIsPin(true)
-                },
-                onLeaveBack: () => {
-                    setIsPin(false)
-                },
-                onLeave: () => {
-                    setIsPin(false)
-                },
-                markers: false,
-                pin: true,
-                preventOverlaps: true,
-                scrub: true,
-                end: () => {
-                    const contentEl: any = contentRef.current
-
-                    if (!contentEl) return '+=100%'
-                    const ch = contentEl.scrollHeight - contentEl.clientHeight
-                    // Update cache — onUpdate uses this same value, so scrollTop stays consistent on refresh
-                    contentHeightCache.current = ch
-                    // Use a reasonable default while content is still loading (ch ≈ 0)
-                    if (ch <= 0) return '+=800'
-                    return `+=${ch}`
-                },
-
-                // // pinSpacing: true,
-                // id: 'collections-wrapper-top-pin',
-                onUpdate: (self) => {
-                    const contentEl: any = contentRef.current
-                    if (!contentEl) return
-
-                    // Use cached value — same as what end function evaluated
-                    const ch = contentHeightCache.current || contentEl.scrollHeight - contentEl.clientHeight
-                    const scrollAmount = self.progress * ch
-                    contentEl.scrollTop = self.progress === 1 ? ch : scrollAmount
-                }
-                // anticipatePin: 1
-            })
-
-            return () => {
-                timeline.scrollTrigger?.kill()
-                timeline.kill()
-                pinTriggerRef.current?.kill?.()
-            }
-        })
-
-        // Note: Mobile pin is removed - using portal sticky top bar instead
-
-        // Cleanup matchMedia when component unmounts or deps change
-        return () => {
-            mm.revert()
-        }
-    }, [])
 
     // measure header height so we can position the portal below it
     useEffect(() => {
@@ -187,10 +93,11 @@ const Wrapper: React.FC<WrapperProps> = ({
         return () => mo.disconnect()
     }, [])
 
-    // observe topRef visibility to show sticky header when it's out of view (mobile only)
+    // observe topRef visibility to show sticky bar when it's out of view
+    // Works for both mobile (portal) and desktop (fixed portal)
     useEffect(() => {
         const el = topRef.current
-        if (!el || typeof window === 'undefined' || !isMobile) return
+        if (!el || typeof window === 'undefined') return
 
         const rootMarginTop = headerHeight ? `-${headerHeight + 8}px` : '-80px'
 
@@ -216,104 +123,89 @@ const Wrapper: React.FC<WrapperProps> = ({
             }
             io.disconnect()
         }
-    }, [isMobile, headerHeight])
+    }, [headerHeight])
 
-    // Refresh ScrollTrigger when data changes — cache keeps end and onUpdate in sync
-    useEffect(() => {
-        if (!isMobile && data && data.length > 0) {
-            const timeout = setTimeout(() => {
-                ScrollTrigger.refresh()
-            }, 100)
-            return () => clearTimeout(timeout)
-        }
-    }, [data, isMobile])
-
-    // When Show More starts loading, skeletons render → scrollHeight increases.
-    // Refresh immediately so cache picks up the new height BEFORE real products arrive.
-    // When real products replace skeletons, scrollHeight stays similar → no jump.
-    useLayoutEffect(() => {
-        if (isMobile || !isLoadingMore) return
-        const raf = requestAnimationFrame(() => {
-            ScrollTrigger.refresh()
-        })
-        return () => cancelAnimationFrame(raf)
-    }, [isLoadingMore, isMobile])
+    // Fixed tab bar portal — works on both mobile and desktop.
+    // Uses position:fixed (relative to viewport) so it's immune to
+    // ancestor overflow/transform issues that break CSS sticky.
+    const fixedTabBar = showTopSticky
+        ? (createPortal(
+              <div
+                  aria-hidden={!showTopSticky}
+                  className='mx-auto my-0 box-border w-[90%] min-w-full max-w-[1400px] px-3 py-0 xl:min-w-[1210px]'
+                  style={{
+                      position: 'fixed',
+                      left: 0,
+                      right: 0,
+                      top: showTopSticky && isHeaderVisible ? headerHeight : 0,
+                      zIndex: 49,
+                      transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
+                      transition: 'transform 180ms ease, top 300ms ease',
+                      pointerEvents: 'auto'
+                  }}
+              >
+                  <div className='max-w-screen mx-auto'>
+                      <div
+                          className={classNames(
+                              'bg-grey-white dark:bg-grey-black  z-[100] flex justify-between pb-4 pt-7 shadow-sm   '
+                          )}
+                      >
+                          <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
+                              Our Collections
+                          </h2>
+                          {/* Tabs */}
+                          <div
+                              className={classNames('border-grey-black flex flex-row border', {
+                                  'w-full': selectedTab !== 0
+                              })}
+                          >
+                              {tabs.map((item, idx) => (
+                                  <button
+                                      key={`${item}-${idx}`}
+                                      onClick={() => onTabChange?.(idx)}
+                                      className={classNames(
+                                          'xl:!text-button-3-desktop !text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
+                                          {
+                                              'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
+                                              'bg-grey-white text-grey-black hover:bg-grey-100':
+                                                  idx !== (selectedTab ?? 0),
+                                              'w-full': selectedTab !== 0
+                                          }
+                                      )}
+                                  >
+                                      {item}
+                                  </button>
+                              ))}
+                          </div>
+                          <Button
+                              variant='secondaryInverse'
+                              className={classNames('!p-3 xl:hidden', {
+                                  hidden: selectedTab !== 0
+                              })}
+                              onClick={() => setIsFilterModalOpen(true)}
+                          >
+                              <Icons icon='Filter' width={16} height={16} className='text-grey-black' />
+                          </Button>
+                      </div>
+                  </div>
+              </div>,
+              document.body
+          ) as unknown as React.ReactNode)
+        : null
 
     return (
         <>
-            {/* Mobile: sticky top bar (below header) with tabs + filter button - render via portal */}
-            {isMobile && showTopSticky
-                ? (createPortal(
-                      <div
-                          aria-hidden={!showTopSticky}
-                          className='mx-auto my-0 box-border w-[90%] min-w-full max-w-[1400px] px-3 py-0 xl:min-w-[1210px]'
-                          style={{
-                              position: 'fixed',
-                              left: 0,
-                              right: 0,
-                              top: showTopSticky && isHeaderVisible ? headerHeight : 0,
-                              zIndex: 49,
-                              transform: showTopSticky ? 'translateY(0)' : 'translateY(-120%)',
-                              transition: 'transform 180ms ease, top 300ms ease',
-                              pointerEvents: 'auto'
-                          }}
-                      >
-                          <div className='max-w-screen mx-auto'>
-                              <div
-                                  className={classNames(
-                                      'bg-grey-white dark:bg-grey-black  z-[100] flex justify-between pb-4 pt-7 shadow-sm   '
-                                  )}
-                              >
-                                  <h2 className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-black hidden xl:block'>
-                                      Our Collections
-                                  </h2>
-                                  {/* Tabs */}
-                                  <div
-                                      className={classNames('border-grey-black flex flex-row border', {
-                                          'w-full': selectedTab !== 0
-                                      })}
-                                  >
-                                      {tabs.map((item, idx) => (
-                                          <button
-                                              key={`${item}-${idx}`}
-                                              onClick={() => onTabChange?.(idx)}
-                                              className={classNames(
-                                                  '!text-button-3-mobile  w-[137px] py-3 transition-colors focus:outline-none',
-                                                  {
-                                                      'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
-                                                      'bg-grey-white text-grey-black hover:bg-grey-100':
-                                                          idx !== (selectedTab ?? 0),
-                                                      'w-full': selectedTab !== 0
-                                                  }
-                                              )}
-                                          >
-                                              {item}
-                                          </button>
-                                      ))}
-                                  </div>
-                                  <Button
-                                      variant='secondaryInverse'
-                                      className={classNames('!p-3', {
-                                          hidden: selectedTab !== 0
-                                      })}
-                                      onClick={() => setIsFilterModalOpen(true)}
-                                  >
-                                      <Icons icon='Filter' width={16} height={16} className='text-grey-black' />
-                                  </Button>
-                              </div>
-                          </div>
-                      </div>,
-                      document.body
-                  ) as unknown as React.ReactNode)
-                : null}
+            {fixedTabBar}
 
             <Container className='relative flex flex-col gap-7 xl:gap-10 xl:pb-11' ref={sectionRef}>
-                <div
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
-                        {
-                            'xl:!pb-0': isPin
-                        }
+                        { invisible: showTopSticky && !isMobile }
                     )}
                     ref={topRef}
                 >
@@ -358,7 +250,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                     '
                         />
                     </Button>
-                </div>
+                </motion.div>
 
                 {(() => {
                     const showSidebar = selectedTab === 0
@@ -366,17 +258,29 @@ const Wrapper: React.FC<WrapperProps> = ({
                         <>
                             <div className='flex flex-row xl:gap-10'>
                                 {showSidebar && (
-                                    <Sidebar products={data} brandOptions={brandOptions} brandLoading={brandLoading} />
+                                    <div
+                                        className='hidden xl:block'
+                                        style={{
+                                            position: 'sticky',
+                                            top: headerHeight + 16,
+                                            alignSelf: 'flex-start'
+                                        }}
+                                    >
+                                        <Sidebar
+                                            products={data}
+                                            brandOptions={brandOptions}
+                                            brandLoading={brandLoading}
+                                        />
+                                    </div>
                                 )}
                                 <div className={showSidebar ? 'flex-1' : 'w-full'}>
                                     <Content
                                         products={data}
                                         isLoading={isLoading}
+                                        isLoadingMore={isLoadingMore}
                                         onLoadMore={onLoadMore}
                                         hasMore={hasMore}
-                                        isLoadingMore={isLoadingMore}
                                         total={total}
-                                        contentRef={contentRef}
                                     />
                                 </div>
                             </div>
@@ -395,21 +299,6 @@ const Wrapper: React.FC<WrapperProps> = ({
                         </>
                     )
                 })()}
-
-                {hasMore && (
-                    <div className=' flex flex-col items-center gap-5'>
-                        {typeof total === 'number' && (
-                            <span className='text-grey-500 xl:text-paragraph-7-desktop text-paragraph-7-mobile text-center'>
-                                {data?.length ?? 0}/{total}
-                            </span>
-                        )}
-                        <div className='flex w-full justify-center'>
-                            <Button variant='secondaryInverse' disabled={isLoadingMore} onClick={onLoadMore}>
-                                {isLoadingMore ? t('common:loading') : t('common:show_more')}
-                            </Button>
-                        </div>
-                    </div>
-                )}
             </Container>
         </>
     )

@@ -1,82 +1,37 @@
 import Button from '@components/buttons/Button'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useTheme } from '@contexts/ThemeContext'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/dist/ScrollTrigger'
+import { motion, useInView } from 'motion/react'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => {
     const { t } = useTranslation(['home'])
     const { setIsDarkSection } = useTheme()
 
     const sectionRef = useRef<HTMLElement>(null)
-    const sellRef = useRef<HTMLDivElement>(null)
-    const reserveRef = useRef<HTMLDivElement>(null)
+    const isInView = useInView(sectionRef, { margin: '-40% 0px -40% 0px' })
 
-    // Set initial light mode on mount for SellReserve section
     useEffect(() => {
-        setIsDarkSection(false)
-    }, [setIsDarkSection])
-
-    useGSAP(() => {
-        // Ensure light mode when SellReserve section is in view
-        const lightModeTrigger = ScrollTrigger.create({
-            id: 'sell-reserve-light-mode',
-            trigger: sectionRef.current,
-            start: 'top 60%', // Trigger earlier to ensure light mode
-            end: 'bottom 80%',
-            onEnter: () => {
-                setIsDarkSection(false)
-            },
-            onEnterBack: () => {
-                setIsDarkSection(false)
-            }
-        })
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'play none none none',
-                id: 'sell-reserve-animation'
-            }
-        })
-
-        // Animasi kedua content fade in bersamaan
-        // Start from opacity: 1 so elements are visible even if animation doesn't fire
-        timeline.fromTo(
-            [sellRef.current, reserveRef.current],
-            { opacity: 0.5, y: 10 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-        )
-
-        return () => {
-            lightModeTrigger?.kill()
-            timeline.scrollTrigger?.kill()
-            timeline.kill()
-        }
-    }, [])
+        if (isInView) setIsDarkSection(false)
+    }, [isInView, setIsDarkSection])
 
     return (
         <section
             ref={sectionRef}
-            className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 overflow-x-hidden px-4 pb-0 pt-16 xl:flex-row xl:px-5 xl:pt-[160px]'
+            className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 overflow-hidden px-4 pb-0 pt-16 xl:flex-row xl:px-5 xl:pt-[160px]'
         >
-            <div
-                ref={sellRef}
+            <motion.div
+                initial={{ opacity: 0.5, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${sell})`,
                     backgroundSize: '100% auto',
-                    backgroundPositionY: 'top'
+                    backgroundPositionY: 'center'
                 }}
-                className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
+                className='relative z-10 flex h-[368px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
                     <Trans i18nKey='home:sell_reserve.sell_title'>{t('sell_reserve.sell_title')}</Trans>
@@ -84,16 +39,18 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
                 <UnstyledLink href='/sell'>
                     <Button>{t('common:learn_more')}</Button>
                 </UnstyledLink>
-            </div>
-            <div
-                ref={reserveRef}
+            </motion.div>
+            <motion.div
+                initial={{ opacity: 0.5, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.15 }}
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${reserve})`,
                     backgroundSize: '100% auto',
-                    backgroundPositionY: 'top'
-                    // backgroundRepeat: 'no-repeat'
+                    backgroundPositionY: 'center'
                 }}
-                className='relative z-10 flex h-[464px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
+                className='relative z-10 flex h-[368px] w-full flex-col items-start justify-end gap-4 p-5 xl:h-[888px] xl:p-20'
             >
                 <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'>
                     {t('sell_reserve.reserve_title')}
@@ -101,7 +58,7 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
                 <UnstyledLink href='/reserve'>
                     <Button>{t('sell_reserve.cta_reserve')}</Button>
                 </UnstyledLink>
-            </div>
+            </motion.div>
         </section>
     )
 }

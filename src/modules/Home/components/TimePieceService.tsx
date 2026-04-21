@@ -1,25 +1,20 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import { useTheme } from '@contexts/ThemeContext'
-import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion, useInView } from 'motion/react'
 import Image from 'next/image'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const TimePieceService = ({
     service1,
@@ -34,10 +29,16 @@ const TimePieceService = ({
     const swiperDesktopRef = useRef<SwiperType>()
     const swiperMobileRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    const buttonRef = useRef<HTMLButtonElement>(null)
 
     const { setIsDarkSection } = useTheme()
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
+
+    const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+
+    // Set dark mode when section is in view
+    useEffect(() => {
+        if (isInView) setIsDarkSection(true)
+    }, [isInView, setIsDarkSection])
 
     // Set dark mode on mount if URL has #service hash
     useEffect(() => {
@@ -49,7 +50,6 @@ const TimePieceService = ({
     // Ensure mobile Swiper updates after mount to fix blank images
     useEffect(() => {
         if (swiperMobileRef.current) {
-            // Small delay to ensure DOM is ready
             const timeout = setTimeout(() => {
                 swiperMobileRef.current?.update()
             }, 100)
@@ -78,102 +78,22 @@ const TimePieceService = ({
         }
     ]
 
-    useGSAP(() => {
-        // Track dark section state dengan ScrollTrigger
-        // Fire when section is more visible to ensure smooth transition from SellReserve (light) to TimePieceService (dark)
-        const darkModeTrigger = ScrollTrigger.create({
-            id: 'timepiece-dark-mode',
-            trigger: sectionRef.current,
-            start: 'top 50%', // Trigger when section is more visible
-            end: 'bottom 50%',
-            onEnter: () => {
-                setIsDarkSection(true)
-            },
-            onEnterBack: () => {
-                setIsDarkSection(true)
-            }
-        })
-
-        const mm = gsap.matchMedia()
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'play none none reset'
-            }
-        })
-
-        // Use from() instead of fromTo() so elements start visible
-        // This prevents blank screen on hash navigation (ScrollTrigger doesn't fire on direct jumps)
-        timeline.from(titleRef.current, { opacity: 0, x: -30, duration: 1, ease: 'power2.out' })
-
-        timeline.from(buttonRef.current, { opacity: 0, x: 30, duration: 1, ease: 'power2.out' }, '-=0.7')
-
-        mm.add('(min-width: 1280px)', () => {
-            timeline.from(
-                '.service-slide',
-                {
-                    opacity: 0,
-                    y: 30,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    stagger: 0.15,
-                    onComplete: () => {
-                        // Dispatch custom event setelah animasi selesai untuk memberitahu component lain
-                        setTimeout(() => {
-                            window.dispatchEvent(
-                                new CustomEvent('layoutChange', { detail: { component: 'TimePieceService' } })
-                            )
-                            ScrollTrigger.refresh()
-                        }, 100)
-                    }
-                },
-                '-=0.5'
-            )
-        })
-
-        mm.add('(max-width: 1279px)', () => {
-            timeline.from(
-                '.service-slide',
-                {
-                    opacity: 0,
-                    y: 30,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    stagger: 0.15,
-                    onComplete: () => {
-                        // Refresh ScrollTrigger after mobile animation to ensure triggers are recalculated
-                        setTimeout(() => {
-                            ScrollTrigger.refresh()
-                        }, 100)
-                    }
-                },
-                '-=0.5'
-            )
-        })
-        return () => {
-            darkModeTrigger?.kill()
-            timeline.scrollTrigger?.kill()
-            timeline.kill()
-            mm.revert()
-        }
-    }, [])
-
     return (
         <section ref={sectionRef} className='relative z-10 overflow-x-hidden py-16 xl:py-[160px]' id='service'>
             <Container className='relative z-10 flex flex-col justify-between gap-14 xl:flex-row xl:items-center xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
-                        <h2
-                            className={`xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black `}
-                            ref={titleRef}
+                        <motion.h2
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                            className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'
                         >
                             <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                 {t('timepiece.title')}
                             </Trans>
-                        </h2>
+                        </motion.h2>
                         <div className='w-fit'>
                             <a
                                 href={getWhatsAppLinkFromTemplate('timepieceService')}
@@ -209,7 +129,13 @@ const TimePieceService = ({
                         >
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
-                                    <div className='flex  flex-col gap-6'>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: isMobile ? true : false, amount: 0.3 }}
+                                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: index * 0.15 }}
+                                        className='flex  flex-col gap-6'
+                                    >
                                         <div className='relative h-[403px] w-[302px] overflow-hidden'>
                                             <Image
                                                 src={service.image || ''}
@@ -228,7 +154,7 @@ const TimePieceService = ({
                                                 </Trans>
                                             </p>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -236,7 +162,13 @@ const TimePieceService = ({
                 </div>
                 {/* mobile */}
                 <div className='relative w-full flex-1 xl:hidden'>
-                    <div className='relative isolate w-full'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: isMobile ? true : false, amount: 0.3 }}
+                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+                        className='relative isolate w-full'
+                    >
                         <Swiper
                             modules={[Navigation, Pagination]}
                             spaceBetween={16}
@@ -269,7 +201,6 @@ const TimePieceService = ({
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                        {/* explicit pagination container so bullets are always visible and styleable */}
                         <div
                             className='timepiece-pagination mt-14 flex items-center justify-end
                         '
@@ -290,7 +221,7 @@ const TimePieceService = ({
                                 height: 6px !important;
                             }
                         `}</style>
-                    </div>
+                    </motion.div>
                 </div>
             </Container>
         </section>

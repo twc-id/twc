@@ -20,6 +20,7 @@ const Home = () => {
 
     const commitmentImage = assets?.find((asset) => asset.name === 'home-1')?.media?.url
     const journeyImage = assets?.find((asset) => asset.name === 'home-2')?.media?.url
+    console.log(journeyImage)
     const ctaImage = assets?.find((asset) => asset.name === 'home-3')?.media?.url
     const sellImage = assets?.find((asset) => asset.name === 'home-4')?.media?.url
     const reviewImage = assets?.find((asset) => asset.name === 'home-5')?.media?.url

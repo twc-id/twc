@@ -1,44 +1,37 @@
 import Container from '@components/Container'
-import { useGSAP } from '@gsap/react'
 import { useAssets } from '@hooks/useAsset'
 import classNames from '@lib/classnames'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion, useAnimate } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Trans } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperType } from 'swiper'
-import { Autoplay, Pagination } from 'swiper/modules'
+import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
-import 'swiper/css/pagination'
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
+const FALLBACK_IMAGES = ['/images/home/hero-home.webp', '/images/about-us/hero.webp']
 
 const Hero = () => {
-    const h3RefFirst = useRef<HTMLHeadingElement>(null)
-    const h3RefSecond = useRef<HTMLHeadingElement>(null)
-    const h1Ref = useRef<HTMLHeadingElement>(null)
     const sectionRef = useRef<HTMLElement>(null)
-    const timelineRef = useRef<any>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const swiperRef = useRef<SwiperType>()
-    const videoRefs = useRef<Record<number | string, HTMLVideoElement | null>>({})
+    const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
     const [isVisible, setIsVisible] = useState(true)
-    const [videoLoaded, setVideoLoaded] = useState<Record<number, boolean>>({})
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
+    const directionRef = useRef<'next' | 'prev'>('next')
+    const prevActiveRef = useRef<number>(0)
     const { assets, isLoading } = useAssets()
     const router = useRouter()
     const lang = router.locale ?? router.defaultLocale ?? 'en'
 
-    // Ensure we have slides data before rendering
+    // Framer Motion animate for text
+    const [textScope, animateText] = useAnimate()
+
     const heroSlides = assets
         ?.filter((asset) => asset.media_type === 'video')
         .sort((a, b) => {
-            // Extract number from the end of name (e.g., 'banner_video_2' -> 2)
             const getSuffixNumber = (name: string) => {
                 const parts = name.split('_')
                 const lastPart = parts[parts.length - 1]
@@ -48,131 +41,97 @@ const Hero = () => {
             return getSuffixNumber(a.name) - getSuffixNumber(b.name)
         })
 
-    useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                id: 'home-hero-animation',
-                toggleActions: 'play none none reset'
-            }
-        })
-
-        // Animasi fade untuk h3 dengan durasi lebih lama
-        timeline.fromTo(
-            [h3RefFirst.current, h3RefSecond.current],
-            { opacity: 0 },
-            { opacity: 1, duration: 1, ease: 'power2.out' }
-        )
-
-        // Animasi h1 muncul dari bawah setelah h3 selesai
-        timeline.fromTo(h1Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
-
-        // store timeline so we can restart it on slide change
-        timelineRef.current = timeline
-
-        return () => {
-            timeline.scrollTrigger?.kill()
-            try {
-                timeline.kill()
-            } catch (e) {
-                // ignore
-            }
-            timelineRef.current = null
-        }
-    }, [])
-
-    // Restart the timeline animation when active slide changes so text animates per slide
+    // Text animation on slide change
     useEffect(() => {
-        try {
-            if (timelineRef.current && !timelineRef.current.isActive()) {
-                // restart from beginning for the new slide, only if not currently animating
-                timelineRef.current.restart()
-            }
-        } catch (e) {
-            // swallow errors in non-browser or if timeline not ready
-        }
-    }, [activeIndex])
+        if (isLoading || !textScope.current) return
+        animateText(textScope.current, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, ease: [0.33, 1, 0.68, 1] })
+    }, [activeIndex, isLoading, animateText, textScope])
 
-    // Observe hero visibility to pause videos when not visible
+    // Observe hero visibility
     useEffect(() => {
         if (typeof window === 'undefined' || !sectionRef.current) return
-        const el = sectionRef.current
-        const io = new IntersectionObserver(
-            (entries) => {
-                const e = entries[0]
-                setIsVisible(Boolean(e.isIntersecting))
-            },
-            { threshold: 0.25 }
-        )
-        io.observe(el)
+        const io = new IntersectionObserver((entries) => setIsVisible(Boolean(entries[0].isIntersecting)), {
+            threshold: 0.25
+        })
+        io.observe(sectionRef.current)
         return () => io.disconnect()
     }, [])
 
-    // Enhanced video playback with proper loading state and error handling
+    // Initialize video positions once slides load
     useEffect(() => {
-        const vids = videoRefs.current
-        Object.keys(vids).forEach((k) => {
-            const idx = Number(k)
-            const v = vids[k]
+        if (!heroSlides?.length) return
+        heroSlides.forEach((_, idx) => {
+            const v = videoRefs.current[idx]
             if (!v) return
+            v.style.transform = idx === 0 ? 'translateX(0%)' : 'translateX(100%)'
+            v.style.opacity = '0'
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [heroSlides?.length])
 
-            try {
-                if (idx === activeIndex && isVisible) {
-                    v.muted = true
+    // Slide animation when activeIndex changes (CSS transitions)
+    useEffect(() => {
+        const prev = prevActiveRef.current
+        const curr = activeIndex
+        prevActiveRef.current = curr
 
-                    // Function to attempt playing the video with retries
-                    const attemptPlay = async (retryCount = 0) => {
-                        try {
-                            // Ensure video has enough data before playing
-                            if (v.readyState < 2) {
-                                // HAVE_CURRENT_DATA
-                                await new Promise<void>((resolve) => {
-                                    const onCanPlay = () => {
-                                        v.removeEventListener('canplay', onCanPlay)
-                                        resolve()
-                                    }
-                                    v.addEventListener('canplay', onCanPlay)
-                                    // Set a timeout in case canplay never fires
-                                    setTimeout(() => {
-                                        v.removeEventListener('canplay', onCanPlay)
-                                        resolve()
-                                    }, 3000)
-                                })
-                            }
+        if (prev === curr) return
 
-                            // Attempt to play
-                            await v.play()
-                            setVideoReady((prev) => ({ ...prev, [idx]: true }))
-                        } catch (err) {
-                            // Retry logic for common playback errors
-                            if (retryCount < 2) {
-                                setTimeout(() => attemptPlay(retryCount + 1), 500)
-                            } else {
-                                console.warn(`Video ${idx} failed to play after retries:`, err)
-                            }
-                        }
+        const isNext = directionRef.current !== 'prev'
+        const prevV = videoRefs.current[prev]
+        const currV = videoRefs.current[curr]
+
+        // Position incoming video off-screen
+        if (currV) {
+            currV.style.transition = 'none'
+            currV.style.transform = isNext ? 'translateX(100%)' : 'translateX(-100%)'
+            // Force reflow to apply instant position before transitioning
+            currV.offsetHeight // eslint-disable-line no-unused-expressions
+            currV.style.transition = 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)'
+            currV.style.transform = 'translateX(0%)'
+        }
+
+        // Slide out outgoing video
+        if (prevV) {
+            prevV.style.transition =
+                'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1)'
+            prevV.style.transform = isNext ? 'translateX(-100%)' : 'translateX(100%)'
+            prevV.style.opacity = '0'
+        }
+    }, [activeIndex])
+
+    // Fade in active video when ready
+    useEffect(() => {
+        const v = videoRefs.current[activeIndex]
+        if (!v) return
+        if (videoReady[activeIndex]) {
+            v.style.transition = 'opacity 0.4s ease-out'
+            v.style.opacity = '1'
+        } else {
+            v.style.opacity = '0'
+        }
+    }, [videoReady, activeIndex])
+
+    // Play active video, pause others.
+    useEffect(() => {
+        let cancelled = false
+        Object.entries(videoRefs.current).forEach(([k, v]) => {
+            if (!v) return
+            const idx = Number(k)
+            if (idx === activeIndex && isVisible) {
+                v.play().catch((err) => {
+                    if (!cancelled && err?.name !== 'AbortError') {
+                        console.warn(`Video ${idx} play failed:`, err)
                     }
-
-                    // Start the play attempt
-                    if (v.readyState < 3) {
-                        v.load()
-                    }
-                    attemptPlay()
-                } else {
-                    v.pause()
-                    setVideoReady((prev) => ({ ...prev, [idx]: false }))
-                    try {
-                        v.currentTime = 0
-                    } catch (e) {
-                        // ignore
-                    }
-                }
-            } catch (e) {
-                console.warn('Video control error:', e)
+                })
+            } else {
+                v.pause()
+                v.currentTime = 0
             }
         })
+        return () => {
+            cancelled = true
+        }
     }, [activeIndex, isVisible])
 
     return (
@@ -180,134 +139,116 @@ const Hero = () => {
             <div className='absolute inset-x-0 bottom-10 z-10 xl:bottom-16'>
                 <Container>
                     <div className='flex w-full flex-col items-start justify-between gap-14 xl:flex-row xl:items-end xl:gap-4'>
-                        <div className='flex flex-col justify-end gap-2'>
+                        <motion.div ref={textScope} className='flex flex-col justify-end gap-2'>
                             <h3
-                                ref={h3RefFirst}
                                 className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-white uppercase'
-                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
+                                style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                {heroSlides &&
-                                    heroSlides[activeIndex] &&
-                                    heroSlides[activeIndex].video_banner?.[lang]?.sub_header}
+                                {heroSlides?.[activeIndex]?.video_banner?.[lang]?.sub_header}
                             </h3>
                             <h1
-                                ref={h1Ref}
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-[360px] xl:w-[700px]'
-                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-full xl:w-[700px]'
+                                style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                <Trans i18nKey='hero.title' components={{ br: <br /> }}>
-                                    {heroSlides &&
-                                        heroSlides[activeIndex] &&
-                                        heroSlides[activeIndex].video_banner?.[lang]?.title}
-                                </Trans>
+                                {heroSlides?.[activeIndex]?.video_banner?.[lang]?.title && (
+                                    <Trans i18nKey='hero.title' components={{ br: <br /> }}>
+                                        {heroSlides[activeIndex].video_banner?.[lang]?.title}
+                                    </Trans>
+                                )}
                             </h1>
                             <h3
-                                ref={h3RefSecond}
                                 className='xl:text-paragraph-6-desktop text-paragraph-6-mobile text-grey-200'
-                                style={{ opacity: !isLoading ? 1 : 0, pointerEvents: isLoading ? 'none' : 'auto' }}
+                                style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
-                                {heroSlides &&
-                                    heroSlides[activeIndex] &&
-                                    heroSlides[activeIndex].video_banner?.[lang]?.sub_footer}
+                                {heroSlides?.[activeIndex]?.video_banner?.[lang]?.sub_footer}
                             </h3>
-                        </div>
+                        </motion.div>
                         <div className='flex flex-shrink-0 flex-row justify-end gap-2'>
-                            {heroSlides &&
-                                heroSlides?.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => swiperRef.current?.slideToLoop(index)}
-                                        className={classNames(
-                                            'bg-grey-500 relative h-[3px] w-8 overflow-hidden focus:outline-none',
-                                            {
-                                                'w-16': activeIndex === index
-                                            }
-                                        )}
-                                    >
-                                        <div
-                                            key={`progress-${activeIndex}-${index}`}
-                                            className={classNames('bg-grey-white absolute left-0 top-0 h-full', {
-                                                'animate-progress': activeIndex === index,
-                                                'w-0': activeIndex !== index
-                                            })}
-                                        />
-                                    </button>
-                                ))}
+                            {heroSlides?.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => swiperRef.current?.slideToLoop(index)}
+                                    className={classNames(
+                                        'bg-grey-500 relative h-[3px] w-8 overflow-hidden focus:outline-none',
+                                        { 'w-16': activeIndex === index }
+                                    )}
+                                >
+                                    <div
+                                        key={`progress-${activeIndex}-${index}`}
+                                        className={classNames('bg-grey-white absolute left-0 top-0 h-full', {
+                                            'animate-progress': activeIndex === index,
+                                            'w-0': activeIndex !== index
+                                        })}
+                                    />
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </Container>
             </div>
-            <Swiper
-                modules={[Autoplay, Pagination]}
-                autoplay={{
-                    delay: 5000,
-                    disableOnInteraction: false
-                }}
-                speed={1500}
-                slidesPerView={1}
-                onSwiper={(swiper) => {
-                    swiperRef.current = swiper
-                }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                loop={true}
-                allowTouchMove={false}
-                className='h-full w-full [&_.swiper-slide]:!opacity-100'
-            >
-                {heroSlides &&
-                    heroSlides.map((slide, idx) => (
+
+            {heroSlides?.map((slide, idx) => (
+                <video
+                    key={slide.id}
+                    ref={(el) => {
+                        videoRefs.current[idx] = el
+                    }}
+                    src={slide.media.url}
+                    className='absolute inset-0 h-full w-full object-cover'
+                    muted
+                    playsInline
+                    preload='auto'
+                    onCanPlay={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
+                    onPlaying={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
+                    onWaiting={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
+                    onError={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
+                    style={{ zIndex: idx === activeIndex ? 1 : 0 }}
+                />
+            ))}
+
+            {heroSlides && heroSlides.length > 0 ? (
+                <Swiper
+                    modules={[Autoplay]}
+                    autoplay={{ delay: 5000, disableOnInteraction: false }}
+                    speed={1}
+                    slidesPerView={1}
+                    onSwiper={(swiper) => {
+                        swiperRef.current = swiper
+                    }}
+                    onSlideChange={(swiper) => {
+                        directionRef.current = (swiper.swipeDirection as 'next' | 'prev') || 'next'
+                        setActiveIndex(swiper.realIndex)
+                    }}
+                    loop={true}
+                    allowTouchMove={false}
+                    className='absolute inset-0'
+                >
+                    {heroSlides.map((slide, idx) => (
                         <SwiperSlide key={slide.id} className='absolute !translate-y-0'>
-                            {/* fallback poster image until video is ready */}
                             <Image
-                                src={idx % 2 === 0 ? '/images/home/hero-home.webp' : '/images/about-us/hero.webp'}
+                                src={FALLBACK_IMAGES[idx % FALLBACK_IMAGES.length]}
                                 alt='hero poster'
                                 className='absolute inset-0 h-full w-full object-cover'
                                 fill
                             />
-
-                            <video
-                                ref={(el) => {
-                                    videoRefs.current[idx] = el
-                                }}
-                                className='absolute inset-0 h-full w-full object-cover'
-                                muted
-                                playsInline
-                                preload='metadata'
-                                onLoadedData={() => {
-                                    setVideoLoaded((s) => ({ ...s, [idx]: true }))
-                                }}
-                                onCanPlay={() => {
-                                    setVideoReady((s) => ({ ...s, [idx]: true }))
-                                }}
-                                onWaiting={() => {
-                                    setVideoReady((s) => ({ ...s, [idx]: false }))
-                                }}
-                                onPlaying={() => {
-                                    setVideoReady((s) => ({ ...s, [idx]: true }))
-                                }}
-                                onError={(e) => {
-                                    console.warn(`Video ${idx} error:`, e)
-                                    setVideoReady((s) => ({ ...s, [idx]: false }))
-                                }}
-                                style={{
-                                    opacity: videoReady[idx] || videoLoaded[idx] ? 1 : 0,
-                                    transition: 'opacity 400ms ease'
-                                }}
-                            >
-                                {/* prefer webm when available, fallback to provided mp4 */}
-                                <source src={slide.media.url.replace(/\.mp4$/i, '.webm')} type='video/webm' />
-                                <source src={slide.media.url} type='video/mp4' />
-                            </video>
-
-                            {/* gradient overlay to keep text readable */}
-                            <div
-                                className='absolute inset-0'
-                                style={{
-                                    background: 'linear-gradient(180deg, rgba(1,1,1,0) 31.05%, #010101 97.39%)'
-                                }}
-                            />
                         </SwiperSlide>
                     ))}
-            </Swiper>
+                </Swiper>
+            ) : (
+                <Image
+                    src={FALLBACK_IMAGES[0]}
+                    alt='hero'
+                    className='absolute inset-0 h-full w-full object-cover'
+                    fill
+                    priority
+                />
+            )}
+
+            {/* Persistent gradient */}
+            <div
+                className='absolute inset-0 z-[1]'
+                style={{ background: 'linear-gradient(180deg, rgba(1,1,1,0) 31.05%, #010101 97.39%)' }}
+            />
 
             <style jsx>{`
                 @keyframes progress {

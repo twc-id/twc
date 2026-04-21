@@ -5,8 +5,6 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
@@ -15,9 +13,6 @@ import { useMediaQuery } from 'react-responsive'
 interface SuggestionProps {
     products?: any
 }
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const Suggestion = ({ products }: SuggestionProps) => {
     const { t } = useTranslation(['home', 'common', 'collection'])
@@ -25,19 +20,6 @@ const Suggestion = ({ products }: SuggestionProps) => {
 
     // Use the related products hook
     const { data: related = [], isLoading } = useRelatedProducts(products?.id, isMobile ? 4 : 3)
-
-    const handleSelect = () => {
-        if (typeof window === 'undefined') return
-        try {
-            // kill the specific left pin ScrollTrigger and all ScrollTriggers
-            ScrollTrigger.getById && ScrollTrigger.getById('detail-left-pin')?.kill()
-            ScrollTrigger.getAll && ScrollTrigger.getAll().forEach((s: any) => s.kill())
-            // kill any active tweens
-            gsap.killTweensOf('*')
-        } catch (e) {
-            // swallow
-        }
-    }
 
     const isWatch = products?.categories?.some((category: any) => category.name === 'Watches')
 
@@ -70,7 +52,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                     }
                                 }}
                             >
-                                <div onClick={handleSelect} className='relative flex w-full flex-col gap-1 xl:gap-12'>
+                                <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
                                     <div className='flex items-center justify-center xl:h-[417px] xl:w-[344px]'>
                                         <div className='h-[158px] w-[99px] overflow-hidden xl:h-[319px] xl:w-[196px]'>
                                             <Image
@@ -122,7 +104,6 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                         </p>
                                         {p.purchasable && (
                                             <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
-                                                {/* IDR {parseInt(p.price).toLocaleString('id-ID')} */}
                                                 {formatRupiah(p.price)}
                                             </p>
                                         )}

@@ -5,8 +5,6 @@ import Toast from '@components/Toast'
 import { ThemeProvider } from '@contexts/ThemeContext'
 import { useGATracking } from '@lib/useGATracking'
 import { HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -18,11 +16,6 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css'
 // Updated imports to use alias format
 import '@styles/globals.css'
 import '@styles/nprogress.css'
-
-// Initialize GSAP on client-side
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 // Route change handlers
 Router.events.on('routeChangeStart', () => {
