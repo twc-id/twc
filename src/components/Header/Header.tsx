@@ -454,7 +454,7 @@ const Headers = () => {
                         return
                     }
 
-                    // Get scroll position - works with both native scroll and ScrollSmoother
+                    // Get scroll position
                     const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
                     const lastY = lastScrollYRef.current
                     const scrollDirection = currentScrollY > lastY ? 'down' : 'up'
@@ -536,39 +536,15 @@ const Headers = () => {
             // Lock scroll without changing position (prevents visual jump)
             document.body.style.overflow = 'hidden'
             document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px` // Prevent layout shift from scrollbar
-
-            // Pause ScrollSmoother to prevent scrolling when menu is open
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(true)
-                }
-            }
         } else {
             // Restore scroll
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
-
-            // Resume ScrollSmoother
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(false)
-                }
-            }
         }
 
         return () => {
             document.body.style.overflow = ''
             document.body.style.paddingRight = ''
-
-            // Resume ScrollSmoother on cleanup
-            if (typeof window !== 'undefined') {
-                const smoother = (window as any).scrollSmootherInstance
-                if (smoother && typeof smoother.paused === 'function') {
-                    smoother.paused(false)
-                }
-            }
         }
     }, [isMenuOpen, isSearchOpen])
 

@@ -1,7 +1,6 @@
 import Icons from '@components/Icon'
-import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
-import gsap from 'gsap'
+import { motion } from 'motion/react'
 import { PropsWithChildren, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -40,8 +39,6 @@ const ModalV2 = ({
     closeBackdrop,
     withClose = true
 }: ModalV2Props) => {
-    const backdropRef = useRef<HTMLDivElement>(null)
-    const modalRef = useRef<HTMLDivElement>(null)
     const modalContentRef = useRef<HTMLDivElement>(null)
 
     // Use scroll management hook
@@ -62,80 +59,20 @@ const ModalV2 = ({
         return () => document.removeEventListener('keydown', handleEscape)
     }, [open, onClose])
 
-    // GSAP timeline for open animations
-    useGSAP(() => {
-        if (!open) return
-
-        const timeline = gsap.timeline({ paused: true })
-
-        // Set initial state
-        gsap.set(backdropRef.current, { opacity: 0 })
-        gsap.set(modalRef.current, { opacity: 0, scale: 0.8 })
-
-        // Open animation sequence
-        timeline
-            .to(backdropRef.current, { opacity: 1, duration: 0.3, ease: 'power2.out' })
-            .to(
-                modalRef.current,
-                {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.3,
-                    ease: 'back.out(1.2)'
-                },
-                '-=0.1'
-            )
-            .play()
-
-        return () => {
-            timeline.kill()
-        }
-    }, [open])
-
-    // Close animation when open becomes false
-    useEffect(() => {
-        if (!open && (backdropRef.current || modalRef.current)) {
-            const timeline = gsap.timeline({
-                onComplete: () => {
-                    // Cleanup after animation completes
-                }
-            })
-
-            timeline
-                .to(modalRef.current, {
-                    opacity: 0,
-                    scale: 0.95,
-                    duration: 0.2,
-                    ease: 'power2.in'
-                })
-                .to(
-                    backdropRef.current,
-                    {
-                        opacity: 0,
-                        duration: 0.2,
-                        ease: 'power2.in'
-                    },
-                    '-=0.1'
-                )
-
-            return () => {
-                timeline.kill()
-            }
-        }
-    }, [open])
-
     // Don't render anything if not open
     if (!open) return null
 
-    // Render via portal to document.body (outside ScrollSmoother wrapper)
+    // Render via portal to document.body
     return (
         <>
             {
                 createPortal(
                     <>
                         {/* Backdrop */}
-                        <div
-                            ref={backdropRef}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
                             className='bg-dropdown-menu-overlay fixed inset-0 z-[998]'
                             onClick={() => {
                                 if (closeBackdrop) {
@@ -146,8 +83,10 @@ const ModalV2 = ({
                         />
 
                         {/* Modal */}
-                        <div
-                            ref={modalRef}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
                             className={classNames(
                                 'fixed inset-0 z-[999] flex items-center justify-center overflow-y-auto p-4',
                                 dialogClassName
@@ -219,7 +158,7 @@ const ModalV2 = ({
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     </>,
                     document.body
                 ) as any

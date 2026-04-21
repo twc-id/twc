@@ -1,17 +1,9 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import classNames from '@lib/classnames'
-import React, { Fragment, PropsWithChildren, useEffect } from 'react'
+import React, { Fragment, PropsWithChildren } from 'react'
 import { When } from 'react-if'
 
 import Icons from '../Icon'
-
-// Types for ScrollSmoother access via window
-declare global {
-    interface Window {
-        scrollSmootherInstance?: any
-        scrollPosBeforeModal?: number
-    }
-}
 
 export const modalOverlayClassName = 'xmodal-overlay'
 export const modalDialogClassName = 'xmodal-dialog'
@@ -53,76 +45,6 @@ const Modal = ({
     const handleClose = () => {
         onClose()
     }
-
-    // Handle ScrollSmoother when modal opens/closes to prevent scroll jump
-    useEffect(() => {
-        if (typeof window === 'undefined') return
-
-        const smoother = window.scrollSmootherInstance
-
-        if (open) {
-            // Store BOTH ScrollSmoother AND native scroll positions
-            let scrollPos = 0
-            if (smoother && typeof smoother.scrollTop === 'function') {
-                scrollPos = smoother.scrollTop()
-            }
-
-            // Also get native scroll position as backup
-            const nativeScroll =
-                window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-
-            // Use the one that's larger (ScrollSmoother might return negative values)
-            window.scrollPosBeforeModal = Math.max(scrollPos, nativeScroll)
-
-            // Kill ScrollSmoother completely (GSAP recommended approach for modals)
-            if (smoother && typeof smoother.kill === 'function') {
-                smoother.kill()
-                window.scrollSmootherInstance = null
-            }
-        } else {
-            // Wait for modal close animation to complete (200ms matches leave duration)
-            setTimeout(() => {
-                const smoothWrapper = document.getElementById('smooth-wrapper-home')
-                const smoothContent = document.getElementById('smooth-content-home')
-
-                if (smoothWrapper && smoothContent) {
-                    // Create new ScrollSmoother instance (same config as Layout.tsx)
-                    const isMobile = window.matchMedia('(max-width: 1279px)').matches
-                    const { ScrollSmoother: ScrollSmootherClass } = require('gsap/dist/ScrollSmoother')
-                    const newSmoother = ScrollSmootherClass.create({
-                        wrapper: smoothWrapper,
-                        content: smoothContent,
-                        smooth: 2,
-                        effects: false,
-                        smoothTouch: isMobile ? 1 : false,
-                        normalizeScroll: false
-                    })
-
-                    // Store globally
-                    window.scrollSmootherInstance = newSmoother
-
-                    // Restore scroll position
-                    const storedScroll = window.scrollPosBeforeModal || 0
-
-                    if (storedScroll > 0) {
-                        // Use native scroll first as fallback
-                        window.scrollTo(0, storedScroll)
-
-                        // Then use ScrollSmoother's scrollTo
-                        if (typeof newSmoother.scrollTo === 'function') {
-                            newSmoother.scrollTo(storedScroll, false)
-                        }
-                    }
-
-                    // Refresh ScrollTrigger after restoring position
-                    const { ScrollTrigger } = require('gsap/dist/ScrollTrigger')
-                    setTimeout(() => {
-                        ScrollTrigger.refresh()
-                    }, 100)
-                }
-            }, 200) // Wait for modal close animation (leave='ease-in duration-200')
-        }
-    }, [open])
 
     return (
         <Transition appear show={open} as={Fragment}>

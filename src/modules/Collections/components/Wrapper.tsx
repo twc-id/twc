@@ -1,15 +1,12 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
-import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import Content from '@modules/Collections/components/Content'
 import MobileFilterModal from '@modules/Collections/components/MobileFilterModal'
 import Sidebar from '@modules/Collections/components/Sidebar'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
-import gsap from 'gsap'
-import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -27,10 +24,6 @@ interface WrapperProps {
     onTabChange?: (index: number) => void
     brandOptions?: Array<{ id: string; name: string }>
     brandLoading?: boolean
-}
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
 }
 
 const Wrapper: React.FC<WrapperProps> = ({
@@ -61,90 +54,6 @@ const Wrapper: React.FC<WrapperProps> = ({
     const [headerHeight, setHeaderHeight] = useState<number>(0)
     const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
 
-    // Kill ScrollSmoother on desktop — its transform + position:fixed
-    // on wrapper/content divs prevents normal page scroll.
-    // Recreate when leaving the page.
-    useEffect(() => {
-        if (isMobile) return
-
-        let cancelled = false
-
-        const killSmoother = () => {
-            if (cancelled) return
-            const smoother = (window as any).scrollSmootherInstance
-            if (!smoother) return
-
-            const currentScroll = smoother.scrollTop()
-            smoother.kill()
-            ;(window as any).scrollSmootherInstance = null
-
-            const wrapper = document.getElementById('smooth-wrapper-home')
-            const contentEl = document.getElementById('smooth-content-home')
-            if (wrapper) wrapper.removeAttribute('style')
-            if (contentEl) contentEl.removeAttribute('style')
-
-            // Override ancestor overflow-hidden to enable CSS sticky on sidebar.
-            // Layout.tsx sets overflow-hidden on the parent div which breaks sticky.
-            const parentDiv = wrapper?.parentElement
-            if (parentDiv) {
-                parentDiv.style.overflowX = 'clip'
-                parentDiv.style.overflowY = 'visible'
-            }
-
-            window.scrollTo(0, currentScroll)
-
-            // globals.css sets overflow-x:hidden on body which forces
-            // overflow-y:auto — creating a second scrollbar alongside
-            // the viewport scrollbar. Override to overflow:visible so
-            // body doesn't create a scroll context. The viewport (html)
-            // handles scrolling with a single scrollbar.
-            // GSAP sets body overflow async after kill — poll to override.
-            let clearAttempts = 0
-            const setBodyOverflow = () => {
-                document.body.style.overflow = 'visible'
-                clearAttempts++
-                if (clearAttempts < 10) {
-                    requestAnimationFrame(setBodyOverflow)
-                }
-            }
-            setBodyOverflow()
-        }
-
-        // Try immediately (works on client-side navigation)
-        const smoother = (window as any).scrollSmootherInstance
-        if (smoother) {
-            killSmoother()
-        } else {
-            // First page load: Layout's effect hasn't run yet — wait one frame
-            requestAnimationFrame(() => killSmoother())
-        }
-
-        return () => {
-            cancelled = true
-            // Restore body overflow — ScrollSmoother will manage it
-            document.body.style.removeProperty('overflow')
-
-            const wrapper = document.getElementById('smooth-wrapper-home')
-            const content = document.getElementById('smooth-content-home')
-
-            // Restore ancestor overflow
-            const parentDiv = wrapper?.parentElement
-            if (parentDiv) parentDiv.style.overflow = ''
-            if (wrapper && content) {
-                const isMobileCheck = window.matchMedia('(max-width: 1279px)').matches
-                const newSmoother = ScrollSmoother.create({
-                    wrapper,
-                    content,
-                    smooth: 0.8,
-                    effects: false,
-                    smoothTouch: isMobileCheck ? 0.3 : false,
-                    normalizeScroll: false
-                })
-                ;(window as any).scrollSmootherInstance = newSmoother
-            }
-        }
-    }, [isMobile])
-
     const handleApplyFilters = (tempFilters: any) => {
         const keys = ['brands', 'availability', 'condition', 'gender', 'priceRange', 'sortBy'] as const
         keys.forEach((key) => {
@@ -153,34 +62,6 @@ const Wrapper: React.FC<WrapperProps> = ({
             }
         })
     }
-
-    // Fade-in animation only (no pin/scrub)
-    useGSAP(() => {
-        const mm = gsap.matchMedia()
-
-        mm.add('(min-width: 1280px)', () => {
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    id: 'collections-wrapper-animation',
-                    toggleActions: 'restart none none reset'
-                }
-            })
-
-            timeline.fromTo(topRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' })
-
-            return () => {
-                timeline.scrollTrigger?.kill()
-                timeline.kill()
-            }
-        })
-
-        return () => {
-            mm.revert()
-        }
-    }, [])
 
     // measure header height so we can position the portal below it
     useEffect(() => {
@@ -317,7 +198,11 @@ const Wrapper: React.FC<WrapperProps> = ({
             {fixedTabBar}
 
             <Container className='relative flex flex-col gap-7 xl:gap-10 xl:pb-11' ref={sectionRef}>
-                <div
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
                         { invisible: showTopSticky && !isMobile }
@@ -365,7 +250,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                     '
                         />
                     </Button>
-                </div>
+                </motion.div>
 
                 {(() => {
                     const showSidebar = selectedTab === 0

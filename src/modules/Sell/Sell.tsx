@@ -7,81 +7,13 @@ import Faq from '@modules/Sell/components/Faq'
 import Hero from '@modules/Sell/components/Hero'
 import HowToSell from '@modules/Sell/components/HowToSell'
 import WhiteSpace from '@modules/Sell/components/WhiteSpace'
-import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 const Sell = () => {
     const { t } = useTranslation('sell')
     const { assets } = useAssets()
 
-    // Kill ScrollSmoother to enable CSS sticky and remove GSAP dependency
-    useEffect(() => {
-        let cancelled = false
-
-        const killSmoother = () => {
-            if (cancelled) return
-            const smoother = (window as any).scrollSmootherInstance
-            if (!smoother) return
-
-            const currentScroll = smoother.scrollTop()
-            smoother.kill()
-            ;(window as any).scrollSmootherInstance = null
-
-            const wrapper = document.getElementById('smooth-wrapper-home')
-            const contentEl = document.getElementById('smooth-content-home')
-            if (wrapper) wrapper.removeAttribute('style')
-            if (contentEl) contentEl.removeAttribute('style')
-
-            const parentDiv = wrapper?.parentElement
-            if (parentDiv) {
-                parentDiv.style.overflowX = 'clip'
-                parentDiv.style.overflowY = 'visible'
-            }
-
-            window.scrollTo(0, currentScroll)
-
-            let clearAttempts = 0
-            const setBodyOverflow = () => {
-                document.body.style.overflow = 'visible'
-                clearAttempts++
-                if (clearAttempts < 10) {
-                    requestAnimationFrame(setBodyOverflow)
-                }
-            }
-            setBodyOverflow()
-        }
-
-        const smoother = (window as any).scrollSmootherInstance
-        if (smoother) {
-            killSmoother()
-        } else {
-            requestAnimationFrame(() => killSmoother())
-        }
-
-        return () => {
-            cancelled = true
-            document.body.style.removeProperty('overflow')
-
-            const wrapper = document.getElementById('smooth-wrapper-home')
-            const content = document.getElementById('smooth-content-home')
-            const parentDiv = wrapper?.parentElement
-            if (parentDiv) parentDiv.style.overflow = ''
-
-            if (wrapper && content) {
-                const isMobileCheck = window.matchMedia('(max-width: 1279px)').matches
-                const newSmoother = ScrollSmoother.create({
-                    wrapper,
-                    content,
-                    smooth: 0.8,
-                    effects: false,
-                    smoothTouch: isMobileCheck ? 0.3 : false,
-                    normalizeScroll: false
-                })
-                ;(window as any).scrollSmootherInstance = newSmoother
-            }
-        }
-    }, [])
     const heroImage = assets?.find((asset) => asset.name === 'sell-1')?.media.url
     const howToSellImage1 = assets?.find((asset) => asset.name === 'sell-2')?.media.url
     const howToSellImage2 = assets?.find((asset) => asset.name === 'sell-3')?.media.url

@@ -6,7 +6,6 @@ import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { ModalV2 } from '@components/Modal'
 import Skeleton from '@components/Skeleton'
-import { useGSAP } from '@gsap/react'
 import { useProductCondition } from '@hooks/useProductCondition'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -14,8 +13,6 @@ import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -24,29 +21,6 @@ import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 're
 import { useCollapse } from 'react-collapsed'
 import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
-
-// Helper to detect low-end devices
-const isLowEndDevice = () => {
-    if (typeof window === 'undefined') return false
-    const hardwareConcurrency = navigator.hardwareConcurrency || 2
-    const memory = (navigator as any).deviceMemory || 4
-    // Reduce animations on devices with <=4 CPU cores or <=4GB RAM
-    return hardwareConcurrency <= 4 || memory <= 4
-}
-
-// Throttle ScrollTrigger refresh for low-end devices
-let refreshTimeout: NodeJS.Timeout | null = null
-const debouncedRefresh = () => {
-    if (refreshTimeout) clearTimeout(refreshTimeout)
-    const delay = isLowEndDevice() ? 200 : 100
-    refreshTimeout = setTimeout(() => {
-        ScrollTrigger.refresh()
-    }, delay)
-}
 
 interface PageProps {
     product?: any
@@ -111,7 +85,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const pinRef = useRef<HTMLDivElement | null>(null)
     const scrollRef = useRef<HTMLDivElement | null>(null)
     const priceRef = useRef<HTMLDivElement | null>(null)
-    const rightPinRef = useRef<HTMLDivElement | null>(null)
     const rightScrollRef = useRef<HTMLDivElement | null>(null)
     const [activeImageIndex, setActiveImageIndex] = useState(0)
     const [imageModalOpen, setImageModalOpen] = useState(false)
@@ -124,131 +97,41 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
-    // Pin both left and right columns on desktop - each scrolls independently
-    useGSAP(() => {
-        const leftPinEl = pinRef.current
+    // Forward wheel events to the page when the inner image container
+    // cannot scroll further in the wheel direction (desktop only)
+    useEffect(() => {
         const leftScrollEl = scrollRef.current
-        const rightPinEl = rightPinRef.current
-        const rightScrollEl = rightScrollRef.current
-        // increase end buffer on desktop so the pin releases earlier
-        // const endBuffer = typeof window !== 'undefined' && window.innerWidth >= 1280 ? 300 : 80
+        if (!leftScrollEl || typeof window === 'undefined') return
 
-        let _leftWheelHandler: ((e: WheelEvent) => void) | null = null
-        const roL = new ResizeObserver(debouncedRefresh)
-        const roR = new ResizeObserver(debouncedRefresh)
+        const isDesktop = window.innerWidth >= 1280
+        if (!isDesktop) return
 
-        // Only create ScrollTrigger pins on desktop - mobile doesn't need pins
-        // and the pins interfere with touch events on mobile
-        const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1280
+        const wheelHandler = (e: WheelEvent) => {
+            try {
+                const isHorizontal = leftScrollEl.scrollWidth > leftScrollEl.clientWidth
+                const primaryDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
 
-        if (leftPinEl && leftScrollEl) {
-            const id = 'detail-left-pin'
-
-            if (isDesktop) {
-                ScrollTrigger.create({
-                    id,
-                    trigger: leftPinEl,
-                    start: 'top top',
-                    // end: () => `+=${Math.max(0, leftScrollEl.scrollHeight - leftScrollEl.clientHeight - endBuffer)}`,
-                    end: 'bottom bottom',
-                    pin: leftPinEl,
-                    pinSpacing: false
-                })
-            }
-
-            roL.observe(leftScrollEl)
-
-            // When left pin is not yet active, forward wheel events to the page only
-            // when the inner container cannot scroll further in the wheel direction.
-            // Only apply on desktop - mobile uses touch events for carousel swipe
-            const wheelHandler = (e: WheelEvent) => {
-                try {
-                    // Skip wheel handling on mobile - let touch events work naturally
-                    if (!isDesktop) return
-
-                    const st = ScrollTrigger.getById(id)
-
-                    // if ScrollTrigger exists and is active, let inner scrolling behave normally
-                    if (st && st.isActive) return
-
-                    const isHorizontal = leftScrollEl.scrollWidth > leftScrollEl.clientWidth
-
-                    // choose the primary delta for user intent (horizontal vs vertical)
-                    const primaryDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-
-                    if (isHorizontal) {
-                        const atLeft = leftScrollEl.scrollLeft <= 0
-                        const atRight =
-                            leftScrollEl.scrollLeft + leftScrollEl.clientWidth >= leftScrollEl.scrollWidth - 1
-
-                        // if inner can scroll in the wheel direction, let it
-                        if ((primaryDelta > 0 && !atRight) || (primaryDelta < 0 && !atLeft)) return
-
-                        // otherwise forward horizontally to window vertical scroll
-                        e.preventDefault()
-                        window.scrollBy({ top: primaryDelta, behavior: 'auto' })
-                    } else {
-                        const atTop = leftScrollEl.scrollTop <= 0
-                        const atBottom =
-                            leftScrollEl.scrollTop + leftScrollEl.clientHeight >= leftScrollEl.scrollHeight - 1
-
-                        if ((primaryDelta > 0 && !atBottom) || (primaryDelta < 0 && !atTop)) return
-
-                        e.preventDefault()
-                        window.scrollBy({ top: primaryDelta, behavior: 'auto' })
-                    }
-                } catch (err) {
-                    // swallow
+                if (isHorizontal) {
+                    const atLeft = leftScrollEl.scrollLeft <= 0
+                    const atRight = leftScrollEl.scrollLeft + leftScrollEl.clientWidth >= leftScrollEl.scrollWidth - 1
+                    if ((primaryDelta > 0 && !atRight) || (primaryDelta < 0 && !atLeft)) return
+                    e.preventDefault()
+                    window.scrollBy({ top: primaryDelta, behavior: 'auto' })
+                } else {
+                    const atTop = leftScrollEl.scrollTop <= 0
+                    const atBottom = leftScrollEl.scrollTop + leftScrollEl.clientHeight >= leftScrollEl.scrollHeight - 1
+                    if ((primaryDelta > 0 && !atBottom) || (primaryDelta < 0 && !atTop)) return
+                    e.preventDefault()
+                    window.scrollBy({ top: primaryDelta, behavior: 'auto' })
                 }
+            } catch (err) {
+                // swallow
             }
-
-            _leftWheelHandler = wheelHandler
-            leftScrollEl.addEventListener('wheel', wheelHandler, { passive: false })
         }
 
-        // Pin right column (product info) on desktop
-        if (rightPinEl && rightScrollEl && isDesktop) {
-            const rightId = 'detail-right-pin'
-
-            ScrollTrigger.create({
-                id: rightId,
-                trigger: rightPinEl,
-                start: 'top top',
-                end: 'bottom bottom',
-                pin: rightPinEl,
-                pinSpacing: false
-            })
-
-            roR.observe(rightScrollEl)
-        }
-
-        const onLoad = () => ScrollTrigger.refresh()
-        window.addEventListener('load', onLoad)
-
-        return () => {
-            ScrollTrigger.getById('detail-left-pin')?.kill()
-            ScrollTrigger.getById('detail-right-pin')?.kill()
-            // remove wheel handler if attached
-            try {
-                if (leftScrollEl && _leftWheelHandler) leftScrollEl.removeEventListener('wheel', _leftWheelHandler)
-            } catch (e) {
-                // ignore
-            }
-            try {
-                roL.disconnect()
-            } catch (e) {
-                // ignore
-            }
-            try {
-                roR.disconnect()
-            } catch (e) {
-                // ignore
-            }
-            window.removeEventListener('load', onLoad)
-            if (refreshTimeout) clearTimeout(refreshTimeout)
-            ScrollTrigger.refresh()
-        }
-    }, [product?.images?.length, product?.id, priceHistory?.length])
+        leftScrollEl.addEventListener('wheel', wheelHandler, { passive: false })
+        return () => leftScrollEl.removeEventListener('wheel', wheelHandler)
+    }, [product?.images?.length, product?.id])
 
     // measure header height so we can position the portal below it
     useEffect(() => {
@@ -257,8 +140,6 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const hdr = document.querySelector('.nav-header') as HTMLElement | null
             const h = hdr ? Math.ceil(hdr.getBoundingClientRect().height) : 0
             setHeaderHeight(h)
-            // eslint-disable-next-line no-console
-            console.debug('Measured header height:', h)
         }
 
         measure()
@@ -569,7 +450,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
             const underline = /status|brand|model|reference|condition/.test(label.toLowerCase())
             const underlineClass = underline ? ' underline' : ''
 
-            if (label === 'brand' && item.value) {
+            if (label === 'Brand' && item.value) {
                 return (
                     <div key={idx} className='flex flex-col gap-2'>
                         <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0 '>
@@ -584,7 +465,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 )
             }
 
-            if (label === 'condition' && item.value) {
+            if (label === 'Condition' && item.value) {
                 const displayLabel = isNewFlag === true ? 'Brand New' : String(item.value)
 
                 return (
@@ -810,8 +691,14 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                 }
             `}</style>
             <Container className='flex flex-col gap-14 pt-[130px] xl:flex-row xl:items-center xl:gap-20 xl:pt-[100px]'>
-                {/* Images column: independently scrollable and GSAP-pinned until images end */}
-                <div ref={pinRef as any} className='relative w-full xl:w-auto' style={{ willChange: 'transform' }}>
+                {/* Images column: sticky on desktop so it stays visible while scrolling */}
+                <div
+                    ref={pinRef as any}
+                    className='relative w-full xl:w-auto'
+                    style={
+                        !isMobile ? { position: 'sticky', top: headerHeight + 16, alignSelf: 'flex-start' } : undefined
+                    }
+                >
                     {/* left vertical indicators */}
                     <div className='absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 flex-row justify-center gap-3 xl:left-[2px] xl:top-1/2 xl:-translate-y-1/2 xl:translate-x-0 xl:flex-col'>
                         {product.images.map((_: any, i: any) => (
@@ -867,11 +754,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
 
-                <div
-                    ref={rightPinRef as any}
-                    className='scrollbar-none flex w-full xl:w-auto'
-                    style={{ willChange: 'transform' }}
-                >
+                <div className='scrollbar-none flex w-full xl:w-auto'>
                     <div
                         ref={rightScrollRef as any}
                         className='scrollbar-none flex w-full flex-col gap-12 overflow-y-auto xl:max-h-[calc(100vh-160px)]'
