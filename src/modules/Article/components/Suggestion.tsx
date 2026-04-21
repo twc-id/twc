@@ -1,7 +1,5 @@
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
@@ -11,25 +9,9 @@ interface SuggestionProps {
     products?: any
     isLoading?: boolean
 }
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 const Suggestion = ({ products, isLoading }: SuggestionProps) => {
     const { t } = useTranslation(['home', 'common', 'collection'])
-
-    const handleSelect = () => {
-        if (typeof window === 'undefined') return
-        try {
-            // kill the specific left pin ScrollTrigger and all ScrollTriggers
-            ScrollTrigger.getById && ScrollTrigger.getById('detail-left-pin')?.kill()
-            ScrollTrigger.getAll && ScrollTrigger.getAll().forEach((s: any) => s.kill())
-            // kill any active tweens
-            gsap.killTweensOf('*')
-        } catch (e) {
-            // swallow
-        }
-    }
 
     return (
         <div className='flex w-full flex-col items-center gap-4 xl:gap-12'>
@@ -45,10 +27,7 @@ const Suggestion = ({ products, isLoading }: SuggestionProps) => {
                 <div className='grid grid-cols-2 grid-rows-2 flex-row items-center gap-4 xl:flex xl:gap-[140px]'>
                     {products?.map((p: any) => (
                         <Link href={`/collections/${p.slug ?? p.id}`} key={p.id}>
-                            <div
-                                onClick={handleSelect}
-                                className='relative flex min-h-[363px] w-full flex-col items-center gap-1'
-                            >
+                            <div className='relative flex min-h-[363px] w-full flex-col items-center gap-1'>
                                 <div className='flex h-[217px] w-[217px] items-center justify-center'>
                                     <div className='h-[166px] w-[124px] overflow-hidden '>
                                         <Image
@@ -98,7 +77,6 @@ const Suggestion = ({ products, isLoading }: SuggestionProps) => {
                                     </p>
                                     {p.purchasable && (
                                         <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
-                                            {/* IDR {parseInt(p.price).toLocaleString('id-ID')} */}
                                             {formatRupiah(p.price)}
                                         </p>
                                     )}
