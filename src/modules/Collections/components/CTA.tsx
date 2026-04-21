@@ -55,12 +55,12 @@ const CTA = ({ image }: { image?: string }) => {
                             height={0}
                             sizes='100vw'
                             className='h-full w-full'
-                            style={{ objectFit: 'cover', objectPosition: 'right' }}
+                            style={{ objectFit: 'contain', objectPosition: 'right' }}
                         />
                         <div
                             className='absolute inset-0'
                             style={{
-                                background: 'linear-gradient(270deg, rgba(1, 1, 1, 0) 20%, #010101 100%)'
+                                background: 'linear-gradient(270deg, rgba(1, 1, 1, 0) 5%, #010101 70%)'
                             }}
                         />
                     </div>
