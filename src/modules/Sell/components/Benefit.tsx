@@ -1,20 +1,20 @@
 import Container from '@components/Container'
 import Icons, { IconType } from '@components/Icon'
 import { useTheme } from '@contexts/ThemeContext'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { useInView } from 'motion/react'
 import { useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
+import React, { useEffect, useRef } from 'react'
 
 const Benefit = () => {
     const { t } = useTranslation('sell')
     const { setIsDarkSection } = useTheme()
     const sectionRef = useRef<HTMLElement>(null)
+
+    const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+
+    useEffect(() => {
+        if (isInView) setIsDarkSection(true)
+    }, [isInView, setIsDarkSection])
 
     const items = [
         {
@@ -34,16 +34,6 @@ const Benefit = () => {
         }
     ]
 
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom top',
-            onEnter: () => setIsDarkSection(true),
-            onLeaveBack: () => setIsDarkSection(false),
-            onEnterBack: () => setIsDarkSection(true)
-        })
-    }, [])
     return (
         <section ref={sectionRef} className='pb-14 xl:pb-[116px]'>
             <Container className=''>

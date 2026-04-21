@@ -1,19 +1,13 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import { useTheme } from '@contexts/ThemeContext'
-import { useGSAP } from '@gsap/react'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion, useInView } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
+import React, { useEffect, useRef, useState } from 'react'
 
 interface HowToSellProps {
     images?: {
@@ -27,11 +21,15 @@ interface HowToSellProps {
 const HowToSell = ({ images }: HowToSellProps) => {
     const { t } = useTranslation('sell')
     const sectionRef = useRef<HTMLElement>(null)
-    const topRef = useRef<HTMLDivElement>(null)
-    const imageContainerRef = useRef<HTMLDivElement>(null)
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const { setIsDarkSection } = useTheme()
+
+    const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+
+    useEffect(() => {
+        if (isInView) setIsDarkSection(true)
+    }, [isInView, setIsDarkSection])
 
     const items = [
         {
@@ -80,57 +78,16 @@ const HowToSell = ({ images }: HowToSellProps) => {
         })
     }
 
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom top',
-            onEnter: () => setIsDarkSection(true),
-            onLeaveBack: () => setIsDarkSection(false),
-
-            onEnterBack: () => setIsDarkSection(true)
-        })
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                toggleActions: 'restart none none reset'
-            }
-        })
-
-        timeline.fromTo(topRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            '.step-items',
-            { opacity: 0, y: 50 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.2 }
-        )
-
-        const pinTrigger = ScrollTrigger.create({
-            trigger: imageContainerRef.current,
-            start: 'top top',
-            end: '+=100%',
-            pin: true,
-            pinSpacing: false,
-            id: 'how-to-sell-pin',
-            pinnedContainer: sectionRef.current
-        })
-
-        // Cleanup
-        return () => {
-            timeline.scrollTrigger?.kill()
-            pinTrigger.kill()
-        }
-    }, [])
-
     return (
-        <section className='relative' ref={sectionRef}>
+        <section className='relative z-0 -mb-[50vh] xl:-mb-[100vh]' ref={sectionRef}>
             <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'
-                        ref={topRef}
                     >
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'>
                             {t('how_to_sell.title')}
@@ -143,8 +100,12 @@ const HowToSell = ({ images }: HowToSellProps) => {
                         >
                             <Button className='w-fit'>{t('common:book_appointment')}</Button>
                         </a>
-                    </div>
-                    <div
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.2 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
@@ -152,7 +113,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                         {items.map((item, index) => (
                             <div
                                 key={index}
-                                className='step-items flex min-w-[280px] snap-center flex-col items-start gap-4 xl:min-w-0 xl:snap-align-none xl:gap-6'
+                                className='flex min-w-[280px] snap-center flex-col items-start gap-4 xl:min-w-0 xl:snap-align-none xl:gap-6'
                             >
                                 <div className='dark:border-grey-white border-grey-black dark:text-grey-white text-grey-black flex h-8 w-8 items-center justify-center rounded-full border py-1.5'>
                                     {index + 1}
@@ -177,7 +138,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </motion.div>
                     <div className='flex flex-row items-center gap-2 xl:hidden'>
                         {items.map((_, index) => (
                             <button
@@ -191,9 +152,11 @@ const HowToSell = ({ images }: HowToSellProps) => {
                     </div>
                 </div>
             </Container>
-            <div ref={imageContainerRef} className='relative z-0 h-[300px] xl:h-[560px]'>
+            {/* Sticky pin image — next section covers it via higher z-index */}
+            <div className='sticky top-0 z-0 h-[300px] xl:h-[560px]'>
                 <Image src={images?.pin || ''} alt='The Watch Collections' fill className='object-cover' unoptimized />
             </div>
+            <div className='h-[50vh] xl:h-[100vh]' aria-hidden='true' />
         </section>
     )
 }
