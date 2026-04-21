@@ -22,6 +22,9 @@ import '@styles/nprogress.css'
 // Initialize GSAP on client-side
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger)
+    ScrollTrigger.config({
+        ignoreMobileResize: true
+    })
 }
 
 // Route change handlers

@@ -20,7 +20,7 @@ const isLowEndDevice = () => {
     if (typeof window === 'undefined') return false
     const hardwareConcurrency = navigator.hardwareConcurrency || 2
     const memory = (navigator as any).deviceMemory || 4
-    // Reduce/disable animations on devices with <=4 CPU cores or <=4GB RAM
+    // Disable ScrollSmoother on devices with <=4 CPU threads or <=4GB RAM
     return hardwareConcurrency <= 4 || memory <= 4
 }
 
@@ -58,11 +58,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         const smoother = ScrollSmoother.create({
             wrapper: smoothWrapperRef.current,
             content: smoothContentRef.current,
-            smooth: isLowEnd ? false : 2, // Disable smooth on low-end devices
+            smooth: isLowEnd ? false : 0.8, // Reduced from 2 → 1.2 → 0.8 to reduce wheel event blocking on older hardware
             effects: isLowEnd ? false : false, // Keep effects disabled for performance
             // Mobile: use smoothTouch and normalizeScroll to prevent pin flickering
             // Desktop: keep false to preserve ScrollTrigger pin functionality
-            smoothTouch: isMobile ? 0.5 : false, // Reduced from 1 to 0.5 for better mobile performance
+            smoothTouch: isMobile ? 0.3 : false, // Reduced from 0.5 for cross-browser smoothness
             normalizeScroll: false // Enable normalizeScroll only on mobile
         })
 
