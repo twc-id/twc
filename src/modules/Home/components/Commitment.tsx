@@ -1,73 +1,36 @@
 import Icons from '@components/Icon'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
-import React, { useRef } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
+import React from 'react'
 
 const Commitment = ({ image }: { image?: string }) => {
     const { t } = useTranslation('home')
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    const descRef = useRef<HTMLHeadingElement>(null)
-    const sectionRef = useRef<HTMLDivElement>(null)
-    const imageContainerRef = useRef<HTMLDivElement>(null)
-
-    useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'play none none reset',
-                id: 'commitment-timeline'
-            }
-        })
-
-        timeline.fromTo(titleRef.current, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            descRef.current,
-            { opacity: 0, x: 50 },
-            { opacity: 1, x: 0, duration: 1, ease: 'power2.out' },
-            '-=0.5'
-        )
-
-        // Pin image saat scroll
-        const pinTrigger = ScrollTrigger.create({
-            trigger: imageContainerRef.current,
-            start: 'top top',
-            end: '+=100%',
-            pin: true,
-            pinSpacing: false,
-            id: 'commitment-pin',
-            pinnedContainer: sectionRef.current
-        })
-
-        // Cleanup
-        return () => {
-            timeline.scrollTrigger?.kill()
-            timeline.kill()
-            pinTrigger.kill()
-        }
-    }, [])
 
     return (
-        <section ref={sectionRef}>
-            <div className='bg-grey-black relative  flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
-                <h1 ref={titleRef} className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'>
+        <section className='bg-grey-black relative z-0 -mb-[50vh] xl:-mb-[100vh]'>
+            <div className='bg-grey-black relative z-10 flex flex-col items-center justify-center gap-6 px-4 py-16 text-center xl:py-[160px]'>
+                <motion.h1
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'
+                >
                     {t('commitment.title')}
-                </h1>
+                </motion.h1>
                 <Icons icon='Diamond' className='text-grey-100' />
-                <h3 ref={descRef} className='text-paragraph-7-mobile text-grey-100 xl:text-paragraph-7-desktop'>
+                <motion.h3
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.5 }}
+                    className='text-paragraph-7-mobile text-grey-100 xl:text-paragraph-7-desktop'
+                >
                     {t('commitment.description')}
-                </h3>
+                </motion.h3>
             </div>
-            <div ref={imageContainerRef} className='bg-grey-black relative z-0 h-[290px] overflow-hidden xl:h-[560px]'>
+            <div className='sticky top-0 z-0 h-[290px] overflow-hidden xl:h-[560px]'>
                 <Image
                     src={image || '/images/home/commitment.webp'}
                     alt='commitment'
@@ -75,6 +38,9 @@ const Commitment = ({ image }: { image?: string }) => {
                     className='h-[290px] object-cover object-bottom xl:h-[560px]'
                 />
             </div>
+            {/* Spacer gives sticky room. Negative margin-bottom on section pulls next
+                section up so it overlaps the pinned image (replicates GSAP pinSpacing:false) */}
+            <div className='h-[50vh] xl:h-[100vh]' aria-hidden='true' />
         </section>
     )
 }

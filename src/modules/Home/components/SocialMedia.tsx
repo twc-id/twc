@@ -2,18 +2,12 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
-import { useGSAP } from '@gsap/react'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
-
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-}
 
 // Declare Instagram Embeds type for window object
 declare global {
@@ -30,8 +24,6 @@ const Instagram = () => {
     const { t } = useTranslation('home')
     const [isLoading, setIsLoading] = useState(true)
     const sectionRef = useRef<HTMLElement>(null)
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    const buttonRef = useRef<HTMLButtonElement>(null)
 
     // Instagram embed URLs
     const instagramPosts = [
@@ -107,45 +99,6 @@ const Instagram = () => {
         }
     }, [])
 
-    useGSAP(() => {
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                toggleActions: 'play none none reset',
-                id: 'social-media-animation'
-            }
-        })
-
-        timeline.fromTo(titleRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-
-        timeline.fromTo(
-            buttonRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-            '-=0.7'
-        )
-
-        timeline.fromTo(
-            '.instagram-post-item',
-            { opacity: 0, y: 30 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power2.out',
-                stagger: 0.15
-            },
-            '-=0.5'
-        )
-
-        return () => {
-            timeline.scrollTrigger?.kill()
-            timeline.kill()
-        }
-    }, [isLoading])
-
     if (isLoading) {
         return (
             <section className='bg-grey-white py-16 xl:py-[116px]'>
@@ -168,25 +121,32 @@ const Instagram = () => {
                 <div className='flex w-full flex-col items-center gap-16 xl:gap-10'>
                     {/* Header */}
                     <div className='flex flex-col items-center gap-1 text-center'>
-                        <h2
-                            ref={titleRef}
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black mb-2'
                         >
                             {t('social_media.title')}
-                        </h2>
+                        </motion.h2>
                         <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
                             @thewatchcollections
                         </p>
-                        <a
+                        <motion.a
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: false, amount: 0.3 }}
+                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                             href='https://www.instagram.com/thewatchcollections/'
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={() => trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)}
                         >
-                            <Button ref={buttonRef} variant='secondaryInverse' className='xl:mt-9'>
+                            <Button variant='secondaryInverse' className='xl:mt-9'>
                                 {t('common:follow_us')}
                             </Button>
-                        </a>
+                        </motion.a>
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}

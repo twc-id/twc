@@ -2,14 +2,12 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
-import { useGSAP } from '@gsap/react'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
@@ -21,13 +19,6 @@ import 'swiper/css'
 import 'swiper/css/grid'
 import 'swiper/css/navigation'
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-    ScrollTrigger.config({
-        ignoreMobileResize: true
-    })
-}
-
 const Highlight = () => {
     const { t } = useTranslation('home')
     const [data, setData] = useState<any>(null)
@@ -35,9 +26,6 @@ const Highlight = () => {
     const [tab, setTab] = useState<string>('watches')
     const swiperRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
-    const h1Ref = useRef<HTMLHeadingElement>(null)
-    const tabsRef = useRef<HTMLDivElement>(null)
-    const hasAnimatedRef = useRef(false) // Track if initial animation has played
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const tabs = [
@@ -77,54 +65,6 @@ const Highlight = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tab])
 
-    useGSAP(() => {
-        // Only animate once on initial load
-        if (hasAnimatedRef.current) return
-
-        const timeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-                id: 'highlight-animation',
-                toggleActions: 'restart none none reset'
-            }
-        })
-
-        // Animasi H1 fade in
-        timeline.fromTo(h1Ref.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-
-        // Animasi tabs fade in
-        timeline.fromTo(
-            tabsRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-            '-=0.7'
-        )
-
-        // Animasi swiper items fade in satu per satu (hanya jika data ada dan tidak loading)
-        if (data && data.length > 0 && !isLoading) {
-            timeline.fromTo(
-                '.swiper-slide',
-                { opacity: 0, y: 30 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    stagger: 0.2
-                },
-                '-=0.5'
-            )
-
-            // Mark as animated after first successful animation
-            hasAnimatedRef.current = true
-        }
-
-        return () => {
-            timeline.scrollTrigger?.kill()
-        }
-    }, [data, isLoading])
-
     useEffect(() => {
         // ensure swiper updates after data changes (remount or refresh)
         if (!swiperRef.current) return
@@ -146,16 +86,22 @@ const Highlight = () => {
         <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
             <Container className='flex flex-col gap-5 xl:gap-20'>
                 <div className='flex flex-col justify-between gap-6 xl:flex-row xl:items-center'>
-                    <h1
-                        ref={h1Ref}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black flex-shrink-0'
                     >
                         {t('highlight.title')}
-                    </h1>
+                    </motion.h1>
 
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.3 }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                         className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'
-                        ref={tabsRef}
                     >
                         {tabs.map((item) => (
                             <button
@@ -170,7 +116,7 @@ const Highlight = () => {
                                 {item.label}
                             </button>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
 
                 <div className='overflow-hidden'>
@@ -245,44 +191,50 @@ const Highlight = () => {
                                       </div>
                                   </SwiperSlide>
                               ))
-                            : data?.map((product: any) => (
+                            : data?.map((product: any, index: number) => (
                                   <SwiperSlide key={product.id}>
-                                      <UnstyledLink
-                                          href={`/collections/${product.slug}`}
-                                          onClick={() => {
-                                              if (tab === 'watches') {
-                                                  trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
-                                              } else {
-                                                  trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
-                                              }
-                                          }}
+                                      <motion.div
+                                          initial={{ opacity: 0, y: 30 }}
+                                          whileInView={{ opacity: 1, y: 0 }}
+                                          viewport={{ once: false, amount: 0.2 }}
+                                          transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: index * 0.1 }}
                                       >
-                                          <div className='relative flex w-full flex-col gap-1 xl:gap-8'>
-                                              <div className=' w-full overflow-hidden xl:h-full'>
-                                                  <Image
-                                                      src={
-                                                          product.images[0]?.src ||
-                                                          'https://placehold.co/344x417/png?text=TWC'
-                                                      }
-                                                      alt={product.name}
-                                                      width={344}
-                                                      height={318}
-                                                      className='object-cover'
-                                                  />
-                                              </div>
-                                              {!product.purchasable && (
-                                                  <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
-                                                      <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
-                                                          Reservable
-                                                      </span>
+                                          <UnstyledLink
+                                              href={`/collections/${product.slug}`}
+                                              onClick={() => {
+                                                  if (tab === 'watches') {
+                                                      trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                  } else {
+                                                      trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                  }
+                                              }}
+                                          >
+                                              <div className='relative flex w-full flex-col gap-1 xl:gap-8'>
+                                                  <div className=' w-full overflow-hidden xl:h-full'>
+                                                      <Image
+                                                          src={
+                                                              product.images[0]?.src ||
+                                                              'https://placehold.co/344x417/png?text=TWC'
+                                                          }
+                                                          alt={product.name}
+                                                          width={344}
+                                                          height={318}
+                                                          className='object-cover'
+                                                      />
                                                   </div>
-                                              )}
+                                                  {!product.purchasable && (
+                                                      <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
+                                                          <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
+                                                              Reservable
+                                                          </span>
+                                                      </div>
+                                                  )}
 
-                                              <div className='flex flex-col gap-1 text-center'>
-                                                  <p
-                                                      className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-200 truncate px-2 uppercase'
-                                                      dangerouslySetInnerHTML={{
-                                                          __html: sanitizeHtml(`
+                                                  <div className='flex flex-col gap-1 text-center'>
+                                                      <p
+                                                          className='xl:text-paragraph-9-desktop text-paragraph-9-mobile text-grey-200 truncate px-2 uppercase'
+                                                          dangerouslySetInnerHTML={{
+                                                              __html: sanitizeHtml(`
                                                                 ${product.brands?.[0]?.name || ''}
                                                                 ${
                                                                     product.meta_data.find(
@@ -297,28 +249,29 @@ const Highlight = () => {
                                                                         : ''
                                                                 }
                                                             `)
-                                                      }}
-                                                  />
+                                                          }}
+                                                      />
 
-                                                  <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
-                                                      {product.name}
-                                                  </h3>
-                                                  <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
-                                                      {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                          t('highlight.pre_owned', {
-                                                              year: product.meta_data.find((meta: any) =>
-                                                                  meta.key.startsWith('pre-owned-')
-                                                              )?.value
-                                                          })}
-                                                  </p>
-                                                  {product.purchasable && (
-                                                      <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark truncate px-2'>
-                                                          {formatRupiah(product.price)}
+                                                      <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
+                                                          {product.name}
+                                                      </h3>
+                                                      <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
+                                                          {product?.meta_data?.key?.startsWith('pre-owned-') &&
+                                                              t('highlight.pre_owned', {
+                                                                  year: product.meta_data.find((meta: any) =>
+                                                                      meta.key.startsWith('pre-owned-')
+                                                                  )?.value
+                                                              })}
                                                       </p>
-                                                  )}
+                                                      {product.purchasable && (
+                                                          <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark truncate px-2'>
+                                                              {formatRupiah(product.price)}
+                                                          </p>
+                                                      )}
+                                                  </div>
                                               </div>
-                                          </div>
-                                      </UnstyledLink>
+                                          </UnstyledLink>
+                                      </motion.div>
                                   </SwiperSlide>
                               ))}
                     </Swiper>
