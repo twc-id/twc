@@ -1,6 +1,6 @@
 import type { CookieConsentConfig } from 'vanilla-cookieconsent'
 
-import { initGAAfterConsent } from './ga'
+import { denyConsent, grantConsent } from './ga'
 
 // Detect language from URL path
 const detectLanguage = (): string => {
@@ -160,22 +160,25 @@ export const getCookieConsentConfig = (): CookieConsentConfig => ({
     },
     onFirstConsent: ({ cookie }) => {
         if (cookie.categories.includes('analytics')) {
-            // Fire and forget - don't block the consent flow
-            void initGAAfterConsent()
+            grantConsent()
+        } else {
+            denyConsent()
         }
     },
     onChange: ({ cookie }) => {
         if (cookie.categories.includes('analytics')) {
-            // Fire and forget - don't block the consent flow
-            void initGAAfterConsent()
-        } else if (typeof window !== 'undefined') {
-            // Clear GA cookies
-            document.cookie.split(';').forEach((c) => {
-                const cookieName = c.split('=')[0].trim()
-                if (cookieName.match(/^_ga/) || cookieName === '_gid') {
-                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`
-                }
-            })
+            grantConsent()
+        } else {
+            denyConsent()
+            // Clear GA cookies as extra safety
+            if (typeof window !== 'undefined') {
+                document.cookie.split(';').forEach((c) => {
+                    const cookieName = c.split('=')[0].trim()
+                    if (cookieName.match(/^_ga/) || cookieName === '_gid') {
+                        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`
+                    }
+                })
+            }
         }
     }
 })

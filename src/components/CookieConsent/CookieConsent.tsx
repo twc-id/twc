@@ -1,4 +1,4 @@
-import { initGAAfterConsent } from '@lib/ga'
+import { denyConsent, grantConsent } from '@lib/ga'
 import { useEffect } from 'react'
 
 const CookieConsentComponent = () => {
@@ -16,10 +16,12 @@ const CookieConsentComponent = () => {
                     return
                 }
 
-                // If consent already given in previous session, init GA without re-running banner
+                // If consent already given in previous session, restore consent state without re-running banner
                 if (CookieConsentLib.validConsent?.()) {
                     if (CookieConsentLib.acceptedCategory?.('analytics')) {
-                        void initGAAfterConsent()
+                        grantConsent()
+                    } else {
+                        denyConsent()
                     }
                     return
                 }
