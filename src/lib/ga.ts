@@ -1,57 +1,46 @@
 // Google Analytics 4 Configuration
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'
 
-// Analytics instance (will be initialized after consent)
-let analyticsInstance: any = null
-
-// Initialize Analytics with GA4
-export const initGA = async (): Promise<void> => {
-    if (typeof window === 'undefined' || analyticsInstance) return
-
-    // Dynamically import analytics libraries only after consent
-    const [{ default: googleAnalytics }, { Analytics }] = await Promise.all([
-        import('@analytics/google-analytics'),
-        import('analytics')
-    ])
-
-    analyticsInstance = Analytics({
-        app: 'twc',
-        plugins: [
-            googleAnalytics({
-                measurementIds: [GA_MEASUREMENT_ID]
-            })
-        ]
-    })
-}
-
-// Initialize GA4 after consent
-export const initGAAfterConsent = async (): Promise<void> => {
-    if (typeof window === 'undefined') return
-
-    await initGA()
-
-    if (analyticsInstance) {
-        analyticsInstance.page()
+declare global {
+    interface Window {
+        gtag: (...args: any[]) => void
+        dataLayer: any[]
     }
 }
 
 // Track page view
 export const trackPageView = (url: string): void => {
-    if (typeof window === 'undefined' || !analyticsInstance) return
+    if (typeof window === 'undefined' || !window.gtag) return
 
-    analyticsInstance.page({
-        url
+    window.gtag('config', GA_MEASUREMENT_ID, {
+        page_path: url
     })
 }
 
 // Track custom event with dynamic parameters
 export const trackEvent = (eventName: string, parameters?: Record<string, any>): void => {
-    if (typeof window === 'undefined' || !analyticsInstance) return
+    if (typeof window === 'undefined' || !window.gtag) return
 
-    analyticsInstance.track(eventName, parameters)
+    window.gtag('event', eventName, parameters)
 }
 
-// Check if GA is initialized
-export const isGAInitialized = (): boolean => {
-    return analyticsInstance !== null
+// Grant analytics consent via Consent Mode v2
+export const grantConsent = (): void => {
+    if (typeof window === 'undefined' || !window.gtag) return
+
+    window.gtag('consent', 'update', {
+        analytics_storage: 'granted'
+    })
+
+    // Track initial page view after consent is granted
+    trackPageView(window.location.pathname)
+}
+
+// Deny analytics consent via Consent Mode v2
+export const denyConsent = (): void => {
+    if (typeof window === 'undefined' || !window.gtag) return
+
+    window.gtag('consent', 'update', {
+        analytics_storage: 'denied'
+    })
 }
