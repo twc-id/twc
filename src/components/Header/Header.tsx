@@ -45,6 +45,7 @@ const languages = [
 const menuData: MenuItem[] = [
     {
         label: 'Our Collections',
+        href: '/collections',
         subMenu: [
             {
                 label: 'Brand'

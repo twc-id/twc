@@ -11,7 +11,7 @@ import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
-const FALLBACK_IMAGES = ['/images/home/hero-home.webp', '/images/about-us/hero.webp']
+const FALLBACK_IMAGES = ['/images/home/hero-home.webp', '/images/home/hero-2.webp']
 
 const Hero = () => {
     const sectionRef = useRef<HTMLElement>(null)
