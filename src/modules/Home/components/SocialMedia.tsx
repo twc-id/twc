@@ -141,7 +141,12 @@ const Instagram = () => {
                             href='https://www.instagram.com/thewatchcollections/'
                             target='_blank'
                             rel='noopener noreferrer'
-                            onClick={() => trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)}
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                    'Button Location': 'New in Instagram',
+                                    'Button Page': 'All pages'
+                                })
+                            }
                         >
                             <Button variant='secondaryInverse' className='xl:mt-9'>
                                 {t('common:follow_us')}

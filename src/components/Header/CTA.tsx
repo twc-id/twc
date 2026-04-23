@@ -9,7 +9,6 @@ import React from 'react'
 
 const CTA = ({ image }: { image?: string }) => {
     const { t } = useTranslation('common')
-
     return (
         <section className='bg-grey-white pb-14 xl:pb-[116px]'>
             <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
@@ -40,7 +39,12 @@ const CTA = ({ image }: { image?: string }) => {
                         href={getWhatsAppLinkFromTemplate('navigation')}
                         target='_blank'
                         rel='noopener noreferrer'
-                        onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                        onClick={() =>
+                            trackEvent(GA_EVENTS.CONTACT_WA, {
+                                'Button Location': 'CTA above footer',
+                                'Button Page': 'All pages'
+                            })
+                        }
                     >
                         <Button
                             variant='secondary'

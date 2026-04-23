@@ -2,6 +2,7 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import listLocation from '@constant/location'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
@@ -9,6 +10,7 @@ import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -27,6 +29,7 @@ const Highlight = () => {
     const swiperRef = useRef<SwiperType>()
     const sectionRef = useRef<HTMLElement>(null)
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const router = useRouter()
 
     const tabs = [
         {
@@ -81,6 +84,13 @@ const Highlight = () => {
     const enableLoop = !isMobile && (data?.length || 0) > slidesPerViewCurrent
 
     const hasFewSlides = Array.isArray(data) && data.length <= slidesPerViewCurrent
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     return (
         <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
@@ -203,9 +213,15 @@ const Highlight = () => {
                                               href={`/collections/${product.slug}`}
                                               onClick={() => {
                                                   if (tab === 'watches') {
-                                                      trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                      trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                          'Button Location': 'Collection highlight',
+                                                          'Button Page': locationMatch?.label
+                                                      })
                                                   } else {
-                                                      trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                      trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                          'Button Location': 'Collection highlight',
+                                                          'Button Page': locationMatch?.label
+                                                      })
                                                   }
                                               }}
                                           >
@@ -298,9 +314,15 @@ const Highlight = () => {
                             href='/collections'
                             onClick={() => {
                                 if (tab === 'watches') {
-                                    trackEvent(GA_EVENTS.INTEREST_WATCHES)
+                                    trackEvent(GA_EVENTS.INTEREST_WATCHES, {
+                                        'Button Location': 'Collection highlight',
+                                        'Button Page': locationMatch?.label
+                                    })
                                 } else {
-                                    trackEvent(GA_EVENTS.INTEREST_ACCESSORIES)
+                                    trackEvent(GA_EVENTS.INTEREST_ACCESSORIES, {
+                                        'Button Location': 'Collection highlight',
+                                        'Button Page': locationMatch?.label
+                                    })
                                 }
                             }}
                         >

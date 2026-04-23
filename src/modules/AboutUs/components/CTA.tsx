@@ -1,16 +1,26 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import UnstyledLink from '@components/links/UnstyledLink'
+import listLocation from '@constant/location'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React from 'react'
 
 const CTA = ({ image, showTemukanKami }: { image?: string; showTemukanKami: boolean }) => {
     const { t } = useTranslation('about')
+    const router = useRouter()
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     return (
         <section
@@ -41,7 +51,15 @@ const CTA = ({ image, showTemukanKami }: { image?: string; showTemukanKami: bool
                         >
                             {t('cta.description')}
                         </motion.p>
-                        <UnstyledLink href='/collections' onClick={() => trackEvent(GA_EVENTS.INTEREST_WATCHES)}>
+                        <UnstyledLink
+                            href='/collections'
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.INTEREST_WATCHES, {
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': locationMatch?.label
+                                })
+                            }
+                        >
                             <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
                                 {t('cta.button')}
                             </Button>

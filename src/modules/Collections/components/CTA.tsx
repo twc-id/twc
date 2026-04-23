@@ -10,6 +10,7 @@ import React from 'react'
 
 const CTA = ({ image }: { image?: string }) => {
     const { t } = useTranslation('collection')
+
     return (
         <section className='bg-grey-white py-6 xl:py-[116px]'>
             <Container>
@@ -39,7 +40,12 @@ const CTA = ({ image }: { image?: string }) => {
                             href={getWhatsAppLinkFromTemplate('listProduct')}
                             target='_blank'
                             rel='noopener noreferrer'
-                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': 'All pages'
+                                })
+                            }
                         >
                             <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
                                 {t('common:learn_more')}

@@ -100,13 +100,10 @@ const Footer = () => {
                                                 href={link.href}
                                                 className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
-                                                    if (link.title === 'Book an Appointment') {
-                                                        articlePath || productDetailPath
-                                                            ? trackEvent(GA_EVENTS.CONTACT_WA, {
-                                                                  'Page title': pageTitle
-                                                              })
-                                                            : trackEvent(GA_EVENTS.CONTACT_WA)
-                                                    }
+                                                    trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                        'Button Location': 'Footer',
+                                                        'Button Page': 'All pages'
+                                                    })
                                                 }}
                                             >
                                                 {link.title}
@@ -128,9 +125,14 @@ const Footer = () => {
                                                     if (link.title === 'Instagram') {
                                                         articlePath || productDetailPath
                                                             ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
-                                                                  'Page title': pageTitle
+                                                                  'Button Title': pageTitle,
+                                                                  'Button Location': 'Footer',
+                                                                  'Button Page': 'All pages'
                                                               })
-                                                            : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
+                                                            : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                                                  'Button Location': 'Footer',
+                                                                  'Button Page': 'All pages'
+                                                              })
                                                     }
                                                 }}
                                             >
@@ -209,9 +211,14 @@ const Footer = () => {
                                                 onClick={() => {
                                                     articlePath || productDetailPath
                                                         ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
-                                                              'Page title': pageTitle
+                                                              'Button Title': pageTitle,
+                                                              'Button Location': 'Footer',
+                                                              'Button Page': 'All pages'
                                                           })
-                                                        : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM)
+                                                        : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
+                                                              'Button Location': 'Footer',
+                                                              'Button Page': 'All pages'
+                                                          })
                                                 }}
                                             >
                                                 {link.title}

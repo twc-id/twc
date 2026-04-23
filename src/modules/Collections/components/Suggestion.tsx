@@ -1,11 +1,13 @@
 import Container from '@components/Container'
 import UnstyledLink from '@components/links/UnstyledLink'
+import listLocation from '@constant/location'
 import { useRelatedProducts } from '@hooks/useProduct'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -17,6 +19,16 @@ interface SuggestionProps {
 const Suggestion = ({ products }: SuggestionProps) => {
     const { t } = useTranslation(['home', 'common', 'collection'])
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const router = useRouter()
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
+
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
 
     // Use the related products hook
     const { data: related = [], isLoading } = useRelatedProducts(products?.id, isMobile ? 4 : 3)
@@ -43,11 +55,15 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                 onClick={() => {
                                     if (isWatch) {
                                         trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
-                                            'Page title': p.name
+                                            'Button Title': pageTitle,
+                                            'Button Location': 'You May Also Like These Watches',
+                                            'Button Page': locationMatch?.label
                                         })
                                     } else {
                                         trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
-                                            'Page title': p.name
+                                            'Button Title': pageTitle,
+                                            'Button Location': 'You May Also Like These Accessories',
+                                            'Button Page': locationMatch?.label
                                         })
                                     }
                                 }}

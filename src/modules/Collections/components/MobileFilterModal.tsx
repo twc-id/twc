@@ -231,7 +231,10 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
 
     const handleApply = () => {
         onApply(tempFilters)
-        trackEvent(GA_EVENTS.FILTER_SELECTED)
+        trackEvent(GA_EVENTS.FILTER_SELECTED, {
+            'Button Location': 'Menu Our Collections',
+            'Button Page': 'Menu page'
+        })
         onClose()
     }
 

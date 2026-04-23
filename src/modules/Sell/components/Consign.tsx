@@ -1,10 +1,12 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import listLocation from '@constant/location'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useRef, useState } from 'react'
 
@@ -21,6 +23,14 @@ const Consign = ({ images }: ConsignProps) => {
     const { t } = useTranslation('sell')
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
+    const router = useRouter()
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     const items = [
         {
@@ -86,7 +96,12 @@ const Consign = ({ images }: ConsignProps) => {
                             href={getWhatsAppLinkFromTemplate('howToConsign')}
                             target='_blank'
                             rel='noopener noreferrer'
-                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Button Location': 'How To Consign',
+                                    'Button Page': locationMatch?.label
+                                })
+                            }
                         >
                             <Button className='h-full w-fit'>{t('common:book_appointment')}</Button>
                         </a>

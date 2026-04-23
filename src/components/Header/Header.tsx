@@ -6,6 +6,7 @@ import CTA from '@components/Header/CTA'
 import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import listLocation from '@constant/location'
 import { useTheme } from '@contexts/ThemeContext'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { useAssets } from '@hooks/useAsset'
@@ -633,6 +634,15 @@ const Headers = () => {
     }
 
     const isWatch = searchResults?.[0]?.categories?.some((category: any) => category.name === 'Watches')
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     return (
         <>
@@ -784,15 +794,18 @@ const Headers = () => {
                                     if (willOpen) {
                                         const articlePath = router.pathname.startsWith('/articles/')
                                         const productDetailPath = router.pathname.startsWith('/collections/')
-                                        const pageTitle =
-                                            typeof window !== 'undefined' ? document.title : router.pathname
 
                                         if (articlePath || productDetailPath) {
                                             trackEvent(GA_EVENTS.SEARCH, {
-                                                'Page title': pageTitle
+                                                'Button Title': pageTitle,
+                                                'Button Location': 'Header',
+                                                'Button Page': locationMatch?.label
                                             })
                                         } else {
-                                            trackEvent(GA_EVENTS.SEARCH)
+                                            trackEvent(GA_EVENTS.SEARCH, {
+                                                'Button location': 'Header',
+                                                'Button Page': locationMatch?.label
+                                            })
                                         }
 
                                         // close menu when opening search
@@ -917,7 +930,10 @@ const Headers = () => {
                                                 className='text-button-4-mobile hover:text-grey-white text-grey-200 flex items-center gap-1'
                                                 onClick={() => {
                                                     setIsMenuOpen(false)
-                                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                        'Button Location': 'Menu Our Collections',
+                                                        'Button Page': 'Menu page'
+                                                    })
                                                 }}
                                             >
                                                 See all Watches
@@ -943,7 +959,10 @@ const Headers = () => {
                                                             className='text-button-4-desktop text-grey-200 hover:text-grey-100 absolute bottom-6 left-6 flex items-center gap-2 transition-colors'
                                                             onClick={() => {
                                                                 setIsMenuOpen(false)
-                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                    'Button Location': 'Menu Our Collections',
+                                                                    'Button Page': 'Menu page'
+                                                                })
                                                             }}
                                                         >
                                                             See all Watches
@@ -968,7 +987,10 @@ const Headers = () => {
                                                                     children={undefined}
                                                                     onClick={() => {
                                                                         setIsMenuOpen(false)
-                                                                        trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                        trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                            'Button Location': 'Menu Our Collections',
+                                                                            'Button Page': 'Menu page'
+                                                                        })
                                                                     }}
                                                                 />
                                                             ))}
@@ -994,7 +1016,10 @@ const Headers = () => {
                                                             className='group flex w-full cursor-pointer flex-col gap-4'
                                                             onClick={() => {
                                                                 setIsMenuOpen(false)
-                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                    'Button Location': 'Menu Our Collections',
+                                                                    'Button Page': 'Menu page'
+                                                                })
                                                             }}
                                                         >
                                                             <div className='h-[218px] w-full overflow-hidden'>
@@ -1075,7 +1100,11 @@ const Headers = () => {
                                                                         onClick={() => {
                                                                             setIsMenuOpen(false)
 
-                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                                'Button Location':
+                                                                                    'Menu Our Collections',
+                                                                                'Button Page': 'Menu page'
+                                                                            })
                                                                         }}
                                                                     >
                                                                         {item}
@@ -1118,7 +1147,11 @@ const Headers = () => {
                                                                         onClick={() => {
                                                                             setIsMenuOpen(false)
 
-                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                                'Button Location':
+                                                                                    'Menu Our Collections',
+                                                                                'Button Page': 'Menu page'
+                                                                            })
                                                                         }}
                                                                         onKeyDown={handleSubSubMenuItemKeyDown}
                                                                     >
@@ -1146,7 +1179,10 @@ const Headers = () => {
                                                             className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
                                                             onClick={() => {
                                                                 setIsMenuOpen(false)
-                                                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                    'Button Location': 'Menu Our Collections',
+                                                                    'Button Page': 'Menu page'
+                                                                })
                                                             }}
                                                         >
                                                             See All Accessories
@@ -1195,7 +1231,10 @@ const Headers = () => {
                                                         children={undefined}
                                                         onClick={() => {
                                                             setIsMenuOpen(false)
-                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                'Button Location': 'Menu Our Collections',
+                                                                'Button Page': 'Menu page'
+                                                            })
                                                         }}
                                                     />
                                                 ))}
@@ -1225,7 +1264,10 @@ const Headers = () => {
                                                         className='text-button-1-mobile text-grey-200 block text-left transition-colors'
                                                         onClick={() => {
                                                             setIsMenuOpen(false)
-                                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                                'Button Location': 'Menu Our Collections',
+                                                                'Button Page': 'Menu page'
+                                                            })
                                                         }}
                                                     >
                                                         {item}
@@ -1241,7 +1283,10 @@ const Headers = () => {
                                                     className='text-button-1-mobile text-grey-200 block text-left transition-colors'
                                                     onClick={() => {
                                                         setIsMenuOpen(false)
-                                                        trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                                        trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                            'Button Location': 'Menu Our Collections',
+                                                            'Button Page': 'Menu page'
+                                                        })
                                                     }}
                                                 >
                                                     See All Accessories
@@ -1321,9 +1366,15 @@ const Headers = () => {
                                                             setCorrectedQuery('')
 
                                                             if (isWatch) {
-                                                                trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                                trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                                    'Button Location': 'Search',
+                                                                    'Button Page': 'Search Page'
+                                                                })
                                                             } else {
-                                                                trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                                trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                                    'Button Location': 'Search',
+                                                                    'Button Page': 'Search Page'
+                                                                })
                                                             }
                                                         }}
                                                     >

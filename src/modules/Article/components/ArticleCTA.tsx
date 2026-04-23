@@ -25,10 +25,15 @@ const ArticleCTA = ({ image }: { image?: string }) => {
         if (result.success) {
             if (articlePath) {
                 trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER, {
-                    'Page title': pageTitle
+                    'Button Title': pageTitle,
+                    'Button Location': 'CTA above footer',
+                    'Button Page': 'Artice details'
                 })
             } else {
-                trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER)
+                trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER, {
+                    'Button Location': 'CTA above footer',
+                    'Button Page': 'Articl list'
+                })
             }
             form.resetFields()
         }

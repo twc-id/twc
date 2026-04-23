@@ -47,7 +47,9 @@ const CTADetail = ({ image }: { image?: string }) => {
                             rel='noopener noreferrer'
                             onClick={() =>
                                 trackEvent(GA_EVENTS.CONTACT_WA, {
-                                    'Page title': pageTitle
+                                    'Button Title': pageTitle,
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': 'All pages'
                                 })
                             }
                         >

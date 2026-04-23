@@ -2,11 +2,13 @@ import Button from '@components/buttons/Button'
 import UnstyledLink from '@components/links/UnstyledLink'
 import Loader from '@components/Loader'
 import Skeleton from '@components/Skeleton'
+import listLocation from '@constant/location'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { Else, If, Then } from 'react-if'
@@ -24,6 +26,14 @@ interface ContentProps {
 const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, onLoadMore, hasMore, total }) => {
     const { t } = useTranslation(['collection', 'home', 'common'])
     const isMobile = useMediaQuery({ maxWidth: 1279 })
+    const router = useRouter()
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     if (isLoading) {
         return (
@@ -45,9 +55,15 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, o
                                 key={item.id}
                                 onClick={() => {
                                     if (isWatch) {
-                                        trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                        trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                            'Button Location': 'Product list',
+                                            'Button Page': locationMatch?.label
+                                        })
                                     } else {
-                                        trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                        trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                            'Button Location': 'Product list',
+                                            'Button Page': locationMatch?.label
+                                        })
                                     }
                                 }}
                             >
