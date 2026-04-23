@@ -830,11 +830,14 @@ const Headers = () => {
                                     }
                                 )}
                             >
-                                {menuData.map((item) =>
-                                    item.href ? (
+                                {menuData.map((item) => {
+                                    const hasSubMenu = Boolean(item.subMenu && item.subMenu.length > 0)
+                                    const shouldUseLink = Boolean(item.href && !(isMobile && hasSubMenu))
+
+                                    return shouldUseLink ? (
                                         <UnstyledLink
                                             key={item.label}
-                                            href={item.href}
+                                            href={item.href!}
                                             className='text-grey-200 hover:text-grey-white  w-full cursor-pointer text-left outline-none transition-colors '
                                             onClick={() => {
                                                 setIsMenuOpen(false)
@@ -859,20 +862,20 @@ const Headers = () => {
                                                     : 'text-grey-200 hover:text-grey-white'
                                             )}
                                             onMouseEnter={() => {
-                                                if (window.innerWidth >= 1024) {
+                                                if (window.innerWidth >= 1024 && hasSubMenu) {
                                                     setHoveredMenuItem(item)
                                                     setSelectedSubMenuItem(null)
                                                 }
                                             }}
                                             onClick={() => {
-                                                if (window.innerWidth < 1024 && item.subMenu) {
+                                                if (hasSubMenu) {
                                                     setHoveredMenuItem(item)
                                                     setSelectedSubMenuItem(null)
                                                 }
                                             }}
                                             onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
                                             aria-expanded={hoveredMenuItem === item}
-                                            aria-haspopup={!!item.subMenu}
+                                            aria-haspopup={hasSubMenu}
                                         >
                                             <div className='flex items-center justify-between gap-4 xl:justify-normal'>
                                                 <span className='xl:text-button-1-desktop text-button-1-mobile'>
@@ -882,7 +885,7 @@ const Headers = () => {
                                             </div>
                                         </button>
                                     )
-                                )}
+                                })}
                             </div>
 
                             {/* Grid 2: Content Area with Image */}
