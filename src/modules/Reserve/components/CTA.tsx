@@ -40,7 +40,12 @@ const CTA = ({ image }: { image?: string }) => {
                             href={getWhatsAppLinkFromTemplate('reserveMain')}
                             target='_blank'
                             rel='noopener noreferrer'
-                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                            onClick={() =>
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': 'All pages'
+                                })
+                            }
                         >
                             <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
                                 {t('cta.button')}

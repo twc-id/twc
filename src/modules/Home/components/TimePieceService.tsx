@@ -1,11 +1,13 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import listLocation from '@constant/location'
 import { useTheme } from '@contexts/ThemeContext'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import { motion, useInView } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -34,6 +36,14 @@ const TimePieceService = ({
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+    const router = useRouter()
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     // Set dark mode when section is in view
     useEffect(() => {
@@ -99,7 +109,12 @@ const TimePieceService = ({
                                 href={getWhatsAppLinkFromTemplate('timepieceService')}
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                onClick={() =>
+                                    trackEvent(GA_EVENTS.CONTACT_WA, {
+                                        'Button Location': 'Timepiece Service',
+                                        'Button Page': locationMatch?.label
+                                    })
+                                }
                             >
                                 <Button>{t('timepiece.book_now')}</Button>
                             </a>

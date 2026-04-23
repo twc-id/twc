@@ -236,7 +236,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
             debounce((min?: string, max?: string) => {
                 if (min !== '' && typeof min !== 'undefined' && max !== '' && typeof max !== 'undefined') {
                     setFilter('priceRange', { min, max })
-                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                        'Button Location': 'Our Collections',
+                        'Button Page': 'Our Collections'
+                    })
                 }
             }, 500),
         [setFilter]
@@ -297,7 +300,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     newValues = currentValues.filter((id: string) => id !== option.id)
                                 }
                                 setFilter(key, newValues)
-                                trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                    'Button Location': 'Our Collections',
+                                    'Button Page': 'Our Collections'
+                                })
                             }}
                             checked={filters[key].includes(option.id)}
                             textClassName='xl:text-paragraph-8-desktop text-paragraph-8-mobile !leading-none'
@@ -376,7 +382,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Our Collections',
+                                                'Button Page': 'Our Collections'
+                                            })
                                         }}
                                         checked={
                                             (filters.priceRange.min ?? undefined) === opt.min &&
@@ -393,7 +402,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                            trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Our Collections',
+                                                'Button Page': 'Our Collections'
+                                            })
                                         }}
                                     >
                                         {opt.label}
@@ -424,7 +436,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 key={option?.id}
                                 onChange={() => {
                                     setFilter('sortBy', option?.id)
-                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                        'Button Location': 'Our Collections',
+                                        'Button Page': 'Our Collections'
+                                    })
                                 }}
                                 checked={filters.sortBy === option?.id}
                                 name='sort-by'
@@ -435,7 +450,10 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
                                 onClick={() => {
                                     setFilter('sortBy', option?.id)
-                                    trackEvent(GA_EVENTS.FILTER_SELECTED)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                        'Button Location': 'Our Collections',
+                                        'Button Page': 'Our Collections'
+                                    })
                                 }}
                             >
                                 {option?.name}

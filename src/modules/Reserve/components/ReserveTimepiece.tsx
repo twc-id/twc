@@ -3,11 +3,13 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import Skeleton from '@components/Skeleton'
+import listLocation from '@constant/location'
 import { WooCommerce } from '@lib/api'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { sanitizeHtml } from '@utils/html'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { Navigation } from 'swiper/modules'
@@ -21,6 +23,7 @@ const ReserveTimepiece = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const [data, setData] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
 
     const getData = async () => {
         setIsLoading(true)
@@ -34,6 +37,14 @@ const ReserveTimepiece = () => {
 
         setIsLoading(false)
     }
+
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     useEffect(() => {
         getData()
@@ -87,9 +98,15 @@ const ReserveTimepiece = () => {
                                                     href={`/collections/${product.slug}`}
                                                     onClick={() => {
                                                         if (isWatch) {
-                                                            trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS)
+                                                            trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                                'Button Location': 'Reserve your timepiece',
+                                                                'Button Page': locationMatch?.label
+                                                            })
                                                         } else {
-                                                            trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS)
+                                                            trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                                'Button Location': 'Reserve your timepiece',
+                                                                'Button Page': locationMatch?.label
+                                                            })
                                                         }
                                                     }}
                                                 >
@@ -177,7 +194,10 @@ const ReserveTimepiece = () => {
                     <UnstyledLink
                         href='/collections'
                         onClick={() => {
-                            trackEvent(GA_EVENTS.INTEREST_WATCHES)
+                            trackEvent(GA_EVENTS.INTEREST_WATCHES, {
+                                'Button Location': 'Reserve your timepiece',
+                                'Button Page': locationMatch?.label
+                            })
                         }}
                     >
                         <Button variant='secondaryInverse'>{t('common:view_all')}</Button>
