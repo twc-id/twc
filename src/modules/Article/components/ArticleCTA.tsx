@@ -32,7 +32,7 @@ const ArticleCTA = ({ image }: { image?: string }) => {
             } else {
                 trackEvent(GA_EVENTS.SUBSCRIBE_NEWSLETTER, {
                     'Button Location': 'CTA above footer',
-                    'Button Page': 'Articl list'
+                    'Button Page': 'Article list'
                 })
             }
             form.resetFields()
