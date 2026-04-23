@@ -1,11 +1,7 @@
 import { toast } from '@components/Toast'
+import { NEWSLETTER_API_URL, NEWSLETTER_CLIENT_KEY, NEWSLETTER_CLIENT_SECRET } from '@constant/env'
 import axios from 'axios'
 import { useState } from 'react'
-
-// Newsletter Plugin API credentials
-const NEWSLETTER_API_URL = 'https://store.thewatchcollections.com/wp-json/wc/v3/newsletter/subscribe'
-const NEWSLETTER_CLIENT_KEY = '2c3a52d16fcca9497a2b08b752c3fc8c54c5b850'
-const NEWSLETTER_CLIENT_SECRET = 'f733e9556c83013a4fb9af8318c807bc82f80950'
 
 export const useNewsletterSubscription = () => {
     const [loading, setLoading] = useState(false)

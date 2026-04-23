@@ -1,4 +1,4 @@
-import { API_URL, CONSUMER_KEY, CONSUMER_SECRET } from '@constant/env'
+import { API_URL, CONSUMER_KEY, CONSUMER_SECRET, SITE_URL } from '@constant/env'
 import { getAuth, resetAuth } from '@utils/auth'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api' // Supports ESM
 
@@ -44,7 +44,7 @@ const createWooCommerceInstance = (config?: WooCommerceConfig) => {
     const authHeader = `Basic ${toBase64(`${consumerKey}:${consumerSecret}`)}`
 
     return new WooCommerceRestApi({
-        url: config?.url ?? 'https://store.thewatchcollections.com',
+        url: config?.url ?? SITE_URL ?? 'https://store.thewatchcollections.com',
         consumerKey,
         consumerSecret,
         version: config?.version ?? ('wc/v3' as any),
