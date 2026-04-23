@@ -26,7 +26,7 @@ export const useNewsletterSubscription = () => {
 
             // Call Newsletter Plugin API - POST /subscribers endpoint
             const response = await axios.post(
-                `${NEWSLETTER_API_URL}/subscribers`,
+                `${NEWSLETTER_API_URL}`,
                 {
                     email,
                     status: 'confirmed',
