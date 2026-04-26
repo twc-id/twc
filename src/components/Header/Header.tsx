@@ -14,6 +14,7 @@ import { WooCommerce } from '@lib/api'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import useProductStore from '@store/useProductStore'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import { sanitizeHtml } from '@utils/html'
@@ -303,6 +304,7 @@ const Headers = () => {
     const [form] = Form.useForm()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const { setIsDarkSection } = useTheme()
+    const currentProduct = useProductStore((s) => s.currentProduct)
     const { assets } = useAssets()
     const brandImage = assets?.find((asset) => asset.name === 'header-1')?.media.url
     const availabitlyImage = assets?.find((asset) => asset.name === 'header-2')?.media.url
@@ -794,10 +796,10 @@ const Headers = () => {
                                     if (willOpen) {
                                         const articlePath = router.pathname.startsWith('/articles/')
                                         const productDetailPath = router.pathname.startsWith('/collections/')
-
+                                        const productName = currentProduct?.name || document.title || ''
                                         if (articlePath || productDetailPath) {
                                             trackEvent(GA_EVENTS.SEARCH, {
-                                                'Button Title': pageTitle,
+                                                'Button Title': productDetailPath ? productName : pageTitle,
                                                 'Button Location': 'Header',
                                                 'Button Page': locationMatch?.label
                                             })
@@ -989,7 +991,9 @@ const Headers = () => {
                                                                         setIsMenuOpen(false)
                                                                         trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                             'Button Location': 'Menu Our Collections',
-                                                                            'Button Page': 'Menu page'
+                                                                            'Button Page': 'Menu page',
+                                                                            'Button Title':
+                                                                                'All button by brands (richard mille, etc)'
                                                                         })
                                                                     }}
                                                                 />
@@ -1018,7 +1022,8 @@ const Headers = () => {
                                                                 setIsMenuOpen(false)
                                                                 trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                     'Button Location': 'Menu Our Collections',
-                                                                    'Button Page': 'Menu page'
+                                                                    'Button Page': 'Menu page',
+                                                                    'Button Title': 'See all accessories'
                                                                 })
                                                             }}
                                                         >
@@ -1103,7 +1108,9 @@ const Headers = () => {
                                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                                 'Button Location':
                                                                                     'Menu Our Collections',
-                                                                                'Button Page': 'Menu page'
+                                                                                'Button Page': 'Menu page',
+                                                                                'Button Title':
+                                                                                    'All button by availability (available, etc)'
                                                                             })
                                                                         }}
                                                                     >
@@ -1150,7 +1157,9 @@ const Headers = () => {
                                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                                 'Button Location':
                                                                                     'Menu Our Collections',
-                                                                                'Button Page': 'Menu page'
+                                                                                'Button Page': 'Menu page',
+                                                                                'Button Title':
+                                                                                    'All button by condition (brand new, etc)'
                                                                             })
                                                                         }}
                                                                         onKeyDown={handleSubSubMenuItemKeyDown}
@@ -1181,7 +1190,8 @@ const Headers = () => {
                                                                 setIsMenuOpen(false)
                                                                 trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                     'Button Location': 'Menu Our Collections',
-                                                                    'Button Page': 'Menu page'
+                                                                    'Button Page': 'Menu page',
+                                                                    'Button Title': 'See all accessories'
                                                                 })
                                                             }}
                                                         >
@@ -1233,7 +1243,9 @@ const Headers = () => {
                                                             setIsMenuOpen(false)
                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                 'Button Location': 'Menu Our Collections',
-                                                                'Button Page': 'Menu page'
+                                                                'Button Page': 'Menu page',
+                                                                'Button Title':
+                                                                    'All button by brands (richard mille, etc)'
                                                             })
                                                         }}
                                                     />
@@ -1266,7 +1278,9 @@ const Headers = () => {
                                                             setIsMenuOpen(false)
                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                 'Button Location': 'Menu Our Collections',
-                                                                'Button Page': 'Menu page'
+                                                                'Button Page': 'Menu page',
+                                                                'Button Title':
+                                                                    'All button by availability (available, etc)'
                                                             })
                                                         }}
                                                     >
@@ -1285,7 +1299,8 @@ const Headers = () => {
                                                         setIsMenuOpen(false)
                                                         trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                             'Button Location': 'Menu Our Collections',
-                                                            'Button Page': 'Menu page'
+                                                            'Button Page': 'Menu page',
+                                                            'Button Title': 'See all accessories'
                                                         })
                                                     }}
                                                 >
@@ -1367,11 +1382,13 @@ const Headers = () => {
 
                                                             if (isWatch) {
                                                                 trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                                    'Button Title': product.name,
                                                                     'Button Location': 'Search',
                                                                     'Button Page': 'Search Page'
                                                                 })
                                                             } else {
                                                                 trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                                    'Button Title': product.name,
                                                                     'Button Location': 'Search',
                                                                     'Button Page': 'Search Page'
                                                                 })

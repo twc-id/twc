@@ -6,6 +6,7 @@ import ImageZoom from '@components/ImageZoom/ImageZoom'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { ModalV2 } from '@components/Modal'
 import Skeleton from '@components/Skeleton'
+import listLocation from '@constant/location'
 import { useProductCondition } from '@hooks/useProductCondition'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -264,6 +265,14 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
     }
 
     const isWatch = product?.categories?.some((category: any) => category.name === 'Watches')
+
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     // Read is_new once from product meta_data (0 = false, 1 = true)
     const isNewMeta = (product?.meta_data || []).find((m: any) => String(m.key) === 'is_new')
@@ -881,7 +890,12 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             )}
                                             target='_blank'
                                             rel='noopener noreferrer'
-                                            onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                            onClick={() =>
+                                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                    'Button Location': 'Button reserve',
+                                                    'Button Page': locationMatch?.label
+                                                })
+                                            }
                                         >
                                             <Button variant='secondaryInverse' block>
                                                 {t('common:reserve_this', {
@@ -988,7 +1002,12 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   )}
                                                                   target='_blank'
                                                                   rel='noopener noreferrer'
-                                                                  onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                                                  onClick={() =>
+                                                                      trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                          'Button Location': 'Button reserve',
+                                                                          'Button Page': locationMatch?.label
+                                                                      })
+                                                                  }
                                                               >
                                                                   <Button variant='secondaryInverse'>
                                                                       {' '}
@@ -1179,7 +1198,12 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   )}
                                                                   target='_blank'
                                                                   rel='noopener noreferrer'
-                                                                  onClick={() => trackEvent(GA_EVENTS.CONTACT_WA)}
+                                                                  onClick={() =>
+                                                                      trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                          'Button Location': 'Button reserve',
+                                                                          'Button Page': locationMatch?.label
+                                                                      })
+                                                                  }
                                                               >
                                                                   <Button variant='secondaryInverse'>
                                                                       Reserve This Watch

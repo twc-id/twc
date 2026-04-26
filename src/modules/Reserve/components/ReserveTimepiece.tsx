@@ -99,11 +99,13 @@ const ReserveTimepiece = () => {
                                                     onClick={() => {
                                                         if (isWatch) {
                                                             trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                                'Button Title': product.name,
                                                                 'Button Location': 'Reserve your timepiece',
                                                                 'Button Page': locationMatch?.label
                                                             })
                                                         } else {
                                                             trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                                'Button Title': product.name,
                                                                 'Button Location': 'Reserve your timepiece',
                                                                 'Button Page': locationMatch?.label
                                                             })

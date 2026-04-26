@@ -1,15 +1,30 @@
 import Button from '@components/buttons/Button'
 import Container from '@components/Container'
+import listLocation from '@constant/location'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import useProductStore from '@store/useProductStore'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React from 'react'
 
 const CTA = ({ image }: { image?: string }) => {
     const { t } = useTranslation('collection')
+    const router = useRouter()
+    const currentProduct = useProductStore((s) => s.currentProduct)
+    const articlePath = router.pathname.startsWith('/articles/')
+    const productDetailPath = router.pathname.startsWith('/collections/')
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     return (
         <section className='bg-grey-white py-6 xl:py-[116px]'>
@@ -40,12 +55,21 @@ const CTA = ({ image }: { image?: string }) => {
                             href={getWhatsAppLinkFromTemplate('listProduct')}
                             target='_blank'
                             rel='noopener noreferrer'
-                            onClick={() =>
-                                trackEvent(GA_EVENTS.CONTACT_WA, {
-                                    'Button Location': 'CTA above footer',
-                                    'Button Page': 'All pages'
-                                })
-                            }
+                            onClick={() => {
+                                const productName = currentProduct?.name || document.title || ''
+                                if (articlePath || productDetailPath) {
+                                    trackEvent(GA_EVENTS.CONTACT_WA, {
+                                        'Button Title': productDetailPath ? productName : pageTitle,
+                                        'Button Location': 'CTA above footer',
+                                        'Button Page': locationMatch?.label
+                                    })
+                                } else {
+                                    trackEvent(GA_EVENTS.CONTACT_WA, {
+                                        'Button Location': 'CTA above footer',
+                                        'Button Page': locationMatch?.label
+                                    })
+                                }
+                            }}
                         >
                             <Button variant='secondary' className='!bg-grey-white !text-button-3-desktop !rounded-none'>
                                 {t('common:learn_more')}
