@@ -1,9 +1,11 @@
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
+import listLocation from '@constant/location'
 import { useComponentVisibility } from '@hooks/useComponentVisibility'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import useProductStore from '@store/useProductStore'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -14,11 +16,20 @@ const Footer = () => {
     const isMobile = useMediaQuery({ maxWidth: 1279 })
     const router = useRouter()
     const { data: visibility } = useComponentVisibility()
-
+    const currentProduct = useProductStore((s) => s.currentProduct)
     const articlePath = router.pathname.startsWith('/articles/')
     const productDetailPath = router.pathname.startsWith('/collections/')
+    const documentTitle = typeof window !== 'undefined' && document.title
     const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
     const showStoreLocation = visibility?.footer_store_location ?? false
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
+    const productName = currentProduct?.name || documentTitle || ''
 
     const items = [
         {
@@ -100,10 +111,22 @@ const Footer = () => {
                                                 href={link.href}
                                                 className='!text-button-4-desktop text-grey-white uppercase'
                                                 onClick={() => {
-                                                    trackEvent(GA_EVENTS.CONTACT_WA, {
-                                                        'Button Location': 'Footer',
-                                                        'Button Page': 'All pages'
-                                                    })
+                                                    const productDetailPath =
+                                                        router.pathname.startsWith('/collections/')
+                                                    const articlePath = router.pathname.startsWith('/articles/')
+                                                    const productName = currentProduct?.name || document.title || ''
+                                                    if (articlePath || productDetailPath) {
+                                                        trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                            'Button Title': productDetailPath ? productName : pageTitle,
+                                                            'Button Location': 'Footer',
+                                                            'Button Page': locationMatch?.label
+                                                        })
+                                                    } else {
+                                                        trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                            'Button Location': 'Footer',
+                                                            'Button Page': locationMatch?.label
+                                                        })
+                                                    }
                                                 }}
                                             >
                                                 {link.title}
@@ -125,13 +148,15 @@ const Footer = () => {
                                                     if (link.title === 'Instagram') {
                                                         articlePath || productDetailPath
                                                             ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
-                                                                  'Button Title': pageTitle,
+                                                                  'Button Title': productDetailPath
+                                                                      ? productName
+                                                                      : pageTitle,
                                                                   'Button Location': 'Footer',
-                                                                  'Button Page': 'All pages'
+                                                                  'Button Page': locationMatch?.label
                                                               })
                                                             : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
                                                                   'Button Location': 'Footer',
-                                                                  'Button Page': 'All pages'
+                                                                  'Button Page': locationMatch?.label
                                                               })
                                                     }
                                                 }}
@@ -211,13 +236,15 @@ const Footer = () => {
                                                 onClick={() => {
                                                     articlePath || productDetailPath
                                                         ? trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
-                                                              'Button Title': pageTitle,
+                                                              'Button Title': productDetailPath
+                                                                  ? productName
+                                                                  : pageTitle,
                                                               'Button Location': 'Footer',
-                                                              'Button Page': 'All pages'
+                                                              'Button Page': locationMatch?.label
                                                           })
                                                         : trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
                                                               'Button Location': 'Footer',
-                                                              'Button Page': 'All pages'
+                                                              'Button Page': locationMatch?.label
                                                           })
                                                 }}
                                             >

@@ -238,7 +238,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                     setFilter('priceRange', { min, max })
                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                         'Button Location': 'Our Collections',
-                        'Button Page': 'Our Collections'
+                        'Button Page': 'Our Collections',
+                        'Button Title': 'All button by price (IDR 0 - IDR 1M, etc)'
                     })
                 }
             }, 500),
@@ -277,6 +278,13 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
     const renderFilterOptions = (item: (typeof metaData)[0]) => {
         const { key, type } = item
         const hasActive = hasActiveFilter(key)
+        let ButtonTitle = ''
+
+        if (key === 'brands') ButtonTitle = 'All button by brands (richard mille, etc)'
+        else if (key === 'availability') ButtonTitle = 'All button by availability (available, etc)'
+        else if (key === 'condition') ButtonTitle = 'All button by condition (brand new, etc)'
+        else if (key === 'gender') ButtonTitle = 'All button by gender (male, etc)'
+        else if (key === 'priceRange') ButtonTitle = 'All button by price (IDR 0 - IDR 1M, etc)'
 
         if (type === 'checkbox') {
             let options: Array<{ id: string; name: string }> = []
@@ -302,7 +310,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                 setFilter(key, newValues)
                                 trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                     'Button Location': 'Our Collections',
-                                    'Button Page': 'Our Collections'
+                                    'Button Page': 'Our Collections',
+                                    'Button Title': ButtonTitle
                                 })
                             }}
                             checked={filters[key].includes(option.id)}
@@ -384,7 +393,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                             })
                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                 'Button Location': 'Our Collections',
-                                                'Button Page': 'Our Collections'
+                                                'Button Page': 'Our Collections',
+                                                'Button Title': 'All button by price (IDR 0 - IDR 1M, etc)'
                                             })
                                         }}
                                         checked={
@@ -404,7 +414,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                             })
                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                 'Button Location': 'Our Collections',
-                                                'Button Page': 'Our Collections'
+                                                'Button Page': 'Our Collections',
+                                                'Button Title': 'All button by price (IDR 0 - IDR 1M, etc)'
                                             })
                                         }}
                                     >
@@ -438,7 +449,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     setFilter('sortBy', option?.id)
                                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                         'Button Location': 'Our Collections',
-                                        'Button Page': 'Our Collections'
+                                        'Button Page': 'Our Collections',
+                                        'Button Title': 'All button by sort by (Newest arrival, etc)'
                                     })
                                 }}
                                 checked={filters.sortBy === option?.id}
@@ -452,7 +464,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     setFilter('sortBy', option?.id)
                                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                         'Button Location': 'Our Collections',
-                                        'Button Page': 'Our Collections'
+                                        'Button Page': 'Our Collections',
+                                        'Button Title': 'All button by sort by (Newest arrival, etc)'
                                     })
                                 }}
                             >

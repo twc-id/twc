@@ -56,11 +56,13 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, o
                                 onClick={() => {
                                     if (isWatch) {
                                         trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                            'Button Title': item.name,
                                             'Button Location': 'Product list',
                                             'Button Page': locationMatch?.label
                                         })
                                     } else {
                                         trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                            'Button Title': item.name,
                                             'Button Location': 'Product list',
                                             'Button Page': locationMatch?.label
                                         })

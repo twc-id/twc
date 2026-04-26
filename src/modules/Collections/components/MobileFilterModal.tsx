@@ -233,7 +233,8 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
         onApply(tempFilters)
         trackEvent(GA_EVENTS.FILTER_SELECTED, {
             'Button Location': 'Menu Our Collections',
-            'Button Page': 'Menu page'
+            'Button Page': 'Menu page',
+            'Button Title': 'Apply Filter'
         })
         onClose()
     }
@@ -241,6 +242,14 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
     const renderFilterOptions = (item: (typeof metaData)[0]) => {
         const { key, type } = item
         const hasActive = hasActiveFilter(key)
+        let ButtonTitle = ''
+
+        if (key === 'brands') ButtonTitle = 'All button by brands (richard mille, etc)'
+        else if (key === 'availability') ButtonTitle = 'All button by availability (available, etc)'
+        else if (key === 'condition') ButtonTitle = 'All button by condition (brand new, etc)'
+        else if (key === 'gender') ButtonTitle = 'All button by gender (male, etc)'
+        else if (key === 'priceRange') ButtonTitle = 'All button by price (IDR 0 - IDR 1M, etc)'
+        else if (key === 'sortBy') ButtonTitle = 'All button by sort by (Newest arrival, etc)'
 
         if (type === 'checkbox') {
             let options: Array<{ id: string; name: string }> = []
@@ -295,6 +304,11 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             newValues = currentValues.filter((id: string) => id !== option.id)
                                         }
                                         setTempFilter(key, newValues)
+                                        trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                            'Button Location': 'Menu Our Collections',
+                                            'Button Page': 'Menu page',
+                                            'Button Title': ButtonTitle
+                                        })
                                     }}
                                     checked={tempFilters[key].includes(option.id)}
                                     textClassName='text-paragraph-8-mobile'
@@ -322,6 +336,11 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                                 newValues = currentValues.filter((id: string) => id !== option.id)
                                             }
                                             setTempFilter(key, newValues)
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Menu Our Collections',
+                                                'Button Page': 'Menu page',
+                                                'Button Title': ButtonTitle
+                                            })
                                         }}
                                         checked={tempFilters[key].includes(option.id)}
                                         textClassName='text-paragraph-8-mobile'
@@ -398,12 +417,17 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                             return priceQuickOptions.map((opt) => (
                                 <div className='flex items-center gap-2' key={opt.id}>
                                     <RadioButton
-                                        onChange={() =>
+                                        onChange={() => {
                                             setTempFilter('priceRange', {
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                        }
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Menu Our Collections',
+                                                'Button Page': 'Menu page',
+                                                'Button Title': ButtonTitle
+                                            })
+                                        }}
                                         checked={
                                             (tempFilters.priceRange.min ?? undefined) === opt.min &&
                                             (tempFilters.priceRange.max ?? undefined) === opt.max
@@ -414,12 +438,17 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     />
                                     <span
                                         className='text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
-                                        onClick={() =>
+                                        onClick={() => {
                                             setTempFilter('priceRange', {
                                                 min: opt.min,
                                                 max: opt.max
                                             })
-                                        }
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Menu Our Collections',
+                                                'Button Page': 'Menu page',
+                                                'Button Title': ButtonTitle
+                                            })
+                                        }}
                                     >
                                         {opt.label}
                                     </span>
@@ -447,7 +476,14 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                         <div className='flex flex-row gap-2' key={option.id}>
                             <RadioButton
                                 key={option?.id}
-                                onChange={() => setTempFilter('sortBy', option?.id)}
+                                onChange={() => {
+                                    setTempFilter('sortBy', option?.id)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                        'Button Location': 'Menu Our Collections',
+                                        'Button Page': 'Menu page',
+                                        'Button Title': ButtonTitle
+                                    })
+                                }}
                                 checked={tempFilters.sortBy === option?.id}
                                 name='sort-by'
                                 value={option?.id}
@@ -455,7 +491,14 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                             />
                             <span
                                 className='text-paragraph-8-mobile text-grey-black dark:text-grey-white cursor-pointer'
-                                onClick={() => setTempFilter('sortBy', option?.id)}
+                                onClick={() => {
+                                    setTempFilter('sortBy', option?.id)
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                        'Button Location': 'Menu Our Collections',
+                                        'Button Page': 'Menu page',
+                                        'Button Title': ButtonTitle
+                                    })
+                                }}
                             >
                                 {option?.name}
                             </span>

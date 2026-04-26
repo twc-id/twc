@@ -1,14 +1,22 @@
 import Button from '@components/buttons/Button'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
+import useProductStore from '@store/useProductStore'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
 import { motion } from 'motion/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React from 'react'
 
 const CTA = ({ image }: { image?: string }) => {
     const { t } = useTranslation('common')
+    const router = useRouter()
+    const currentProduct = useProductStore((s) => s.currentProduct)
+    const articlePath = router.pathname.startsWith('/articles/')
+    const productDetailPath = router.pathname.startsWith('/collections/')
+    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
+
     return (
         <section className='bg-grey-white pb-14 xl:pb-[116px]'>
             <div className='bg-grey-black relative flex h-full w-full flex-col items-center gap-14 overflow-hidden xl:flex-row xl:justify-end'>
@@ -39,12 +47,21 @@ const CTA = ({ image }: { image?: string }) => {
                         href={getWhatsAppLinkFromTemplate('navigation')}
                         target='_blank'
                         rel='noopener noreferrer'
-                        onClick={() =>
-                            trackEvent(GA_EVENTS.CONTACT_WA, {
-                                'Button Location': 'CTA above footer',
-                                'Button Page': 'All pages'
-                            })
-                        }
+                        onClick={() => {
+                            const productName = currentProduct?.name || document.title || ''
+                            if (articlePath || productDetailPath) {
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Button Title': productDetailPath ? productName : pageTitle,
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': 'Search not found'
+                                })
+                            } else {
+                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                    'Button Location': 'CTA above footer',
+                                    'Button Page': 'Search not found'
+                                })
+                            }
+                        }}
                     >
                         <Button
                             variant='secondary'

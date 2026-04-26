@@ -214,11 +214,13 @@ const Highlight = () => {
                                               onClick={() => {
                                                   if (tab === 'watches') {
                                                       trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
+                                                          'Button Title': product.name,
                                                           'Button Location': 'Collection highlight',
                                                           'Button Page': locationMatch?.label
                                                       })
                                                   } else {
                                                       trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
+                                                          'Button Title': product.name,
                                                           'Button Location': 'Collection highlight',
                                                           'Button Page': locationMatch?.label
                                                       })
@@ -311,7 +313,7 @@ const Highlight = () => {
                             <div />
                         )}
                         <UnstyledLink
-                            href='/collections'
+                            href={tab === 'accessories' ? '/collections?tab=accessories' : '/collections'}
                             onClick={() => {
                                 if (tab === 'watches') {
                                     trackEvent(GA_EVENTS.INTEREST_WATCHES, {

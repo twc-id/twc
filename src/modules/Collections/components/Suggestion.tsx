@@ -28,8 +28,6 @@ const Suggestion = ({ products }: SuggestionProps) => {
         return router.pathname === loc.path
     })
 
-    const pageTitle = typeof window !== 'undefined' ? document.title : router.pathname
-
     // Use the related products hook
     const { data: related = [], isLoading } = useRelatedProducts(products?.id, isMobile ? 4 : 3)
 
@@ -55,13 +53,13 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                 onClick={() => {
                                     if (isWatch) {
                                         trackEvent(GA_EVENTS.INTEREST_WATCH_DETAILS, {
-                                            'Button Title': pageTitle,
+                                            'Button Title': p.name,
                                             'Button Location': 'You May Also Like These Watches',
                                             'Button Page': locationMatch?.label
                                         })
                                     } else {
                                         trackEvent(GA_EVENTS.INTEREST_ACCESSORIES_DETAILS, {
-                                            'Button Title': pageTitle,
+                                            'Button Title': p.name,
                                             'Button Location': 'You May Also Like These Accessories',
                                             'Button Page': locationMatch?.label
                                         })
