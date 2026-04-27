@@ -1,0 +1,19 @@
+import { defaultLanguage } from '@constant/i18n'
+import Collections from '@modules/Collections'
+import { GetStaticProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || defaultLanguage, [
+            'components',
+            'common',
+            'pages',
+            'collection',
+            'home'
+        ]))
+    },
+    revalidate: 600
+})
+
+export default Collections

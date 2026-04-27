@@ -1,0 +1,122 @@
+{
+    "title": "The Watch Collections - Sell Your Luxury Watches",
+    "hero": {
+        "title": "Make Room for </br/> Your Next Timepiece",
+        "description": "Sell now and get the best offer from us."
+    },
+    "white_space": {
+        "description": "Get the best offer for your timepiece based on the latest market prices and valuations"
+    },
+    "benefit": {
+        "items": {
+            "1": {
+                "title": "Professional Assistance",
+                "description": "Expert support to sell your watch."
+            },
+            "2": {
+                "title": "Sell with Ease",
+                "description": "Get the best-selling method for your watch and achieve the best returns."
+            },
+            "3": {
+                "title": "Best Price",
+                "description": "Get the best price for your valuable watch."
+            }
+        }
+    },
+    "how_to_sell": {
+        "title": "How to Sell?",
+        "steps": {
+            "1": {
+                "title": "Arrange Your Visit and Share Watch Details",
+                "description": "Schedule a watch assessment and tell us your watch information."
+            },
+            "2": {
+                "title": "Receive Quote",
+                "description": "You will receive an offer based on the information you provide and our expert assessment."
+            },
+            "3": {
+                "title": "Send Watch",
+                "description": "Once you approve the offer, we will arrange for your watch to be securely shipped or collected."
+            },
+            "4": {
+                "title": "Receive Payment",
+                "description": "Receive your payment after we have collected your watch."
+            }
+        }
+    },
+    "consign": {
+        "title": "How to Consign?",
+        "steps": {
+            "1": {
+                "title": "Send Your Watch and Provide Details",
+                "description": "Share your watch’s photos and details, and we’ll arrange secure delivery or collection for expert review."
+            },
+            "2": {
+                "title": "Expert Authentication",
+                "description": "Our specialists will verify your watch’s authenticity and condition to determine a fair market value."
+            },
+            "3": {
+                "title": "Showcase & Listing",
+                "description": "We will professionally present your watch and list it to reach serious, qualified buyers."
+            },
+            "4": {
+                "title": "Secure Sale & Payout",
+                "description": "Once your watch is sold, we will manage the transaction and transfer your payment quickly and securely."
+            }
+        }
+    },
+    "faq": {
+        "title": "Frequently Ask Questions",
+        "items": {
+            "1": {
+                "question": "What types of watches can I sell or consign?",
+                "answer": "We accept luxury timepieces from reputable brands as long as they meet our authentication standards."
+            },
+            "2": {
+                "question": "What condition does my watch need to be in to sell or consign it?",
+                "answer": "As long as we can confirm the watch's authenticity, we can help to buy from our customer. However, if you want to consign, we will have more throughout screening from the experts."
+            },
+            "3": {
+                "question": "How does The Watch Collections authenticate watches?",
+                "answer": "Your watch needed to be delivered to us in order for our experts or technicians to check the authenticity. Sometimes, if required, we will open the watch to check the parts and movements."
+            },
+            "4": {
+                "question": "How is the selling price determined?",
+                "answer": "The selling price is based on current market value, condition, completeness, and expert assessment."
+            },
+            "5": {
+                "question": "Is there any commission fee?",
+                "answer": "For consign, our system requires the consignee to set a certain price and our team will offer the best value that comes from the buyer. We will be the third party that secures the deal."
+            },
+            "6": {
+                "question": "How can I find out how much my watch is worth?",
+                "answer": "Submit your watch details and photos. Our experts will provide a valuation based on market data and condition review."
+            },
+            "7": {
+                "question": "How do I receive payment from The Watch Collections?",
+                "answer": "We’re quite flexible; it can be in the form of cash, bank transfer, or online payments."
+            },
+            "8": {
+                "question": "Can I book an offline appointment?",
+                "answer": "Yes, you can. Book a schedule and visit our store for an in-person consultation."
+            },
+            "9": {
+                "question": "Where is The Watch Collections’ offline store located?",
+                "answer": "Our offline store is located at: <br/>Jl. Pantai Mutiara Regatta Blok TG1 B-C, Pluit, Kecamatan Penjaringan, Jakarta Utara, Daerah Khusus Ibukota Jakarta 14450, Indonesia"
+            },
+            "10": {
+                "question": " What are the benefits of selling with The Watch Collections?",
+                "answer": "You will get expert authentication, fair market pricing, secure transactions, professional presentation, and support throughout the selling or consignment process."
+            },
+            "11": {
+                "question": " How can I get in touch with The Watch Collections?",
+                "answer": "Reach us on WhatsApp at +628121396688"
+            }
+        }
+    },
+    "cta": {
+        "title": "Sell Your Watch",
+        "description": "Schedule a consultation to discuss how to sell or consign your timepiece",
+        "button": "Book an Appointment"
+    }
+}

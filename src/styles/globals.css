@@ -2,37 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CookieConsent styles */
+@import 'vanilla-cookieconsent/dist/cookieconsent.css';
+@import './cookieconsent.css';
+
 @layer base {
-    /* #region  /**=========== Typography =========== */
-    .h0 {
-        @apply font-primary text-3xl font-bold md:text-5xl;
+    html,
+    body {
+        overflow-x: clip;
+        max-width: 100vw;
+        overscroll-behavior-y: none;
+        /* iOS: Ensure full height including browser nav area */
+        min-height: 100dvh;
+        min-height: -webkit-fill-available;
     }
 
-    h1,
-    .h1 {
-        @apply font-primary text-2xl font-bold md:text-4xl;
+    body {
+        @apply dark:bg-grey-black bg-white transition-colors duration-300;
     }
 
-    h2,
-    .h2 {
-        @apply font-primary text-xl font-bold md:text-3xl;
+    /* iOS: Ensure footer extends into safe area */
+    footer {
+        padding-bottom: env(safe-area-inset-bottom);
+        background-clip: padding-box;
     }
-
-    h3,
-    .h3 {
-        @apply font-primary text-lg font-bold md:text-2xl;
-    }
-
-    h4,
-    .h4 {
-        @apply font-primary text-base font-bold md:text-lg;
-    }
-
-    body,
-    .p {
-        @apply font-primary text-sm md:text-base;
-    }
-    /* #endregion  /**======== Typography =========== */
 
     .layout {
         /* 1100px */
@@ -46,7 +39,7 @@
 
     /* Class to adjust with sticky footer */
     .min-h-main {
-        @apply min-h-[calc(100vh-56px)];
+        @apply min-h-[calc(100dvh-56px)];
     }
 }
 

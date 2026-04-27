@@ -13,11 +13,34 @@ const nextConfig = {
     swcMinify: true,
 
     // Uncomment to add domain whitelist
-    // images: {
-    //   domains: [
-    //     'res.cloudinary.com',
-    //   ],
-    // },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'store.thewatchcollections.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'mediumpurple-pig-833607.hostingersite.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.jakpost.net'
+            },
+            {
+                protocol: 'https',
+                hostname: 'scontent-sin6-4.cdninstagram.com'
+            },
+            {
+                protocol: 'https',
+                hostname: '*.cdninstagram.com'
+            },
+            {
+                protocol: 'https',
+                hostname: 'placehold.co'
+            }
+        ]
+    },
 
     // SVGR
     // webpack(config) {

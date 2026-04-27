@@ -201,7 +201,7 @@ const MaskedStyledInput = IMaskMixin(({ inputRef, ...props }) => {
             ref={inputRef as React.Ref<HTMLInputElement>}
             className={classNames(
                 inputId,
-                'text-text-neutral-strong dark:text-dark-text-neutral-strong hover:border-outline-color-teal focus:!caret-grey-700 dark:focus:!caret-dark-grey-700 placeholder:!text-text-neutral-disabled placeholder:dark:!text-dark-text-neutral-disabled h-[-webkit-fill-available] w-full flex-1 border-none bg-[transparent] !outline-none',
+                'text-grey-200 hover:border-outline-color-teal focus:!caret-grey-700 dark:focus:!caret-grey-700 placeholder:!text-grey-200 placeholder:dark:!text-grey-200 w-full flex-1 border-none bg-[transparent] !outline-none !ring-transparent',
                 {
                     'cursor-not-allowed': props.disabled
                 },
@@ -326,7 +326,7 @@ const Input: React.FC<InputProps> = ({
                         <div className={classNames('flex', prefixClassName)}>{prefix}</div>
                     </When>
                     <MaskedStyledInput
-                        data-testid='binaloka-input'
+                        data-testid='twc-input'
                         readOnly={isReadOnly}
                         name={name}
                         value={value}

@@ -1,0 +1,49 @@
+{
+    "title": "The Watch Collection - Reserve Your Spot",
+    "hero": {
+        "title": "Couldn\u2019t find the watch you\u2019re looking for?",
+        "subtitle": "We can source more for you",
+        "description": "Reserve your desired watch, and we will secure it exclusively for you",
+        "items": {
+            "1": {
+                "title": "Classic Luxury"
+            },
+            "2": {
+                "title": "Sport Collection"
+            },
+            "3": {
+                "title": "Vintage Series"
+            }
+        }
+    },
+    "reserve_time_pieces": {
+        "title": "Reserve Your Timepieces",
+        "description": "Discover More to Reserve Watches"
+    },
+    "how_to_reserve": {
+        "title": "How to Reserve at The Watch Collections?",
+        "steps": {
+            "1": {
+                "title": "Choose your Timepiece",
+                "description": "Explore our curated collection and select the piece you'd like to reserve."
+            },
+            "2": {
+                "title": "Provide Your Reservation Details",
+                "description": "Share your information and preferred timeframe so we can hold the watch for you."
+            },
+            "3": {
+                "title": "Receive Confirmation",
+                "description": "We'll verify availability, confirm your reservation, and guide you through inspection and payment options."
+            },
+            "4": {
+                "title": "Secure Payment and Delivery",
+                "description": "Complete your payment and choose insured shipping or in-store pickup."
+            }
+        }
+    },
+    "cta": {
+        "title": "Reserve Your Watch Now",
+        "description": "Explore and choose from the world\u2019s luxury timepieces",
+        "button": "Reserve Now"
+    }
+}

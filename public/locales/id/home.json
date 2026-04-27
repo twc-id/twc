@@ -1,0 +1,61 @@
+{
+    "hero": {
+        "title": " Curated Luxury, <br /> Timeless Value",
+        "sub_1": "Curated Pieces",
+        "sub_2": "Where Great Collections Begin"
+    },
+    "commitment": {
+        "title": "Abadi. Berkelas. Terkurasi",
+        "description": "Jam Tangan Berkelas. Momen Layak Dikenang"
+    },
+    "highlight": {
+        "title": "Koleksi Unggulan",
+        "tabs": {
+            "watches": "Jam Tangan",
+            "accessories": "Aksesoris"
+        },
+        "pre_owned": "Bekas • {{year}}",
+        "view_more": "Lihat Lainnya"
+    },
+    "sell_reserve": {
+        "sell_title": "Jual Jam Tangan <br className='hidden xl:block' />  Anda",
+        "reserve_title": "Pesan Jam Tangan",
+        "cta_sell": "Pelajari Lebih Lanjut",
+        "cta_reserve": "Lihat Selengkapnya"
+    },
+    "timepiece": {
+        "title": "Layanan Kami",
+        "book_now": "Pesan Layanan",
+        "items": {
+            "1": {
+                "label": "Perawatan dan Pemeliharaan",
+                "description": "Layanan pembersihan, pemolesan, hingga pemeriksaan lengkap. Tim kami akan memastikan jam tangan Anda selalu dalam kondisi terbaik."
+            },
+            "2": {
+                "label": "Perbaikan dan Penggantian",
+                "description": "Penggantian baterai, <i>bracelet</i>, atau <i>strap</i>, kaca, dan komponen lainnya untuk menjaga kualitas jam tangan Anda."
+            },
+            "3": {
+                "label": "Invishield Watch Protective Film/Anti-Gores Invishield",
+                "description": "Pemasangan lapisan pelindung untuk menjaga jam tangan Anda, dilengkapi dengan garansi seumur hidup."
+            }
+        }
+    },
+    "journey": {
+        "title": "Behind <br /> The Journey",
+        "desc_1": "Sejak 2014, The Watch Collections menghadirkan jam tangan luxury dari berbagai brand ternama di dunia seperti Richard Mille, Patek Philippe, Audemars Piguet, Rolex, Cartier dan lainnya.",
+        "desc_2": "The Watch Collections juga menyediakan layanan in-store di Jakarta. Kami selalu memastikan setiap jam tangan yang kami tawarkan autentik, aman, dan terjamin keasliannya. <br/> Terinspirasi oleh seni dan craftsmanship pembuatan jam, kami berkomitmen membantu Anda menemukan jam tangan yang paling tepat dengan pelayanan yang mengutamakan kejujuran, rasa hormat, dan etika.",
+        "learn_our_story": "Tentang Kami"
+    },
+    "review": {
+        "title": "Where Trust Speaks"
+    },
+    "social_media": {
+        "title": "Kunjungi Instagram Kami",
+        "find_us_social_media": "Lihat <br className='hidden xl:block' /> Media Sosial Kami"
+    },
+    "cta": {
+        "title": "The Watch <br /> Journal",
+        "description": "Temukan dan pelajari informasi mendalam seputar jam tangan mewah"
+    }
+}

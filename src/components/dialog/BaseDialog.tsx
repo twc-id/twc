@@ -127,7 +127,7 @@ export default function BaseDialog({
                                 </Button>
                                 <Button
                                     type='button'
-                                    variant='grayOutline'
+                                    variant='secondary'
                                     onClick={onClose}
                                     className='mt-3 w-full items-center justify-center !font-medium sm:mt-0 sm:w-auto sm:text-sm'
                                 >
