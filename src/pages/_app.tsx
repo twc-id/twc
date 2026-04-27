@@ -17,17 +17,17 @@ import 'vanilla-cookieconsent/dist/cookieconsent.css'
 import '@styles/globals.css'
 import '@styles/nprogress.css'
 
-// Route change handlers
-Router.events.on('routeChangeStart', () => {
-    nProgress.start()
+// Route change handlers — skip NProgress for shallow transitions (e.g. filter URL sync)
+Router.events.on('routeChangeStart', (_url, { shallow }) => {
+    if (!shallow) nProgress.start()
 })
 
-Router.events.on('routeChangeError', () => {
-    nProgress.done()
+Router.events.on('routeChangeError', (_url, { shallow }) => {
+    if (!shallow) nProgress.done()
 })
 
-Router.events.on('routeChangeComplete', () => {
-    nProgress.done()
+Router.events.on('routeChangeComplete', (_url, { shallow }) => {
+    if (!shallow) nProgress.done()
 })
 
 type AppPropsWithLayout = AppProps & {

@@ -1,6 +1,5 @@
 import Button from '@components/buttons/Button'
 import UnstyledLink from '@components/links/UnstyledLink'
-import Loader from '@components/Loader'
 import Skeleton from '@components/Skeleton'
 import listLocation from '@constant/location'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
@@ -37,8 +36,17 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, o
 
     if (isLoading) {
         return (
-            <div className='flex h-full w-full items-center justify-center'>
-                <Loader />
+            <div className='grid grid-cols-2 gap-2 xl:grid-cols-3'>
+                {Array.from({ length: isMobile ? 6 : 9 }).map((_, i) => (
+                    <div key={i} className='flex flex-col items-center gap-1 pb-6 xl:gap-3 xl:pb-8'>
+                        <Skeleton className='h-[168px] w-[168px] rounded-none xl:h-[318px] xl:w-[318px]' />
+                        <div className='flex flex-col items-center gap-1'>
+                            <Skeleton className='h-3 w-24' />
+                            <Skeleton className='h-4 w-32' />
+                            <Skeleton className='h-3 w-20' />
+                        </div>
+                    </div>
+                ))}
             </div>
         )
     }
