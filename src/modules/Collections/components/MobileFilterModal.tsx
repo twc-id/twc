@@ -7,7 +7,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
-import { sanitizeHtml } from '@utils/html'
+import { decodeHtml, sanitizeHtml } from '@utils/html'
 import debounce from 'lodash/debounce'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
@@ -242,15 +242,6 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
     const renderFilterOptions = (item: (typeof metaData)[0]) => {
         const { key, type } = item
         const hasActive = hasActiveFilter(key)
-        let ButtonTitle = ''
-
-        if (key === 'brands') ButtonTitle = 'All button by brands (richard mille, etc)'
-        else if (key === 'availability') ButtonTitle = 'All button by availability (available, etc)'
-        else if (key === 'condition') ButtonTitle = 'All button by condition (brand new, etc)'
-        else if (key === 'gender') ButtonTitle = 'All button by gender (male, etc)'
-        else if (key === 'priceRange') ButtonTitle = 'All button by price (IDR 0 - IDR 1M, etc)'
-        else if (key === 'sortBy') ButtonTitle = 'All button by sort by (Newest arrival, etc)'
-
         if (type === 'checkbox') {
             let options: Array<{ id: string; name: string }> = []
 
@@ -307,7 +298,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                         trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                             'Button Location': 'Menu Our Collections',
                                             'Button Page': 'Menu page',
-                                            'Button Title': ButtonTitle
+                                            'Button Title': decodeHtml(option.name)
                                         })
                                     }}
                                     checked={tempFilters[key].includes(option.id)}
@@ -339,7 +330,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                 'Button Location': 'Menu Our Collections',
                                                 'Button Page': 'Menu page',
-                                                'Button Title': ButtonTitle
+                                                'Button Title': decodeHtml(option.name)
                                             })
                                         }}
                                         checked={tempFilters[key].includes(option.id)}
@@ -425,7 +416,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                 'Button Location': 'Menu Our Collections',
                                                 'Button Page': 'Menu page',
-                                                'Button Title': ButtonTitle
+                                                'Button Title': opt.label
                                             })
                                         }}
                                         checked={
@@ -446,7 +437,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                 'Button Location': 'Menu Our Collections',
                                                 'Button Page': 'Menu page',
-                                                'Button Title': ButtonTitle
+                                                'Button Title': opt.label
                                             })
                                         }}
                                     >
@@ -481,7 +472,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                         'Button Location': 'Menu Our Collections',
                                         'Button Page': 'Menu page',
-                                        'Button Title': ButtonTitle
+                                        'Button Title': decodeHtml(option?.name || '')
                                     })
                                 }}
                                 checked={tempFilters.sortBy === option?.id}
@@ -496,7 +487,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                         'Button Location': 'Menu Our Collections',
                                         'Button Page': 'Menu page',
-                                        'Button Title': ButtonTitle
+                                        'Button Title': decodeHtml(option?.name || '')
                                     })
                                 }}
                             >
