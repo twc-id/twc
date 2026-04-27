@@ -36,7 +36,7 @@ const listLocation = [
         label: 'Privacy policy'
     },
     {
-        path: '/terms-of-use',
+        path: '/terms',
         label: 'Terms of use'
     }
 ]

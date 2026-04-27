@@ -17,7 +17,7 @@ import { trackEvent } from '@lib/ga'
 import useProductStore from '@store/useProductStore'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
-import { sanitizeHtml } from '@utils/html'
+import { decodeHtml, sanitizeHtml } from '@utils/html'
 import Fuse from 'fuse.js'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -934,7 +934,8 @@ const Headers = () => {
                                                     setIsMenuOpen(false)
                                                     trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                         'Button Location': 'Menu Our Collections',
-                                                        'Button Page': 'Menu page'
+                                                        'Button Page': 'Menu page',
+                                                        'Button Title': 'See all watches'
                                                     })
                                                 }}
                                             >
@@ -963,7 +964,8 @@ const Headers = () => {
                                                                 setIsMenuOpen(false)
                                                                 trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                     'Button Location': 'Menu Our Collections',
-                                                                    'Button Page': 'Menu page'
+                                                                    'Button Page': 'Menu page',
+                                                                    'Button Title': 'See all watches'
                                                                 })
                                                             }}
                                                         >
@@ -992,8 +994,7 @@ const Headers = () => {
                                                                         trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                             'Button Location': 'Menu Our Collections',
                                                                             'Button Page': 'Menu page',
-                                                                            'Button Title':
-                                                                                'All button by brands (richard mille, etc)'
+                                                                            'Button Title': decodeHtml(item.name)
                                                                         })
                                                                     }}
                                                                 />
@@ -1109,8 +1110,7 @@ const Headers = () => {
                                                                                 'Button Location':
                                                                                     'Menu Our Collections',
                                                                                 'Button Page': 'Menu page',
-                                                                                'Button Title':
-                                                                                    'All button by availability (available, etc)'
+                                                                                'Button Title': decodeHtml(item)
                                                                             })
                                                                         }}
                                                                     >
@@ -1158,8 +1158,7 @@ const Headers = () => {
                                                                                 'Button Location':
                                                                                     'Menu Our Collections',
                                                                                 'Button Page': 'Menu page',
-                                                                                'Button Title':
-                                                                                    'All button by condition (brand new, etc)'
+                                                                                'Button Title': decodeHtml(item)
                                                                             })
                                                                         }}
                                                                         onKeyDown={handleSubSubMenuItemKeyDown}
@@ -1244,8 +1243,7 @@ const Headers = () => {
                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                 'Button Location': 'Menu Our Collections',
                                                                 'Button Page': 'Menu page',
-                                                                'Button Title':
-                                                                    'All button by brands (richard mille, etc)'
+                                                                'Button Title': decodeHtml(item.name)
                                                             })
                                                         }}
                                                     />
@@ -1279,8 +1277,7 @@ const Headers = () => {
                                                             trackEvent(GA_EVENTS.FILTER_SELECTED, {
                                                                 'Button Location': 'Menu Our Collections',
                                                                 'Button Page': 'Menu page',
-                                                                'Button Title':
-                                                                    'All button by availability (available, etc)'
+                                                                'Button Title': decodeHtml(item)
                                                             })
                                                         }}
                                                     >

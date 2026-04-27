@@ -15,6 +15,15 @@ export const wrapTableWithFigure = async (html: string) => {
     return $.html()
 }
 
+export const decodeHtml = (html: string): string => {
+    if (typeof document !== 'undefined') {
+        const el = document.createElement('div')
+        el.innerHTML = DOMPurify.sanitize(html, { ALLOWED_TAGS: [] })
+        return el.textContent || ''
+    }
+    return html.replace(/<[^>]*>/g, '')
+}
+
 export const getTextFromHtml = async (html: string) => {
     const { load } = await import('cheerio')
 

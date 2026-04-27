@@ -899,7 +899,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         >
                                             <Button variant='secondaryInverse' block>
                                                 {t('common:reserve_this', {
-                                                    item: isWatch ? 'watch' : 'accesoris'
+                                                    item: isWatch ? 'watch' : 'accessories'
                                                 })}
                                             </Button>
                                         </a>
