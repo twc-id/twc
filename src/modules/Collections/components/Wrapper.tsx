@@ -155,7 +155,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                           </h2>
                           {/* Tabs */}
                           <div
-                              className={classNames('border-grey-black flex flex-row border', {
+                              className={classNames('border-grey-black flex flex-row border xl:w-auto', {
                                   'w-full': selectedTab !== 0
                               })}
                           >
@@ -169,7 +169,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                                               'bg-grey-black text-grey-white': idx === (selectedTab ?? 0),
                                               'bg-grey-white text-grey-black hover:bg-grey-100':
                                                   idx !== (selectedTab ?? 0),
-                                              'w-full': selectedTab !== 0
+                                              'w-full': selectedTab !== 0 && isMobile
                                           }
                                       )}
                                   >
