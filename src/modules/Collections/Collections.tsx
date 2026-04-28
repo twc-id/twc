@@ -8,7 +8,7 @@ import Wrapper from '@modules/Collections/components/Wrapper'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 const TAB_MAP = {
@@ -41,8 +41,8 @@ const Collections = () => {
 
     const filters = useCollectionsFilterStore.useFilters()
 
-    // Track if filters have been reset on mount
-    const hasResetFiltersRef = useRef(false)
+    // Incremented on non-shallow route changes to re-trigger URL→store sync
+    const [navKey, setNavKey] = useState(0)
 
     const heroBanner = assets?.find((asset) => asset.name === 'our-collection-1')?.media?.url
     const ctaImage = assets?.find((asset) => asset.name === 'our-collection-2')?.media?.url
@@ -120,10 +120,19 @@ const Collections = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, selectedTab, router.isReady, isInitialized])
 
-    // Reset filters when component first mounts (when user navigates to collections page)
-    // But preserve filters from URL query parameters
+    // Re-sync URL → store on non-shallow route changes (e.g. header filter links)
+    // Shallow router.replace (from Sidebar URL sync) is ignored to prevent loops.
     useEffect(() => {
-        if (!router.isReady || hasResetFiltersRef.current) return
+        const handleRouteChange = (_url: string, { shallow }: { shallow: boolean }) => {
+            if (!shallow) setNavKey((k) => k + 1)
+        }
+        router.events.on('routeChangeComplete', handleRouteChange)
+        return () => router.events.off('routeChangeComplete', handleRouteChange)
+    }, [router.events])
+
+    // Sync URL query params → Zustand store on mount and on navigation from header
+    useEffect(() => {
+        if (!router.isReady) return
 
         // Check if there are filter-related query parameters
         const hasFilterParams =
@@ -135,8 +144,10 @@ const Collections = () => {
             router.query.max_price ||
             router.query.sortby
 
+        // Always reset first, then apply only what's in the URL
+        resetFilters()
+
         if (hasFilterParams) {
-            // Set filters from URL query parameters instead of resetting
             if (router.query.product_brand) {
                 const brandVal = Array.isArray(router.query.product_brand)
                     ? router.query.product_brand
@@ -172,14 +183,9 @@ const Collections = () => {
                     setFilter('sortBy', sortVal as 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc')
                 }
             }
-        } else {
-            // No filter params in URL, reset filters
-            resetFilters()
         }
-
-        hasResetFiltersRef.current = true
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.isReady])
+    }, [router.isReady, navKey])
 
     const handleLoadMore = async () => {
         const nextPage = page + 1
