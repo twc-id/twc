@@ -763,7 +763,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                     </div>
                 </div>
 
-                <div className='scrollbar-none flex w-full xl:w-auto'>
+                <div className='scrollbar-none flex w-full xl:w-full'>
                     <div
                         ref={rightScrollRef as any}
                         className='scrollbar-none flex w-full flex-col gap-12 overflow-y-auto xl:max-h-[calc(100vh-160px)]'
@@ -897,7 +897,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                 })
                                             }
                                         >
-                                            <Button variant='secondaryInverse' block>
+                                            <Button variant='secondaryInverse' block className='capitalize'>
                                                 {t('common:reserve_this', {
                                                     item: isWatch ? 'watch' : 'accessories'
                                                 })}
@@ -1205,8 +1205,17 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       })
                                                                   }
                                                               >
-                                                                  <Button variant='secondaryInverse'>
+                                                                  {/* <Button variant='secondaryInverse'>
                                                                       Reserve This Watch
+                                                                  </Button> */}
+                                                                  <Button
+                                                                      variant='secondaryInverse'
+                                                                      block
+                                                                      className='capitalize'
+                                                                  >
+                                                                      {t('common:reserve_this', {
+                                                                          item: isWatch ? 'watch' : 'accessories'
+                                                                      })}
                                                                   </Button>
                                                               </a>
                                                           ) : (
