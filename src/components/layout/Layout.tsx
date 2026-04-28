@@ -81,7 +81,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         window.addEventListener('hashchange', handleHashChange)
         window.addEventListener('click', handleHashLinkClick, true)
 
-        const onRouteChangeComplete = (url: string) => {
+        const onRouteChangeComplete = (url: string, { shallow }: { shallow: boolean }) => {
+            if (shallow) return
             const hashIndex = url.indexOf('#')
             if (hashIndex !== -1) {
                 const hash = url.substring(hashIndex)
