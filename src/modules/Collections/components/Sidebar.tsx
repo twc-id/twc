@@ -300,11 +300,13 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
                                     newValues = currentValues.filter((id: string) => id !== option.id)
                                 }
                                 setFilter(key, newValues)
-                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
-                                    'Button Location': 'Our Collections',
-                                    'Button Page': 'Our Collections',
-                                    'Button Title': decodeHtml(option.name)
-                                })
+                                if (e) {
+                                    trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                        'Button Location': 'Our Collections',
+                                        'Button Page': 'Our Collections',
+                                        'Button Title': decodeHtml(option.name)
+                                    })
+                                }
                             }}
                             checked={filters[key].includes(option.id)}
                             textClassName='xl:text-paragraph-8-desktop text-paragraph-8-mobile !leading-none'
@@ -481,7 +483,7 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
     }
 
     return (
-        <div className='scrollbar-none hidden w-full flex-col gap-5 xl:flex xl:max-h-[calc(100dvh-130px)] xl:max-w-[270px] xl:gap-6 xl:overflow-y-auto'>
+        <div className='scrollbar-none hidden w-full flex-col gap-5 xl:flex xl:max-h-[calc(100dvh-130px)] xl:min-w-[270px] xl:max-w-[270px] xl:gap-6 xl:overflow-y-auto'>
             {metaData.map((item) => (
                 <Collapse
                     key={item.key}

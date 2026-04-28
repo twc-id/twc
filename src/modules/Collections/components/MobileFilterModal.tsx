@@ -295,11 +295,13 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                             newValues = currentValues.filter((id: string) => id !== option.id)
                                         }
                                         setTempFilter(key, newValues)
-                                        trackEvent(GA_EVENTS.FILTER_SELECTED, {
-                                            'Button Location': 'Menu Our Collections',
-                                            'Button Page': 'Menu page',
-                                            'Button Title': decodeHtml(option.name)
-                                        })
+                                        if (e) {
+                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                'Button Location': 'Menu Our Collections',
+                                                'Button Page': 'Menu page',
+                                                'Button Title': decodeHtml(option.name)
+                                            })
+                                        }
                                     }}
                                     checked={tempFilters[key].includes(option.id)}
                                     textClassName='text-paragraph-8-mobile'
@@ -327,11 +329,13 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
                                                 newValues = currentValues.filter((id: string) => id !== option.id)
                                             }
                                             setTempFilter(key, newValues)
-                                            trackEvent(GA_EVENTS.FILTER_SELECTED, {
-                                                'Button Location': 'Menu Our Collections',
-                                                'Button Page': 'Menu page',
-                                                'Button Title': decodeHtml(option.name)
-                                            })
+                                            if (e) {
+                                                trackEvent(GA_EVENTS.FILTER_SELECTED, {
+                                                    'Button Location': 'Menu Our Collections',
+                                                    'Button Page': 'Menu page',
+                                                    'Button Title': decodeHtml(option.name)
+                                                })
+                                            }
                                         }}
                                         checked={tempFilters[key].includes(option.id)}
                                         textClassName='text-paragraph-8-mobile'
