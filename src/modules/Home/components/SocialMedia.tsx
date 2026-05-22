@@ -145,49 +145,51 @@ const Instagram = () => {
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}
-                    <div className='scrollbar-hide -mx-4 flex w-full flex-row gap-2 overflow-x-auto xl:mx-0 xl:w-full xl:justify-between xl:overflow-visible xl:px-0'>
+                    <div className='scrollbar-hide -mx-4 flex w-full snap-x snap-mandatory flex-row gap-2 overflow-x-auto xl:mx-0 xl:w-full xl:snap-none xl:justify-between xl:overflow-visible xl:px-0'>
                         {instagramPosts.map((post) => (
                             <div
                                 key={post.id}
-                                className='instagram-post-item relative h-[419px] w-[314px] flex-shrink-0 overflow-hidden'
+                                className='instagram-post-item relative h-[388px] w-[312px] flex-shrink-0 snap-center overflow-hidden'
                             >
-                                {/* Instagram Embed - akan di-replace oleh script Instagram */}
-                                <blockquote
-                                    className='instagram-media'
-                                    data-instgrm-permalink={post.embedUrl}
-                                    data-instgrm-version='14'
-                                    style={{
-                                        background: '#FFF',
-                                        border: '0',
-                                        borderRadius: '8px',
-                                        margin: '0',
-                                        maxWidth: 'none',
-                                        padding: '0',
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    {/* Fallback content while loading */}
-                                    <div
+                                {/* Instagram Embed - crop to photo only (312x388), hide header & footer */}
+                                <div className='-mt-[54px]' style={{ height: 'calc(100% + 54px + 400px)' }}>
+                                    <blockquote
+                                        className='instagram-media'
+                                        data-instgrm-permalink={post.embedUrl}
+                                        data-instgrm-version='14'
                                         style={{
-                                            backgroundColor: '#f4f4f4',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
+                                            background: '#FFF',
+                                            border: '0',
+                                            borderRadius: '8px',
+                                            margin: '0',
+                                            maxWidth: 'none',
+                                            padding: '0',
+                                            width: '100%',
+                                            height: '100%'
                                         }}
-                                        className='h-[419px] w-[314px]'
                                     >
+                                        {/* Fallback content while loading */}
                                         <div
                                             style={{
-                                                fontSize: '14px',
-                                                color: '#8e8e8e',
-                                                textAlign: 'center'
+                                                backgroundColor: '#f4f4f4',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
                                             }}
+                                            className='h-[388px] w-[312px]'
                                         >
-                                            <p>Loading Instagram post...</p>
+                                            <div
+                                                style={{
+                                                    fontSize: '14px',
+                                                    color: '#8e8e8e',
+                                                    textAlign: 'center'
+                                                }}
+                                            >
+                                                <p>Loading Instagram post...</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </blockquote>
+                                    </blockquote>
+                                </div>
                             </div>
                         ))}
                     </div>
