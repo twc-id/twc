@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Instagram embed override - remove min-width injected by embed.js */
+.instagram-post-item iframe.instagram-media-rendered {
+    min-width: 0 !important;
+}
+
 /* CookieConsent styles */
 @import 'vanilla-cookieconsent/dist/cookieconsent.css';
 @import './cookieconsent.css';

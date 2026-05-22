@@ -162,7 +162,6 @@ const Instagram = () => {
                                         borderRadius: '8px',
                                         margin: '0',
                                         maxWidth: 'none',
-                                        minWidth: 'auto',
                                         padding: '0',
                                         width: '100%',
                                         height: '100%'
