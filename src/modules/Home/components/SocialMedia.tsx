@@ -7,7 +7,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { motion } from 'motion/react'
 import { Trans, useTranslation } from 'next-i18next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 // Declare Instagram Embeds type for window object
 declare global {
@@ -22,8 +22,8 @@ declare global {
 
 const Instagram = () => {
     const { t } = useTranslation('home')
-    const [isLoading, setIsLoading] = useState(true)
     const sectionRef = useRef<HTMLElement>(null)
+    const embedsProcessed = useRef(false)
 
     // Instagram embed URLs
     const instagramPosts = [
@@ -77,39 +77,29 @@ const Instagram = () => {
     ]
 
     useEffect(() => {
-        // Load Instagram embed script
+        // If script already loaded (e.g. HMR or re-mount), process immediately
+        if (window.instgrm) {
+            window.instgrm.Embeds.process()
+            embedsProcessed.current = true
+            return
+        }
+
+        // Avoid adding duplicate scripts
+        const existingScript = document.querySelector('script[src="https://www.instagram.com/embed.js"]')
+        if (existingScript) return
+
         const script = document.createElement('script')
         script.src = 'https://www.instagram.com/embed.js'
         script.async = true
         script.onload = () => {
-            setIsLoading(false)
-            // Process embeds after script loads
+            // Blockquotes are already in the DOM, safe to process
             if (window.instgrm) {
                 window.instgrm.Embeds.process()
+                embedsProcessed.current = true
             }
         }
         document.body.appendChild(script)
-
-        return () => {
-            // Cleanup script on unmount
-            const existingScript = document.querySelector('script[src="https://www.instagram.com/embed.js"]')
-            if (existingScript) {
-                document.body.removeChild(existingScript)
-            }
-        }
     }, [])
-
-    if (isLoading) {
-        return (
-            <section className='bg-grey-white py-16 xl:py-[116px]'>
-                <Container>
-                    <div className='text-center'>
-                        <p>Loading Instagram posts...</p>
-                    </div>
-                </Container>
-            </section>
-        )
-    }
 
     return (
         <section
