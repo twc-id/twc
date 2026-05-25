@@ -2,10 +2,12 @@ import Button from '@components/buttons/Button'
 import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
+import listLocation from '@constant/location'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { motion } from 'motion/react'
+import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
 
@@ -22,8 +24,16 @@ declare global {
 
 const Instagram = () => {
     const { t } = useTranslation('home')
+    const router = useRouter()
     const sectionRef = useRef<HTMLElement>(null)
     const embedsProcessed = useRef(false)
+    const locationMatch = listLocation.find((loc) => {
+        if (loc.path.endsWith('/*')) {
+            const basePath = loc.path.replace('/*', '')
+            return router.pathname.startsWith(basePath)
+        }
+        return router.pathname === loc.path
+    })
 
     // Instagram embed URLs
     const instagramPosts = [
@@ -134,7 +144,7 @@ const Instagram = () => {
                             onClick={() =>
                                 trackEvent(GA_EVENTS.INTEREST_INSTAGRAM, {
                                     'Button Location': 'New in Instagram',
-                                    'Button Page': 'All pages'
+                                    'Button Page': locationMatch?.label
                                 })
                             }
                         >
@@ -151,6 +161,19 @@ const Instagram = () => {
                                 key={post.id}
                                 className='instagram-post-item relative h-[388px] w-[312px] flex-shrink-0 snap-center overflow-hidden'
                             >
+                                {/* Click overlay - captures clicks on iframe (cross-origin) */}
+                                <a
+                                    href={post.embedUrl}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    className='absolute inset-0 z-10 cursor-pointer'
+                                    onClick={() =>
+                                        trackEvent(GA_EVENTS.INTEREST_INSTAGRAM_EMBED, {
+                                            'Button Location': 'New in Instagram (embed)',
+                                            'Button Page': locationMatch?.label
+                                        })
+                                    }
+                                />
                                 {/* Instagram Embed - crop to photo only (312x388), hide header & footer */}
                                 <div className='-mt-[54px]' style={{ height: 'calc(100% + 54px + 400px)' }}>
                                     <blockquote
