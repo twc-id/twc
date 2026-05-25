@@ -114,13 +114,14 @@ const Instagram = () => {
     }, [])
 
     useEffect(() => {
-        const handleWindowBlur = () => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState !== 'hidden') return
+
             const activeEl = document.activeElement
             if (!activeEl || activeEl.tagName !== 'IFRAME') return
 
             const instagramIframes = document.querySelectorAll('.instagram-post-item iframe')
-            const isInstagramEmbed = Array.from(instagramIframes).some((iframe) => iframe === activeEl)
-            if (!isInstagramEmbed) return
+            if (!Array.from(instagramIframes).some((f) => f === activeEl)) return
 
             trackEvent(GA_EVENTS.INTEREST_INSTAGRAM_EMBED, {
                 'Button Location': 'New in Instagram (embed)',
@@ -128,8 +129,8 @@ const Instagram = () => {
             })
         }
 
-        window.addEventListener('blur', handleWindowBlur)
-        return () => window.removeEventListener('blur', handleWindowBlur)
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
     }, [])
 
     return (
