@@ -34,6 +34,8 @@ const Instagram = () => {
         }
         return router.pathname === loc.path
     })
+    const locationMatchRef = useRef(locationMatch)
+    locationMatchRef.current = locationMatch
 
     // Instagram embed URLs
     const instagramPosts = [
@@ -111,6 +113,25 @@ const Instagram = () => {
         document.body.appendChild(script)
     }, [])
 
+    useEffect(() => {
+        const handleWindowBlur = () => {
+            const activeEl = document.activeElement
+            if (!activeEl || activeEl.tagName !== 'IFRAME') return
+
+            const instagramIframes = document.querySelectorAll('.instagram-post-item iframe')
+            const isInstagramEmbed = Array.from(instagramIframes).some((iframe) => iframe === activeEl)
+            if (!isInstagramEmbed) return
+
+            trackEvent(GA_EVENTS.INTEREST_INSTAGRAM_EMBED, {
+                'Button Location': 'New in Instagram (embed)',
+                'Button Page': locationMatchRef.current?.label
+            })
+        }
+
+        window.addEventListener('blur', handleWindowBlur)
+        return () => window.removeEventListener('blur', handleWindowBlur)
+    }, [])
+
     return (
         <section
             ref={sectionRef}
@@ -161,19 +182,6 @@ const Instagram = () => {
                                 key={post.id}
                                 className='instagram-post-item relative h-[388px] w-[312px] flex-shrink-0 snap-center overflow-hidden'
                             >
-                                {/* Click overlay - captures clicks on iframe (cross-origin) */}
-                                <a
-                                    href={post.embedUrl}
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                    className='absolute inset-0 z-10 cursor-pointer'
-                                    onClick={() =>
-                                        trackEvent(GA_EVENTS.INTEREST_INSTAGRAM_EMBED, {
-                                            'Button Location': 'New in Instagram (embed)',
-                                            'Button Page': locationMatch?.label
-                                        })
-                                    }
-                                />
                                 {/* Instagram Embed - crop to photo only (312x388), hide header & footer */}
                                 <div className='-mt-[54px]' style={{ height: 'calc(100% + 54px + 400px)' }}>
                                     <blockquote
