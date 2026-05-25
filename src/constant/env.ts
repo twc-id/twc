@@ -17,4 +17,4 @@ export const NEWSLETTER_CLIENT_SECRET = process.env.NEXT_PUBLIC_NEWSLETTER_CLIEN
 
 export const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 export const COOKIE_PREFIX = process.env.NEXT_PUBLIC_COOKIE_PREFIX
-export const APP_VERSION = '2.2.14'
+export const APP_VERSION = '2.2.15'
