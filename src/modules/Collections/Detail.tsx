@@ -40,6 +40,8 @@ const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
             <CTADetail image={imageCta} />
             <ShareButton
                 offsetBottom
+                pageName='Product details'
+                title={product?.name}
                 intro={{
                     en: 'Discover this exceptional timepiece from The Watch Collections.\nAuthentic. Trusted. Curated for watch collectors and enthusiast.\n\nView details:',
                     id: 'Temukan koleksi jam tangan istimewa dari The Watch Collections.\nAutentik. Terpercaya. Dikurasi untuk para kolektor dan penggemar jam tangan.\n\nLihat detail lengkapnya:'

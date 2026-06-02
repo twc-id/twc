@@ -9,5 +9,9 @@ export const GA_EVENTS = {
     INTEREST_INSTAGRAM: 'interest_instagram',
     INTEREST_INSTAGRAM_EMBED: 'interest_instagram_embed',
     FILTER_SELECTED: 'filter_selected',
-    SUBSCRIBE_NEWSLETTER: 'subscribe_newsletter'
+    SUBSCRIBE_NEWSLETTER: 'subscribe_newsletter',
+    SHARE_FACEBOOK: 'share_facebook',
+    SHARE_WA: 'share_WA',
+    SHARE_TELEGRAM: 'share_telegram',
+    COPY_LINK: 'copy_link'
 } as const

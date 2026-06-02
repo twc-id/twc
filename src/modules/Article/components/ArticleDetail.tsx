@@ -144,6 +144,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                 </div>
             </div>
             <ShareButton
+                pageName='Article details'
                 intro={{
                     en: 'Discover the latest insights from The Watch Journal.\n\nRead the full article here:',
                     id: 'Temukan wawasan terbaru dari The Watch Journal.\n\nBaca artikel selengkapnya di sini:'

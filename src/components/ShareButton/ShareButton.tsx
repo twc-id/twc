@@ -1,5 +1,7 @@
 import Icons from '@components/Icon'
 import classNames from '@lib/classnames'
+import { GA_EVENTS } from '@lib/constants/analyticsEvents'
+import { trackEvent } from '@lib/ga'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
@@ -15,12 +17,33 @@ interface ShareButtonProps {
     telegramIntro?: ShareIntro
     // Push the button up on mobile to avoid overlapping with a sticky bottom bar
     offsetBottom?: boolean
+    // GA tracking context: page the share menu lives on (e.g. 'Product details')
+    pageName: string
+    // GA tracking context: the product/article title being shared
+    title?: string
 }
 
-const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetBottom }) => {
+// Maps each share action to its GA event + Button Location label (per analytics spec)
+const SHARE_TRACKING: Record<'whatsapp' | 'facebook' | 'telegram' | 'copy', { event: string; location: string }> = {
+    whatsapp: { event: GA_EVENTS.SHARE_WA, location: 'Share WA' },
+    facebook: { event: GA_EVENTS.SHARE_FACEBOOK, location: 'Share facebook' },
+    telegram: { event: GA_EVENTS.SHARE_TELEGRAM, location: 'Share telegram' },
+    copy: { event: GA_EVENTS.COPY_LINK, location: 'Copy link' }
+}
+
+const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetBottom, pageName, title }) => {
     const [open, setOpen] = useState(false)
     const [copied, setCopied] = useState(false)
     const { locale } = useRouter()
+
+    const trackShare = (action: keyof typeof SHARE_TRACKING) => {
+        const { event, location } = SHARE_TRACKING[action]
+        trackEvent(event, {
+            'Button Title': title || (typeof document !== 'undefined' ? document.title : ''),
+            'Button Location': location,
+            'Button Page': pageName
+        })
+    }
 
     const handleShare = (platform: 'whatsapp' | 'facebook' | 'telegram') => {
         if (typeof window === 'undefined') return
@@ -40,12 +63,14 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
             telegram: `https://t.me/share/url?url=${url}&text=${tgText}`
         }
 
+        trackShare(platform)
         window.open(shareUrls[platform], '_blank', 'noopener,noreferrer')
     }
 
     const handleCopyLink = () => {
         if (typeof window === 'undefined') return
         navigator.clipboard.writeText(window.location.href)
+        trackShare('copy')
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
