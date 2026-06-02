@@ -2,7 +2,6 @@ import Icons from '@components/Icon'
 import classNames from '@lib/classnames'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useMediaQuery } from 'react-responsive'
 
 export interface ShareIntro {
     en: string
@@ -22,7 +21,6 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
     const [open, setOpen] = useState(false)
     const [copied, setCopied] = useState(false)
     const { locale } = useRouter()
-    const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const handleShare = (platform: 'whatsapp' | 'facebook' | 'telegram') => {
         if (typeof window === 'undefined') return
@@ -62,7 +60,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
         <div
             className={classNames(
                 'fixed right-6 z-[99990] flex flex-col items-end gap-3',
-                offsetBottom && isMobile ? 'bottom-[100px]' : 'bottom-6'
+                offsetBottom ? 'bottom-[100px] xl:bottom-6' : 'bottom-6'
             )}
         >
             <div
@@ -78,11 +76,10 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
                         aria-label={`Share to ${option.platform}`}
                         onClick={() => handleShare(option.platform)}
                         className={classNames(
-                            'text-grey-black flex items-center justify-center bg-white shadow-md transition-transform hover:scale-105',
-                            isMobile ? 'h-10 w-10' : 'h-14 w-14'
+                            'text-grey-black flex h-11 w-11 items-center justify-center bg-white shadow-md transition-transform hover:scale-105'
                         )}
                     >
-                        <Icons icon={option.icon} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+                        <Icons icon={option.icon} width={22} height={22} />
                     </button>
                 ))}
             </div>
@@ -92,13 +89,12 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
                 aria-label={copied ? 'Link copied' : 'Copy link'}
                 onClick={handleCopyLink}
                 className={classNames(
-                    'flex items-center justify-center bg-white shadow-md transition-all hover:scale-105',
-                    isMobile ? 'h-10 w-10' : 'h-14 w-14',
+                    'flex h-11 w-11 items-center justify-center bg-white shadow-md transition-all hover:scale-105',
                     copied ? 'text-success-500' : 'text-grey-black',
                     open ? 'pointer-events-auto opacity-100' : 'pointer-events-none translate-y-2 opacity-0'
                 )}
             >
-                <Icons icon={copied ? 'Checklist' : 'Chain'} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+                <Icons icon={copied ? 'Checklist' : 'Chain'} width={22} height={22} />
             </button>
 
             <button
@@ -106,11 +102,10 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
                 aria-label={open ? 'Close share menu' : 'Share'}
                 onClick={() => setOpen((prev) => !prev)}
                 className={classNames(
-                    'bg-grey-black flex items-center justify-center text-white shadow-md transition-transform hover:scale-105',
-                    isMobile ? 'h-10 w-10' : 'h-14 w-14'
+                    'bg-grey-black flex h-11 w-11 items-center justify-center text-white shadow-md transition-transform hover:scale-105'
                 )}
             >
-                <Icons icon={open ? 'XClose' : 'Share'} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+                <Icons icon={open ? 'XClose' : 'Share'} width={22} height={22} />
             </button>
         </div>
     )
