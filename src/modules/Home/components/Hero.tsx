@@ -17,7 +17,7 @@ const Hero = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const swiperRef = useRef<SwiperType>()
-    const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
+    const slideRefs = useRef<Record<number, HTMLDivElement | null>>({})
     const [isVisible, setIsVisible] = useState(true)
     const [videoReady, setVideoReady] = useState<Record<number, boolean>>({})
     const directionRef = useRef<'next' | 'prev'>('next')
@@ -30,7 +30,7 @@ const Hero = () => {
     const [textScope, animateText] = useAnimate()
 
     const heroSlides = assets
-        ?.filter((asset) => asset.media_type === 'video')
+        ?.filter((asset) => asset.name.startsWith('banner_video_'))
         .sort((a, b) => {
             const getSuffixNumber = (name: string) => {
                 const parts = name.split('_')
@@ -57,14 +57,18 @@ const Hero = () => {
         return () => io.disconnect()
     }, [])
 
-    // Initialize video positions once slides load
+    // Initialize slide positions once slides load
     useEffect(() => {
         if (!heroSlides?.length) return
-        heroSlides.forEach((_, idx) => {
-            const v = videoRefs.current[idx]
-            if (!v) return
-            v.style.transform = idx === 0 ? 'translateX(0%)' : 'translateX(100%)'
-            v.style.opacity = '0'
+        heroSlides.forEach((slide, idx) => {
+            const el = slideRefs.current[idx]
+            if (!el) return
+            el.style.transform = idx === 0 ? 'translateX(0%)' : 'translateX(100%)'
+            el.style.opacity = '0'
+            // Image slides are instantly ready
+            if (slide.media_type === 'image') {
+                setVideoReady((s) => ({ ...s, [idx]: true }))
+            }
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [heroSlides?.length])
@@ -78,46 +82,49 @@ const Hero = () => {
         if (prev === curr) return
 
         const isNext = directionRef.current !== 'prev'
-        const prevV = videoRefs.current[prev]
-        const currV = videoRefs.current[curr]
+        const prevEl = slideRefs.current[prev]
+        const currEl = slideRefs.current[curr]
 
-        // Position incoming video off-screen
-        if (currV) {
-            currV.style.transition = 'none'
-            currV.style.transform = isNext ? 'translateX(100%)' : 'translateX(-100%)'
+        // Position incoming slide off-screen
+        if (currEl) {
+            currEl.style.transition = 'none'
+            currEl.style.transform = isNext ? 'translateX(100%)' : 'translateX(-100%)'
             // Force reflow to apply instant position before transitioning
-            currV.offsetHeight // eslint-disable-line no-unused-expressions
-            currV.style.transition = 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)'
-            currV.style.transform = 'translateX(0%)'
+            currEl.offsetHeight // eslint-disable-line no-unused-expressions
+            currEl.style.transition = 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)'
+            currEl.style.transform = 'translateX(0%)'
         }
 
-        // Slide out outgoing video
-        if (prevV) {
-            prevV.style.transition =
+        // Slide out outgoing slide
+        if (prevEl) {
+            prevEl.style.transition =
                 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1)'
-            prevV.style.transform = isNext ? 'translateX(-100%)' : 'translateX(100%)'
-            prevV.style.opacity = '0'
+            prevEl.style.transform = isNext ? 'translateX(-100%)' : 'translateX(100%)'
+            prevEl.style.opacity = '0'
         }
     }, [activeIndex])
 
-    // Fade in active video when ready
+    // Fade in active slide when ready
     useEffect(() => {
-        const v = videoRefs.current[activeIndex]
-        if (!v) return
+        const el = slideRefs.current[activeIndex]
+        if (!el) return
         if (videoReady[activeIndex]) {
-            v.style.transition = 'opacity 0.4s ease-out'
-            v.style.opacity = '1'
+            el.style.transition = 'opacity 0.4s ease-out'
+            el.style.opacity = '1'
         } else {
-            v.style.opacity = '0'
+            el.style.opacity = '0'
         }
     }, [videoReady, activeIndex])
 
     // Play active video, pause others.
     useEffect(() => {
+        if (!heroSlides?.length) return
         let cancelled = false
-        Object.entries(videoRefs.current).forEach(([k, v]) => {
+        heroSlides.forEach((slide, idx) => {
+            if (slide.media_type !== 'video') return
+            const el = slideRefs.current[idx]
+            const v = el?.querySelector('video')
             if (!v) return
-            const idx = Number(k)
             if (idx === activeIndex && isVisible) {
                 v.play().catch((err) => {
                     if (!cancelled && err?.name !== 'AbortError') {
@@ -132,6 +139,7 @@ const Hero = () => {
         return () => {
             cancelled = true
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeIndex, isVisible])
 
     return (
@@ -188,22 +196,36 @@ const Hero = () => {
             </div>
 
             {heroSlides?.map((slide, idx) => (
-                <video
+                <div
                     key={slide.id}
                     ref={(el) => {
-                        videoRefs.current[idx] = el
+                        slideRefs.current[idx] = el
                     }}
-                    src={slide.media.url}
-                    className='absolute inset-0 h-full w-full object-cover'
-                    muted
-                    playsInline
-                    preload='auto'
-                    onCanPlay={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
-                    onPlaying={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
-                    onWaiting={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
-                    onError={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
+                    className='absolute inset-0 h-full w-full'
                     style={{ zIndex: idx === activeIndex ? 1 : 0 }}
-                />
+                >
+                    {slide.media_type === 'video' ? (
+                        <video
+                            src={slide.media.url}
+                            className='h-full w-full object-cover'
+                            muted
+                            playsInline
+                            preload='auto'
+                            onCanPlay={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
+                            onPlaying={() => setVideoReady((s) => ({ ...s, [idx]: true }))}
+                            onWaiting={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
+                            onError={() => setVideoReady((s) => ({ ...s, [idx]: false }))}
+                        />
+                    ) : (
+                        <Image
+                            src={slide.media.url}
+                            alt={slide.media.alt || slide.name}
+                            className='h-full w-full object-cover'
+                            fill
+                            priority={idx === 0}
+                        />
+                    )}
+                </div>
             ))}
 
             {heroSlides && heroSlides.length > 0 ? (
