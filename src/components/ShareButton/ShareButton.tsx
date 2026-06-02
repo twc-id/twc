@@ -20,6 +20,7 @@ interface ShareButtonProps {
 
 const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetBottom }) => {
     const [open, setOpen] = useState(false)
+    const [copied, setCopied] = useState(false)
     const { locale } = useRouter()
     const isMobile = useMediaQuery({ maxWidth: 1279 })
 
@@ -42,6 +43,13 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
         }
 
         window.open(shareUrls[platform], '_blank', 'noopener,noreferrer')
+    }
+
+    const handleCopyLink = () => {
+        if (typeof window === 'undefined') return
+        navigator.clipboard.writeText(window.location.href)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
     }
 
     const options: { platform: 'whatsapp' | 'facebook' | 'telegram'; icon: 'Whatsapp' | 'Facebook' | 'Telegram' }[] = [
@@ -78,6 +86,20 @@ const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetB
                     </button>
                 ))}
             </div>
+
+            <button
+                type='button'
+                aria-label={copied ? 'Link copied' : 'Copy link'}
+                onClick={handleCopyLink}
+                className={classNames(
+                    'flex items-center justify-center bg-white shadow-md transition-all hover:scale-105',
+                    isMobile ? 'h-10 w-10' : 'h-14 w-14',
+                    copied ? 'text-success-500' : 'text-grey-black',
+                    open ? 'pointer-events-auto opacity-100' : 'pointer-events-none translate-y-2 opacity-0'
+                )}
+            >
+                <Icons icon={copied ? 'Checklist' : 'Chain'} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+            </button>
 
             <button
                 type='button'
