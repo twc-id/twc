@@ -147,7 +147,7 @@ const Hero = () => {
                                 {heroSlides?.[activeIndex]?.video_banner?.[lang]?.sub_header}
                             </h3>
                             <h1
-                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white line-clamp-4 w-full xl:w-[700px]'
+                                className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-white w-full xl:w-[700px]'
                                 style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
                             >
                                 {heroSlides?.[activeIndex]?.video_banner?.[lang]?.title && (

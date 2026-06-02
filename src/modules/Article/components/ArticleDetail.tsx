@@ -1,6 +1,7 @@
 import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
 import { Article } from '@hooks/useArticle'
+import ShareButton from '@modules/Article/components/ShareButton'
 import Suggestion from '@modules/Article/components/Suggestion'
 import { formatDate } from '@utils/format-date'
 import { sanitizeHtml } from '@utils/html'
@@ -142,6 +143,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                     </Container>
                 </div>
             </div>
+            <ShareButton title={article.title.rendered} />
             <style jsx>{`
                 .article {
                     img {

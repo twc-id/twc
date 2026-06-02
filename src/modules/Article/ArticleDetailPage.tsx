@@ -49,7 +49,12 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ article }) => {
 
     return (
         <>
-            <Seo title={article.title.rendered} description={article.uagb_excerpt} date={article.date} />
+            <Seo
+                title={article.title.rendered}
+                description={article.uagb_excerpt}
+                date={article.date}
+                image={article._embedded?.['wp:featuredmedia']?.[0]?.source_url}
+            />
             <ArticleDetail article={article} products={products} isLoading={isLoading} />
             <When condition={relatedArticles && relatedArticles.data.length > 0}>
                 <RelatedArticles article={relatedArticles} />
