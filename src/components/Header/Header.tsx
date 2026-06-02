@@ -286,7 +286,13 @@ const Headers = () => {
     const currentLanguage = languages.find((lang) => lang.code === router.locale) || languages[0]
 
     const handleLanguageChange = (langCode: string) => {
-        router.push(router.asPath, router.asPath, { locale: langCode })
+        // Capture current scroll position so the locale switch doesn't jump to top.
+        // scroll: false alone isn't enough here because changing locale re-fetches
+        // page data and remounts the page, which resets the scroll position.
+        const scrollY = window.scrollY
+        router.push(router.asPath, router.asPath, { locale: langCode, scroll: false }).then(() => {
+            window.scrollTo(0, scrollY)
+        })
     }
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
