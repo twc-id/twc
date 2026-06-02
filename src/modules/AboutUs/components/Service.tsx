@@ -61,7 +61,7 @@ const Service = ({ image }: { image?: string }) => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='xl:text-paragraph-2-desktop text-paragraph-2-mobile text-grey-black dark:text-grey-white line-clamp-[7] xl:line-clamp-3'
+                        className='xl:text-paragraph-2-desktop text-paragraph-2-mobile text-grey-black dark:text-grey-white'
                     >
                         {t('service.quote')}
                     </motion.h3>

@@ -756,10 +756,8 @@ const Headers = () => {
                                                                 className={classNames(
                                                                     ' flex w-full items-center justify-center gap-2 px-6 py-4 text-left outline-none transition-colors',
                                                                     {
-                                                                        'bg-grey-100': active,
-                                                                        'bg-grey-300':
-                                                                            lang.code === currentLanguage.code &&
-                                                                            !active
+                                                                        'bg-grey-100':
+                                                                            active || lang.code === currentLanguage.code
                                                                     }
                                                                 )}
                                                             >
