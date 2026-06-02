@@ -170,16 +170,18 @@ const Article: React.FC<ArticleProps> = ({ initialArticles, articleTags, page = 
                         >
                             {t('tab.all')}
                         </Tab>
-                        {articleTags?.map((tag) => (
-                            <Tab
-                                key={tag.id}
-                                isActive={selectedTagId === tag.id}
-                                onClick={() => setSelectedTagId(tag.id)}
-                                className='w-fit'
-                            >
-                                {tag.name}
-                            </Tab>
-                        ))}
+                        {articleTags
+                            ?.filter((tag) => tag.count > 0)
+                            .map((tag) => (
+                                <Tab
+                                    key={tag.id}
+                                    isActive={selectedTagId === tag.id}
+                                    onClick={() => setSelectedTagId(tag.id)}
+                                    className='w-fit'
+                                >
+                                    {tag.name}
+                                </Tab>
+                            ))}
                     </Tabs>
                     {selectedTagId === null && !isMobile && (
                         <ArticleHero initialArticles={heroArticles} page={page} isLoading={isLoading} />
