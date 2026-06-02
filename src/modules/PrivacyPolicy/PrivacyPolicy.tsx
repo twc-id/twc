@@ -22,7 +22,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
     if (isLoading) {
         return (
             <div className='min-h-screen'>
-                <Container className='flex flex-col gap-20 py-[200px] xl:py-40'>
+                <Container className='flex flex-col gap-20 py-[92px] xl:py-40'>
                     <div className='flex flex-col gap-4'>
                         <Skeleton className='h-10 w-1/2' />
                         <Skeleton className='h-6 w-1/4  ' />
@@ -39,7 +39,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ locale }) => {
     return (
         <>
             <Seo title={title || 'Privacy Policy'} />
-            <Container className='flex flex-col gap-20 py-[200px] xl:py-40'>
+            <Container className='flex flex-col gap-20 py-[92px] xl:py-40'>
                 <div className='flex flex-col gap-4'>
                     <h1 className='xl:text-heading-1-desktop text-heading-1-mobile text-grey-black'>{title}</h1>
                     <span className='xl:text-paragraph-7-desktop text-paragraph-7-mobile'>
