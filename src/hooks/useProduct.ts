@@ -418,7 +418,10 @@ export const useProductPrice = (
         queryKey: ['product-price', productId],
         queryFn: () => fetchProductPrice(productId),
         enabled: !!productId,
-        staleTime: 30 * 1000, // 30 seconds - price changes frequently
+        staleTime: 0, // No cache - always treat price/stock as stale
+        gcTime: 0,
+        refetchOnMount: 'always',
+        refetchOnWindowFocus: true,
         refetchInterval: 60 * 1000, // Refetch every minute
         ...options
     })

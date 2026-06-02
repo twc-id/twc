@@ -4,7 +4,6 @@ import Container from '@components/Container'
 import Input from '@components/forms/Input'
 import CTA from '@components/Header/CTA'
 import Icons from '@components/Icon'
-import { IconsProps } from '@components/Icon/Icon'
 import UnstyledLink from '@components/links/UnstyledLink'
 import listLocation from '@constant/location'
 import { useTheme } from '@contexts/ThemeContext'
@@ -40,8 +39,8 @@ interface MenuItem {
 }
 
 const languages = [
-    { code: 'en', label: 'EN', flag: 'UsFlag' },
-    { code: 'id', label: 'ID', flag: 'IndoFlag' }
+    { code: 'en', label: 'English' },
+    { code: 'id', label: 'Indonesia' }
 ]
 
 const menuData: MenuItem[] = [
@@ -720,11 +719,7 @@ const Headers = () => {
                                             )}
                                             as='div'
                                         >
-                                            <Icons
-                                                icon={currentLanguage.flag as IconsProps['icon']}
-                                                width={20}
-                                                height={15}
-                                            />
+                                            <Icons icon='Globe' width={20} height={20} />
 
                                             <span className='text-button-3-desktop hidden xl:block'>
                                                 {currentLanguage.label}
@@ -752,7 +747,7 @@ const Headers = () => {
                                             leaveFrom='transform opacity-100 scale-100'
                                             leaveTo='transform opacity-0 scale-95'
                                         >
-                                            <MenuItems className=' absolute right-0 z-10  mt-2 origin-top-right bg-white shadow-lg outline-none ring-1 ring-black ring-opacity-5'>
+                                            <MenuItems className='absolute left-1/2 right-auto z-10 mt-2 origin-top -translate-x-1/2 bg-white shadow-lg outline-none ring-1 ring-black ring-opacity-5 xl:left-auto xl:right-0 xl:origin-top-right xl:translate-x-0'>
                                                 {languages.map((lang) => (
                                                     <MenuItem key={lang.code}>
                                                         {({ active }) => (
@@ -768,11 +763,6 @@ const Headers = () => {
                                                                     }
                                                                 )}
                                                             >
-                                                                <Icons
-                                                                    icon={lang.flag as IconsProps['icon']}
-                                                                    width={20}
-                                                                    height={15}
-                                                                />
                                                                 <span className='text-button-3-desktop text-grey-black'>
                                                                     {lang.label}
                                                                 </span>

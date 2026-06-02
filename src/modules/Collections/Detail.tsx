@@ -1,4 +1,5 @@
 import Seo from '@components/Seo'
+import ShareButton from '@components/ShareButton'
 import { useAssets } from '@hooks/useAsset'
 import { useProductPrice } from '@hooks/useProduct'
 import CTADetail from '@modules/Collections/components/CTADetail'
@@ -37,6 +38,17 @@ const Detail: React.FC<PageProps> = ({ product, priceHistory }) => {
             <DetailItem product={product} priceHistory={priceHistory} productPrice={productPrice} />
             <Suggestion products={product} />
             <CTADetail image={imageCta} />
+            <ShareButton
+                offsetBottom
+                intro={{
+                    en: 'Discover this exceptional timepiece from The Watch Collections.\nAuthentic. Trusted. Curated for watch collectors and enthusiast.\n\nView details:',
+                    id: 'Temukan koleksi jam tangan istimewa dari The Watch Collections.\nAutentik. Terpercaya. Dikurasi untuk para kolektor dan penggemar jam tangan.\n\nLihat detail lengkapnya:'
+                }}
+                telegramIntro={{
+                    en: 'Discover this exceptional timepiece from The Watch Collections.\nAuthentic. Trusted. Curated for watch collectors and enthusiast.',
+                    id: 'Temukan koleksi jam tangan istimewa dari The Watch Collections.\nAutentik. Terpercaya. Dikurasi untuk para kolektor dan penggemar jam tangan.'
+                }}
+            />
         </>
     )
 }

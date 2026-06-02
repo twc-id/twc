@@ -304,6 +304,9 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
         }))
         .filter((item) => item.value !== '')
 
+    // Hide Performance (price history) when product status is "reserveable"
+    const isReservable = /reserv/i.test(String(getMetaValue('basic-info-status')))
+
     // If product has explicit `is_new` flag, override the condition value
     if (isNewFlag === true) {
         const conditionIdx = basicItems.findIndex((i) => i.label.toLowerCase() === 'condition')
@@ -1256,7 +1259,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         </div>
                                     </Collapse>
                                 ))}
-                                {isWatch && priceHistory && priceHistory.length > 0 && (
+                                {isWatch && !isReservable && priceHistory && priceHistory.length > 0 && (
                                     <Collapse
                                         key='Performance'
                                         title='Performance'
