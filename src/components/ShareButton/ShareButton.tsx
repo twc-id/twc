@@ -1,0 +1,97 @@
+import Icons from '@components/Icon'
+import classNames from '@lib/classnames'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
+
+export interface ShareIntro {
+    en: string
+    id: string
+}
+
+interface ShareButtonProps {
+    intro: ShareIntro
+    // Telegram renders the link at the top (url param), so it uses a shorter
+    // intro without the trailing "view here" line. Falls back to `intro`.
+    telegramIntro?: ShareIntro
+    // Push the button up on mobile to avoid overlapping with a sticky bottom bar
+    offsetBottom?: boolean
+}
+
+const ShareButton: React.FC<ShareButtonProps> = ({ intro, telegramIntro, offsetBottom }) => {
+    const [open, setOpen] = useState(false)
+    const { locale } = useRouter()
+    const isMobile = useMediaQuery({ maxWidth: 1279 })
+
+    const handleShare = (platform: 'whatsapp' | 'facebook' | 'telegram') => {
+        if (typeof window === 'undefined') return
+
+        const pageUrl = window.location.href
+        const isId = locale === 'id'
+        const introText = isId ? intro.id : intro.en
+        const tgIntro = telegramIntro ? (isId ? telegramIntro.id : telegramIntro.en) : introText
+
+        const url = encodeURIComponent(pageUrl)
+        const message = encodeURIComponent(`${introText}\n${pageUrl}`)
+        const tgText = encodeURIComponent(tgIntro)
+
+        const shareUrls: Record<typeof platform, string> = {
+            whatsapp: `https://wa.me/?text=${message}`,
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+            telegram: `https://t.me/share/url?url=${url}&text=${tgText}`
+        }
+
+        window.open(shareUrls[platform], '_blank', 'noopener,noreferrer')
+    }
+
+    const options: { platform: 'whatsapp' | 'facebook' | 'telegram'; icon: 'Whatsapp' | 'Facebook' | 'Telegram' }[] = [
+        { platform: 'whatsapp', icon: 'Whatsapp' },
+        { platform: 'facebook', icon: 'Facebook' },
+        { platform: 'telegram', icon: 'Telegram' }
+    ]
+
+    return (
+        <div
+            className={classNames(
+                'fixed right-6 z-[99990] flex flex-col items-end gap-3',
+                offsetBottom && isMobile ? 'bottom-[100px]' : 'bottom-6'
+            )}
+        >
+            <div
+                className={classNames(
+                    'flex flex-col items-end gap-3 transition-all duration-200',
+                    open ? 'pointer-events-auto opacity-100' : 'pointer-events-none translate-y-2 opacity-0'
+                )}
+            >
+                {options.map((option) => (
+                    <button
+                        key={option.platform}
+                        type='button'
+                        aria-label={`Share to ${option.platform}`}
+                        onClick={() => handleShare(option.platform)}
+                        className={classNames(
+                            'text-grey-black flex items-center justify-center bg-white shadow-md transition-transform hover:scale-105',
+                            isMobile ? 'h-10 w-10' : 'h-14 w-14'
+                        )}
+                    >
+                        <Icons icon={option.icon} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+                    </button>
+                ))}
+            </div>
+
+            <button
+                type='button'
+                aria-label={open ? 'Close share menu' : 'Share'}
+                onClick={() => setOpen((prev) => !prev)}
+                className={classNames(
+                    'bg-grey-black flex items-center justify-center text-white shadow-md transition-transform hover:scale-105',
+                    isMobile ? 'h-10 w-10' : 'h-14 w-14'
+                )}
+            >
+                <Icons icon={open ? 'XClose' : 'Share'} width={isMobile ? 18 : 22} height={isMobile ? 18 : 22} />
+            </button>
+        </div>
+    )
+}
+
+export default ShareButton

@@ -1,7 +1,7 @@
 import Breadcrumb from '@components/Breadcrumb'
 import Container from '@components/Container'
+import ShareButton from '@components/ShareButton'
 import { Article } from '@hooks/useArticle'
-import ShareButton from '@modules/Article/components/ShareButton'
 import Suggestion from '@modules/Article/components/Suggestion'
 import { formatDate } from '@utils/format-date'
 import { sanitizeHtml } from '@utils/html'
@@ -143,7 +143,16 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, products, isLoad
                     </Container>
                 </div>
             </div>
-            <ShareButton title={article.title.rendered} />
+            <ShareButton
+                intro={{
+                    en: 'Discover the latest insights from The Watch Journal.\n\nRead the full article here:',
+                    id: 'Temukan wawasan terbaru dari The Watch Journal.\n\nBaca artikel selengkapnya di sini:'
+                }}
+                telegramIntro={{
+                    en: 'Discover the latest insights from The Watch Journal.',
+                    id: 'Temukan wawasan terbaru dari The Watch Journal.'
+                }}
+            />
             <style jsx>{`
                 .article {
                     img {
