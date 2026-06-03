@@ -67,7 +67,7 @@ const Faq = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: false, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white line-clamp-2 max-w-[300px] xl:line-clamp-3'
+                        className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white max-w-[300px]'
                     >
                         {t('faq.title')}
                     </motion.h1>

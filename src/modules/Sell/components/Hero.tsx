@@ -24,7 +24,7 @@ const Hero = ({ image }: { image?: string }) => {
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: false, amount: 0.3 }}
                             transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                            className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-grey-white line-clamp-3 xl:line-clamp-2 xl:w-[700px] xl:text-right'
+                            className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-grey-white xl:w-[700px] xl:text-right'
                         >
                             <Trans i18nKey='sell:hero.title' components={{ br: <br className='block xl:hidden' /> }}>
                                 {t('hero.title')}
