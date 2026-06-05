@@ -1399,7 +1399,7 @@ const Headers = () => {
                                                                     className='h-full w-full object-contain'
                                                                 />
                                                             </div>
-                                                            {!product.purchasable && (
+                                                            {product.stock_status === 'onbackorder' && (
                                                                 <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
                                                                     <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
                                                                         Reservable
@@ -1449,11 +1449,12 @@ const Headers = () => {
                                                                         })}
                                                                 </p>
 
-                                                                {product.purchasable && (
-                                                                    <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
-                                                                        {formatRupiah(product.price)}
-                                                                    </p>
-                                                                )}
+                                                                {product.stock_status === 'instock' &&
+                                                                    product.price !== '' && (
+                                                                        <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
+                                                                            {formatRupiah(product.price)}
+                                                                        </p>
+                                                                    )}
                                                             </div>
                                                         </div>
                                                     </UnstyledLink>

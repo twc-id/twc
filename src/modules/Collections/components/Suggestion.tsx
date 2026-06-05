@@ -80,7 +80,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                         </div>
                                     </div>
 
-                                    {!p.purchasable && (
+                                    {p.stock_status === 'onbackorder' && (
                                         <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
                                             <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
                                                 Reservable
@@ -116,7 +116,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                                     )?.value
                                                 })}
                                         </p>
-                                        {p.purchasable && (
+                                        {p.stock_status === 'instock' && p.price !== '' && (
                                             <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
                                                 {formatRupiah(p.price)}
                                             </p>

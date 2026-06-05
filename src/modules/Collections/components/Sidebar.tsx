@@ -103,8 +103,8 @@ const Sidebar: React.FC<SidebarProps> = ({ products, brandOptions = [], brandLoa
     ]
 
     const availabilityOptions = [
-        { id: 'instock', name: 'In Stock' },
-        { id: 'outofstock', name: 'Out of Stock' }
+        { id: 'instock', name: 'Available' },
+        { id: 'outofstock', name: 'Need Reservation' }
     ]
 
     const conditionOptions = [
