@@ -240,7 +240,7 @@ const Highlight = () => {
                                                           className='object-cover'
                                                       />
                                                   </div>
-                                                  {!product.purchasable && (
+                                                  {product.stock_status === 'onbackorder' && (
                                                       <div className='bg-grey-black absolute left-2 top-2 px-3 pb-1'>
                                                           <span className='text-grey-white xl:text-paragraph-12-desktop text-paragraph-12-mobile !leading-none'>
                                                               Reservable
@@ -281,7 +281,7 @@ const Highlight = () => {
                                                                   )?.value
                                                               })}
                                                       </p>
-                                                      {product.purchasable && (
+                                                      {product.stock_status === 'instock' && product.price !== '' && (
                                                           <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark truncate px-2'>
                                                               {formatRupiah(product.price)}
                                                           </p>

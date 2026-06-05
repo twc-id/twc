@@ -830,7 +830,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                         ))}
                                 </div>
                                 <div ref={priceRef as any} className='hidden flex-col gap-2 pt-6 xl:flex xl:gap-3'>
-                                    {product.price !== '' && (
+                                    {product.stock_status === 'instock' && product.price !== '' && (
                                         <p className='xl:text-paragraph-3-desktop text-paragraph-3-mobile text-grey-black'>
                                             {formatRupiah(product.price)}
                                         </p>
@@ -882,7 +882,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             </span>
                                         </div>
                                     )}
-                                    {product.purchasable ? (
+                                    {product.stock_status !== 'outofstock' ? (
                                         <a
                                             href={getWhatsAppLinkFromTemplate(
                                                 'detailProduct',
@@ -924,7 +924,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                               <div className='mx-auto max-w-screen-md '>
                                                   <div className='bg-dropdown-menu-overlay/80 flex items-center justify-between px-5 py-4 shadow-lg'>
                                                       <div className='flex flex-col gap-1'>
-                                                          {product.price !== '' ? (
+                                                          {product.stock_status === 'instock' &&
+                                                          product.price !== '' ? (
                                                               <p className='text-grey-white text-subheading-5-desktop'>
                                                                   {formatRupiah(product.price)}
                                                               </p>
@@ -994,7 +995,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                       </div>
 
                                                       <div className='ml-4 flex shrink-0 items-center'>
-                                                          {product.purchasable ? (
+                                                          {product.stock_status !== 'outofstock' ? (
                                                               <a
                                                                   href={getWhatsAppLinkFromTemplate(
                                                                       'detailProduct',
@@ -1129,11 +1130,12 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
 
                                                   <div className='flex items-center gap-8'>
                                                       <div className='flex flex-col items-end gap-1.5'>
-                                                          {product.price !== '' && (
-                                                              <p className='text-subheading-5-desktop text-grey-white'>
-                                                                  {formatRupiah(product.price)}
-                                                              </p>
-                                                          )}
+                                                          {product.stock_status === 'instock' &&
+                                                              product.price !== '' && (
+                                                                  <p className='text-subheading-5-desktop text-grey-white'>
+                                                                      {formatRupiah(product.price)}
+                                                                  </p>
+                                                              )}
                                                           {priceHistory.length > 1 && (
                                                               <div className='flex items-center gap-0.5'>
                                                                   <Icons
@@ -1190,7 +1192,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                       </div>
 
                                                       <div>
-                                                          {product.purchasable ? (
+                                                          {product.stock_status !== 'outofstock' ? (
                                                               <a
                                                                   href={getWhatsAppLinkFromTemplate(
                                                                       'detailProduct',

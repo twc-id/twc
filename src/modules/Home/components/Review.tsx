@@ -213,7 +213,7 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.purchasable && (
+                                                    {product?.stock_status === 'instock' && product?.price !== '' && (
                                                         <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
                                                             {formatRupiah(product.price)}
                                                         </p>
@@ -316,7 +316,7 @@ const Review = () => {
                                                         </p>
                                                     )}
 
-                                                    {product?.purchasable && (
+                                                    {product?.stock_status === 'instock' && product?.price !== '' && (
                                                         <p className='text-subheading-6-mobile text-accent-price-dark'>
                                                             {formatRupiah(product.price)}
                                                         </p>
