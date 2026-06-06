@@ -119,7 +119,7 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
 
     const availabilityOptions = [
         { id: 'instock', name: 'Available' },
-        { id: 'outofstock', name: 'Need Reservation' }
+        { id: 'onbackorder', name: 'Need Reservation' }
     ]
 
     const conditionOptions = [
@@ -138,11 +138,11 @@ const MobileFilterModal: React.FC<MobileFilterModalProps> = ({
         id: 'default' | 'price-asc' | 'price-desc' | 'year-asc' | 'year-desc'
         name: string
     }> = [
-        { id: 'default', name: 'Newest Arrival' },
-        { id: 'year-asc', name: 'Year: Newest first' },
-        { id: 'year-desc', name: 'Year: Oldest first' },
-        { id: 'price-desc', name: 'Price: High to low' },
-        { id: 'price-asc', name: 'Price: Low to high' }
+        { id: 'default', name: 'Default' },
+        { id: 'price-asc', name: 'Price: Low to High' },
+        { id: 'price-desc', name: 'Price: High to Low' },
+        { id: 'year-asc', name: 'Year: Oldest first' },
+        { id: 'year-desc', name: 'Year: Newest first' }
     ]
 
     const [localMin, setLocalMin] = useState<string>(tempFilters.priceRange.min ?? '')
