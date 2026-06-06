@@ -53,7 +53,7 @@ const menuData: MenuItem[] = [
             },
             {
                 label: 'Availability',
-                items: ['In Stock', 'Out of Stock']
+                items: ['Available', 'Need Reservation']
             },
             {
                 label: 'Conditions',
@@ -1090,10 +1090,10 @@ const Headers = () => {
                                                                     <UnstyledLink
                                                                         key={item}
                                                                         href={
-                                                                            item === 'In Stock'
+                                                                            item === 'Available'
                                                                                 ? '/collections?availability=instock'
-                                                                                : item === 'Out of Stock'
-                                                                                ? '/collections?availability=outofstock'
+                                                                                : item === 'Need Reservation'
+                                                                                ? '/collections?availability=onbackorder'
                                                                                 : '#'
                                                                         }
                                                                         className='text-button-4-desktop text-grey-200 hover:text-grey-100 block text-left'
@@ -1253,10 +1253,10 @@ const Headers = () => {
                                                         href={
                                                             // Availability items
                                                             selectedSubMenuItem.label === 'Availability'
-                                                                ? item === 'In Stock'
+                                                                ? item === 'Available'
                                                                     ? '/collections?availability=instock'
-                                                                    : item === 'Out of Stock'
-                                                                    ? '/collections?availability=outofstock'
+                                                                    : item === 'Need Reservation'
+                                                                    ? '/collections?availability=onbackorder'
                                                                     : '#'
                                                                 : // Conditions items
                                                                 item === 'Brand New'
