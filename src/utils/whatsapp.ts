@@ -37,6 +37,10 @@ export const WhatsAppTemplates = {
     detailProduct: (productName: string, productUrl: string) =>
         `Hello TWC Team, I'm interested in this watch:\n${productName}\nLink: ${productUrl}\nCould you please assist me with more information? Thank you.`,
 
+    // 💲 Detail Product Page – Ask for Price
+    askPrice: (productName: string, productUrl: string) =>
+        `Hello TWC Team, I'm interested in this watch:\n${productName}\nLink: ${productUrl}\nCould you please assist me with more information? Thank you.`,
+
     // 📰 List Article Page – CTA
     listArticle:
         "Hello TWC Team, I've been reading your articles and would like to inquire further about your watches and services. Thank you.",

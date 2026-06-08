@@ -882,7 +882,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             </span>
                                         </div>
                                     )}
-                                    {product.stock_status !== 'outofstock' ? (
+                                    {product.stock_status === 'instock' && product.price !== '' ? (
                                         <a
                                             href={getWhatsAppLinkFromTemplate(
                                                 'detailProduct',
@@ -904,6 +904,28 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                 {t('common:reserve_this', {
                                                     item: isWatch ? 'watch' : 'accessories'
                                                 })}
+                                            </Button>
+                                        </a>
+                                    ) : product.stock_status === 'instock' && product.price === '' ? (
+                                        <a
+                                            href={getWhatsAppLinkFromTemplate(
+                                                'askPrice',
+                                                product.name,
+                                                typeof window !== 'undefined'
+                                                    ? window.location.href
+                                                    : `/collections/${product.slug}`
+                                            )}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            onClick={() =>
+                                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                    'Button Location': 'Button ask price',
+                                                    'Button Page': locationMatch?.label
+                                                })
+                                            }
+                                        >
+                                            <Button variant='secondaryInverse' block className='capitalize'>
+                                                {t('common:ask_price')}
                                             </Button>
                                         </a>
                                     ) : (
@@ -995,7 +1017,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                       </div>
 
                                                       <div className='ml-4 flex shrink-0 items-center'>
-                                                          {product.stock_status !== 'outofstock' ? (
+                                                          {product.stock_status === 'instock' &&
+                                                          product.price !== '' ? (
                                                               <a
                                                                   href={getWhatsAppLinkFromTemplate(
                                                                       'detailProduct',
@@ -1020,6 +1043,29 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                               ? t('common:watch')
                                                                               : t('common:item')
                                                                       })}
+                                                                  </Button>
+                                                              </a>
+                                                          ) : product.stock_status === 'instock' &&
+                                                            product.price === '' ? (
+                                                              <a
+                                                                  href={getWhatsAppLinkFromTemplate(
+                                                                      'askPrice',
+                                                                      product.name,
+                                                                      typeof window !== 'undefined'
+                                                                          ? window.location.href
+                                                                          : `/collections/${product.slug}`
+                                                                  )}
+                                                                  target='_blank'
+                                                                  rel='noopener noreferrer'
+                                                                  onClick={() =>
+                                                                      trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                          'Button Location': 'Button ask price',
+                                                                          'Button Page': locationMatch?.label
+                                                                      })
+                                                                  }
+                                                              >
+                                                                  <Button variant='secondaryInverse'>
+                                                                      {t('common:ask_price')}
                                                                   </Button>
                                                               </a>
                                                           ) : (
@@ -1192,7 +1238,8 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                       </div>
 
                                                       <div>
-                                                          {product.stock_status !== 'outofstock' ? (
+                                                          {product.stock_status === 'instock' &&
+                                                          product.price !== '' ? (
                                                               <a
                                                                   href={getWhatsAppLinkFromTemplate(
                                                                       'detailProduct',
@@ -1221,6 +1268,33 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                       {t('common:reserve_this', {
                                                                           item: isWatch ? 'watch' : 'accessories'
                                                                       })}
+                                                                  </Button>
+                                                              </a>
+                                                          ) : product.stock_status === 'instock' &&
+                                                            product.price === '' ? (
+                                                              <a
+                                                                  href={getWhatsAppLinkFromTemplate(
+                                                                      'askPrice',
+                                                                      product.name,
+                                                                      typeof window !== 'undefined'
+                                                                          ? window.location.href
+                                                                          : `/collections/${product.slug}`
+                                                                  )}
+                                                                  target='_blank'
+                                                                  rel='noopener noreferrer'
+                                                                  onClick={() =>
+                                                                      trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                          'Button Location': 'Button ask price',
+                                                                          'Button Page': locationMatch?.label
+                                                                      })
+                                                                  }
+                                                              >
+                                                                  <Button
+                                                                      variant='secondaryInverse'
+                                                                      block
+                                                                      className='capitalize'
+                                                                  >
+                                                                      {t('common:ask_price')}
                                                                   </Button>
                                                               </a>
                                                           ) : (
