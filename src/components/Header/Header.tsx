@@ -725,7 +725,7 @@ const Headers = () => {
                                             )}
                                             as='div'
                                         >
-                                            <Icons icon='Globe' width={20} height={20} />
+                                            <Icons icon='Globe' width={24} height={24} />
 
                                             <span className='text-button-3-desktop hidden xl:block'>
                                                 {currentLanguage.label}
