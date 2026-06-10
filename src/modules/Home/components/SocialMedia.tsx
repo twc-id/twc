@@ -3,6 +3,7 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { IconsProps } from '@components/Icon/Icon'
 import listLocation from '@constant/location'
+import { useInstagramPosts } from '@hooks/useInstagramPosts'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
@@ -25,6 +26,7 @@ declare global {
 const Instagram = () => {
     const { t } = useTranslation('home')
     const router = useRouter()
+    const { data: instagramPosts = [] } = useInstagramPosts()
     const sectionRef = useRef<HTMLElement>(null)
     const embedsProcessed = useRef(false)
     const locationMatch = listLocation.find((loc) => {
@@ -36,30 +38,6 @@ const Instagram = () => {
     })
     const locationMatchRef = useRef(locationMatch)
     locationMatchRef.current = locationMatch
-
-    // Instagram embed URLs
-    const instagramPosts = [
-        {
-            id: 1,
-            embedUrl: 'https://www.instagram.com/p/DRGmqrwEc1s/?utm_source=ig_embed&utm_campaign=loading',
-            caption: 'INVISHIELD PROTECTIVE FILM - Keep your watch scratch-free'
-        },
-        {
-            id: 2,
-            embedUrl: 'https://www.instagram.com/p/DNb6WaNzmtA/?utm_source=ig_embed&utm_campaign=loading',
-            caption: 'TWC - The Watch Collections'
-        },
-        {
-            id: 3,
-            embedUrl: 'https://www.instagram.com/p/DNnToR5xplH/?utm_source=ig_embed&utm_campaign=loading',
-            caption: 'TWC - The Watch Collections'
-        },
-        {
-            id: 4,
-            embedUrl: 'https://www.instagram.com/p/DR3_2Omkf5t/?utm_source=ig_embed&utm_campaign=loading',
-            caption: 'TWC - The Watch Collections'
-        }
-    ]
 
     const socialMediaItems = [
         {
@@ -89,29 +67,31 @@ const Instagram = () => {
     ]
 
     useEffect(() => {
-        // If script already loaded (e.g. HMR or re-mount), process immediately
-        if (window.instgrm) {
-            window.instgrm.Embeds.process()
+        if (!instagramPosts.length) return
+
+        const processEmbeds = () => {
+            window.instgrm?.Embeds.process()
             embedsProcessed.current = true
+        }
+
+        if (window.instgrm) {
+            processEmbeds()
             return
         }
 
         // Avoid adding duplicate scripts
         const existingScript = document.querySelector('script[src="https://www.instagram.com/embed.js"]')
-        if (existingScript) return
+        if (existingScript) {
+            existingScript.addEventListener('load', processEmbeds, { once: true })
+            return () => existingScript.removeEventListener('load', processEmbeds)
+        }
 
         const script = document.createElement('script')
         script.src = 'https://www.instagram.com/embed.js'
         script.async = true
-        script.onload = () => {
-            // Blockquotes are already in the DOM, safe to process
-            if (window.instgrm) {
-                window.instgrm.Embeds.process()
-                embedsProcessed.current = true
-            }
-        }
+        script.onload = processEmbeds
         document.body.appendChild(script)
-    }, [])
+    }, [instagramPosts.length])
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -187,7 +167,7 @@ const Instagram = () => {
                                 <div className='-mt-[54px]' style={{ height: 'calc(100% + 54px + 400px)' }}>
                                     <blockquote
                                         className='instagram-media'
-                                        data-instgrm-permalink={post.embedUrl}
+                                        data-instgrm-permalink={post.url}
                                         data-instgrm-version='14'
                                         style={{
                                             background: '#FFF',
