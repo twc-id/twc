@@ -788,7 +788,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                             />
                         )}
                         <div className='flex flex-col gap-14 xl:gap-12'>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-4'>
                                 <UnstyledLink
                                     href={`/collections?product_brand=${product?.brands?.[0]?.id || ''}`}
                                     className='w-fit'
@@ -814,7 +814,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                     </p>
                                 )}
 
-                                <div className='flex flex-row flex-wrap gap-1 pt-2 xl:pt-0'>
+                                <div className='flex flex-row flex-wrap gap-1'>
                                     {['basic-info-scope-of-delivery', 'basic-info-status', 'basic-info-year-production']
                                         .map((key) => product?.meta_data?.find((m: any) => m.key === key))
                                         .filter((m: any) => m && m.value && m.value !== '-')
@@ -929,14 +929,125 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                             </Button>
                                         </a>
                                     ) : (
-                                        <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                            <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
-                                                {t('common:sold')}
-                                            </p>
-                                        </button>
+                                        <div className='flex flex-col gap-6'>
+                                            <button className='bg-grey-50 w-fit px-4 py-2' disabled>
+                                                <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
+                                                    {t('common:sold')}
+                                                </p>
+                                            </button>
+                                            {product.stock_status === 'onbackorder' && (
+                                                <a
+                                                    href={getWhatsAppLinkFromTemplate(
+                                                        'detailProduct',
+                                                        product.name,
+                                                        typeof window !== 'undefined'
+                                                            ? window.location.href
+                                                            : `/collections/${product.slug}`
+                                                    )}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                    onClick={() =>
+                                                        trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                            'Button Location': 'Button reserve',
+                                                            'Button Page': locationMatch?.label
+                                                        })
+                                                    }
+                                                >
+                                                    <Button variant='secondaryInverse' block className='capitalize'>
+                                                        {t('common:reserve_this', {
+                                                            item: isWatch ? 'watch' : 'accessories'
+                                                        })}
+                                                    </Button>
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className='flex flex-col gap-6 xl:hidden'>
+                                    {product.stock_status === 'instock' && product.price !== '' ? (
+                                        <a
+                                            href={getWhatsAppLinkFromTemplate(
+                                                'detailProduct',
+                                                product.name,
+                                                typeof window !== 'undefined'
+                                                    ? window.location.href
+                                                    : `/collections/${product.slug}`
+                                            )}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            onClick={() =>
+                                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                    'Button Location': 'Button reserve',
+                                                    'Button Page': locationMatch?.label
+                                                })
+                                            }
+                                        >
+                                            <Button variant='secondaryInverse' block className='capitalize'>
+                                                {t('common:reserve_this', {
+                                                    item: isWatch ? 'watch' : 'accessories'
+                                                })}
+                                            </Button>
+                                        </a>
+                                    ) : product.stock_status === 'instock' && product.price === '' ? (
+                                        <a
+                                            href={getWhatsAppLinkFromTemplate(
+                                                'askPrice',
+                                                product.name,
+                                                typeof window !== 'undefined'
+                                                    ? window.location.href
+                                                    : `/collections/${product.slug}`
+                                            )}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            onClick={() =>
+                                                trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                    'Button Location': 'Button ask price',
+                                                    'Button Page': locationMatch?.label
+                                                })
+                                            }
+                                        >
+                                            <Button variant='secondaryInverse' block className='capitalize'>
+                                                {t('common:ask_price')}
+                                            </Button>
+                                        </a>
+                                    ) : (
+                                        <div className='flex flex-col gap-4'>
+                                            <button className='bg-grey-50 w-fit px-4 py-2' disabled>
+                                                <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
+                                                    {t('common:sold')}
+                                                </p>
+                                            </button>
+                                            {product.stock_status === 'onbackorder' && (
+                                                <a
+                                                    href={getWhatsAppLinkFromTemplate(
+                                                        'detailProduct',
+                                                        product.name,
+                                                        typeof window !== 'undefined'
+                                                            ? window.location.href
+                                                            : `/collections/${product.slug}`
+                                                    )}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                    onClick={() =>
+                                                        trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                            'Button Location': 'Button reserve',
+                                                            'Button Page': locationMatch?.label
+                                                        })
+                                                    }
+                                                >
+                                                    <Button variant='secondaryInverse' block className='capitalize'>
+                                                        {t('common:reserve_this', {
+                                                            item: isWatch ? 'watch' : 'accessories'
+                                                        })}
+                                                    </Button>
+                                                </a>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>
+
+                            {/* Mobile inline CTA - Sold + Reserve */}
 
                             {/* Mobile bottom fixed bar - render via portal to avoid overflow container issues */}
                             {
@@ -1066,6 +1177,32 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                               >
                                                                   <Button variant='secondaryInverse'>
                                                                       {t('common:ask_price')}
+                                                                  </Button>
+                                                              </a>
+                                                          ) : product.stock_status === 'onbackorder' ? (
+                                                              <a
+                                                                  href={getWhatsAppLinkFromTemplate(
+                                                                      'detailProduct',
+                                                                      product.name,
+                                                                      typeof window !== 'undefined'
+                                                                          ? window.location.href
+                                                                          : `/collections/${product.slug}`
+                                                                  )}
+                                                                  target='_blank'
+                                                                  rel='noopener noreferrer'
+                                                                  onClick={() =>
+                                                                      trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                          'Button Location': 'Button reserve',
+                                                                          'Button Page': locationMatch?.label
+                                                                      })
+                                                                  }
+                                                              >
+                                                                  <Button variant='secondaryInverse'>
+                                                                      {t('common:reserve', {
+                                                                          item: isWatch
+                                                                              ? t('common:watch')
+                                                                              : t('common:item')
+                                                                      })}
                                                                   </Button>
                                                               </a>
                                                           ) : (
@@ -1298,11 +1435,47 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                                   </Button>
                                                               </a>
                                                           ) : (
-                                                              <button className='bg-grey-50 w-fit px-4 py-2' disabled>
-                                                                  <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
-                                                                      {t('common:sold')}
-                                                                  </p>
-                                                              </button>
+                                                              <div className='flex flex-row items-center gap-2'>
+                                                                  <button
+                                                                      className='bg-grey-50 w-fit px-4 py-2'
+                                                                      disabled
+                                                                  >
+                                                                      <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-grey-200 uppercase'>
+                                                                          {t('common:sold')}
+                                                                      </p>
+                                                                  </button>
+                                                                  {product.stock_status === 'onbackorder' && (
+                                                                      <a
+                                                                          href={getWhatsAppLinkFromTemplate(
+                                                                              'detailProduct',
+                                                                              product.name,
+                                                                              typeof window !== 'undefined'
+                                                                                  ? window.location.href
+                                                                                  : `/collections/${product.slug}`
+                                                                          )}
+                                                                          target='_blank'
+                                                                          rel='noopener noreferrer'
+                                                                          onClick={() =>
+                                                                              trackEvent(GA_EVENTS.CONTACT_WA, {
+                                                                                  'Button Location': 'Button reserve',
+                                                                                  'Button Page': locationMatch?.label
+                                                                              })
+                                                                          }
+                                                                      >
+                                                                          <Button
+                                                                              variant='secondaryInverse'
+                                                                              block
+                                                                              className='capitalize'
+                                                                          >
+                                                                              {t('common:reserve_this', {
+                                                                                  item: isWatch
+                                                                                      ? 'watch'
+                                                                                      : 'accessories'
+                                                                              })}
+                                                                          </Button>
+                                                                      </a>
+                                                                  )}
+                                                              </div>
                                                           )}
                                                       </div>
                                                   </div>
