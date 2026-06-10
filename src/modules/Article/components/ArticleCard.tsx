@@ -52,7 +52,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, titleClassName, meta
                                 .map((categories: any) => (
                                     <span
                                         key={categories.id}
-                                        className='border-grey-500 xl:text-paragraph-10-desktop text-paragraph-10-mobile rounded-full border-[0.5px] px-3 py-1 !leading-none text-gray-500'
+                                        className='border-grey-500 xl:text-paragraph-10-desktop text-paragraph-10-mobile rounded-full border-[0.5px] px-3 pb-[3px] pt-[5px] !leading-none text-gray-500'
                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(categories.name) }}
                                     />
                                 ))}

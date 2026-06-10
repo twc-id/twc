@@ -823,7 +823,7 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                                                 className='border-grey-500 flex items-center rounded-full border'
                                                 key={item.key}
                                             >
-                                                <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 !mb-0 px-3 py-[5px] capitalize xl:!leading-none'>
+                                                <span className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 !mb-0 px-3 pb-[3px] pt-[5px]  capitalize xl:!leading-none'>
                                                     {item.value}
                                                 </span>
                                             </div>
