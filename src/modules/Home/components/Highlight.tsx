@@ -8,6 +8,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
+import { getPreOwnedYear } from '@utils/product'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -273,14 +274,14 @@ const Highlight = () => {
                                                       <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black line-clamp-2 min-h-[2.5em] px-2'>
                                                           {product.name}
                                                       </h3>
-                                                      <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
-                                                          {product?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                              t('highlight.pre_owned', {
-                                                                  year: product.meta_data.find((meta: any) =>
-                                                                      meta.key.startsWith('pre-owned-')
-                                                                  )?.value
-                                                              })}
-                                                      </p>
+                                                      {(() => {
+                                                          const year = getPreOwnedYear(product)
+                                                          return year ? (
+                                                              <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
+                                                                  {t('highlight.pre_owned', { year })}
+                                                              </p>
+                                                          ) : null
+                                                      })()}
                                                       {product.stock_status === 'instock' && product.price !== '' && (
                                                           <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark truncate px-2'>
                                                               {formatRupiah(product.price)}

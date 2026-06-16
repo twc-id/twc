@@ -17,6 +17,7 @@ import useProductStore from '@store/useProductStore'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import { decodeHtml, sanitizeHtml } from '@utils/html'
+import { getPreOwnedYear } from '@utils/product'
 import Fuse from 'fuse.js'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -1435,19 +1436,14 @@ const Headers = () => {
                                                                     }}
                                                                 />
 
-                                                                <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                                    {product?.meta_data?.find(
-                                                                        (meta: any) =>
-                                                                            meta.key === 'basic-info-year-purchase'
-                                                                    ) &&
-                                                                        t('home:highlight.pre_owned', {
-                                                                            year: product?.meta_data?.find(
-                                                                                (meta: any) =>
-                                                                                    meta.key ===
-                                                                                    'basic-info-year-purchase'
-                                                                            )?.value
-                                                                        })}
-                                                                </p>
+                                                                {(() => {
+                                                                    const year = getPreOwnedYear(product)
+                                                                    return year ? (
+                                                                        <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
+                                                                            {t('home:highlight.pre_owned', { year })}
+                                                                        </p>
+                                                                    ) : null
+                                                                })()}
 
                                                                 {product.stock_status === 'instock' &&
                                                                     product.price !== '' && (

@@ -6,6 +6,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
+import { getPreOwnedYear } from '@utils/product'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -108,14 +109,14 @@ const Suggestion = ({ products }: SuggestionProps) => {
                                         <h3 className='xl:text-subheading-5-desktop text-subheading-5-mobile text-grey-black'>
                                             {p.name}
                                         </h3>
-                                        <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                            {p?.meta_data?.key?.startsWith('pre-owned-') &&
-                                                t('home:highlight.pre_owned', {
-                                                    year: p.meta_data.find((meta: any) =>
-                                                        meta.key.startsWith('pre-owned-')
-                                                    )?.value
-                                                })}
-                                        </p>
+                                        {(() => {
+                                            const year = getPreOwnedYear(p)
+                                            return year ? (
+                                                <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
+                                                    {t('home:highlight.pre_owned', { year })}
+                                                </p>
+                                            ) : null
+                                        })()}
                                         {p.stock_status === 'instock' && p.price !== '' && (
                                             <p className='xl:text-paragraph-5-desktop text-paragraph-5-mobile text-accent-price-dark'>
                                                 {formatRupiah(p.price)}
