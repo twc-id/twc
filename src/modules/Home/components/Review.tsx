@@ -4,6 +4,7 @@ import Icons from '@components/Icon'
 import { WooCommerce } from '@lib/api'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
+import { getPreOwnedYear } from '@utils/product'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
@@ -203,15 +204,14 @@ const Review = () => {
                                                         className='xl:text-subheading-6-desktop text-subheading-6-mobile text-grey-black'
                                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.name) }}
                                                     />
-                                                    {product?.meta_data?.key?.startsWith('pre-owned-') && (
-                                                        <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                            {t('highlight.pre_owned', {
-                                                                year: product.meta_data.find((meta: any) =>
-                                                                    meta.key.startsWith('pre-owned-')
-                                                                )?.value
-                                                            })}
-                                                        </p>
-                                                    )}
+                                                    {(() => {
+                                                        const year = getPreOwnedYear(product)
+                                                        return year ? (
+                                                            <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
+                                                                {t('highlight.pre_owned', { year })}
+                                                            </p>
+                                                        ) : null
+                                                    })()}
 
                                                     {product?.stock_status === 'instock' && product?.price !== '' && (
                                                         <p className='xl:text-subheading-6-desktop text-subheading-6-mobile text-accent-price-dark'>
@@ -306,15 +306,14 @@ const Review = () => {
                                                         {product.stock_status === 'instock' ? 'In Stock' : 'Pre-owned'}
                                                     </p> */}
 
-                                                    {product?.meta_data?.key?.startsWith('pre-owned-') && (
-                                                        <p className='text-paragraph-12-mobile text-grey-500'>
-                                                            {t('highlight.pre_owned', {
-                                                                year: product.meta_data.find((meta: any) =>
-                                                                    meta.key.startsWith('pre-owned-')
-                                                                )?.value
-                                                            })}
-                                                        </p>
-                                                    )}
+                                                    {(() => {
+                                                        const year = getPreOwnedYear(product)
+                                                        return year ? (
+                                                            <p className='text-paragraph-12-mobile text-grey-500'>
+                                                                {t('highlight.pre_owned', { year })}
+                                                            </p>
+                                                        ) : null
+                                                    })()}
 
                                                     {product?.stock_status === 'instock' && product?.price !== '' && (
                                                         <p className='text-subheading-6-mobile text-accent-price-dark'>
