@@ -205,7 +205,11 @@ const Wrapper: React.FC<WrapperProps> = ({
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
-                        { invisible: showTopSticky && !isMobile }
+                        // Hide the in-flow tab bar whenever the sticky portal is showing,
+                        // on ALL viewports. On mobile this was previously left visible,
+                        // which overlapped the fixed portal and caused a "doubled" tab glitch
+                        // while scrolling. visibility:hidden keeps the layout space (no jump).
+                        { invisible: showTopSticky }
                     )}
                     ref={topRef}
                 >
