@@ -23,7 +23,7 @@ const Hero = ({ image }: { image?: string }) => {
                         <motion.h1
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                             className='xl:text-heading-1-2-desktop text-heading-1-2-mobile text-grey-white xl:w-[700px]'
                         >
@@ -34,7 +34,7 @@ const Hero = ({ image }: { image?: string }) => {
                         <motion.p
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                             className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile line-clamp-3 w-[288px]'
                         >

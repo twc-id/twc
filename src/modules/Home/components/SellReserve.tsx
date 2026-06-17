@@ -24,7 +24,7 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
             <motion.div
                 initial={{ opacity: 0.5, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${sell})`,
@@ -43,7 +43,7 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
             <motion.div
                 initial={{ opacity: 0.5, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.15 }}
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${reserve})`,

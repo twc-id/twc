@@ -201,7 +201,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',

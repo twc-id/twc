@@ -14,7 +14,7 @@ const Journey = ({ image }: { image?: string }) => {
                     <motion.div
                         initial={{ opacity: 0, x: -60 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='relative h-[456px] w-full overflow-hidden xl:h-[960px] xl:w-[736px]'
                     >
@@ -30,7 +30,7 @@ const Journey = ({ image }: { image?: string }) => {
                     <motion.div
                         initial={{ opacity: 0, x: 60 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
                         className='flex flex-col justify-center gap-6'
                     >

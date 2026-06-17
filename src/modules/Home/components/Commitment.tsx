@@ -13,7 +13,7 @@ const Commitment = ({ image }: { image?: string }) => {
                 <motion.h1
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className='text-heading-2-mobile text-grey-white xl:text-heading-2-desktop'
                 >
@@ -23,7 +23,7 @@ const Commitment = ({ image }: { image?: string }) => {
                 <motion.h3
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.5 }}
                     className='text-paragraph-7-mobile text-grey-100 xl:text-paragraph-7-desktop'
                 >

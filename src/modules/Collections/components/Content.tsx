@@ -6,7 +6,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import { getPreOwnedYear } from '@utils/product'
+import { getProductStatusLine } from '@utils/product'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -124,10 +124,10 @@ const Content: React.FC<ContentProps> = ({ products, isLoading, isLoadingMore, o
                                         />
 
                                         {(() => {
-                                            const year = getPreOwnedYear(item)
-                                            return year ? (
+                                            const label = getProductStatusLine(item)
+                                            return label ? (
                                                 <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                    {t('home:highlight.pre_owned', { year })}
+                                                    {label}
                                                 </p>
                                             ) : null
                                         })()}

@@ -8,7 +8,7 @@ import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import { getPreOwnedYear } from '@utils/product'
+import { getProductStatusLine } from '@utils/product'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -100,7 +100,7 @@ const Highlight = () => {
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black flex-shrink-0'
                     >
@@ -110,7 +110,7 @@ const Highlight = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                         className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'
                     >
@@ -207,7 +207,7 @@ const Highlight = () => {
                                       <motion.div
                                           initial={{ opacity: 0, y: 30 }}
                                           whileInView={{ opacity: 1, y: 0 }}
-                                          viewport={{ once: false, amount: 0.2 }}
+                                          viewport={{ once: true, amount: 0.2 }}
                                           transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: index * 0.1 }}
                                       >
                                           <UnstyledLink
@@ -275,10 +275,10 @@ const Highlight = () => {
                                                           {product.name}
                                                       </h3>
                                                       {(() => {
-                                                          const year = getPreOwnedYear(product)
-                                                          return year ? (
+                                                          const label = getProductStatusLine(product)
+                                                          return label ? (
                                                               <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500 truncate px-2'>
-                                                                  {t('highlight.pre_owned', { year })}
+                                                                  {label}
                                                               </p>
                                                           ) : null
                                                       })()}

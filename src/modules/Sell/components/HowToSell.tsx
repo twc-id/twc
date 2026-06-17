@@ -95,7 +95,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'
                     >
@@ -119,7 +119,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.2 }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
                         ref={scrollContainerRef}

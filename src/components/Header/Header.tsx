@@ -17,7 +17,7 @@ import useProductStore from '@store/useProductStore'
 import { formatRupiah } from '@utils/currency'
 import debounce from '@utils/debounce'
 import { decodeHtml, sanitizeHtml } from '@utils/html'
-import { getPreOwnedYear } from '@utils/product'
+import { getProductStatusLine } from '@utils/product'
 import Fuse from 'fuse.js'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -1311,7 +1311,7 @@ const Headers = () => {
             {/* Search Dropdown */}
             {isSearchOpen && (
                 <div
-                    className='animate-fade-in fixed inset-0 top-[60px] z-50 overflow-auto bg-white'
+                    className='animate-fade-in fixed inset-0 top-[60px] z-[101] overflow-auto bg-white'
                     onClick={() => {
                         // setIsSearchOpen(false)
                         setHoveredMenuItem(null)
@@ -1437,10 +1437,10 @@ const Headers = () => {
                                                                 />
 
                                                                 {(() => {
-                                                                    const year = getPreOwnedYear(product)
-                                                                    return year ? (
+                                                                    const label = getProductStatusLine(product)
+                                                                    return label ? (
                                                                         <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                                            {t('home:highlight.pre_owned', { year })}
+                                                                            {label}
                                                                         </p>
                                                                     ) : null
                                                                 })()}
