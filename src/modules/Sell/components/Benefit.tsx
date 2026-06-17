@@ -10,10 +10,14 @@ const Benefit = () => {
     const { setIsDarkSection } = useTheme()
     const sectionRef = useRef<HTMLElement>(null)
 
-    const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
+    const isInView = useInView(sectionRef, { margin: '-50% 0px -90% 0px' })
 
     useEffect(() => {
-        if (isInView) setIsDarkSection(true)
+        if (isInView) {
+            setIsDarkSection(true)
+        } else {
+            setIsDarkSection(false)
+        }
     }, [isInView, setIsDarkSection])
 
     const items = [
