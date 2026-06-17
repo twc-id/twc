@@ -27,7 +27,7 @@ const Service = ({ image }: { image?: string }) => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='flex max-w-[411px] flex-col gap-6 xl:gap-4'
                     >
@@ -43,7 +43,7 @@ const Service = ({ image }: { image?: string }) => {
                     <motion.div
                         initial={{ opacity: 0, x: 60 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
                         className='relative overflow-hidden xl:h-[511px] xl:w-[736px]'
                     >
@@ -59,7 +59,7 @@ const Service = ({ image }: { image?: string }) => {
                     <motion.h3
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='xl:text-paragraph-2-desktop text-paragraph-2-mobile text-grey-black dark:text-grey-white'
                     >
@@ -68,7 +68,7 @@ const Service = ({ image }: { image?: string }) => {
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
                         className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-200'
                     >

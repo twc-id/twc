@@ -12,7 +12,7 @@ const WhiteSpace = () => {
                 <motion.p
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className='xl:text-subheading-1-desktop text-subheading-1-mobile text-grey-500 dark:text-grey-200 xl:w-[520px]'
                 >

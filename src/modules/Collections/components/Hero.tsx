@@ -22,7 +22,7 @@ const Hero = ({ image }: { image?: string }) => {
                         <motion.h1
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
                             className='xl:text-heading-1-3-desktop text-heading-1-3-mobile text-grey-white line-clamp-4 xl:line-clamp-3'
                         >
@@ -33,7 +33,7 @@ const Hero = ({ image }: { image?: string }) => {
                         <motion.p
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
                             className='text-grey-200 xl:text-paragraph-6-desktop text-paragraph-6-mobile line-clamp-2 xl:w-[514px]'
                         >

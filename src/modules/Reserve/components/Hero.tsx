@@ -225,7 +225,7 @@ const Hero = ({
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='flex flex-row justify-end pb-16 pt-14 xl:pb-[160px] xl:pt-[116px]'
                     >

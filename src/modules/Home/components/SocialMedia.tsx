@@ -126,7 +126,7 @@ const Instagram = () => {
                         <motion.h2
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                             className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black mb-2'
                         >
@@ -138,7 +138,7 @@ const Instagram = () => {
                         <motion.a
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.3 }}
+                            viewport={{ once: true, amount: 0.3 }}
                             transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                             href='https://www.instagram.com/thewatchcollections/'
                             target='_blank'

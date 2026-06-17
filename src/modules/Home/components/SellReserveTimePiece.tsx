@@ -64,7 +64,7 @@ const SellReserveTimePiece = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.2 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     style={{
                         backgroundImage:
@@ -84,7 +84,7 @@ const SellReserveTimePiece = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.2 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.15 }}
                     style={{
                         backgroundImage:
@@ -111,7 +111,7 @@ const SellReserveTimePiece = () => {
                             <motion.h2
                                 initial={{ opacity: 0, x: -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: false, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.3 }}
                                 transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                                 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'
                             >

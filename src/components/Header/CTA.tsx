@@ -24,7 +24,7 @@ const CTA = ({ image }: { image?: string }) => {
                     <motion.h2
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                         className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white'
                     >
@@ -36,7 +36,7 @@ const CTA = ({ image }: { image?: string }) => {
                     <motion.p
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
                         className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-100'
                     >
