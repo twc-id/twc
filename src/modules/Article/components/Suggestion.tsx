@@ -1,6 +1,6 @@
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import { getPreOwnedYear } from '@utils/product'
+import { getProductStatusLine } from '@utils/product'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
@@ -70,10 +70,10 @@ const Suggestion = ({ products, isLoading }: SuggestionProps) => {
                                         {p.name}
                                     </h3>
                                     {(() => {
-                                        const year = getPreOwnedYear(p)
-                                        return year ? (
+                                        const label = getProductStatusLine(p)
+                                        return label ? (
                                             <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                {t('home:highlight.pre_owned', { year })}
+                                                {label}
                                             </p>
                                         ) : null
                                     })()}

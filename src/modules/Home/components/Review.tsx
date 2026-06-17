@@ -4,7 +4,7 @@ import Icons from '@components/Icon'
 import { WooCommerce } from '@lib/api'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
-import { getPreOwnedYear } from '@utils/product'
+import { getProductStatusLine } from '@utils/product'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
@@ -144,7 +144,7 @@ const Review = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 60 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.2 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className='hidden xl:block'
                 >
@@ -205,10 +205,10 @@ const Review = () => {
                                                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.name) }}
                                                     />
                                                     {(() => {
-                                                        const year = getPreOwnedYear(product)
-                                                        return year ? (
+                                                        const label = getProductStatusLine(product)
+                                                        return label ? (
                                                             <p className='xl:text-paragraph-10-desktop text-paragraph-10-mobile text-grey-500'>
-                                                                {t('highlight.pre_owned', { year })}
+                                                                {label}
                                                             </p>
                                                         ) : null
                                                     })()}
@@ -242,7 +242,7 @@ const Review = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 60 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.2 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
                     className='xl:hidden'
                 >
@@ -307,10 +307,10 @@ const Review = () => {
                                                     </p> */}
 
                                                     {(() => {
-                                                        const year = getPreOwnedYear(product)
-                                                        return year ? (
+                                                        const label = getProductStatusLine(product)
+                                                        return label ? (
                                                             <p className='text-paragraph-12-mobile text-grey-500'>
-                                                                {t('highlight.pre_owned', { year })}
+                                                                {label}
                                                             </p>
                                                         ) : null
                                                     })()}

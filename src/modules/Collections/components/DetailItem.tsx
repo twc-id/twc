@@ -29,6 +29,16 @@ interface PageProps {
     productPrice: any
 }
 
+// Map a product's basic-info-status value to the /collections condition filter id
+// (see buildProductFiltersQuery). Returns null for statuses with no matching filter.
+const statusToConditionId = (status: any): string | null => {
+    const s = String(status ?? '').toLowerCase()
+    if (s.includes('brand new')) return 'brand-new'
+    if (s.includes('new old stock') || s.includes('nos')) return 'new-old-stock'
+    if (s.includes('pre-owned') || s.includes('preowned') || s.includes('pre owned')) return 'pre-owned'
+    return null
+}
+
 interface CollapseProps {
     title: string
     defaultExpanded?: boolean
@@ -492,6 +502,27 @@ const DetailItem: React.FC<PageProps> = ({ product, priceHistory, productPrice }
                         >
                             {displayLabel}
                         </button>
+                    </div>
+                )
+            }
+
+            if (label === 'Status' && item.value) {
+                // Status links to /collections filtered by that status (when it maps to a known condition).
+                const conditionId = statusToConditionId(item.value)
+                return (
+                    <div key={idx} className='flex flex-col gap-2'>
+                        <p className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-200 !mb-0 '>
+                            {label}
+                        </p>
+                        <p
+                            className={`xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-black capitalize !mb-0${underlineClass}`}
+                        >
+                            {conditionId ? (
+                                <a href={`/collections?condition=${conditionId}`}>{item.value}</a>
+                            ) : (
+                                item.value
+                            )}
+                        </p>
                     </div>
                 )
             }
