@@ -3,7 +3,7 @@ import classNames from '@lib/classnames'
 import { motion, useMotionValueEvent, useScroll } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 const Hero = ({
@@ -54,22 +54,46 @@ const Hero = ({
         setActiveIndex(currentIndex)
     })
 
+    // Offset the pinned section by the navbar height so the title isn't covered
+    // when the navbar is visible (scroll up). The navbar toggles visibility — the
+    // Header sets body[data-header-visible] — so we follow it to avoid a gap when
+    // it's hidden. Scoped to mobile (where the title lives inside the sticky).
+    const [headerVisible, setHeaderVisible] = useState(true)
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const update = () => setHeaderVisible(document.body.dataset.headerVisible !== 'false')
+        update()
+        window.addEventListener('scroll', update, { passive: true })
+        return () => window.removeEventListener('scroll', update)
+    }, [])
+    const pinOffset = isMobile && headerVisible ? 72 : 0
+
     return (
-        <section ref={sectionRef} className='bg-grey-black pt-[240px]'>
+        <section ref={sectionRef} className='bg-grey-black pt-[64px] xl:pt-[240px]'>
+            {/* Desktop-only title — sits above the pinned gallery (desktop layout unchanged) */}
             <Container className='pb-14 xl:pb-[116px]'>
-                <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-white xl:w-[585px]'>
+                <h1 className='text-grey-white xl:text-heading-2-desktop hidden xl:block xl:w-[585px]'>
                     {t('hero.title')}
                 </h1>
             </Container>
 
-            {/* Scroll-driven gallery wrapper — extra height creates scroll room */}
+            {/* Scroll-driven gallery wrapper — extra height creates scroll room.
+                On mobile the pin starts at the title text: the title is the first child
+                of the sticky container, so it pins at the top while the gallery changes. */}
             <div ref={scrollWrapperRef} className='h-[300vh] xl:h-[200vh]'>
-                <div className='sticky top-0 h-dvh overflow-hidden'>
+                <div
+                    className='sticky flex flex-col overflow-hidden'
+                    style={{ top: pinOffset, height: `calc(100dvh - ${pinOffset}px)` }}
+                >
+                    {/* Mobile-only title — pins at the top of the gallery section */}
+                    <Container className='pb-14 pt-6 xl:hidden'>
+                        <h1 className='text-heading-2-mobile text-grey-white'>{t('hero.title')}</h1>
+                    </Container>
                     {isMobile ? (
                         /* Mobile Layout - Vertical */
-                        <div className='flex h-full w-full flex-col'>
+                        <div className='flex w-full flex-1 flex-col'>
                             {/* Main Image - Mobile */}
-                            <div className='relative h-[400px] w-full overflow-hidden'>
+                            <div className='relative h-full w-full overflow-hidden'>
                                 {items.map((item, index) => (
                                     <div
                                         key={item.id}
@@ -89,56 +113,11 @@ const Hero = ({
                                     </div>
                                 ))}
                                 {/* Text overlay - Mobile */}
-                                <div className='absolute bottom-4 left-4'>
-                                    <h2 className='text-heading-3-mobile max-w-[280px] text-white'>
-                                        {t('hero.subtitle')}
-                                    </h2>
-                                </div>
-                            </div>
-
-                            {/* Items Container - Mobile */}
-                            <div className='mt-14 overflow-hidden px-4'>
-                                <div className='relative flex h-[172px] items-center justify-center'>
-                                    {items.map((item, index) => {
-                                        const offsetFromActive = index - activeIndex
-                                        const xPosition = offsetFromActive * 180
-
-                                        return (
-                                            <div
-                                                key={item.id}
-                                                className='absolute h-[172px] w-[172px] cursor-pointer transition-all duration-500 ease-out'
-                                                style={{
-                                                    transform: `translateX(${xPosition}px) scale(${
-                                                        index === activeIndex ? 1 : 0.9
-                                                    })`,
-                                                    opacity: index === activeIndex ? 1 : 0.6
-                                                }}
-                                                onClick={() => setActiveIndex(index)}
-                                            >
-                                                <Image
-                                                    src={item.image || ''}
-                                                    alt={item.label}
-                                                    width={172}
-                                                    height={172}
-                                                    className='h-full w-full object-cover'
-                                                    unoptimized
-                                                />
-                                                <div className='absolute bottom-2 left-2 overflow-hidden'>
-                                                    <div
-                                                        className={`transform transition-all duration-500 ease-out ${
-                                                            activeIndex === index
-                                                                ? 'translate-y-0 opacity-100'
-                                                                : 'translate-y-full opacity-0'
-                                                        }`}
-                                                    >
-                                                        <span className='text-subheading-3-mobile text-grey-white rounded px-2 py-1'>
-                                                            {item.label}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
+                                <div className='absolute bottom-4 left-4 flex flex-col gap-2.5'>
+                                    <span className='text-subheading-3-mobile mb-2 block text-white/70'>
+                                        {items[activeIndex]?.label}
+                                    </span>
+                                    <h2 className='text-heading-3-mobile text-white'>{t('hero.subtitle')}</h2>
                                 </div>
                             </div>
                         </div>
@@ -239,7 +218,7 @@ const Hero = ({
             {/* Bottom pinned image */}
             <div
                 className={classNames('relative z-0 -mb-[300px] xl:-mb-[560px]', {
-                    'mt-16 xl:mt-[160px]': !showWatchTextSection
+                    'xl:mt-[160px]': !showWatchTextSection
                 })}
             >
                 <div className='sticky top-0 z-0 h-[300px] w-full xl:h-[560px]'>
