@@ -185,11 +185,10 @@ const Collections = () => {
             }
         }
 
-        // Default the watches list to "in stock" when no availability filter is set in the URL.
-        // Skipped for accessories, which intentionally clears all filters on entry.
-        if (!router.query.availability && router.query.tab !== 'accessories') {
-            setFilter('availability', ['instock'])
-        }
+        // No default availability filter — the list shows all watches unless an
+        // explicit `availability` param is present in the URL (e.g. the Header
+        // "Available" menu item links to /collections?availability=instock).
+        // Accessories intentionally clears all filters on entry (see handleTabChange).
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.isReady, navKey])
 

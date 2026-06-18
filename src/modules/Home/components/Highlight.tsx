@@ -229,16 +229,17 @@ const Highlight = () => {
                                               }}
                                           >
                                               <div className='relative flex w-full flex-col gap-1 xl:gap-8'>
-                                                  <div className=' w-full overflow-hidden xl:h-full'>
+                                                  <div className='overflow-hidden'>
                                                       <Image
                                                           src={
                                                               product.images[0]?.src ||
                                                               'https://placehold.co/344x417/png?text=TWC'
                                                           }
                                                           alt={product.name}
-                                                          width={344}
-                                                          height={318}
-                                                          className='object-cover'
+                                                          width={0}
+                                                          height={0}
+                                                          className='h-full w-full object-cover'
+                                                          unoptimized
                                                       />
                                                   </div>
                                                   {product.stock_status === 'onbackorder' && (

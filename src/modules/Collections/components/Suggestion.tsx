@@ -69,7 +69,7 @@ const Suggestion = ({ products }: SuggestionProps) => {
                             >
                                 <div className='relative flex w-full flex-col gap-1 xl:gap-12'>
                                     <div className='flex items-center justify-center xl:h-[417px] xl:w-[344px]'>
-                                        <div className='h-[158px] w-[99px] overflow-hidden xl:h-[319px] xl:w-[196px]'>
+                                        <div className='overflow-hidden '>
                                             <Image
                                                 src={p.images[0]?.src || 'https://placehold.co/344x417/png?text=TWC'}
                                                 alt={p.name}
