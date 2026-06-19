@@ -28,7 +28,7 @@ const ReserveTimepiece = () => {
     const getData = async () => {
         setIsLoading(true)
         try {
-            const response = await WooCommerce.get(`products?tag=54&category=15&per_page=10`)
+            const response = await WooCommerce.get(`products?tag=33&category=15&per_page=10`)
 
             setData(response.data)
         } catch (error) {
