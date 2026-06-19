@@ -54,10 +54,10 @@ const Hero = ({
         setActiveIndex(currentIndex)
     })
 
-    // Offset the pinned section by the navbar height so the title isn't covered
-    // when the navbar is visible (scroll up). The navbar toggles visibility — the
-    // Header sets body[data-header-visible] — so we follow it to avoid a gap when
-    // it's hidden. Scoped to mobile (where the title lives inside the sticky).
+    // Reserve a constant amount of space for the navbar at the top of the pinned
+    // section. Keeping this constant (instead of reacting to the navbar's show/hide)
+    // avoids a height jump — and the resulting jerk — right as the pin engages.
+    // Scoped to mobile (where the title lives inside the sticky).
     const [headerVisible, setHeaderVisible] = useState(true)
     useEffect(() => {
         if (typeof window === 'undefined') return
@@ -66,7 +66,7 @@ const Hero = ({
         window.addEventListener('scroll', update, { passive: true })
         return () => window.removeEventListener('scroll', update)
     }, [])
-    const pinOffset = isMobile && headerVisible ? 72 : 0
+    const pinOffset = isMobile ? 72 : 0
 
     return (
         <section ref={sectionRef} className='bg-grey-black pt-[64px] xl:pt-[240px]'>
@@ -86,7 +86,11 @@ const Hero = ({
                     style={{ top: pinOffset, height: `calc(100dvh - ${pinOffset}px)` }}
                 >
                     {/* Mobile-only title — pins at the top of the gallery section */}
-                    <Container className='pb-14 pt-14 xl:hidden'>
+                    <Container
+                        className={classNames('pb-14 transition-all duration-150 xl:hidden', {
+                            'pt-14': headerVisible
+                        })}
+                    >
                         <h1 className='text-heading-2-mobile text-grey-white'>{t('hero.title')}</h1>
                     </Container>
                     {isMobile ? (
