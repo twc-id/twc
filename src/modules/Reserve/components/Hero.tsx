@@ -71,7 +71,7 @@ const Hero = ({
     return (
         <section ref={sectionRef} className='bg-grey-black pt-[64px] xl:pt-[240px]'>
             {/* Desktop-only title — sits above the pinned gallery (desktop layout unchanged) */}
-            <Container className='pb-14 xl:pb-[116px]'>
+            <Container className='xl:pb-[116px]'>
                 <h1 className='text-grey-white xl:text-heading-2-desktop hidden xl:block xl:w-[585px]'>
                     {t('hero.title')}
                 </h1>
@@ -86,7 +86,7 @@ const Hero = ({
                     style={{ top: pinOffset, height: `calc(100dvh - ${pinOffset}px)` }}
                 >
                     {/* Mobile-only title — pins at the top of the gallery section */}
-                    <Container className='pb-14 pt-6 xl:hidden'>
+                    <Container className='pb-14 pt-14 xl:hidden'>
                         <h1 className='text-heading-2-mobile text-grey-white'>{t('hero.title')}</h1>
                     </Container>
                     {isMobile ? (
