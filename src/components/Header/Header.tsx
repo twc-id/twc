@@ -374,7 +374,7 @@ const Headers = () => {
                         setIsSearching(true)
                         // First, try exact search
                         const response = await WooCommerce.get(
-                            `products?search=${encodeURIComponent(query)}&per_page=8`
+                            `product-search?term=${encodeURIComponent(query)}&per_page=8`
                         )
                         const exactResults = response.data || []
 
