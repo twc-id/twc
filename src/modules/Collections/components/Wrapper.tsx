@@ -6,7 +6,6 @@ import Content from '@modules/Collections/components/Content'
 import MobileFilterModal from '@modules/Collections/components/MobileFilterModal'
 import Sidebar from '@modules/Collections/components/Sidebar'
 import useCollectionsFilterStore from '@store/useCollectionsFilterStore'
-import { motion } from 'motion/react'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -198,11 +197,7 @@ const Wrapper: React.FC<WrapperProps> = ({
             {fixedTabBar}
 
             <Container className='relative flex flex-col gap-7 xl:gap-10 xl:pb-11' ref={sectionRef}>
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                <div
                     className={classNames(
                         'bg-grey-white dark:bg-grey-black z-[100] mt-px flex justify-between pb-[29px] pt-14 xl:pb-[41px] xl:pt-20',
                         // Hide the in-flow tab bar whenever the sticky portal is showing,
@@ -254,7 +249,7 @@ const Wrapper: React.FC<WrapperProps> = ({
                     '
                         />
                     </Button>
-                </motion.div>
+                </div>
 
                 {(() => {
                     const showSidebar = selectedTab === 0

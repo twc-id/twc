@@ -4,7 +4,6 @@ import listLocation from '@constant/location'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -82,13 +81,7 @@ const Consign = ({ images }: ConsignProps) => {
         <section className='bg-grey-black relative z-10'>
             <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='flex w-full flex-col items-start justify-between gap-5 xl:flex-row xl:items-center'
-                    >
+                    <div className='flex w-full flex-col items-start justify-between gap-5 xl:flex-row xl:items-center'>
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black  xl:max-w-[574px]'>
                             {t('consign.title')}
                         </h1>
@@ -105,12 +98,8 @@ const Consign = ({ images }: ConsignProps) => {
                         >
                             <Button className='h-full w-fit'>{t('common:book_appointment')}</Button>
                         </a>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    </div>
+                    <div
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
@@ -143,7 +132,7 @@ const Consign = ({ images }: ConsignProps) => {
                                 </div>
                             </div>
                         ))}
-                    </motion.div>
+                    </div>
                     <div className='flex flex-row items-center gap-2 xl:hidden'>
                         {items.map((_, index) => (
                             <button

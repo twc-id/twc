@@ -5,7 +5,7 @@ import { useTheme } from '@contexts/ThemeContext'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import { motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -92,13 +92,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
         <section className='relative z-0 -mb-[50vh] xl:-mb-[100vh]' ref={sectionRef}>
             <Container className='pb-16 pt-14 xl:pb-40 xl:pt-[116px]'>
                 <div className='flex flex-col items-center gap-14 xl:gap-20'>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'
-                    >
+                    <div className='flex w-full flex-col items-center gap-4 text-center xl:max-w-[574px] xl:gap-8'>
                         <h1 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'>
                             {t('how_to_sell.title')}
                         </h1>
@@ -115,12 +109,8 @@ const HowToSell = ({ images }: HowToSellProps) => {
                         >
                             <Button className='w-fit'>{t('common:book_appointment')}</Button>
                         </a>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    </div>
+                    <div
                         className='scrollbar-none flex w-full snap-x snap-mandatory flex-row justify-between gap-6 overflow-x-auto scroll-smooth xl:snap-none xl:overflow-x-visible'
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
@@ -153,7 +143,7 @@ const HowToSell = ({ images }: HowToSellProps) => {
                                 </div>
                             </div>
                         ))}
-                    </motion.div>
+                    </div>
                     <div className='flex flex-row items-center gap-2 xl:hidden'>
                         {items.map((_, index) => (
                             <button

@@ -7,7 +7,6 @@ import { useInstagramPosts } from '@hooks/useInstagramPosts'
 import classNames from '@lib/classnames'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
-import { motion } from 'motion/react'
 import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
@@ -123,23 +122,13 @@ const Instagram = () => {
                 <div className='flex w-full flex-col items-center gap-16 xl:gap-10'>
                     {/* Header */}
                     <div className='flex flex-col items-center gap-1 text-center'>
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                            className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black mb-2'
-                        >
+                        <h2 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black mb-2'>
                             {t('social_media.title')}
-                        </motion.h2>
+                        </h2>
                         <p className='xl:text-paragraph-7-desktop text-paragraph-7-mobile text-grey-500'>
                             @thewatchcollections
                         </p>
-                        <motion.a
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
+                        <a
                             href='https://www.instagram.com/thewatchcollections/'
                             target='_blank'
                             rel='noopener noreferrer'
@@ -153,7 +142,7 @@ const Instagram = () => {
                             <Button variant='secondaryInverse' className='xl:mt-9'>
                                 {t('common:follow_us')}
                             </Button>
-                        </motion.a>
+                        </a>
                     </div>
 
                     {/* Instagram Photos Grid - menggunakan embed tapi dikustomisasi */}
