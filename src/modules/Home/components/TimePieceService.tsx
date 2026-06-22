@@ -5,12 +5,11 @@ import { useTheme } from '@contexts/ThemeContext'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import { motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
-import { useMediaQuery } from 'react-responsive'
 import type { Swiper as SwiperType } from 'swiper'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -33,7 +32,6 @@ const TimePieceService = ({
     const sectionRef = useRef<HTMLElement>(null)
 
     const { setIsDarkSection } = useTheme()
-    const isMobile = useMediaQuery({ maxWidth: 1279 })
 
     const isInView = useInView(sectionRef, { margin: '-50% 0px -50% 0px' })
     const router = useRouter()
@@ -93,17 +91,11 @@ const TimePieceService = ({
             <Container className='relative z-10 flex flex-col justify-between gap-14 xl:flex-row xl:items-center xl:gap-10'>
                 <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                     <div className='flex flex-col gap-8'>
-                        <motion.h2
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                            className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'
-                        >
+                        <h2 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'>
                             <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                 {t('timepiece.title')}
                             </Trans>
-                        </motion.h2>
+                        </h2>
                         <div className='w-fit'>
                             <a
                                 href={getWhatsAppLinkFromTemplate('timepieceService')}
@@ -144,13 +136,7 @@ const TimePieceService = ({
                         >
                             {items.map((service, index) => (
                                 <SwiperSlide key={`${service.id}-${index}`} className='service-slide !w-[302px]'>
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: isMobile ? true : false, amount: 0.3 }}
-                                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: index * 0.15 }}
-                                        className='flex  flex-col gap-6'
-                                    >
+                                    <div className='flex  flex-col gap-6'>
                                         <div className='relative h-[403px] w-[302px] overflow-hidden'>
                                             <Image
                                                 src={service.image || ''}
@@ -169,7 +155,7 @@ const TimePieceService = ({
                                                 </Trans>
                                             </p>
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -177,13 +163,7 @@ const TimePieceService = ({
                 </div>
                 {/* mobile */}
                 <div className='relative w-full flex-1 xl:hidden'>
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: isMobile ? true : false, amount: 0.3 }}
-                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-                        className='relative isolate w-full'
-                    >
+                    <div className='relative isolate w-full'>
                         <Swiper
                             modules={[Navigation, Pagination]}
                             spaceBetween={16}
@@ -238,7 +218,7 @@ const TimePieceService = ({
                                 height: 6px !important;
                             }
                         `}</style>
-                    </motion.div>
+                    </div>
                 </div>
             </Container>
         </section>

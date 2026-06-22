@@ -1,7 +1,7 @@
 import Button from '@components/buttons/Button'
 import UnstyledLink from '@components/links/UnstyledLink'
 import { useTheme } from '@contexts/ThemeContext'
-import { motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
 
@@ -21,11 +21,7 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
             ref={sectionRef}
             className='dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 overflow-hidden px-4 pb-0 pt-16 xl:flex-row xl:px-5 xl:pt-[160px]'
         >
-            <motion.div
-                initial={{ opacity: 0.5, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+            <div
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${sell})`,
                     backgroundSize: '100% auto',
@@ -39,12 +35,8 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
                 <UnstyledLink href='/sell'>
                     <Button>{t('common:learn_more')}</Button>
                 </UnstyledLink>
-            </motion.div>
-            <motion.div
-                initial={{ opacity: 0.5, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.15 }}
+            </div>
+            <div
                 style={{
                     backgroundImage: `linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url(${reserve})`,
                     backgroundSize: '100% auto',
@@ -58,7 +50,7 @@ const SellReserve = ({ sell, reserve }: { sell?: string; reserve?: string }) => 
                 <UnstyledLink href='/reserve'>
                     <Button>{t('sell_reserve.cta_reserve')}</Button>
                 </UnstyledLink>
-            </motion.div>
+            </div>
         </section>
     )
 }

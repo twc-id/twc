@@ -2,7 +2,7 @@ import Container from '@components/Container'
 import Icons from '@components/Icon'
 import { useTheme } from '@contexts/ThemeContext'
 import classNames from '@lib/classnames'
-import { motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useCollapse } from 'react-collapsed'
@@ -62,23 +62,11 @@ const Faq = () => {
         <section ref={sectionRef} className='pt-14 xl:pt-[116px]'>
             <Container>
                 <div className='flex flex-col justify-between gap-7 xl:flex-row'>
-                    <motion.h1
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white max-w-[300px]'
-                    >
+                    <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black dark:text-grey-white max-w-[300px]'>
                         {t('faq.title')}
-                    </motion.h1>
+                    </h1>
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.2 }}
-                        className='flex w-full flex-col gap-5 xl:max-w-[602px] xl:gap-6'
-                    >
+                    <div className='flex w-full flex-col gap-5 xl:max-w-[602px] xl:gap-6'>
                         {items.map((item, index) => (
                             <Collapse key={item.question} title={item.question} defaultExpanded={index === 0}>
                                 <span className='xl:text-paragraph-8-desktop text-paragraph-8-mobile text-grey-500'>
@@ -86,7 +74,7 @@ const Faq = () => {
                                 </span>
                             </Collapse>
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
             </Container>
         </section>

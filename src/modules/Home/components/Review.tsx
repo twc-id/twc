@@ -5,7 +5,6 @@ import { WooCommerce } from '@lib/api'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import { getProductStatusLine } from '@utils/product'
-import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useRef, useState } from 'react'
@@ -141,13 +140,7 @@ const Review = () => {
                 </div>
 
                 {/* Desktop Swiper */}
-                <motion.div
-                    initial={{ opacity: 0, y: 60 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                    className='hidden xl:block'
-                >
+                <div className='hidden xl:block'>
                     <Swiper
                         modules={[Navigation]}
                         loop
@@ -236,16 +229,10 @@ const Review = () => {
                             )
                         })}
                     </Swiper>
-                </motion.div>
+                </div>
 
                 {/* Mobile Swiper */}
-                <motion.div
-                    initial={{ opacity: 0, y: 60 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                    className='xl:hidden'
-                >
+                <div className='xl:hidden'>
                     <Swiper
                         modules={[Navigation]}
                         spaceBetween={16}
@@ -336,7 +323,7 @@ const Review = () => {
                             )
                         })}
                     </Swiper>
-                </motion.div>
+                </div>
                 <div className='flex flex-row gap-4 xl:hidden'>
                     <Button
                         className='!h-8 !w-8 !p-0'

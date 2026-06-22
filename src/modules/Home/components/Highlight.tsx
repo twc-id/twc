@@ -9,7 +9,6 @@ import { trackEvent } from '@lib/ga'
 import { formatRupiah } from '@utils/currency'
 import { sanitizeHtml } from '@utils/html'
 import { getProductStatusLine } from '@utils/product'
-import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
@@ -97,23 +96,11 @@ const Highlight = () => {
         <section ref={sectionRef} className='bg-grey-white relative z-10 pt-14 xl:pt-[116px]'>
             <Container className='flex flex-col gap-5 xl:gap-20'>
                 <div className='flex flex-col justify-between gap-6 xl:flex-row xl:items-center'>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                        className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black flex-shrink-0'
-                    >
+                    <h1 className='xl:text-heading-2-desktop text-heading-2-mobile text-grey-black flex-shrink-0'>
                         {t('highlight.title')}
-                    </motion.h1>
+                    </h1>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.3 }}
-                        className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'
-                    >
+                    <div className='border-grey-black flex w-full flex-row border xl:w-auto xl:justify-end'>
                         {tabs.map((item) => (
                             <button
                                 key={item.value}
@@ -127,7 +114,7 @@ const Highlight = () => {
                                 {item.label}
                             </button>
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
 
                 <div className='overflow-hidden'>
@@ -202,14 +189,9 @@ const Highlight = () => {
                                       </div>
                                   </SwiperSlide>
                               ))
-                            : data?.map((product: any, index: number) => (
+                            : data?.map((product: any) => (
                                   <SwiperSlide key={product.id}>
-                                      <motion.div
-                                          initial={{ opacity: 0, y: 30 }}
-                                          whileInView={{ opacity: 1, y: 0 }}
-                                          viewport={{ once: true, amount: 0.2 }}
-                                          transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: index * 0.1 }}
-                                      >
+                                      <div>
                                           <UnstyledLink
                                               href={`/collections/${product.slug}`}
                                               onClick={() => {
@@ -291,7 +273,7 @@ const Highlight = () => {
                                                   </div>
                                               </div>
                                           </UnstyledLink>
-                                      </motion.div>
+                                      </div>
                                   </SwiperSlide>
                               ))}
                     </Swiper>
