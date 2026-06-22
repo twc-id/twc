@@ -5,7 +5,7 @@ import { useTheme } from '@contexts/ThemeContext'
 import { GA_EVENTS } from '@lib/constants/analyticsEvents'
 import { trackEvent } from '@lib/ga'
 import { getWhatsAppLinkFromTemplate } from '@utils/whatsapp'
-import { motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import Image from 'next/image'
 import { Trans, useTranslation } from 'next-i18next'
 import React, { useEffect, useRef } from 'react'
@@ -61,11 +61,7 @@ const SellReserveTimePiece = () => {
         <section ref={wrapperRef} className='flex flex-col'>
             {/* SellReserve Section - Light Mode */}
             <section className='xl:py[160px] dark:bg-grey-black bg-grey-white relative z-10 flex flex-col gap-2 px-4 py-16  xl:flex-row  xl:px-5 '>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                <div
                     style={{
                         backgroundImage:
                             "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/sell.webp')",
@@ -80,12 +76,8 @@ const SellReserveTimePiece = () => {
                     <UnstyledLink href='/sell'>
                         <Button>{t('common:learn_more')}</Button>
                     </UnstyledLink>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 1, ease: [0.33, 1, 0.68, 1], delay: 0.15 }}
+                </div>
+                <div
                     style={{
                         backgroundImage:
                             "linear-gradient(174.63deg, rgba(1, 1, 1, 0) 51.23%, #010101 96.85%), url('/images/home/reserve.webp')",
@@ -100,7 +92,7 @@ const SellReserveTimePiece = () => {
                     <UnstyledLink href='/reserve'>
                         <Button>{t('sell_reserve.cta_reserve')}</Button>
                     </UnstyledLink>
-                </motion.div>
+                </div>
             </section>
 
             {/* TimePieceService Section - Dark Mode */}
@@ -108,17 +100,11 @@ const SellReserveTimePiece = () => {
                 <Container className='relative flex flex-col items-center justify-between gap-14 xl:flex-row xl:gap-10'>
                     <div className='flex min-w-[243px] flex-col justify-between xl:gap-[275px]'>
                         <div className='flex flex-col gap-8'>
-                            <motion.h2
-                                initial={{ opacity: 0, x: -30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                                transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                                className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'
-                            >
+                            <h2 className='xl:text-heading-2-desktop text-heading-2-mobile dark:text-grey-white text-grey-black'>
                                 <Trans i18nKey='timepiece.title' components={{ br: <br /> }}>
                                     {t('timepiece.title')}
                                 </Trans>
-                            </motion.h2>
+                            </h2>
                             <div className='hidden xl:block'>
                                 <a
                                     href={getWhatsAppLinkFromTemplate('timepieceService')}
